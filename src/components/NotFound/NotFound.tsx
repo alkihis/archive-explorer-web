@@ -1,34 +1,17 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import './NotFound.scss';
 import { RouteComponentProps } from 'react-router';
+import { setPageTitle } from '../../helpers';
+import { CenterComponent, internalError } from '../../tools/PlacingComponents';
 
-const Login = (props: RouteComponentProps) => {
+const NotFound = (props: RouteComponentProps) => {
+  setPageTitle("Page Not Found");
+
   return (
-    <div className="NotFound">
-      <header className="NotFound-header">
-        <p>
-          Here's not found page.
-        </p>
-        <p>
-          You tried to show <code>{props.location.pathname}</code>, but it does not exists.
-        </p>
-        <a
-          className="NotFound-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <section>
-        <Button variant="contained" color="primary">
-          Hello, i'm a material button !
-        </Button>
-      </section>
-    </div>
+    <CenterComponent style={{height: '100vh'}}>
+      {internalError(`Page not found`, `You tried to show ${props.location.pathname}, but this page does not exists.`)}
+    </CenterComponent>
   );
 }
 
-export default Login;
+export default NotFound;

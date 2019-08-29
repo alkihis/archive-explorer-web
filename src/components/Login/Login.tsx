@@ -14,6 +14,7 @@ import { blue, red } from '@material-ui/core/colors';
 import sign_in_twitter from '../../assets/sign-in-with-twitter-link.png';
 import APIHELPER from '../../tools/ApiHelper';
 import { RequestTokenRequest } from '../../tools/interfaces';
+import { setPageTitle } from '../../helpers';
 
 function Copyright() {
   return (
@@ -21,11 +22,7 @@ function Copyright() {
       <Link color="inherit" href="https://alkihis.fr/">
         Alkihis
       </Link>{', '}
-      {new Date().getFullYear()}
-      {'. Built with '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI.
-      </Link>
+      {new Date().getFullYear()}.
     </Typography>
   );
 }
@@ -93,6 +90,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Login() {
+  setPageTitle("Login");
   const classes = useStyles({});
 
   const [loading, setLoading] = React.useState(true);
@@ -112,7 +110,7 @@ export default function Login() {
   }
 
   function runGetter() {
-    APIHELPER.request('users/request', undefined, 'POST')
+    APIHELPER.request('users/request', { method: 'POST' })
       .then((data: RequestTokenRequest) => {
         setLoading(false);
 

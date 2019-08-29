@@ -2,8 +2,13 @@ import React from 'react';
 import logo from '../../logo.svg';
 import Button from '@material-ui/core/Button';
 import './Home.scss';
+import { setPageTitle } from '../../helpers';
 
 const Home: React.FC = () => {
+  setPageTitle("Home");
+
+  const [v, setV] = React.useState(0);
+
   return (
     <div className="Home">
       <header className="Home-header">
@@ -21,8 +26,8 @@ const Home: React.FC = () => {
         </a>
       </header>
       <section>
-        <Button variant="contained" color="primary">
-          Hello, i'm a material button !
+        <Button variant="contained" color="primary" onClick={() => setV(v + 1)}>
+          Hello, i'm a material button clicked {v} times !
         </Button>
       </section>
     </div>

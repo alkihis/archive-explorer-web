@@ -1,8 +1,11 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import './Archive.scss';
+import { setPageTitle } from '../../helpers';
 
 const Archive: React.FC = () => {
+  setPageTitle();
+  
   return (
     <div className="Archive">
       <header className="Archive-header">
