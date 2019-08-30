@@ -4,7 +4,7 @@ export class APIHelper {
   request(
     url: string,
     settings: {
-      parameters?: { [key: string]: string },
+      parameters?: { [key: string]: any },
       method: "GET" | "POST",
       mode?: 'json' | 'text',
       headers?: { [key: string]: string } | Headers,

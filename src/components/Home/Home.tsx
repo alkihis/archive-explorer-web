@@ -1,37 +1,68 @@
 import React from 'react';
-import logo from '../../logo.svg';
-import Button from '@material-ui/core/Button';
 import './Home.scss';
 import { setPageTitle } from '../../helpers';
+import { CellMeasurer, CellMeasurerCache, List } from 'react-virtualized';
 
-const Home: React.FC = () => {
-  setPageTitle("Home");
+class Home extends React.Component {
+  state = {
+    heights: Array(1000).fill(null).map((_, index) => {
+      let s = ""
+      for (let i = 0; i < index; i++) {
+        s += Math.random().toFixed(1);
+      }
+      return s
+    }),
+  }
 
-  const [v, setV] = React.useState(0);
+  cache = new CellMeasurerCache({
+    fixedWidth: true,
+    defaultHeight: 30
+  });
 
-  return (
-    <div className="Home">
-      <header className="Home-header">
-        <img src={logo} className="Home-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="Home-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <section>
-        <Button variant="contained" color="primary" onClick={() => setV(v + 1)}>
-          Hello, i'm a material button clicked {v} times !
-        </Button>
-      </section>
-    </div>
-  );
+  componentDidMount() {
+    setPageTitle("Home");
+  }
+
+  // @ts-ignore
+  rowRenderer = ({ index, parent, key, style }) => {
+    return (
+      <CellMeasurer
+        key={key}
+        cache={this.cache}
+        parent={parent}
+        columnIndex={0}
+        rowIndex={index}
+      >
+        <div style={style}>
+          <div style={{maxWidth: '200px'}}>{this.state.heights[index]}</div>
+          <div>Je suis un poney</div>
+          {index % 2 ? <div>Hello</div> : ""}
+        </div>
+      </CellMeasurer>
+    );
+  };
+
+
+  render() {
+    return (
+      <div className="Home">
+        <section>
+          <div>
+            <h2>Details</h2>
+            <List
+              rowCount={this.state.heights.length}
+              width={800}
+              height={400}
+              deferredMeasurementCache={this.cache}
+              rowHeight={this.cache.rowHeight}
+              rowRenderer={this.rowRenderer.bind(this)}
+              overscanRowCount={3}
+            />
+          </div>
+        </section>
+      </div>
+    );
+  }
 }
 
 export default Home;

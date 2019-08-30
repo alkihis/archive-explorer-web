@@ -1,8 +1,11 @@
 import { IUser } from "./interfaces";
+import { TwitterArchive } from "../classes/Archive";
 
 class AESettings {
   protected _token: string = "";
   protected current_user: IUser | null = null;
+
+  protected current_archive: TwitterArchive | null = null;
 
   constructor() {
     if (localStorage.getItem('login_token')) {
@@ -25,6 +28,14 @@ class AESettings {
 
   get user() {
     return this.current_user;
+  }
+
+  set archive(v: TwitterArchive | null) {
+    this.current_archive = v;
+  }
+
+  get archive() {
+    return this.current_archive;
   }
 
   logout(reload = true) {
