@@ -28,25 +28,25 @@ class RouterWrapper extends Component {
   constructor(props: RouteComponentProps) {
     super(props);
     this.state.value = this.calculateCurrentValue(props);
+
+    props.history.listen(location => {
+      const value = this.calculateCurrentValue({ location });
+
+      if (value > -1 && value !== this.state.value) {
+        this.setState({
+          value
+        });
+      }
+    });
   }
 
-  calculateCurrentValue(props: RouteComponentProps) {
+  calculateCurrentValue(props: { location: { pathname: string } }) {
     const { pathname } = props.location;
     const { pathMap } = this.state;
 
     const value = pathMap.indexOf(pathname);
 
     return value;
-  }
-
-  componentDidUpdate(newProps: RouteComponentProps) {
-    const value = this.calculateCurrentValue(newProps);
-
-    if (value > -1 && value !== this.state.value) {
-      this.setState({
-        value
-      });
-    }
   }
 
   handleChange = (_: ChangeEvent, value: any) => {

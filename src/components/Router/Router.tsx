@@ -1,13 +1,12 @@
 import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
 import React from 'react';
-import About from "../About/About";
-import Home from "../Home/Home";
+import Explore from "../vues/Explore/Explore";
 import RouterWrapper from "./RouterWrapper";
-import Archive from "../Archive/Archive";
+import Archive from "../vues/Archive/Archive";
 import SETTINGS from "../../tools/Settings";
-import Login from "../Login/Login";
+import Login from "../vues/Login/Login";
 import FinalizeLogin from "../FinalizeLogin/FinalizeLogin";
-import NotFound from "../NotFound/NotFound";
+import NotFound from "../shared/NotFound/NotFound";
 import { checkCredentials } from "../../helpers";
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
 import { BigPreloader } from "../../tools/PlacingComponents";
@@ -32,7 +31,7 @@ class AppRouter extends React.Component {
       checkCredentials()
         // Fais attendre (DEBUG)
         .then(is_logged => {
-          return new Promise(resolve => setTimeout(resolve, 1000))
+          return new Promise(resolve => setTimeout(resolve, 0))
             .then(() => is_logged);
         })
         .then(is_logged => {
@@ -97,7 +96,7 @@ class AppRouter extends React.Component {
         <div className="Router">
           <Switch>
             <Route path="/" exact component={Archive} />  
-            <Route path="/explore/" component={Home} />
+            <Route path="/explore/" component={Explore} />
             <Route path="/settings/" component={Archive} />  
             <Route path="/dms/" component={Archive} />  
             <Route path="/search/" component={Archive} />  

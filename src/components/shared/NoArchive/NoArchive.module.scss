@@ -1,0 +1,12 @@
+.icon {
+  color: lighten($color: #000000, $amount: 70);
+  font-size: 7rem !important; 
+}
+
+.archive_link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

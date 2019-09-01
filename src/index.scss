@@ -5,10 +5,27 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #ffffff;
+  background-color: #f7f7f7;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.divider-margin {
+  margin: .75rem auto !important;
+}
+
+.center-space-between {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.center-absolute {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

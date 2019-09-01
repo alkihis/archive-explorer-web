@@ -11,10 +11,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Fab, CircularProgress } from '@material-ui/core';
 import { blue, red } from '@material-ui/core/colors';
-import sign_in_twitter from '../../assets/sign-in-with-twitter-link.png';
-import APIHELPER from '../../tools/ApiHelper';
-import { RequestTokenRequest } from '../../tools/interfaces';
-import { setPageTitle } from '../../helpers';
+import sign_in_twitter from '../../../assets/sign-in-with-twitter-link.png';
+import APIHELPER from '../../../tools/ApiHelper';
+import { RequestTokenRequest } from '../../../tools/interfaces';
+import { setPageTitle } from '../../../helpers';
 
 function Copyright() {
   return (

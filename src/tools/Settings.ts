@@ -1,11 +1,14 @@
 import { IUser } from "./interfaces";
-import { TwitterArchive } from "../classes/Archive";
+import { TwitterArchive } from "twitter-archive-reader";
 
 class AESettings {
   protected _token: string = "";
   protected current_user: IUser | null = null;
 
   protected current_archive: TwitterArchive | null = null;
+
+  archive_name: string = "";
+  archive_in_load = "";
 
   constructor() {
     if (localStorage.getItem('login_token')) {

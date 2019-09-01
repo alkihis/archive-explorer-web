@@ -5,7 +5,7 @@ import SETTINGS from "./Settings";
 
 export const CenterComponent = (props: any) => {
   return (
-    <Grid container direction="row" justify="center" {...props} alignItems="center">
+    <Grid container direction="column" justify="center" {...props} alignItems="center">
       {props.children}
     </Grid>
   );

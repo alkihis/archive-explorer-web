@@ -1,0 +1,43 @@
+.root {
+  flex-grow: 1;
+}
+
+.card {
+  width: 100%;
+}
+
+.title {
+  margin-bottom: 1rem !important;
+}
+
+.subtitle {
+  margin-bottom: .8rem !important;
+  margin-top: -.5rem !important;
+  font-size: 17px !important;
+  font-weight: lighter !important;
+}
+
+.center {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dmsinfowrapper {
+  color: lighten(#000000, 35);
+  font-size: .9rem !important;
+}
+
+.bold, .dmsinfo {
+  font-weight: bold;
+}
+
+.bio {
+  font-size: .95rem;
+  color: lighten(#000000, 35);
+}
+
+.filename {
+  font-style: italic;
+}
