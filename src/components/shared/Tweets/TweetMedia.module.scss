@@ -1,0 +1,62 @@
+.root {
+  height: 200px;
+  width: 100%;
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 1fr;
+
+  &.one {
+    grid-template-areas: "img1";
+  }
+
+  &.two {
+    grid-template-columns: calc(50% - 2.5px) calc(50% - 2.5px);
+    grid-template-areas: "img1 img2";
+  }
+  
+  &.three {
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto;
+    grid-template-areas: "img1 img3"
+                         "img2 img3";
+  }
+  
+  &.four {
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto;
+    grid-template-areas: "img1 img2"
+                         "img3 img4";
+  }
+}
+
+.video {
+  width: 100%;
+  max-height: 100%;
+  grid-area: img1;
+
+  &.full {
+    max-width: 100%;
+  }
+}
+
+.full_img {
+  max-width: 100%;
+}
+
+.paper {
+  max-width: 90vw !important;
+}
+
+@mixin object_fit {
+  object-fit: cover;
+}
+
+@for $i from 1 through 4 {
+  .img#{$i} {
+    grid-area: img#{$i};
+    height: 100%;
+    width: 100%;
+    @include object_fit;
+  }
+}
+  

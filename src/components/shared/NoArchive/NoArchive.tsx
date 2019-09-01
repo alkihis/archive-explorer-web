@@ -9,7 +9,7 @@ export default class NoArchive extends React.Component {
   render() {
     return (
       <div className="center-absolute">
-        <CenterComponent>
+        <CenterComponent className={classes.text_lighten}>
           <BlockIcon className={classes.icon} />
           <Typography variant="h3" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
             Archive is not loaded

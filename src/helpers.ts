@@ -73,7 +73,7 @@ export function dateFormatter(schema: string, date = new Date()) : string {
   const n = date.getMonth() + 1;
   const m = (n < 10 ? "0" : "") + String(n);
   const d = ((date.getDate()) < 10 ? "0" : "") + String(date.getDate());
-  const L = Y % 4 == 0 ? 1 : 0;
+  const L = Y % 4 === 0 ? 1 : 0;
 
   const i = ((date.getMinutes()) < 10 ? "0" : "") + String(date.getMinutes());
   const H = ((date.getHours()) < 10 ? "0" : "") + String(date.getHours());
@@ -105,4 +105,71 @@ export function dateFormatter(schema: string, date = new Date()) : string {
   }
 
   return str;
+}
+
+export function isArchiveLoaded() {
+  return !!SETTINGS.archive_name;
+}
+
+export function getMonthText(month: string) {
+  const m = Number(month);
+
+  switch (m) {
+    case 1:
+      return "January";
+    case 2:
+      return "February";
+    case 3:
+      return "March";
+    case 4:
+      return "April";
+    case 5:
+      return "May";
+    case 6:
+      return "June";
+    case 7:
+      return "July";
+    case 8:
+      return "August";
+    case 9:
+      return "September";
+    case 10:
+      return "October";
+    case 11:
+      return "November";
+    case 12:
+      return "December";
+  }
+}
+
+export function filterTweets(tweets: PartialTweet[]) {
+  return tweets.filter(t => {
+    if (SETTINGS.only_rts && !t.retweeted_status) {
+      return false;
+    }
+
+    if (SETTINGS.only_medias && (!t.entities || !t.entities.media || !t.entities.media.length)) {
+      return false;
+    }
+
+    if (SETTINGS.only_videos) {
+      if (
+        !t.extended_entities || 
+        !t.extended_entities.media || 
+        !t.extended_entities.media.length
+      ) {
+        return false;
+      }
+
+      if (t.extended_entities.media[0].type === "photo") {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
+
+export function isFilterApplied() {
+  return SETTINGS.only_medias || SETTINGS.only_medias || SETTINGS.only_videos;
 }

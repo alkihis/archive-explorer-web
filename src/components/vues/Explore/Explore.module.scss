@@ -1,0 +1,32 @@
+$drawer_width:240px;
+
+.root {
+  display: flex;
+}
+.appBar {
+  width: calc(100% - 240px);
+  margin-left: $drawer_width;
+}
+.drawer {
+  width: $drawer_width;
+  flex-shrink: 0;
+}
+.drawerPaper {
+  width: $drawer_width;
+}
+.content {
+  margin-top: 64px;
+  margin-left: $drawer_width;
+  flex-grow: 1;
+  padding: 10px;
+  margin-bottom: 56px;
+}
+.list_month {
+  width: 100%;
+  margin-bottom: .5rem !important;
+}
+.drawer_month {
+  padding-left: 14px;
+  box-sizing: border-box;
+  font-size: .95rem;
+}

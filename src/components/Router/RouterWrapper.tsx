@@ -53,46 +53,11 @@ class RouterWrapper extends Component {
     this.setState({ value });
   };
 
-  handleClickOpen() {
-    this.setState({ modal_open: true });
-  }
-
-  handleClose() {
-    this.setState({ modal_open: false });
-  }
-
-  modalLogout() {
-    return (
-      <Dialog
-        open={this.state.modal_open}
-        onClose={() => this.handleClose()}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Logout</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Do you want to log out ? You can't use this application again until you're logged in again.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary" autoFocus>
-            Cancel
-          </Button>
-          <Button onClick={() => SETTINGS.logout()} color="secondary">
-            Logout
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-
   render() {
     const { value, pathMap } = this.state;
 
     return (
       <div>
-        {this.modalLogout()}
         <BottomNavigation
           value={value}
           onChange={this.handleChange.bind(this)}
@@ -104,7 +69,7 @@ class RouterWrapper extends Component {
           <BottomNavigationAction label="Search" icon={<SearchIcon />} component={Link} to={pathMap[2]} />
           <BottomNavigationAction label="Direct Messages" icon={<MailIcon />} component={Link} to={pathMap[3]} />
           <BottomNavigationAction label="Settings" icon={<SettingsIcon />} component={Link} to={pathMap[4]} />
-          <BottomNavigationAction label="Tasks" icon={<TasksIcon />} onClick={() => this.handleClickOpen()} />
+          <BottomNavigationAction label="Tasks" icon={<TasksIcon />} />
         </BottomNavigation>
       </div>
     );

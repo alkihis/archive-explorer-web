@@ -8,6 +8,18 @@ body {
   background-color: #f7f7f7;
 }
 
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:active {
+  color: inherit;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -15,6 +27,14 @@ code {
 
 .divider-margin {
   margin: .75rem auto !important;
+}
+
+.divider-big-margin {
+  margin: 1.2rem auto !important;
+}
+
+.bold {
+  font-weight: bold !important;
 }
 
 .center-space-between {

@@ -1,0 +1,12 @@
+@import "../../../tools/functions.scss";
+
+.card_container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+  align-items: center;
+
+  @include mobile_large {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

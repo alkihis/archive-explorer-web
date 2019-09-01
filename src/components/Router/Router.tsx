@@ -10,6 +10,9 @@ import NotFound from "../shared/NotFound/NotFound";
 import { checkCredentials } from "../../helpers";
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
 import { BigPreloader } from "../../tools/PlacingComponents";
+import Settings from "../vues/Settings/Settings";
+import DirectMessages from "../vues/DirectMessages/DirectMessages";
+import Search from "../vues/Search/Search";
 
 class AppRouter extends React.Component {
   state: { logged: boolean, will_validate: boolean, validation_status: boolean };
@@ -97,9 +100,9 @@ class AppRouter extends React.Component {
           <Switch>
             <Route path="/" exact component={Archive} />  
             <Route path="/explore/" component={Explore} />
-            <Route path="/settings/" component={Archive} />  
-            <Route path="/dms/" component={Archive} />  
-            <Route path="/search/" component={Archive} />  
+            <Route path="/settings/" component={Settings} />  
+            <Route path="/dms/" component={DirectMessages} />  
+            <Route path="/search/" component={Search} />  
             <Route component={NotFound} />
           </Switch>
           <RouterWrapper />
