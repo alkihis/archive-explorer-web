@@ -16,7 +16,7 @@ export class Cache<T> {
     const ids_to_get = ids.filter(u => !this.has(u) && !this.asked_by_empty.has(u));
     const ids_to_get_from_cache = ids.filter(u => this.has(u));
 
-    let getted: { [userId: string]: T } = {};
+    let getted: { [id: string]: T } = {};
 
     // Si il y a des IDs à récupérer
     if (ids_to_get.length) {
@@ -63,7 +63,8 @@ export class Cache<T> {
     const returned: { [userId: string]: T } = await APIHELPER.request(this.url, {
       method: 'POST',
       parameters: { ids },
-      body_mode: "json"
+      body_mode: "json",
+      auth: true
     });
 
     // On met à jour le cache

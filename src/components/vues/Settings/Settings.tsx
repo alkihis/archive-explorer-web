@@ -1,8 +1,9 @@
 import React from 'react';
 import classes from './Settings.module.scss';
 import { setPageTitle } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormLabel, FormControl, FormGroup, Divider, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormLabel, FormControl, FormGroup, Divider, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
+import IIcon from '@material-ui/icons/Info';
 
 type SettingsState = {
   only_medias: boolean;
@@ -70,19 +71,29 @@ export default class Settings extends React.Component<{}, SettingsState> {
             label="Show only tweets with medias"
             labelPlacement="end"
           />
-
-          <FormControlLabel
-            value="media"
-            control={
-              <Checkbox 
-                color="primary" 
-                checked={this.state.only_videos}
-                onChange={(_, c) => this.changeVideoState(c)}
-              />
-            }
-            label="Show only tweets with videos or GIFs"
-            labelPlacement="end"
-          />
+          
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <FormControlLabel
+              value="media"
+              control={
+                <Checkbox 
+                  color="primary" 
+                  checked={this.state.only_videos}
+                  onChange={(_, c) => this.changeVideoState(c)}
+                />
+              }
+              disabled={!!SETTINGS.archive && !SETTINGS.archive.is_gdpr}
+              label="Show only tweets with videos or GIFs"
+              labelPlacement="end"
+            />
+            {!!SETTINGS.archive && !SETTINGS.archive.is_gdpr && 
+            <Tooltip classes={{
+              tooltip: classes.big_text,
+              popper: classes.big_text
+            }} title="This filter is not available with a classic archive">
+              <IIcon className={classes.icon} />
+            </Tooltip>}
+          </div>
         </FormGroup>
 
         <FormLabel focused style={{marginTop: '1rem', marginBottom: '.5rem'}}>Tweet settings</FormLabel>

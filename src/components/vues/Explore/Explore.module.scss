@@ -30,3 +30,27 @@ $drawer_width:240px;
   box-sizing: border-box;
   font-size: .95rem;
 }
+.selected_month {
+  background-color: #9292ff82 !important;
+}
+
+.no_tweets {
+  color: lighten($color: #000000, $amount: 30);
+  margin-top: 2rem;
+}
+.icon {
+  color: lighten($color: #000000, $amount: 70);
+  font-size: 7rem !important; 
+}
+
+.month_header {
+  font-style: italic;
+  font-weight: 200;
+  font-size: 1.9rem;
+
+  margin: 1rem 0 1.5rem 1rem;
+}
+.month_tweet_number {
+  font-size: 1.1rem;
+  font-weight: lighter;
+}

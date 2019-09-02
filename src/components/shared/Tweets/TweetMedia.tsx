@@ -11,14 +11,14 @@ type TweetMediaState = {
   image_full: number | null
 }
 
-export default class TweetImage extends React.Component<TweetMediaProp, TweetMediaState> {
+export default class TweetMedia extends React.Component<TweetMediaProp, TweetMediaState> {
   state: TweetMediaState = {
     image_full: null
   };
 
   renderImages() {
     return (this.media as MediaGDPREntity[]).map((m, i) => {
-      return <img 
+      return <img key={`img${i}`}
         alt="Tweet attachment" 
         src={m.media_url_https} 
         className={classes['img' + (i + 1)]} 
@@ -30,13 +30,16 @@ export default class TweetImage extends React.Component<TweetMediaProp, TweetMed
   renderVideo(type: "gif" | "mp4", full = false) {
     const m = this.media[0] as MediaGDPREntity;
 
-    const bitrates = m.video_info.variants.map(e => Number(e.bitrate));
+    const valids = m.video_info.variants.filter(e => e.bitrate && e.url.endsWith('.mp4'));
+
+    const bitrates = valids.map(e => Number(e.bitrate));
     const better = bitrates.indexOf(Math.max(...bitrates));
 
-    let better_variants = m.video_info.variants[better];
+    let better_variants = valids[better];
 
-    // TODO LOG (sometimes no variant)
+    // If any variant is valid
     if (!better_variants) {
+      console.warn("No good variant", m.video_info.variants, valids);
       better_variants = m.video_info.variants[0];
     }
 

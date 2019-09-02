@@ -1,18 +1,18 @@
 import React from 'react';
-import classes from './Tweets.module.scss';
+import classes from './Tweet.module.scss';
 import { Status } from 'twitter-d';
 import { PartialTweet, PartialTweetUser } from 'twitter-archive-reader';
-import { Card, CardHeader, Avatar, CardContent, CardActions, Typography } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import FavoriteIcon from '@material-ui/icons/Star';
-import NonFavoriteIcon from '@material-ui/icons/StarBorder';
+import { Card, CardHeader, Avatar, CardContent, CardActions, Typography, Checkbox } from '@material-ui/core';
 import RetweetIcon from '@material-ui/icons/Repeat';
 import { dateFormatter } from '../../../helpers';
 import TweetImage from './TweetMedia';
+import TweetText from './TweetText';
+import { withStyles } from '@material-ui/styles';
+import { CheckboxProps } from '@material-ui/core/Checkbox';
 
 type TweetProp = {
   data: PartialTweet | Status,
+  checked?: boolean,
   onCheckChange?: (is_checked: boolean, id_str: string) => void;
 };
 
@@ -20,8 +20,23 @@ type TweetState = {
   checked: boolean;
 };
 
+const TweetCheckbox = withStyles({
+  root: {
+    '&$checked': {
+      color: '#ff8c34',
+    },
+  },
+  checked: {},
+})((props: CheckboxProps) => <Checkbox color="default" {...props} />);
+
 export default class Tweet extends React.Component<TweetProp, TweetState> {
-  state: TweetState = { checked: false };
+  state: TweetState;
+
+  constructor(props: TweetProp) {
+    super(props);
+
+    this.state = { checked: this.props.checked };
+  }
 
   renderMedia() {
     if (this.props.data.extended_entities) {
@@ -31,12 +46,24 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
       }
     }
 
-    if (this.props.data.entities && this.props.data.entities.media.length) {
+    if (this.props.data.entities && this.props.data.entities.media && this.props.data.entities.media.length) {
       // @ts-ignore
       return <TweetImage entities={this.props.data.entities} />; 
     }
 
     return "";
+  }
+
+  get original() {
+    return (this.props.data.retweeted_status ? this.props.data.retweeted_status : this.props.data) as Status;
+  }
+
+  check() {
+    this.setState({ checked: true });
+  }
+
+  uncheck() {
+    this.setState({ checked: false });
   }
 
   render() {
@@ -48,10 +75,9 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
               {(this.props.data.user as PartialTweetUser).screen_name.slice(0, 1)}
             </Avatar>
           }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
+          action={(this.props.data as Status).retweeted_status ? 
+            <RetweetIcon className={classes.retweeted} style={{padding: '12px'}} /> : 
+            undefined
           }
           title={`@${(this.props.data.user as PartialTweetUser).screen_name}`}
           subheader={dateFormatter("Y-m-d H:i:s", new Date(this.props.data.created_at))}
@@ -61,15 +87,24 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
         
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            {(this.props.data as PartialTweet).text}
+            <TweetText data={this.props.data} />
           </Typography>
         </CardContent>
+
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            {(this.props.data as Status).favorited ? <FavoriteIcon /> : <NonFavoriteIcon />}
-          </IconButton>
+          <TweetCheckbox 
+            onChange={(_, checked) => { 
+              this.setState({ checked });
+              const oc = this.props.onCheckChange;
+
+              if (oc)
+                oc(checked, this.props.data.id_str); 
+            }} 
+            checked={this.state.checked}
+          />
         </CardActions>
       </Card>
     )
   }
 }
+

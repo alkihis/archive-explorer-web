@@ -6,13 +6,13 @@ import { setPageTitle, dateFormatter } from '../../../helpers';
 import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider } from '@material-ui/core';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
-import TwitterArchive from 'twitter-archive-reader';
+import TwitterArchive, { ArchiveReadState } from 'twitter-archive-reader';
 
 type ArchiveState = {
   loaded: string;
   is_error: boolean;
   in_load: string;
-  loading_state: "reading" | "indexing" | "tweet_read" | "user_read" | "dm_read" | "extended_read";
+  loading_state: ArchiveReadState;
 };
 
 export default class Archive extends React.Component<{}, ArchiveState> {
@@ -34,6 +34,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
     // Subscribe to archive readyness when in load
     if (this.state.in_load) {
+      this.state.loading_state = SETTINGS.archive.state;
       this.checkOnReadyArchive();
     }
   }
@@ -45,6 +46,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
       SETTINGS.archive_name = name;
       SETTINGS.archive_in_load = "";
+
+      if (!SETTINGS.archive.is_gdpr) {
+        SETTINGS.only_videos = false;
+      }
 
       if (this.active)
         this.setState({

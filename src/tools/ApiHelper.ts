@@ -86,7 +86,7 @@ export class APIHelper {
       }
     }
 
-    if (settings.auth) {
+    if (settings.auth !== false) {
       if (!SETTINGS.token) {
         console.warn("Could not authentificate request without token. Skipping auth header...");
       }

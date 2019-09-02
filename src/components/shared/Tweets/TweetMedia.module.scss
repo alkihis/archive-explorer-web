@@ -33,6 +33,7 @@
   width: 100%;
   max-height: 100%;
   grid-area: img1;
+  outline: none;
 
   &.full {
     max-width: 100%;
@@ -41,10 +42,12 @@
 
 .full_img {
   max-width: 100%;
+  max-height: 95vh;
 }
 
 .paper {
   max-width: 90vw !important;
+  max-height: unset !important;
 }
 
 @mixin object_fit {

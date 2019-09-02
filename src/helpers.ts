@@ -142,6 +142,10 @@ export function getMonthText(month: string) {
   }
 }
 
+export function uppercaseFirst(str: string) {
+  return str.slice(0, 1).toLocaleUpperCase() + str.slice(1);
+}
+
 export function filterTweets(tweets: PartialTweet[]) {
   return tweets.filter(t => {
     if (SETTINGS.only_rts && !t.retweeted_status) {

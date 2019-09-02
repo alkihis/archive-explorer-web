@@ -1,12 +1,14 @@
 import React from 'react';
 import classes from './Explore.module.scss';
-import { setPageTitle, isArchiveLoaded, getMonthText } from '../../../helpers';
+import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst } from '../../../helpers';
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { CssBaseline, AppBar, Toolbar, Typography, Drawer, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Drawer, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles } from '@material-ui/core';
 import TweetViewer from '../../shared/TweetViewer/TweetViewer';
 import { PartialTweet } from 'twitter-archive-reader';
+import { CenterComponent } from '../../../tools/PlacingComponents';
+import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -29,11 +31,13 @@ const ExpansionPanel = withStyles({
 
 type ExploreState = {
   loaded: PartialTweet[] | null;
+  month: string;
 }
 
 export default class Explore extends React.Component<{}, ExploreState> {
   state: ExploreState = {
-    loaded: null
+    loaded: null,
+    month: ""
   };
 
   componentDidMount() {
@@ -48,9 +52,24 @@ export default class Explore extends React.Component<{}, ExploreState> {
     return years_sorted.map(y => this.year(y));
   }
 
+  noMonthSelected() {
+    return (
+      <CenterComponent className={classes.no_tweets}>
+        <LeftArrowIcon className={classes.icon} />
+        <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+          Select a month
+        </Typography>
+
+        <Typography variant="h6">
+          Choose a month to see your tweets.
+        </Typography>
+      </CenterComponent>
+    );
+  }
+
   year(year: string) {
     return (
-      <ExpansionPanel>
+      <ExpansionPanel key={"year" + year}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
         >
@@ -66,7 +85,8 @@ export default class Explore extends React.Component<{}, ExploreState> {
   monthClicker(year: string, month: string) {
     console.log("Getting tweets");
     this.setState({
-      loaded: SETTINGS.archive.month(month, year)
+      loaded: SETTINGS.archive.month(month, year),
+      month: year + "-" + month
     });
   }
 
@@ -76,7 +96,12 @@ export default class Explore extends React.Component<{}, ExploreState> {
     return (
       <List className={classes.list_month}>
         {Object.entries(current_year).map(([month, tweets]) => (
-          <ListItem button key={year + "-" + month} onClick={() => this.monthClicker(year, month)}>
+          <ListItem 
+            button 
+            key={year + "-" + month} 
+            className={year + "-" + month === this.state.month ? classes.selected_month : ""} 
+            onClick={() => this.monthClicker(year, month)}
+          >
             <ListItemText className={classes.drawer_month}>
               {getMonthText(month)} ({Object.keys(tweets).length})
             </ListItemText>
@@ -86,8 +111,18 @@ export default class Explore extends React.Component<{}, ExploreState> {
     )
   }
 
-  emptyLoad() {
-    return <div>No month selected</div>;
+  showActiveMonth() {
+    const [year, month] = this.state.month.split('-');
+    const month_text = uppercaseFirst(getMonthText(month));
+    const tweets_number = this.state.loaded.length;
+
+    return (
+      <div className={classes.month_header}>
+        {month_text} {year} <span className={classes.month_tweet_number}>
+            <span className="bold">{tweets_number}</span> tweets
+          </span>
+      </div>
+    );
   }
 
   render() {
@@ -125,8 +160,11 @@ export default class Explore extends React.Component<{}, ExploreState> {
         
           <main className={classes.content}>
             {this.state.loaded ? 
-              <TweetViewer tweets={this.state.loaded} /> :
-              this.emptyLoad()
+              (<div>
+                {this.showActiveMonth()}
+                <TweetViewer tweets={this.state.loaded} />
+              </div>) :
+              this.noMonthSelected()
             }
           </main>
         </div>
