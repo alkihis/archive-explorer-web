@@ -3,7 +3,7 @@
 }
 
 .avatar {
-  background-color: red;
+  background-color: white;
 }
 
 .retweeted {
@@ -12,4 +12,28 @@
 
 .favorited {
   color: #fab41e;
+}
+
+.card_action {
+  justify-content: space-between;
+}
+
+.date {
+  font-weight: 200;
+  font-size: 12px;
+  margin-right: .7rem;
+}
+
+.date_link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: rgb(73, 73, 255);
+    text-decoration: underline;
+  }
+}
+
+.card_title {
+  font-weight: bold;
 }

@@ -15,7 +15,7 @@ import DirectMessages from "../vues/DirectMessages/DirectMessages";
 import Search from "../vues/Search/Search";
 
 class AppRouter extends React.Component {
-  state: { logged: boolean, will_validate: boolean, validation_status: boolean };
+  state: { logged: boolean, will_validate: boolean, validation_status: boolean | null };
 
   constructor(props: any) {
     super(props);
@@ -26,7 +26,7 @@ class AppRouter extends React.Component {
       validation_status: true
     };
 
-    console.log(this.state);
+    // console.log(this.state);
   }
 
   componentDidMount() {
@@ -49,45 +49,78 @@ class AppRouter extends React.Component {
           // token invalide ou API injoignable
           else {
             this.setState({
-              validation_status: false
+              validation_status: is_logged
             });
           }
         })
     }
   }
 
-  renderDialogLogin(is_open: boolean) {
+  apiError() {
+    if (this.state.validation_status === false) {
+      return (
+        <div>
+          <DialogTitle>Login error</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              You credentials seems to be invalid.
+              Try to log out and log in again.
+            </DialogContentText>
+            <DialogContentText>
+              If the problem persists, try again later.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => SETTINGS.logout()} color="primary">
+              Log out
+            </Button>
+          </DialogActions>
+        </div>  
+      );
+    }
+    // null
+    else {
+      return (
+        <div>
+          <DialogTitle>Server unavailable</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Archive Explorer could not dialog with its server-side.
+              You may be offline, or the server is temporary unavailable.
+            </DialogContentText>
+
+            <DialogContentText>
+              Try again later.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => SETTINGS.reload()} color="primary">
+              Reload
+            </Button>
+          </DialogActions>
+        </div>  
+      );
+    }
+  }
+
+  renderDialogLogin() {
     return (
       <Dialog
-        open={is_open}
+        open={true}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         {this.state.validation_status ? 
         /* L'utilisateur doit attendre que l'API réponde */
           <div>
-            <DialogTitle id="alert-dialog-title">{"Login in..."}</DialogTitle>
+            <DialogTitle>Login in...</DialogTitle>
             <DialogContent style={{ padding: '30px 100px' }}>
               <BigPreloader />
             </DialogContent>
           </div>  
         : 
         /* L'utilisateur n'a pas le choix: Il doit se déconnecter */
-          <div>
-            <DialogTitle id="alert-dialog-title">{"Error"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                API is unavailable or your login token is invalid. 
-                Try to log out and log in again.
-                If the problem persists, try again later.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => SETTINGS.logout()} color="primary">
-                Log out
-              </Button>
-            </DialogActions>
-          </div>  
+          this.apiError()
         }
       </Dialog>
     );
@@ -139,7 +172,7 @@ class AppRouter extends React.Component {
   render() {
     return (
       <div>
-        {this.renderDialogLogin(this.state.will_validate)}
+        {this.state.will_validate && this.renderDialogLogin()}
         {!this.state.will_validate ?
           (this.state.logged ? 
             this.routerLogged() : 

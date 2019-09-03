@@ -105,6 +105,7 @@ export class APIHelper {
       }
     }
 
+    // TODO DISCRIMINE LOGIN TOKEN ERROR OF API INAVAILABLE
     return fetch(fullurl, {
       method: settings.method ? settings.method : "GET",
       body: (fd ? fd : undefined),
@@ -112,10 +113,15 @@ export class APIHelper {
     })
       .then(rq => {
         if (!settings.mode || settings.mode === "json") {
-          return rq.ok ? rq.json() : rq.json().then(d => Promise.reject(d));
+          return (rq.ok ? 
+            rq.json() : 
+            rq.json()
+              .then(d => Promise.reject([rq, d]))
+              .catch(e => Promise.reject([rq, e]))
+          );
         }
         else {
-          return rq.ok ? rq.text() : rq.text().then(d => Promise.reject(d));
+          return rq.ok ? rq.text() : rq.text().then(d => Promise.reject([rq, d]));
         }
       });
   }

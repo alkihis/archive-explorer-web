@@ -285,7 +285,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           </div> 
 
           <div className={classes.modal_unselect_all}>
-            <Button style={{color: 'green !important'}} onClick={() => this.uncheckAll()}>
+            <Button className={classes.modal_unselect_all_color} onClick={() => this.uncheckAll()}>
               Unselect all
             </Button>
           </div> 
@@ -316,6 +316,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
     const t = this.state.current_page.map(this.renderTweet);
 
+    // no tweets available (all deleted)
     if (t.length === 0 && !this.state.has_more) {
       return this.noTweetsLeft();
     }

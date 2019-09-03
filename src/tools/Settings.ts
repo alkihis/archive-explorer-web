@@ -8,6 +8,7 @@ class AESettings {
   protected _only_videos = false;
   protected _auto_tweet_download = false;
   protected _only_rts = false;
+  protected _pp = false;
 
   // Globals
   protected current_user: IUser | null = null;
@@ -32,6 +33,18 @@ class AESettings {
     if (localStorage.getItem('only_rts')) {
       this.only_rts = localStorage.getItem('only_rts') === "true";
     }
+    if (localStorage.getItem('pp')) {
+      this.pp = localStorage.getItem('pp') === "true";
+    }
+  }
+
+  get pp() {
+    return this._pp;
+  }
+
+  set pp(v: boolean) {
+    this._pp = v;
+    localStorage.setItem('pp', String(v));
   }
 
   get token() {
@@ -99,7 +112,11 @@ class AESettings {
     this.token = "";
 
     if (reload)
-      window.location.href = window.location.protocol + window.location.host + '/';
+      this.reload();
+  }
+
+  reload() {
+    window.location.pathname = '/';
   }
 }
 

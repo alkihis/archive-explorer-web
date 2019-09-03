@@ -23,7 +23,22 @@ export async function checkCredentials() {
     SETTINGS.user = reso;
     return !!reso.user_id;
   } catch (e) {
-    return false;
+    if (Array.isArray(e)) {
+      const [rq, c] = e as [Response, any];
+
+      if (rq) {
+        if (rq.status === 403 || rq.status === 401) {
+          // Login invalid
+          return false;
+        }
+        
+        // Unknown error
+        console.log(rq, c);
+      }
+    }
+
+    // API unavailable (fetch promise reject), or other error
+    return null;
   }
 }
 

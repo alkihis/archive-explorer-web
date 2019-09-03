@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './Tweet.module.scss';
-import { Status } from 'twitter-d';
+import { Status, FullUser } from 'twitter-d';
 import { PartialTweet, PartialTweetUser } from 'twitter-archive-reader';
 import { Card, CardHeader, Avatar, CardContent, CardActions, Typography, Checkbox } from '@material-ui/core';
 import RetweetIcon from '@material-ui/icons/Repeat';
@@ -9,6 +9,7 @@ import TweetImage from './TweetMedia';
 import TweetText from './TweetText';
 import { withStyles } from '@material-ui/styles';
 import { CheckboxProps } from '@material-ui/core/Checkbox';
+import SETTINGS from '../../../tools/Settings';
 
 type TweetProp = {
   data: PartialTweet | Status,
@@ -67,20 +68,27 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
   }
 
   render() {
+    const avatar = (this.original.user as PartialTweetUser).profile_image_url_https.replace('_normal', '');
+    const avatar_name = (this.original.user as PartialTweetUser).name.slice(0, 1);
+
     return (
       <Card className={classes.card}>
         <CardHeader
+          classes={
+            { title: classes.card_title }
+          }
+
           avatar={
-            <Avatar className={classes.avatar}>
-              {(this.props.data.user as PartialTweetUser).screen_name.slice(0, 1)}
+            <Avatar className={classes.avatar} src={SETTINGS.pp ? avatar : undefined}>
+              {SETTINGS.pp ? "" : avatar_name}
             </Avatar>
           }
           action={(this.props.data as Status).retweeted_status ? 
             <RetweetIcon className={classes.retweeted} style={{padding: '12px'}} /> : 
             undefined
           }
-          title={`@${(this.props.data.user as PartialTweetUser).screen_name}`}
-          subheader={dateFormatter("Y-m-d H:i:s", new Date(this.props.data.created_at))}
+          title={`${(this.original.user as PartialTweetUser).name}`}
+          subheader={`@${(this.original.user as PartialTweetUser).screen_name}`}
         />
 
         {this.renderMedia()}
@@ -91,7 +99,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
           </Typography>
         </CardContent>
 
-        <CardActions disableSpacing>
+        <CardActions disableSpacing className={classes.card_action}>
           <TweetCheckbox 
             onChange={(_, checked) => { 
               this.setState({ checked });
@@ -102,9 +110,27 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
             }} 
             checked={this.state.checked}
           />
+          <TweetDate 
+            date={new Date(this.original.created_at)} 
+            id_str={this.original.id_str} 
+            screen_name={(this.original.user as FullUser).screen_name} 
+          />
         </CardActions>
       </Card>
     )
   }
+}
+
+function TweetDate(props: { date: Date, screen_name: string, id_str: string }) {
+  return (
+    <div className={classes.date}>
+      <a 
+        href={`https://twitter.com/${props.screen_name}/status/${props.id_str}`} 
+        target="_blank" 
+        rel="oopener noreferrer"
+        className={classes.date_link}
+      >{dateFormatter("Y-m-d H:i:s", props.date)}</a>
+    </div>
+  );
 }
 

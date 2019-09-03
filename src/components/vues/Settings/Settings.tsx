@@ -11,6 +11,7 @@ type SettingsState = {
   download: boolean;
   only_rts: boolean;
   modal_open: boolean;
+  pp: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -19,7 +20,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
     only_videos: SETTINGS.only_videos,
     download: SETTINGS.tweet_dl,
     only_rts: SETTINGS.only_rts,
-    modal_open: false
+    modal_open: false,
+    pp: SETTINGS.pp,
   };
 
   changeMediaState(v: boolean) {
@@ -50,6 +52,13 @@ export default class Settings extends React.Component<{}, SettingsState> {
     SETTINGS.only_rts = v;
   }
 
+  changePPState(v: boolean) {
+    this.setState({
+      pp: v
+    });
+    SETTINGS.pp = v;
+  }
+
   componentDidMount() {
     setPageTitle("Settings");
   }
@@ -72,6 +81,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
             labelPlacement="end"
           />
           
+          {/* Tooltip + Checkbox disabled */}
           <div style={{display: 'flex', alignItems: 'center'}}>
             <FormControlLabel
               value="media"
@@ -121,6 +131,19 @@ export default class Settings extends React.Component<{}, SettingsState> {
               />
             }
             label="Show only retweets (hide you own tweets)"
+            labelPlacement="end"
+          />
+
+          <FormControlLabel
+            value="media"
+            control={
+              <Checkbox 
+                color="primary" 
+                checked={this.state.pp}
+                onChange={(_, c) => this.changePPState(c)} 
+              />
+            }
+            label="Show profile pictures"
             labelPlacement="end"
           />
         </FormGroup>
