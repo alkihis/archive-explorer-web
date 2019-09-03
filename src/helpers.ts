@@ -17,10 +17,26 @@ export function setPageTitle(title?: string) {
   document.title = "Archive Explorer" + (title ? ` - ${title}` : '');
 }
 
-export async function checkCredentials() {
+export async function checkCredentials(auto_user_dl = true) {
   try {
     const reso: IUser = await APIHELPER.request('users/credentials');
     SETTINGS.user = reso;
+
+    if (reso.twitter_id && auto_user_dl) {
+      if (UserCache.getFromCache(reso.twitter_id)) {
+        SETTINGS.user_obj = UserCache.getFromCache(reso.twitter_id);
+      }
+      else {
+        try {
+          const u_twi = await UserCache.get(reso.twitter_id);
+
+          if (u_twi) {
+            SETTINGS.user_obj = u_twi;
+          }
+        } catch (e) { /* do nothing, l'utilisateur peut ne pas exister */ }
+      }
+    }
+
     return !!reso.user_id;
   } catch (e) {
     if (Array.isArray(e)) {

@@ -1,5 +1,6 @@
 import { IUser } from "./interfaces";
 import { TwitterArchive } from "twitter-archive-reader";
+import { FullUser } from "twitter-d";
 
 class AESettings {
   // Saved settings
@@ -16,6 +17,8 @@ class AESettings {
 
   archive_name: string = "";
   archive_in_load = "";
+
+  user_obj: FullUser | undefined;
 
   constructor() {
     if (localStorage.getItem('login_token')) {

@@ -10,7 +10,7 @@ export class Cache<T> {
   protected readonly CHUNK_LENGTH = 100;
   protected readonly MAX_THREADS = 5;
 
-  constructor(protected url: string) { }
+  constructor(protected url: string, protected id_field = "id_str") { }
 
   async bulk(ids: string[], events: EventTarget = document.createElement('div')) {
     const ids_to_get = ids.filter(u => !this.has(u) && !this.asked_by_empty.has(u));
@@ -60,12 +60,19 @@ export class Cache<T> {
   }
 
   protected async tinyBulk(ids: string[]) {
-    const returned: { [userId: string]: T } = await APIHELPER.request(this.url, {
+    const api_res: T[] = await APIHELPER.request(this.url, {
       method: 'POST',
       parameters: { ids },
       body_mode: "json",
       auth: true
     });
+
+    const returned: { [id: string]: T } = {};
+
+    for (const t of api_res) {
+      // @ts-ignore
+      returned[t[this.id_field]] = t;
+    }
 
     // On met à jour le cache
     for (const [id, v] of Object.entries(returned)) {
@@ -88,7 +95,7 @@ export class Cache<T> {
       return this.getFromCache(id);
     }
 
-    const tweet = await this.bulk([id]);
+    const tweet = await this.tinyBulk([id]);
 
     if (id in tweet) {
       return tweet[id];
@@ -97,7 +104,7 @@ export class Cache<T> {
     return null;
   }
 
-  protected getFromCache(id: string) {
+  getFromCache(id: string) {
     return this.cache[id];
   }
 
