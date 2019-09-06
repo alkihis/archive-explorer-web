@@ -7,9 +7,10 @@ import classes from './TweetViewer.module.scss';
 import { filterTweets } from '../../../helpers';
 import NoTweetsIcon from '@material-ui/icons/FormatClear';
 import { CenterComponent } from '../../../tools/PlacingComponents';
-import { Typography, Button, CircularProgress, Icon } from '@material-ui/core';
+import { Typography, Button, CircularProgress, Icon, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import TweetCache from '../../../classes/TweetCache';
+import Tasks from '../../../tools/Tasks';
  
 type ViewerProps = {
   tweets: PartialTweet[];
@@ -25,6 +26,7 @@ type ViewerState = {
   delete_modal: boolean;
   readonly selectible: Set<string>;
   selected: Set<string>;
+  modal_confirm: boolean;
 };
 
 const DEFAULT_CHUNK_LEN = 26;
@@ -48,11 +50,20 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       delete_modal: false,
       selectible: new Set(tweets.map(t => t.id_str)),
       selected: new Set,
+      modal_confirm: false
     };
 
     // Needed because REACT is shit
     this.onTweetCheckChange = this.onTweetCheckChange.bind(this);
     this.renderTweet = this.renderTweet.bind(this);
+  }
+
+  openConfirmModal() {
+    this.setState({ modal_confirm: true });
+  }
+
+  closeConfirmModal() {
+    this.setState({ modal_confirm: false });
   }
 
   warningMessageFilter() {
@@ -270,9 +281,45 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     );
   }
 
+  confirmDeletionModal() {
+    return (
+      <Dialog
+        open={true}
+        onClose={() => this.closeConfirmModal()}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle>Delete selected tweets ?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            The tweets will be deleted from <span className="bold">Twitter</span>.
+          </DialogContentText>
+          <DialogContentText>
+            A deletion task will be started. 
+            You can't restore tweets after they're been removed from Twitter.
+            Are you sure you want to do this ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.closeConfirmModal()} color="primary" autoFocus>
+            No
+          </Button>
+          <Button onClick={() => { 
+            this.closeConfirmModal();  
+            Tasks.start([...this.state.selected]);
+            this.uncheckAll();
+          }} color="secondary">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+
   askDeletionModal() {
     return (
-      <div className={classes.modal_root + (this.state.delete_modal ? " " + classes.open : "")}>
+      <div className={classes.modal_root + 
+          (this.state.delete_modal ? " " + classes.open : "") + " "
+        }>
         <div className={classes.modal_grid_root}>
           <div className={classes.modal_selected}>
             {this.state.selected.size} selected
@@ -291,11 +338,10 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           </div> 
           
           <div className={classes.modal_delete_all}>
-            <Button color="secondary">
+            <Button color="secondary" onClick={() => this.openConfirmModal()}>
               <Icon>delete_sweep</Icon>
             </Button>
           </div> 
-
         </div>
       </div>
     );
@@ -323,6 +369,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
     return (
       <div>
+          {this.state.modal_confirm && this.confirmDeletionModal()}
+
           {this.askDeletionModal()}
 
           {warning && <div className={classes.warning_filters}>Showing only {warning}</div>}

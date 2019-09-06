@@ -1,0 +1,36 @@
+.app_bar {
+  position: relative !important;
+}
+
+.nav_title {
+  margin-left: 1rem !important;
+  flex: 1;
+}
+
+.title {
+  margin-top: 2rem !important;
+  margin-bottom: 1.2rem !important;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  color: lighten($color: #000000, $amount: 70);
+  margin-bottom: .2rem;
+  margin-right: .7rem;
+}
+
+.no_sub_text {
+  margin-left: 1rem !important;
+}
+
+.loader {
+  height: calc(100vh - 64px);
+}
+
+.error_load {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  color: #e53935;
+}

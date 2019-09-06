@@ -7,12 +7,14 @@ import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container,
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState } from 'twitter-archive-reader';
+import UserCache from '../../../classes/UserCache';
+import { THRESHOLD_PREFETCH } from '../../../const';
 
 type ArchiveState = {
   loaded: string;
   is_error: boolean;
   in_load: string;
-  loading_state: ArchiveReadState;
+  loading_state: ArchiveReadState | "prefetch";
 };
 
 export default class Archive extends React.Component<{}, ArchiveState> {
@@ -41,7 +43,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   // Subscribe to archive readyness
   checkOnReadyArchive() {
-    SETTINGS.archive.onready = () => {
+    SETTINGS.archive.onready = async () => {
       const name = this.state.in_load;
 
       SETTINGS.archive_name = name;
@@ -51,11 +53,47 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         SETTINGS.only_videos = false;
       }
 
-      if (this.active)
+      // Récupère les personnes qui apparaissent plus de 
+      // THRESHOLD_PREFETCH fois dans l'archive pour les précharger
+      // (permet de voir leur PP sans DL les tweets)
+      const users_in_archive: { [userId: string]: number } = {};
+
+      for (const t of SETTINGS.archive.all) {
+        const rt = t.retweeted_status ? t.retweeted_status : t;
+
+        if (rt.user.id_str in users_in_archive) {
+          users_in_archive[rt.user.id_str]++;
+        }
+        else {
+          users_in_archive[rt.user.id_str] = 1;
+        }
+      }
+
+      // Récupère les utilisateurs apparaissant plus de THRESHOLD_PREFETCH fois
+      const most_actives = Object.entries(users_in_archive)
+        .filter(([_, c]) => c >= THRESHOLD_PREFETCH)
+        .map(([id, ]) => id);
+
+      const cache_dl = UserCache.prefetch(most_actives);
+
+      // Préfetch si actif
+      if (this.active) {
         this.setState({
-          loaded: name,
-          in_load: ""
+          loading_state: "prefetch"
         });
+
+        // Lance le DL
+        try {
+          await cache_dl;
+        } catch (e) { }
+         
+        // Terminé, composant prêt !
+        if (this.active)
+          this.setState({
+            loaded: name,
+            in_load: ""
+          });
+      }
     };
 
     SETTINGS.archive.onerror = () => {
@@ -138,6 +176,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         return "Reading tweets";
       case "user_read":
         return "Reading user informations";
+      case "prefetch":
+        return "Gathering user informations";
     }
   }
 

@@ -1,0 +1,38 @@
+.details {
+  display: block !important;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem !important;
+}
+
+.icon {
+  font-size: inherit !important;
+  margin-right: .7rem !important;
+  margin-bottom: 1px;
+}
+
+.counts {
+  margin-bottom: 1.2rem !important;
+  margin-left: .4rem !important;
+}
+
+.header_info {
+  color: #505050;
+  font-size: .9rem !important;
+  margin-left: .5rem !important;
+}
+
+.icon_green {
+  color: #4caf50 !important;
+}
+
+.icon_orange {
+  color: #ffa726 !important;
+}
+
+.icon_purple {
+  color: #ba68c8 !important;
+}

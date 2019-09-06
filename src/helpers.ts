@@ -5,14 +5,6 @@ import { PartialTweet } from "twitter-archive-reader";
 import UserCache from "./classes/UserCache";
 import DMArchive from "twitter-archive-reader";
 
-export const VERSION = "0.1.0";
-
-declare global {
-  interface Window {
-    DEBUG: any;
-  }
-}
-
 export function setPageTitle(title?: string) {
   document.title = "Archive Explorer" + (title ? ` - ${title}` : '');
 }
@@ -24,14 +16,14 @@ export async function checkCredentials(auto_user_dl = true) {
 
     if (reso.twitter_id && auto_user_dl) {
       if (UserCache.getFromCache(reso.twitter_id)) {
-        SETTINGS.user_obj = UserCache.getFromCache(reso.twitter_id);
+        SETTINGS.twitter_user = UserCache.getFromCache(reso.twitter_id);
       }
       else {
         try {
           const u_twi = await UserCache.get(reso.twitter_id);
 
           if (u_twi) {
-            SETTINGS.user_obj = u_twi;
+            SETTINGS.twitter_user = u_twi;
           }
         } catch (e) { /* do nothing, l'utilisateur peut ne pas exister */ }
       }
@@ -177,7 +169,16 @@ export function uppercaseFirst(str: string) {
   return str.slice(0, 1).toLocaleUpperCase() + str.slice(1);
 }
 
+/**
+ * Filter and sort tweets
+ * 
+ * @param tweets 
+ */
 export function filterTweets(tweets: PartialTweet[]) {
+  const sort_fn = SETTINGS.sort_reverse_chrono ? 
+  (a: PartialTweet, b: PartialTweet) => Number(BigInt(b.id_str) - BigInt(a.id_str)) :
+  (a: PartialTweet, b: PartialTweet) => Number(BigInt(a.id_str) - BigInt(b.id_str));
+
   return tweets.filter(t => {
     if (SETTINGS.only_rts && !t.retweeted_status) {
       return false;
@@ -202,9 +203,13 @@ export function filterTweets(tweets: PartialTweet[]) {
     }
 
     return true;
-  });
+  }).sort(sort_fn)
 }
 
 export function isFilterApplied() {
   return SETTINGS.only_medias || SETTINGS.only_medias || SETTINGS.only_videos;
+}
+
+export function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }

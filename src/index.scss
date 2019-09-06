@@ -29,12 +29,20 @@ code {
   margin: .75rem auto !important;
 }
 
+.pre-line {
+  white-space: pre-line;
+}
+
 .divider-big-margin {
   margin: 1.2rem auto !important;
 }
 
 .bold {
   font-weight: bold !important;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .center-space-between {

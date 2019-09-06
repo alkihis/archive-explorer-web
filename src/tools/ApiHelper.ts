@@ -1,4 +1,5 @@
 import SETTINGS from "./Settings";
+import { SERVER_URL } from "../const";
 
 export class APIHelper {
   request(
@@ -105,7 +106,6 @@ export class APIHelper {
       }
     }
 
-    // TODO DISCRIMINE LOGIN TOKEN ERROR OF API INAVAILABLE
     return fetch(fullurl, {
       method: settings.method ? settings.method : "GET",
       body: (fd ? fd : undefined),
@@ -113,6 +113,10 @@ export class APIHelper {
     })
       .then(rq => {
         if (!settings.mode || settings.mode === "json") {
+          if (rq.headers.get('Content-Length') === "0") {
+            return {};
+          }
+
           return (rq.ok ? 
             rq.json() : 
             rq.json()
@@ -127,7 +131,7 @@ export class APIHelper {
   }
 }
 
-export const BASE_API_URL = "http://localhost:3128/api/";
+export const BASE_API_URL = SERVER_URL + "/api/";
 
 const APIHELPER = new APIHelper;
 

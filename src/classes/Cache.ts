@@ -59,6 +59,10 @@ export class Cache<T> {
     return getted;
   }
 
+  async prefetch(ids: string[]) {
+    await this.bulk(ids);
+  }
+
   protected async tinyBulk(ids: string[]) {
     const api_res: T[] = await APIHELPER.request(this.url, {
       method: 'POST',

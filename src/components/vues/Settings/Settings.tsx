@@ -12,6 +12,7 @@ type SettingsState = {
   only_rts: boolean;
   modal_open: boolean;
   pp: boolean;
+  sort_reverse_chrono: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -22,6 +23,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
     only_rts: SETTINGS.only_rts,
     modal_open: false,
     pp: SETTINGS.pp,
+    sort_reverse_chrono: SETTINGS.sort_reverse_chrono,
   };
 
   changeMediaState(v: boolean) {
@@ -57,6 +59,13 @@ export default class Settings extends React.Component<{}, SettingsState> {
       pp: v
     });
     SETTINGS.pp = v;
+  }
+
+  changeTweetSortReverse(v: boolean) {
+    this.setState({
+      sort_reverse_chrono: v
+    });
+    SETTINGS.sort_reverse_chrono = v;
   }
 
   componentDidMount() {
@@ -108,6 +117,19 @@ export default class Settings extends React.Component<{}, SettingsState> {
 
         <FormLabel focused style={{marginTop: '1rem', marginBottom: '.5rem'}}>Tweet settings</FormLabel>
         <FormGroup>
+          <FormControlLabel
+            value="media"
+            control={
+              <Checkbox 
+                color="primary" 
+                checked={this.state.sort_reverse_chrono}
+                onChange={(_, c) => this.changeTweetSortReverse(c)}
+              />
+            }
+            label="Sort tweets by more recent"
+            labelPlacement="end"
+          />
+
           <FormControlLabel
             value="media"
             control={

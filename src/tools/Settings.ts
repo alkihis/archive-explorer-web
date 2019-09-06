@@ -9,7 +9,8 @@ class AESettings {
   protected _only_videos = false;
   protected _auto_tweet_download = false;
   protected _only_rts = false;
-  protected _pp = false;
+  protected _pp = true;
+  protected _sort_reverse_chrono = true;
 
   // Globals
   protected current_user: IUser | null = null;
@@ -18,7 +19,7 @@ class AESettings {
   archive_name: string = "";
   archive_in_load = "";
 
-  user_obj: FullUser | undefined;
+  twitter_user: FullUser | undefined;
 
   constructor() {
     if (localStorage.getItem('login_token')) {
@@ -39,6 +40,18 @@ class AESettings {
     if (localStorage.getItem('pp')) {
       this.pp = localStorage.getItem('pp') === "true";
     }
+    if (localStorage.getItem('sort_reverse_chrono')) {
+      this.sort_reverse_chrono = localStorage.getItem('sort_reverse_chrono') === "true";
+    }
+  }
+
+  get sort_reverse_chrono() {
+    return this._sort_reverse_chrono;
+  }
+
+  set sort_reverse_chrono(v: boolean) {
+    this._sort_reverse_chrono = v;
+    localStorage.setItem('sort_reverse_chrono', String(v));
   }
 
   get pp() {

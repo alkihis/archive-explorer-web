@@ -10,6 +10,7 @@ import TweetText from './TweetText';
 import { withStyles } from '@material-ui/styles';
 import { CheckboxProps } from '@material-ui/core/Checkbox';
 import SETTINGS from '../../../tools/Settings';
+import UserCache from '../../../classes/UserCache';
 
 type TweetProp = {
   data: PartialTweet | Status,
@@ -68,7 +69,14 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
   }
 
   render() {
-    const avatar = (this.original.user as PartialTweetUser).profile_image_url_https.replace('_normal', '');
+    let user_pp = (this.original.user as PartialTweetUser).profile_image_url_https;
+
+    // Si c'est un tweet d'une personne qui est en cache
+    if (UserCache.getFromCache(this.original.user.id_str)) {
+      user_pp = UserCache.getFromCache(this.original.user.id_str).profile_image_url_https;
+    }
+
+    const avatar = user_pp.replace('_normal', '');
     const avatar_name = (this.original.user as PartialTweetUser).name.slice(0, 1);
 
     return (
@@ -87,14 +95,28 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
             <RetweetIcon className={classes.retweeted} style={{padding: '12px'}} /> : 
             undefined
           }
-          title={`${(this.original.user as PartialTweetUser).name}`}
-          subheader={`@${(this.original.user as PartialTweetUser).screen_name}`}
+          title={<a 
+            className={classes.link}
+            rel="noopener noreferrer"
+            target="_blank"
+            href={"https://twitter.com/" + (this.original.user as PartialTweetUser).screen_name}
+          >
+            {`${(this.original.user as PartialTweetUser).name}`}
+          </a>}
+          subheader={<a 
+            className={classes.link}
+            rel="noopener noreferrer"
+            target="_blank"
+            href={"https://twitter.com/" + (this.original.user as PartialTweetUser).screen_name}
+          >
+            {`@${(this.original.user as PartialTweetUser).screen_name}`}
+          </a>}
         />
 
         {this.renderMedia()}
         
         <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
+          <Typography variant="body2" className="pre-line" color="textSecondary" component="p">
             <TweetText data={this.props.data} />
           </Typography>
         </CardContent>
@@ -127,8 +149,8 @@ function TweetDate(props: { date: Date, screen_name: string, id_str: string }) {
       <a 
         href={`https://twitter.com/${props.screen_name}/status/${props.id_str}`} 
         target="_blank" 
-        rel="oopener noreferrer"
-        className={classes.date_link}
+        rel="noopener noreferrer"
+        className={classes.link}
       >{dateFormatter("Y-m-d H:i:s", props.date)}</a>
     </div>
   );

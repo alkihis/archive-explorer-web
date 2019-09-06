@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import * as consts from './const';
 import './index.scss';
 import * as serviceWorker from './serviceWorker';
 import App from './components/App/App';
+
+console.log("Archive Explorer version", consts.VERSION);
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
