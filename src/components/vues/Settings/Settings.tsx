@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './Settings.module.scss';
 import { setPageTitle, dateFormatter } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormLabel, FormControl, FormGroup, Divider, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Grid, Avatar } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
 
@@ -191,10 +191,18 @@ export default class Settings extends React.Component<{}, SettingsState> {
           </Button>
         </div>
 
-        <Typography>
-          Account created on 
-          <span className="bold"> {dateFormatter("Y-m-d", new Date(SETTINGS.user.created_at))}</span>.
-        </Typography>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <Typography>
+            Account created on 
+            <span className="bold"> {dateFormatter("Y-m-d", new Date(SETTINGS.user.created_at))}</span>.
+          </Typography>
+          <Tooltip placement="top" classes={{
+              tooltip: classes.big_text,
+              popper: classes.big_text
+            }} title="That's all the information we have from you. Archive Explorer doesn't store any other kind of data.">
+              <IIcon className={classes.icon + " " + classes.account_icon} />
+          </Tooltip>
+        </div>
 
         {SETTINGS.expired && <Typography className={classes.expired}>
           Twitter credentials have expired. Please log out and log in again.
@@ -257,9 +265,9 @@ export default class Settings extends React.Component<{}, SettingsState> {
             {this.tweetViewSettings()}
           </Container>
 
-          <Divider className="divider-big-margin" />
+          {/* <Divider className="divider-big-margin" /> */}
 
-          <Typography variant="h4" className="bold">
+          <Typography variant="h4" className={classes.account_title}>
             Account
           </Typography>
           <Container className={classes.account_container}>

@@ -1,7 +1,7 @@
 import classes from './TaskModal.module.scss';
 import React from 'react';
 import Tasks, { TaskInformation, TaskBaseMessage } from '../../../tools/Tasks';
-import { Dialog, AppBar, Toolbar, Typography, Slide, Button, Divider, Container } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, Typography, Slide, Button, Container } from '@material-ui/core';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Task from './Task';
 import { CenterComponent, BigPreloader } from '../../../tools/PlacingComponents';

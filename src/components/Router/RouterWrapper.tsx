@@ -9,8 +9,7 @@ import TasksIcon from '@material-ui/icons/CheckBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
 import './RouterWrapper.scss';
-import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Badge } from '@material-ui/core';
-import SETTINGS from '../../tools/Settings';
+import { Badge } from '@material-ui/core';
 import TaskModal from '../vues/TaskModal/TaskModal';
 import Tasks, { TaskInformation, TaskBaseMessage } from '../../tools/Tasks';
 

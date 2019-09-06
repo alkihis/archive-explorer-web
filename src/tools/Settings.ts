@@ -1,6 +1,7 @@
 import { IUser } from "./interfaces";
 import { TwitterArchive } from "twitter-archive-reader";
 import { FullUser } from "twitter-d";
+import { DEBUG_MODE } from "../const";
 
 class AESettings {
   // Saved settings
@@ -130,8 +131,8 @@ class AESettings {
   }
 
   get can_delete() {
-    // DEBUG
-    // return true;
+    if (DEBUG_MODE)
+      return true;
 
     return !!this.archive && this.archive.owner === this.user.twitter_id && !this.expired;
   }

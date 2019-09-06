@@ -10,8 +10,18 @@
 }
 
 .root {
-  margin-top: 1rem !important;
+  margin-top: 1.5rem !important;
   margin-bottom: 64px !important;
+}
+
+.account_title {
+  font-weight: bold !important;
+  margin-top: 1.3rem !important;
+}
+
+.account_icon {
+  margin-bottom: .1rem !important;
+  margin-left: .3rem !important;
 }
 
 $avatar_size: 60px;
