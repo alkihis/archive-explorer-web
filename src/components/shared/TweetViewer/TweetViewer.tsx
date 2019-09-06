@@ -11,6 +11,7 @@ import { Typography, Button, CircularProgress, Icon, Dialog, DialogTitle, Dialog
 import { Link } from 'react-router-dom';
 import TweetCache from '../../../classes/TweetCache';
 import Tasks from '../../../tools/Tasks';
+import { toast } from '../Toaster/Toaster';
  
 type ViewerProps = {
   tweets: PartialTweet[];
@@ -117,7 +118,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       });
     }
 
-    if (SETTINGS.tweet_dl) {
+    if (SETTINGS.tweet_dl && !SETTINGS.expired) {
       // do dl
       TweetCache.bulk(tweets.map(t => t.id_str))
         .then(data => {
@@ -305,7 +306,10 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           </Button>
           <Button onClick={() => { 
             this.closeConfirmModal();  
-            Tasks.start([...this.state.selected]);
+            Tasks.start([...this.state.selected])
+              .catch(() => {
+                toast("Unable to start task. Check your network.", "error");
+              });
             this.uncheckAll();
           }} color="secondary">
             Yes

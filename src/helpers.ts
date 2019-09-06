@@ -4,15 +4,48 @@ import SETTINGS from "./tools/Settings";
 import { PartialTweet } from "twitter-archive-reader";
 import UserCache from "./classes/UserCache";
 import DMArchive from "twitter-archive-reader";
+import { toast } from "./components/shared/Toaster/Toaster";
+import { FullUser } from "twitter-d";
+import { AUTO_TWITTER_CHECK } from "./const";
 
 export function setPageTitle(title?: string) {
   document.title = "Archive Explorer" + (title ? ` - ${title}` : '');
 }
 
-export async function checkCredentials(auto_user_dl = true) {
+export async function checkCredentials(auto_user_dl = true, check_twitter_account = AUTO_TWITTER_CHECK) {
   try {
     const reso: IUser = await APIHELPER.request('users/credentials');
     SETTINGS.user = reso;
+
+    if (check_twitter_account) {
+      const twitter_check = APIHELPER.request('users/twitter');
+
+      twitter_check
+        .then((d: { user: IUser, twitter: FullUser }) => {
+          SETTINGS.twitter_user = d.twitter;
+        })
+        .catch((e: any) => {
+          if (Array.isArray(e)) {
+            const [_, c] = e as [Response, any];
+      
+            if (c) {
+              if (c.code === 11) {
+                // Token expiré
+                SETTINGS.expired = true;
+                toast("Twitter credentials have expired. Please log out and log in again.", "error");
+                return;
+              }
+              
+              // Unknown error
+              console.log(_, c);
+              return;
+            }
+          }
+      
+          // API unavailable (fetch promise reject), or other error
+          toast("Twitter account can't be verified. You may be unable to delete tweets.", "warning");
+        });
+    }
 
     if (reso.twitter_id && auto_user_dl) {
       if (UserCache.getFromCache(reso.twitter_id)) {

@@ -14,7 +14,7 @@ export default function EmptyMessage(props: EmptyMessageProps) {
   
   return (
     <div className="center-absolute">
-      <CenterComponent className={classes.text_lighten}>
+      <CenterComponent className={classes.text_lighten} style={{minWidth: '70vw'}}>
         <Icon className={classes.icon} />
         <Typography variant="h3" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
           {props.main}

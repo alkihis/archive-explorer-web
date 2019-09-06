@@ -120,8 +120,8 @@ export class APIHelper {
           return (rq.ok ? 
             rq.json() : 
             rq.json()
-              .then(d => Promise.reject([rq, d]))
               .catch(e => Promise.reject([rq, e]))
+              .then(d => Array.isArray(d) ? Promise.reject(d) : Promise.reject([rq, d]))
           );
         }
         else {

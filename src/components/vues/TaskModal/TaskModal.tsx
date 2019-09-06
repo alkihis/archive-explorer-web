@@ -1,6 +1,6 @@
 import classes from './TaskModal.module.scss';
 import React from 'react';
-import Tasks, { TaskInformation } from '../../../tools/Tasks';
+import Tasks, { TaskInformation, TaskBaseMessage } from '../../../tools/Tasks';
 import { Dialog, AppBar, Toolbar, Typography, Slide, Button, Divider, Container } from '@material-ui/core';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Task from './Task';
@@ -42,11 +42,15 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
   componentDidMount() {
     // @ts-ignore
     Tasks.addEventListener('progression', this.handleProgress);
+    // @ts-ignore
+    Tasks.addEventListener('remove', this.handleRemove);
   }
 
   componentWillUnmount() {
     // @ts-ignore
     Tasks.removeEventListener('progression', this.handleProgress);
+    // @ts-ignore
+    Tasks.removeEventListener('remove', this.handleRemove);
   }
 
   componentDidUpdate(prev_props: TaskModalProps) {
@@ -111,6 +115,19 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
     }
   } 
 
+  handleRemove = (p: CustomEvent<TaskBaseMessage>) => {
+    // handle remove task
+    // Remove task from subs/unsubs
+    const t = this.state.subscribed.filter(t => t.id !== p.detail.id);
+    const u = this.state.unsub ? this.state.unsub.filter(t => t.id !== p.detail.id) : [];
+
+    // Actualise composant
+    this.setState({
+      subscribed: t,
+      unsub: u
+    });
+  } 
+
   onSubChange = (is_sub: boolean, id: string) => {
     if (is_sub) {
       const old = this.state.unsub.find(t => t.id === id);
@@ -132,7 +149,15 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
 
       if (old) {
         const subscribed = this.state.subscribed.filter(t => t.id !== id);
-        const unsub = this.state.unsub ? [...this.state.unsub, old] : [old];
+
+        // Si la tâche est terminée, elle disparaît
+        let unsub: TaskInformation[];
+        if (old.percentage >= 100) {
+          unsub = this.state.unsub;
+        }
+        else {
+          unsub = this.state.unsub ? [...this.state.unsub, old] : [old];
+        }
 
         Tasks.unsubscribe(id);
 

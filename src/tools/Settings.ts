@@ -18,6 +18,7 @@ class AESettings {
 
   archive_name: string = "";
   archive_in_load = "";
+  expired = false;
 
   twitter_user: FullUser | undefined;
 
@@ -122,6 +123,17 @@ class AESettings {
 
   get archive() {
     return this.current_archive;
+  }
+
+  get is_owner() {
+    return !!this.archive && this.archive.owner === this.user.twitter_id;
+  }
+
+  get can_delete() {
+    // DEBUG
+    // return true;
+
+    return !!this.archive && this.archive.owner === this.user.twitter_id && !this.expired;
   }
 
   logout(reload = true) {

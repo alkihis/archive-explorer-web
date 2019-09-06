@@ -177,11 +177,15 @@ class TaskManager extends EventTarget {
         }
       });
 
-      this.socket.on('error', (task: TaskRequestError) => {
-        console.log("Error", task);
+      this.socket.on('task error', (task: TaskRequestError) => {
+        console.log("Error task", task);
 
         // Request a task, but it didn't exists / user not authorized
         this.remove(task.id);
+      });
+
+      this.socket.on('error', (e: any) => {
+        console.log("Error unknown", e);
       });
 
       this.socket.on('task end', (task: TaskBaseMessage) => {

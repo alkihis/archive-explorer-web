@@ -131,6 +131,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
                 oc(checked, this.props.data.id_str); 
             }} 
             checked={this.state.checked}
+            disabled={!SETTINGS.can_delete}
           />
           <TweetDate 
             date={new Date(this.original.created_at)} 

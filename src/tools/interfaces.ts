@@ -12,5 +12,6 @@ export interface IUser {
   twitter_name: string,
   twitter_screen_name: string,
   twitter_id: string,
-  profile_picture: string
+  profile_picture: string,
+  created_at: string
 }  

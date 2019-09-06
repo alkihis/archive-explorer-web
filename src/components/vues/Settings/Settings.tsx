@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './Settings.module.scss';
-import { setPageTitle } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormLabel, FormControl, FormGroup, Divider, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip } from '@material-ui/core';
+import { setPageTitle, dateFormatter } from '../../../helpers';
+import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormLabel, FormControl, FormGroup, Divider, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Grid, Avatar } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
 
@@ -137,6 +137,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
                 color="primary" 
                 checked={this.state.download}
                 onChange={(_, c) => this.changeTweetDLState(c)}
+                disabled={SETTINGS.expired}
               />
             }
             label="Download tweets from Twitter (gives more accurate infos)"
@@ -175,10 +176,29 @@ export default class Settings extends React.Component<{}, SettingsState> {
 
   accountSettings() {
     return (
-      <div>
-        <Button onClick={() => this.handleClickOpen()}>
-          Logout
-        </Button>
+      <div style={{ marginBottom: 'calc(5rem + 64px)' }}>
+        <div className={classes.acc_details}>
+          <Avatar 
+            alt="Twitter avatar" 
+            src={SETTINGS.twitter_user.profile_image_url_https.replace('_normal', '')} 
+            className={classes.avatar} 
+          />
+          <div className={classes.tn}>{SETTINGS.twitter_user.name}</div>
+          <div className={classes.sn}>@{SETTINGS.twitter_user.screen_name}</div>
+
+          <Button className={classes.logout} onClick={() => this.handleClickOpen()} color="secondary">
+            Logout
+          </Button>
+        </div>
+
+        <Typography>
+          Account created on 
+          <span className="bold"> {dateFormatter("Y-m-d", new Date(SETTINGS.user.created_at))}</span>.
+        </Typography>
+
+        {SETTINGS.expired && <Typography className={classes.expired}>
+          Twitter credentials have expired. Please log out and log in again.
+        </Typography>}
       </div>
     );
   }
@@ -229,7 +249,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
           </Toolbar>
         </AppBar>
 
-        <Container maxWidth="lg" style={{marginTop: '1rem'}}>
+        <Container maxWidth="lg" className={classes.root}>
           <Typography variant="h4" className="bold">
             Tweet view
           </Typography>
@@ -242,7 +262,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <Typography variant="h4" className="bold">
             Account
           </Typography>
-          <Container>
+          <Container className={classes.account_container}>
             {this.accountSettings()}
           </Container>
         </Container>

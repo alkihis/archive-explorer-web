@@ -9,6 +9,7 @@ import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
 import { THRESHOLD_PREFETCH } from '../../../const';
+import { Link } from 'react-router-dom';
 
 type ArchiveState = {
   loaded: string;
@@ -228,7 +229,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         </Typography>
 
         <Typography>
-          Archive created at {
+          Archive created on {
             dateFormatter("Y-m-d", new Date(SETTINGS.archive.index.archive.created_at))
           } by {SETTINGS.archive.index.info.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
         </Typography>
@@ -255,6 +256,23 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         <Typography>
           <span className={styles.bio}>{SETTINGS.archive.index.info.bio}</span>
         </Typography>
+
+        {!SETTINGS.is_owner && <div>
+          <Divider className="divider-margin" />
+
+          <Typography className={styles.cannot_delete}>
+            You don't own this archive, you aren't able to delete tweets from it.
+          </Typography>
+        </div>}
+
+        {SETTINGS.is_owner && SETTINGS.expired && <div>
+          <Divider className="divider-margin" />
+
+          <Typography className={styles.cannot_delete}>
+            Twitter credentials have expired, you aren't able to delete tweets.  
+            Log out and in again in <Link to="/settings/">Settings</Link>.
+          </Typography>
+        </div>}
       </div>
     );
   }
@@ -287,7 +305,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         </Button>
         <input type="file" data-archive-input="" onChange={(e) => this.loadArchive(e)} hidden />
 
-        {this.state.loaded && this.buttonQuickDelete()}
+        {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
       </div>
     );
   }

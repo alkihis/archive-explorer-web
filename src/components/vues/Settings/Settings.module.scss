@@ -4,3 +4,60 @@
 .icon {
   color: lighten($color: #000000, $amount: 70);
 }
+
+.account_container {
+  margin-top: 1rem;
+}
+
+.root {
+  margin-top: 1rem !important;
+  margin-bottom: 64px !important;
+}
+
+$avatar_size: 60px;
+
+.acc_details {
+  display: grid;
+  align-items: center;
+  margin: 1.2rem 0;
+  grid-template-columns: min-content auto min-content;
+  grid-template-areas: 
+    "img name logout"
+    "img screen logout";
+}
+
+.logout {
+  grid-area: logout;
+  align-self: center;
+}
+
+.avatar {
+  grid-area: img;
+  height: $avatar_size !important;
+  width: $avatar_size !important;
+}
+
+.sn {
+  grid-area: screen;
+  color: lighten($color: #000000, $amount: 30);
+  font-size: 1.1rem;
+  font-weight: 200;
+  align-self: baseline;
+
+  margin-left: .6rem;
+}
+
+.tn {
+  grid-area: name;
+  font-weight: bold;
+  font-size: 1.4rem;
+  align-self: end;
+
+  margin-left: .6rem;
+}
+
+.expired {
+  color: #ef5350;
+  font-weight: bold !important;
+  font-size: 1.1rem !important;
+}
