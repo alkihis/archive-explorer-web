@@ -15,3 +15,11 @@ export interface IUser {
   profile_picture: string,
   created_at: string
 }  
+
+export interface IToken {
+  user_id: string,
+  token: string,
+  login_ip: string,
+  date: string,
+  last_use: string
+} 

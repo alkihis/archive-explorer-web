@@ -1,8 +1,11 @@
 import React from 'react';
 import { Status } from 'twitter-d';
 import { PartialTweet } from 'twitter-archive-reader';
-import classes from './TweetText.module.scss';
+// import classes from './TweetText.module.scss';
+import { unescapeTwi } from '../../../helpers';
+import Graphene from 'grapheme-splitter';
 
+const splitter = new Graphene;
 const TWITTER_BASE = "https://twitter.com/";
 const TWITTER_HASH_BASE = "https://twitter.com/search?q=";
 
@@ -82,8 +85,8 @@ export default class TweetText extends React.Component<TweetTextProp> {
     const parts: JSX.Element[] = [];
     const original_t = this.tweet.retweeted_status ? this.tweet.retweeted_status : this.tweet;
 
-    // @ts-ignore
-    const original_string: string = original_t.full_text ? original_t.full_text : original_t.text;
+    // @ts-ignore Ralentit énormément le code. A utiliser avec parcimonie
+    const original_string = splitter.splitGraphemes(original_t.full_text ? original_t.full_text : original_t.text);
 
     let last_end = 0;
     let i = 1;
@@ -92,7 +95,9 @@ export default class TweetText extends React.Component<TweetTextProp> {
     // de la chaîne originale entre eux
     for (const [begin, end, element] of frags) {
       if (begin !== last_end) {
-        parts.push(<span key={String(frags.length + i)}>{original_string.slice(last_end, begin)}</span>);
+        parts.push(<span key={String(frags.length + i)}>{
+          unescapeTwi(original_string.slice(last_end, begin).join(""))
+        }</span>);
       }
       parts.push(element);
       last_end = end;
@@ -101,7 +106,9 @@ export default class TweetText extends React.Component<TweetTextProp> {
 
     // Rend le reste de la chaîne originale si besoin
     if (original_string.length !== last_end) {
-      parts.push(<span key={String(frags.length + i)}>{original_string.slice(last_end)}</span>);
+      parts.push(<span key={String(frags.length + i)}>{
+        unescapeTwi(original_string.slice(last_end).join(""))
+      }</span>);
     }
 
     return parts;

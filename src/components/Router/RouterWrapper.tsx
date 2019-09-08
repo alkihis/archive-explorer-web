@@ -8,7 +8,7 @@ import ArchiveIcon from '@material-ui/icons/FolderShared';
 import TasksIcon from '@material-ui/icons/CheckBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
-import './RouterWrapper.scss';
+import classes from './RouterWrapper.module.scss';
 import { Badge } from '@material-ui/core';
 import TaskModal from '../vues/TaskModal/TaskModal';
 import Tasks, { TaskInformation, TaskBaseMessage } from '../../tools/Tasks';
@@ -140,7 +140,7 @@ class RouterWrapper extends Component {
           value={value}
           onChange={this.handleChange.bind(this)}
           showLabels
-          className="nav primary stick-to-bottom"
+          className={"nav primary " + classes.stick_to_bottom + " " + classes.bottom_bar}
         >
           <BottomNavigationAction label="Archive" icon={<ArchiveIcon />} component={Link} to={pathMap[0]} />
           <BottomNavigationAction label="Explore" icon={<ExploreIcon />} component={Link} to={pathMap[1]} />

@@ -128,7 +128,7 @@ export default class NoGDPR extends React.Component<{ icon: any, message?: strin
             </Typography>
 
             <div style={{marginTop: "1rem"}}>
-              <Button color="primary" onClick={() => this.openModal()}>How download an GDPR archive ?</Button>
+              <Button color="primary" onClick={() => this.openModal()}>How to download an GDPR archive ?</Button>
             </div>
           </CenterComponent>
         </div>

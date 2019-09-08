@@ -246,3 +246,7 @@ export function isFilterApplied() {
 export function escapeRegExp(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
+
+export function unescapeTwi(str: string) {
+  return str.replace(/&gt;/g, ">").replace(/&lt;/g, "<");
+}

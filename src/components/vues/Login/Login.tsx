@@ -6,24 +6,64 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Error from '@material-ui/icons/Error';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { Fab, CircularProgress } from '@material-ui/core';
+import { Fab, CircularProgress, Divider } from '@material-ui/core';
 import { blue, red } from '@material-ui/core/colors';
 import sign_in_twitter from '../../../assets/sign-in-with-twitter-link.png';
 import APIHELPER from '../../../tools/ApiHelper';
 import { RequestTokenRequest } from '../../../tools/interfaces';
 import { setPageTitle } from '../../../helpers';
+import classes from './Login.module.scss';
+import { IMG_PREFIX, IMG_LIST } from '../../../const';
+
+const classes_a = classes;
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      <Link color="inherit" href="https://alkihis.fr/">
-        Alkihis
-      </Link>{', '}
-      {new Date().getFullYear()}.
-    </Typography>
+    <div>
+      <Typography variant="body2" color="textSecondary" align="center">
+        Archive Explorer is an open-source tool made by <Link 
+          color="inherit" 
+          href="https://alkihis.fr/" 
+          className={classes.underline}
+        >
+          Alkihis
+        </Link>.
+      </Typography>
+
+      <Typography variant="body2" color="textSecondary" align="center" className={classes.legal_text}>
+        Using <span className="bold">Sign in with Twitter</span>, you allow
+        <span className="bold"> Archive Explorer</span> to store your Twitter credentials
+        and your login details like current date or IP address. 
+      </Typography>
+
+      <Divider className="divider-big-margin" />
+
+      <Typography variant="body2" align="center" className={classes.github_header}>
+        GitHub links
+      </Typography>
+
+      <div className={classes.github_links}>
+        <GithubLogo url="https://github.com/alkihis/archive-explorer-node" text="Server" />
+
+        <GithubLogo url="https://github.com/alkihis/archive-explorer-web" text="Client" />
+
+        <GithubLogo url="https://github.com/alkihis/twitter-archive-reader" text="Archive reader" />
+      </div>
+    </div>
+  );
+}
+
+const IMG_CHOOSEN = IMG_PREFIX + IMG_LIST[Math.floor(Math.random()*IMG_LIST.length)];
+
+function GithubLogo(props: { url: string, text: string }) {
+  return (
+    <a rel="noopener noreferrer" target="_blank" className={classes.github_container} href={props.url}>
+      <img src="/assets/github_logo.png" className={classes.github_img} />
+      <span className={classes.github_text}>{props.text}</span>
+    </a>
   );
 }
 
@@ -32,7 +72,7 @@ const useStyles = makeStyles(theme => ({
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/random)',
+    backgroundImage: `url(${IMG_CHOOSEN})`,
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -45,7 +85,7 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -134,11 +174,17 @@ export default function Login() {
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <FolderOpenIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Archive Explorer
           </Typography>
+
+          <Typography component="h3" variant="h6" className={classes_a.catch_phrase}>
+            Explore through time, browse your old direct messages and
+            quickly delete embarrassing tweets.
+          </Typography>
+
           <div className={classes.form}>
             <div className={classes.wrapper + " " + classes.alignC}>
               {loading ? <CircularProgress className={classes.progress} />
@@ -158,8 +204,8 @@ export default function Login() {
                 : "")
               }
               {twitter_button ? <div>
-                <a href={twitter_button}>
-                  <img src={sign_in_twitter} alt="Sign in with Twitter" className={classes.twitterImg} />
+                <a href={twitter_button} className={classes_a.twitter_link}>
+                  <img src={sign_in_twitter} alt="Sign in with Twitter" className={classes.twitterImg + " " + classes_a.twitter_img} />
                 </a>
               </div> : ""}
             </div>

@@ -4,6 +4,7 @@ import { setPageTitle, dateFormatter } from '../../../helpers';
 import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
+import ExtendedActionsMenu from './ExtendedActionsMenu';
 
 type SettingsState = {
   only_medias: boolean;
@@ -204,6 +205,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
           </Tooltip>
         </div>
 
+        <ExtendedActionsMenu />
+
         {SETTINGS.expired && <Typography className={classes.expired}>
           Twitter credentials have expired. Please log out and log in again.
         </Typography>}
@@ -237,7 +240,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <Button onClick={() => this.handleClose()} color="primary" autoFocus>
             Cancel
           </Button>
-          <Button onClick={() => SETTINGS.logout()} color="secondary">
+          <Button onClick={() => SETTINGS.logout(true, true)} color="secondary">
             Logout
           </Button>
         </DialogActions>

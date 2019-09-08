@@ -3,19 +3,21 @@ import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 import styles from './Archive.module.scss';
 import { setPageTitle, dateFormatter } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider, Dialog } from '@material-ui/core';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
 import { THRESHOLD_PREFETCH } from '../../../const';
 import { Link } from 'react-router-dom';
+import QuickDelete from '../QuickDelete/QuickDelete';
 
 type ArchiveState = {
   loaded: string;
   is_error: boolean;
   in_load: string;
   loading_state: ArchiveReadState | "prefetch";
+  quick_delete_open: boolean;
 };
 
 export default class Archive extends React.Component<{}, ArchiveState> {
@@ -32,7 +34,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       loaded: SETTINGS.archive_name,
       loading_state: "reading",
       is_error: false,
-      in_load: SETTINGS.archive_in_load
+      in_load: SETTINGS.archive_in_load,
+      quick_delete_open: false,
     };
 
     // Subscribe to archive readyness when in load
@@ -54,10 +57,15 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         SETTINGS.only_videos = false;
       }
 
+      // Reset le statut "utilisateurs impossibles à trouver"
+      UserCache.clearFailCache();
+
       // Récupère les personnes qui apparaissent plus de 
       // THRESHOLD_PREFETCH fois dans l'archive pour les précharger
       // (permet de voir leur PP sans DL les tweets)
-      const users_in_archive: { [userId: string]: number } = {};
+      const users_in_archive: { [userId: string]: number } = {
+        [SETTINGS.archive.owner]: THRESHOLD_PREFETCH
+      };
 
       for (const t of SETTINGS.archive.all) {
         const rt = t.retweeted_status ? t.retweeted_status : t;
@@ -312,9 +320,32 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   buttonQuickDelete() {
     return (
-      <Button color="secondary">
+      <Button color="secondary" onClick={this.handleModalOpen}>
         Quick delete
       </Button>
+    );
+  }
+
+  handleModalOpen = () => {
+    this.setState({ quick_delete_open: true });
+  }
+
+  handleModalClose = () => {
+    this.setState({ quick_delete_open: false });
+  }
+
+  modalQuickDelete() {
+    return (
+      <Dialog
+        open={this.state.quick_delete_open}
+        onClose={this.handleModalClose}
+        scroll="body"
+        classes={{
+          paper: styles.modal_paper
+        }}
+      >
+        {this.state.quick_delete_open ? <QuickDelete onClose={this.handleModalClose} /> : ""}
+      </Dialog>
     );
   }
 
@@ -347,6 +378,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
             </Typography>
           </Toolbar>
         </AppBar>
+
+        {this.modalQuickDelete()}
   
         <Container maxWidth="sm" className={styles.center}>
           <CenterComponent>

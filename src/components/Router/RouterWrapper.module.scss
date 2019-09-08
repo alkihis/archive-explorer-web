@@ -1,0 +1,19 @@
+@import '../../tools/functions.scss';
+
+.stick_to_bottom {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}
+
+.bottom_bar {
+    @include threshold_bar {
+        width: 100%;
+        overflow-y: hidden;
+        overflow-x: auto;
+        box-sizing: border-box;
+        display: grid !important;
+        grid-template-columns: max-content max-content max-content max-content max-content max-content;
+        justify-content: unset !important;
+    }
+}

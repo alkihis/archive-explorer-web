@@ -5,8 +5,31 @@ import MailIcon from '@material-ui/icons/Mail';
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import NoGDPR from '../../shared/NoGDPR/NoGDPR';
+import { Conversation } from 'twitter-archive-reader';
+import { Toolbar, AppBar, Typography, Container } from '@material-ui/core';
 
-export default class DirectMessages extends React.Component {
+type DMProps = {
+
+};
+
+type DMState = {
+  /** Selected conversation */
+  conversation: Conversation | null;
+
+  /** Sort mode */
+  sort_mode: "asc" | "desc" | "count";
+
+  /** Groups groups together */
+  separate_single_groups: boolean;
+};
+
+export default class DirectMessages extends React.Component<DMProps, DMState> {
+  state: DMState = {
+    conversation: null,
+    sort_mode: "count",
+    separate_single_groups: true
+  };
+
   componentDidMount() {
     setPageTitle("Direct messages");
   }
@@ -17,15 +40,24 @@ export default class DirectMessages extends React.Component {
     }
 
     if (!SETTINGS.archive.is_gdpr) {
-      return <NoGDPR icon={MailIcon} 
+      return <NoGDPR 
+        icon={MailIcon} 
         message="Loaded archive does not support direct messages." 
       />;
     }
 
     return (
       <div>
-        <div nav-bar></div>
-        <div drawer-menu></div>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" noWrap>
+              {this.state.conversation ? "Conversation" : "Direct messages"}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Container>
+          Hello !
+        </Container>
       </div>
     );
   }

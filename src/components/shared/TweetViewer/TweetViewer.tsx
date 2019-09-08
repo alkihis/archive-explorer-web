@@ -37,6 +37,9 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   references: {
     [id: string]: React.RefObject<any>
   } = {};
+  cache: {
+    [id: string]: any;
+  } = {};
 
   constructor(props: ViewerProps) {
     super(props);
@@ -157,6 +160,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     if (prev_props.tweets !== this.props.tweets) {
       // Tweets change, component reset
       this.references = {};
+      this.cache = {};
       const tweets = filterTweets(this.props.tweets);
       this.setState({
         current_page: [],
@@ -191,8 +195,13 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   }
 
   renderTweet(t: PartialTweet, i: number) {
-    this.references[t.id_str] = React.createRef();
-    return <Tweet 
+    this.references[t.id_str] = t.id_str in this.references ? this.references[t.id_str] : React.createRef();
+    
+    if (t.id_str in this.cache) {
+      return this.cache[t.id_str];
+    }
+
+    return this.cache[t.id_str] = <Tweet 
       data={t} 
       key={i} 
       ref={this.references[t.id_str]} 
@@ -389,6 +398,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           >
               {t}
           </InfiniteScroll>
+          {/* <Sentinel triggerMore={true} onVisible={() => console.log("Visible bottom !!")} /> */}
       </div>
     );
   }

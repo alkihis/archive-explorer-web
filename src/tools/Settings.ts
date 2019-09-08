@@ -2,6 +2,7 @@ import { IUser } from "./interfaces";
 import { TwitterArchive } from "twitter-archive-reader";
 import { FullUser } from "twitter-d";
 import { DEBUG_MODE } from "../const";
+import APIHELPER from "./ApiHelper";
 
 class AESettings {
   // Saved settings
@@ -137,11 +138,33 @@ class AESettings {
     return !!this.archive && this.archive.owner === this.user.twitter_id && !this.expired;
   }
 
-  logout(reload = true) {
-    this.token = "";
+  get is_logged() {
+    return !!this.token;
+  }
 
-    if (reload)
-      this.reload();
+  revoke_token() {
+
+  }
+
+  logout(reload = true, revoke = false) {
+    const is_logged = this.is_logged;
+
+    if (revoke && is_logged) {
+      // Revoke without specifing token: revoking current
+      return APIHELPER.request('users/tokens/revoke', { method: 'POST' })
+        .finally(() => {
+          this.token = "";
+
+          if (reload)
+            this.reload();
+        });
+    }
+    else {
+      this.token = "";
+
+      if (reload)
+        this.reload();
+    }
   }
 
   reload() {

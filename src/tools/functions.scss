@@ -9,3 +9,16 @@
     @content;
   }
 }
+
+@mixin min_mobile {
+  @media screen and (max-width: 500px) {
+    @content;
+  }
+}
+
+@mixin threshold_bar {
+  @media screen and (max-width: 700px) {
+    @content;
+  }
+}
+
