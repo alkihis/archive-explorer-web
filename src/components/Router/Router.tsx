@@ -15,33 +15,51 @@ import DirectMessages from "../vues/DirectMessages/DirectMessages";
 import Search from "../vues/Search/Search";
 
 class AppRouter extends React.Component {
-  state: { logged: boolean, will_validate: boolean, validation_status: boolean | null };
+  state: { will_validate: boolean, validation_status: boolean | null };
+
+  protected logged = !!SETTINGS.token;
 
   constructor(props: any) {
     super(props);
 
     this.state = { 
-      logged: !!SETTINGS.token, 
-      will_validate: !!SETTINGS.token,
+      will_validate: false,
       validation_status: true
     };
-
-    // console.log(this.state);
   }
 
   componentDidMount() {
-    if (this.state.will_validate) {
+    // Si un utilisateur est enregistré et qu'on a un token
+    if (SETTINGS.user && this.logged) {
+      // un utilisateur est valide, check en arrière plan
+      this.setState({
+        will_validate: false
+      });
+
       checkCredentials()
-        // Fais attendre (DEBUG)
         .then(is_logged => {
-          return new Promise(resolve => setTimeout(resolve, 0))
-            .then(() => is_logged);
+          if (!is_logged) {
+            // C'est pas bon, l'utilisateur doit se déconnecter, 
+            // token invalide ou API injoignable
+            this.setState({
+              validation_status: is_logged,
+              will_validate: true
+            });
+          }
         })
+    }
+    // Processus de connexion classique 
+    // (si user not defined, pas censé arrivé)
+    else if (this.logged) {
+      this.setState({
+        will_validate: true
+      });
+
+      checkCredentials()
         .then(is_logged => {
           if (is_logged) {
             // Tout s'est bien passé, l'utilisateur a un token ok
             this.setState({
-              logged: true,
               will_validate: false
             });
           }
@@ -174,7 +192,7 @@ class AppRouter extends React.Component {
       <div>
         {this.state.will_validate && this.renderDialogLogin()}
         {!this.state.will_validate ?
-          (this.state.logged ? 
+          (this.logged ? 
             this.routerLogged() : 
             this.unloggedRouter()
           ) :
@@ -185,4 +203,4 @@ class AppRouter extends React.Component {
   }
 }
   
-  export default AppRouter;
+export default AppRouter;

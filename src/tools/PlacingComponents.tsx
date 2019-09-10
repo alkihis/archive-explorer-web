@@ -45,3 +45,36 @@ export function internalError(message: string, additionnal_text = "", login_agai
     </div>
   );
 }
+
+export function specialJoinJSX(array: string[], options: { 
+  sep?: string, 
+  final_joiner?: string, 
+  class_element?: string, 
+  class_joiner?: string 
+} = {}) : JSX.Element {
+  options = Object.assign({ sep: ", ", final_joiner: " and ", class_joiner: "no-bold" }, options);
+
+  if (array.length < 2) {
+    return <span>{array[0]}</span>;
+  }
+
+  const e: JSX.Element[] = [];
+
+  let i = 0;
+  let last = array.length - 1;
+
+  for (const element of array) {
+    e.push(<span className={options.class_element} key={String(Math.random())}>{element}</span>);
+
+    if ((i + 1) === last) {
+      e.push(<span key={String(Math.random())} className={options.class_joiner}>{options.final_joiner}</span>);
+    }
+    else if (i < last) {
+      e.push(<span key={String(Math.random())} className={options.class_joiner}>{options.sep}</span>);
+    }
+
+    i++;
+  }
+
+  return <span>{e}</span>;
+}

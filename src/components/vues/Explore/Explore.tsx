@@ -68,12 +68,18 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   year(year: string) {
+    let i = 0;
+    const months = SETTINGS.archive.index.years[year];
+    for (const m in months) {
+      i += Object.keys(months[m]).length;
+    }
+
     return (
       <ExpansionPanel key={"year" + year}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
         >
-          <Typography className="bold">{year}</Typography>
+          <Typography><span className="bold">{year}</span> <span className={classes.year_count}>({i})</span></Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails style={{padding: '0'}}>
           {this.listOfMonths(year)}
@@ -83,7 +89,6 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   monthClicker(year: string, month: string) {
-    console.log("Getting tweets");
     this.setState({
       loaded: SETTINGS.archive.month(month, year),
       month: year + "-" + month

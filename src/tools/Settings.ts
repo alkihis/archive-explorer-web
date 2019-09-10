@@ -46,6 +46,20 @@ class AESettings {
     if (localStorage.getItem('sort_reverse_chrono')) {
       this.sort_reverse_chrono = localStorage.getItem('sort_reverse_chrono') === "true";
     }
+    if (localStorage.getItem('current_user')) {
+      try {
+        const u = JSON.parse(localStorage.getItem('current_user'));
+
+        if (this.isUserValid(u)) {
+          this.user = u;
+        }
+        else {
+          localStorage.removeItem('current_user');
+        }
+      } catch (e) {
+        localStorage.removeItem('current_user');
+      }
+    }
   }
 
   get sort_reverse_chrono() {
@@ -113,6 +127,7 @@ class AESettings {
 
   set user(v: IUser) {
     this.current_user = v;
+    localStorage.setItem('current_user', JSON.stringify(v));
   }
 
   get user() {
@@ -142,10 +157,6 @@ class AESettings {
     return !!this.token;
   }
 
-  revoke_token() {
-
-  }
-
   logout(reload = true, revoke = false) {
     const is_logged = this.is_logged;
 
@@ -169,6 +180,13 @@ class AESettings {
 
   reload() {
     window.location.pathname = '/';
+  }
+
+  protected isUserValid(u: IUser) {
+    if (u.created_at && u.twitter_id && u.twitter_name && u.twitter_screen_name) {
+      return true;
+    }
+    return false;
   }
 }
 

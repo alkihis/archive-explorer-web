@@ -44,6 +44,12 @@ $drawer_width:240px;
   font-size: 7rem !important; 
 }
 
+.year_count {
+  color: lighten($color: #000000, $amount: 30);
+  margin-left: .2rem;
+  font-size: .8rem;
+}
+
 .month_header {
   font-style: italic;
   font-weight: 200;

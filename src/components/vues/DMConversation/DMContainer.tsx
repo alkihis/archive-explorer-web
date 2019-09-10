@@ -13,5 +13,7 @@ type DMState = {
 };
 
 export default class DMContainer extends React.Component<DMProps, DMState> {
-  
+  render() {
+    return <div>This is a render function</div>
+  }
 }

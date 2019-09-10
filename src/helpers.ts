@@ -250,3 +250,11 @@ export function escapeRegExp(string: string) {
 export function unescapeTwi(str: string) {
   return str.replace(/&gt;/g, ">").replace(/&lt;/g, "<");
 }
+
+export function specialJoin(array: string[], sep = ", ", final_joiner = " and ") : string {
+  if (array.length < 2) {
+    return array.join(sep);
+  }
+
+  return array.slice(0, array.length - 1).join(sep) + final_joiner + array[array.length - 1];
+}

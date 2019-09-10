@@ -1,0 +1,90 @@
+$drawer_width:240px;
+
+.drawer {
+  width: $drawer_width;
+  flex-shrink: 0;
+}
+.drawerPaper {
+  width: $drawer_width;
+}
+
+.content {
+  margin-left: $drawer_width;
+  flex-grow: 1;
+  padding: 10px;
+  margin-bottom: 56px;
+}
+
+.list_month {
+  width: 100%;
+  margin-bottom: .5rem !important;
+}
+.drawer_month {
+  padding-left: 14px;
+  box-sizing: border-box;
+  font-size: .95rem;
+}
+.back_btn {
+  transition: background-color .5s !important;
+
+  &:hover {
+    background-color: #e2e2ff !important;
+  }
+}
+.get_back_paper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.05rem !important;
+  font-weight: 200 !important;
+  color: #00008e;
+}
+.get_back_icon {
+  margin-bottom: 1px;
+}
+.selected_month {
+  background-color: #1f1f92d4 !important;
+  color: white !important;
+}
+
+.no_msg {
+  color: lighten($color: #000000, $amount: 30);
+  margin-top: 2rem;
+}
+.icon {
+  color: lighten($color: #000000, $amount: 70);
+  font-size: 7rem !important; 
+}
+
+.month_header {
+  font-style: italic;
+  font-weight: 200;
+  font-size: 1.9rem;
+
+  margin: 1rem 0 1.5rem 1rem;
+}
+.month_msg_number {
+  font-size: 1.1rem;
+  font-weight: lighter;
+}
+
+.search_paper {
+  justify-content: space-around !important;
+}
+
+.search_btn {
+  transition: background-color .5s !important;
+  border-top: 1px solid #e0e0e0 !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+
+  &:hover {
+    background-color: #e2e2ff !important;
+  }
+}
+
+.year_count {
+  color: lighten($color: #000000, $amount: 30);
+  margin-left: .2rem;
+  font-size: .8rem;
+}
+
