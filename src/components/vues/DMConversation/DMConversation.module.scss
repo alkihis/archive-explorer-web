@@ -1,18 +1,45 @@
 $drawer_width:240px;
 
+@mixin threshold_app_bar {
+  @media screen and (max-width: 600px) {
+    @content;
+  }
+}
+
+.root {
+  display: flex;
+  width: 100%;
+
+  min-height: calc(100vh - 64px - 56px);
+
+  @include threshold_app_bar {
+    min-height: calc(100vh - 56px - 56px);
+  }
+}
+
 .drawer {
   width: $drawer_width;
   flex-shrink: 0;
 }
 .drawerPaper {
   width: $drawer_width;
+  position: unset !important;
 }
 
 .content {
-  margin-left: $drawer_width;
   flex-grow: 1;
-  padding: 10px;
   margin-bottom: 56px;
+}
+
+.inner_content {
+  padding: 10px;
+}
+
+.conv_header_img {
+  max-height: 25vh;
+  width: 100%;
+  object-fit: cover;
+  box-shadow: 0px 3px 4px 0px #00000026;
 }
 
 .list_month {

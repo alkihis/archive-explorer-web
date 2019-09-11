@@ -1,0 +1,93 @@
+.root {
+  max-width: 80%;
+  margin: .1rem .3rem;
+  display: grid;
+  grid-template-areas: "img text";
+}
+
+$avatar: 38px;
+
+.root_other {
+  justify-self: start;
+}
+
+.root_you {
+  justify-self: end;
+  grid-template-areas: "text img";
+}
+
+.msg {
+  padding: 10px;
+  border-radius: 12px;
+  grid-area: text;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.msg_you {
+  background-color: #d3d2e0;
+  margin-right: 6px;
+
+  &.no_img {
+    margin-right: $avatar+6px;
+  }
+}
+
+.msg_other {
+  background-color: #e0e0e0;
+  margin-left: 6px;
+
+  &.no_img {
+    margin-left: $avatar+6px;
+  }
+}
+
+.date {
+  color: #6d6d6d;
+  font-size: x-small;
+  font-weight: 300;
+  text-align: right;
+  margin-bottom: -3px;
+  margin-top: 3px;
+}
+
+.img {
+  width: 100%;
+  max-width: 400px;
+  display: block;
+  max-height: 300px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.avatar {
+  height: $avatar !important;
+  width: $avatar !important;
+  grid-area: img;
+}
+
+.marginT {
+  margin-top: .7rem;
+}
+
+.position {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+
+  &.you {
+    justify-content: flex-end;
+  }
+}
+
+.full_img {
+  max-width: 100%;
+  max-height: 95vh;
+}
+
+.paper {
+  max-width: 90vw !important;
+  max-height: unset !important;
+}

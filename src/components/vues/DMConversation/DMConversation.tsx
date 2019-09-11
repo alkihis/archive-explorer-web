@@ -6,9 +6,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import SearchIcon from '@material-ui/icons/Search';
-import { uppercaseFirst, getMonthText } from '../../../helpers';
+import { uppercaseFirst, getMonthText, specialJoin } from '../../../helpers';
 import DMContainer from './DMContainer';
 import { withStyles } from '@material-ui/styles';
+import UserCache from '../../../classes/UserCache';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -37,12 +38,14 @@ type DMProps = {
 type DMState = {
   selected: LinkedDirectMessage[] | null;
   month: string;
+  key: string;
 };
 
 export default class DMConversation extends React.Component<DMProps, DMState> {
   state: DMState = {
     selected: null,
-    month: ""
+    month: "",
+    key: ""
   };
 
   protected index = this.props.conversation.index;
@@ -133,7 +136,8 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
   monthClicker(year: string, month: string) {
     this.setState({
       selected: year === "*" ? this.conv.all : this.conv.month(month, year).all,
-      month: year === "*" ? "*" : year + "-" + month
+      month: year === "*" ? "*" : year + "-" + month,
+      key: String(Math.random())
     });
   }
 
@@ -156,6 +160,19 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
         ))}
       </List>
     )
+  }
+
+  showHeaderConv() {
+    // Existe uniquement si c'est une conversation simple
+    // et que l'utilisateur est en cache
+    const p = [...this.conv.real_participants][0];
+    const user = UserCache.getFromCache(p);
+
+    if (user && !this.conv.is_group_conversation) {
+      return (
+        <img className={classes.conv_header_img} src={user.profile_banner_url} />
+      );
+    }
   }
 
   showActiveMonth() {
@@ -187,9 +204,6 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           paper: classes.drawerPaper,
           root: classes.test,
         }}
-        PaperProps={{
-          style: { height: 'calc(100% - 64px - 56px)', bottom: '56px', top: 'unset', zIndex: 'unset' }
-        }}
         anchor="left"
       >
         <div className={classes.toolbar} />
@@ -201,19 +215,33 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
   render() {
     return (
-      <div style={{width: '100%'}}>
+      <div className={classes.root}>
         {this.drawer()}
       
         <main className={classes.content}>
-          {this.state.selected ? 
-            (<div>
-              {this.showActiveMonth()}
-              <DMContainer messages={this.state.selected} />
-            </div>) :
-            this.noMonthSelected()
-          }
+          {this.showHeaderConv()}
+
+          <div className={classes.inner_content}>
+            {this.state.selected ? 
+              (<div>
+                {this.showActiveMonth()}
+                <DMContainer key={this.state.key} messages={this.state.selected} />
+              </div>) :
+              this.noMonthSelected()
+            }
+          </div>
         </main>
       </div>
     );
+  }
+
+  get participants() {
+    const names = [...this.conv.real_participants]
+      .map(e => {
+        const user = UserCache.getFromCache(e);
+        return user ? user.name : '#' + e;
+      });
+
+    return specialJoin(names);
   }
 }
