@@ -29,6 +29,8 @@ export default class TweetMedia extends React.Component<TweetMediaProp, TweetMed
 
   renderVideo(type: "gif" | "mp4", full = false) {
     const m = this.media[0] as MediaGDPREntity;
+    // Remove the possible query string
+    m.video_info.variants.forEach(e => e.url.split('?', 2)[0]);
 
     const valids = m.video_info.variants.filter(e => e.bitrate && e.url.endsWith('.mp4'));
 
