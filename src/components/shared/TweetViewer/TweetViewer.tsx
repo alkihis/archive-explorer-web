@@ -210,9 +210,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     />;
   }
 
-  onTweetCheckChange(checked: boolean, id_str: string) {
-    console.log(this, checked, id_str);
-    
+  onTweetCheckChange(checked: boolean, id_str: string) {   
     const s = this.state.selected;
     if (checked) {
       s.add(id_str);

@@ -47,15 +47,11 @@ export default class Sentinel extends React.Component<SProps, SState> {
   componentDidUpdate(old_props: SProps) {
     if (old_props !== this.props) {
       // props changed
-      console.log("Updated");
 
       this.setState({
         canLoadMore: this.props.triggerMore,
         inLoad: false
       });
-    }
-    else {
-      console.log("State update")
     }
   }
 

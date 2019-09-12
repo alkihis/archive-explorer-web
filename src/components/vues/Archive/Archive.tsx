@@ -287,7 +287,6 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   inLoad() {
     const msg = this.getLoadingMessage();
-    console.log(msg);
 
     return (
       <div>
