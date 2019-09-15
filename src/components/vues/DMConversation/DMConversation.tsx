@@ -10,6 +10,7 @@ import { uppercaseFirst, getMonthText, specialJoin } from '../../../helpers';
 import DMContainer from './DMContainer';
 import { withStyles } from '@material-ui/styles';
 import UserCache from '../../../classes/UserCache';
+import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -39,19 +40,27 @@ type DMState = {
   selected: LinkedDirectMessage[] | null;
   month: string;
   key: string;
+  mobileOpen: boolean;
 };
 
 export default class DMConversation extends React.Component<DMProps, DMState> {
   state: DMState = {
     selected: null,
     month: "",
-    key: ""
+    key: "",
+    mobileOpen: false
   };
 
   protected index = this.props.conversation.index;
 
   get conv() {
     return this.props.conversation;
+  }
+
+  handleDrawerToggle = () => {
+    this.setState({
+      mobileOpen: !this.state.mobileOpen
+    });
   }
 
   listOfYears() {
@@ -137,7 +146,8 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     this.setState({
       selected: year === "*" ? this.conv.all : this.conv.month(month, year).all,
       month: year === "*" ? "*" : year + "-" + month,
-      key: String(Math.random())
+      key: String(Math.random()),
+      mobileOpen: false
     });
   }
 
@@ -197,28 +207,23 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
   drawer() {
     return (
-      <Drawer 
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-          root: classes.test,
-        }}
-        anchor="left"
-      >
+      <div>
         <div className={classes.toolbar} />
         <Divider />
         {this.listOfYears()}
-      </Drawer>
+      </div>
     );
   }
 
   render() {
     return (
-      <div className={classes.root}>
-        {this.drawer()}
-      
-        <main className={classes.content}>
+      <ResponsiveDrawer
+        handleDrawerToggle={this.handleDrawerToggle}
+        mobileOpen={this.state.mobileOpen}
+        title={"Conversation with " + this.participants}
+        noPadding
+        drawer={this.drawer()}
+        content={<div>
           {this.showHeaderConv()}
 
           <div className={classes.inner_content}>
@@ -230,8 +235,8 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
               this.noMonthSelected()
             }
           </div>
-        </main>
-      </div>
+        </div>}
+      />
     );
   }
 

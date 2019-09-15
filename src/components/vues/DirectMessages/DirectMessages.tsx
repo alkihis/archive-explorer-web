@@ -112,7 +112,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
 
       return (
         <Card key={conv.id} className={classes.card_root} onClick={oncardclick}>
-          <CardContent className={classes.card_content}>
+          <CardContent className={classes.card_single}>
             <div className={classes.avatar_holder}>
               {avatar}
 
@@ -133,7 +133,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
 
     return (
       <Card key={conv.id} className={classes.card_root} onClick={oncardclick}>
-        <CardContent className={classes.card_content}>
+        <CardContent>
           <div className={classes.group_conv_container}>
             <div className={classes.group_conv}><span className="no-bold">Conversation with</span> {names}</div>
             <div className={classes.group_conv_screen_name}>{s_n}</div>
@@ -224,12 +224,21 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
       />;
     }
 
+    if (this.state.ready && this.state.conversation) {
+      return (
+        <DMConversation 
+          getBack={this.handleRemoveConversation} 
+          conversation={this.state.conversation} 
+        />
+      );
+    }
+
     return (
       <div>
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" noWrap>
-              {this.state.conversation ? "Conversation with " + this.participants : "Direct Messages"}
+              Direct Messages
             </Typography>
           </Toolbar>
         </AppBar>
@@ -243,14 +252,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
             </CenterComponent>
           </Container> }
 
-          {this.state.ready && !this.state.conversation && this.renderConversations()}
-          {this.state.ready && 
-            this.state.conversation && 
-            <DMConversation 
-              getBack={this.handleRemoveConversation} 
-              conversation={this.state.conversation} 
-            />
-          }
+          {this.state.ready && this.renderConversations()}
       </div>
     );
   }

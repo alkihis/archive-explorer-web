@@ -208,9 +208,22 @@ export function uppercaseFirst(str: string) {
  * @param tweets 
  */
 export function filterTweets(tweets: PartialTweet[]) {
-  const sort_fn = SETTINGS.sort_reverse_chrono ? 
-  (a: PartialTweet, b: PartialTweet) => Number(BigInt(b.id_str) - BigInt(a.id_str)) :
-  (a: PartialTweet, b: PartialTweet) => Number(BigInt(a.id_str) - BigInt(b.id_str));
+  let sort_fn: (a: PartialTweet, b: PartialTweet) => number; 
+  
+  if (typeof BigInt !== 'undefined') {
+    sort_fn = SETTINGS.sort_reverse_chrono ? 
+    (a: PartialTweet, b: PartialTweet) => Number(BigInt(b.id_str) - BigInt(a.id_str)) :
+    (a: PartialTweet, b: PartialTweet) => Number(BigInt(a.id_str) - BigInt(b.id_str));
+  }
+  else {
+    // Does not support BigInt, fallback to Collator (TO TEST TODO)
+    const coll = new Intl.Collator(undefined, { numeric: true });
+    
+    sort_fn = (a: PartialTweet, b: PartialTweet) => (SETTINGS.sort_reverse_chrono ? 
+      coll.compare(b.id_str, a.id_str) :
+      coll.compare(a.id_str, b.id_str)
+    );
+  }
 
   return tweets.filter(t => {
     if (SETTINGS.only_rts && !t.retweeted_status) {

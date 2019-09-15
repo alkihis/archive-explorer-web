@@ -8,7 +8,7 @@ const NotFound = (props: RouteComponentProps) => {
   setPageTitle("Page Not Found");
 
   return (
-    <CenterComponent style={{height: '100vh'}}>
+    <CenterComponent style={{height: '100vh', textAlign: 'center'}}>
       {internalError(`Page not found`, `You tried to show ${props.location.pathname}, but this page does not exists.`)}
     </CenterComponent>
   );

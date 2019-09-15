@@ -8,6 +8,10 @@
   margin: 1.2rem .2rem !important;
 }
 
+.card_single {
+  overflow: scroll;
+}
+
 .preloader {
   height: 80vh;
 }
@@ -66,23 +70,17 @@
 }
 
 .group_conv_container {
-  display: grid;
-  grid-template-columns: max-content;
-  align-items: center;
-  grid-template-areas: "name"
-    "sname";
+  display: flex;
+  flex-direction: column;
 }
 
 .group_conv {
   font-weight: bold;
   font-size: 1.25rem;
-  grid-area: name;
-  align-self: flex-end;
 }
 
 .group_conv_screen_name {
   color: rgb(65, 65, 65);
   font-size: .9rem;
-  grid-area: sname;
   align-self: baseline;
 }

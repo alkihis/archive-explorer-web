@@ -9,6 +9,7 @@ import TweetViewer from '../../shared/TweetViewer/TweetViewer';
 import { PartialTweet } from 'twitter-archive-reader';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
+import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -32,16 +33,24 @@ const ExpansionPanel = withStyles({
 type ExploreState = {
   loaded: PartialTweet[] | null;
   month: string;
+  mobileOpen: boolean;
 }
 
 export default class Explore extends React.Component<{}, ExploreState> {
   state: ExploreState = {
     loaded: null,
-    month: ""
+    month: "",
+    mobileOpen: false
   };
 
   componentDidMount() {
     setPageTitle("Explore");
+  }
+
+  handleDrawerToggle = () => {
+    this.setState({
+      mobileOpen: !this.state.mobileOpen
+    });
   }
 
   listOfYears() {
@@ -91,7 +100,8 @@ export default class Explore extends React.Component<{}, ExploreState> {
   monthClicker(year: string, month: string) {
     this.setState({
       loaded: SETTINGS.archive.month(month, year),
-      month: year + "-" + month
+      month: year + "-" + month,
+      mobileOpen: false
     });
   }
 
@@ -136,44 +146,23 @@ export default class Explore extends React.Component<{}, ExploreState> {
     }
 
     return (
-      <div style={{display: 'flex'}}>
-        <AppBar position="fixed" className={classes.appBar}>
-          <Toolbar>
-            <Typography variant="h6" noWrap>
-              Explore
-            </Typography>
-          </Toolbar>
-        </AppBar>
-
-        <div style={{width: '100%'}}>
-          <Drawer 
-            className={classes.drawer}
-            variant="permanent"
-            classes={{
-              paper: classes.drawerPaper,
-              root: classes.test,
-            }}
-            PaperProps={{
-              style: { height: 'calc(100% - 64px - 56px)', bottom: '56px', top: 'unset', zIndex: 'unset' }
-            }}
-            anchor="left"
-          >
-            <div className={classes.toolbar} />
-            <Divider />
-            {this.listOfYears()}
-          </Drawer>
-        
-          <main className={classes.content}>
-            {this.state.loaded ? 
-              (<div>
-                {this.showActiveMonth()}
-                <TweetViewer tweets={this.state.loaded} />
-              </div>) :
-              this.noMonthSelected()
-            }
-          </main>
-        </div>
-      </div>
+      <ResponsiveDrawer 
+        handleDrawerToggle={this.handleDrawerToggle}
+        mobileOpen={this.state.mobileOpen}
+        title="Explore"
+        drawer={<div>
+          <div className={classes.toolbar} />
+          <Divider />
+          {this.listOfYears()}
+        </div>}
+        content={this.state.loaded ? 
+          (<div>
+            {this.showActiveMonth()}
+            <TweetViewer tweets={this.state.loaded} />
+          </div>) :
+          this.noMonthSelected()
+        }
+      />
     );
   }
 }

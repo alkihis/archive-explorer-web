@@ -16,10 +16,10 @@ export default function EmptyMessage(props: EmptyMessageProps) {
     <div className="center-absolute">
       <CenterComponent className={classes.text_lighten} style={{minWidth: '70vw'}}>
         <Icon className={classes.icon} />
-        <Typography variant="h3" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+        <Typography variant="h3" style={{marginTop: "1rem", marginBottom: ".7rem", textAlign: 'center'}}>
           {props.main}
         </Typography>
-        <Typography variant="h6">
+        <Typography variant="h6" style={{textAlign: 'center'}}>
           {props.second}
         </Typography>
       </CenterComponent>

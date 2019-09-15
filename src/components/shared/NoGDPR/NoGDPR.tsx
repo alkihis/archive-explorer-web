@@ -111,7 +111,7 @@ export default class NoGDPR extends React.Component<{ icon: any, message?: strin
           <CenterComponent className={classes.text_lighten}>
             <Icon className={classes.icon} />
 
-            <Typography variant="h4" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+            <Typography variant="h4" style={{marginTop: "1rem", marginBottom: ".7rem", textAlign: 'center'}}>
               GDPR archive is required
             </Typography>
 
