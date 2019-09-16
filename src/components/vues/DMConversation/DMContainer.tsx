@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import classes from './DMContainer.module.scss';
 import { LinkedDirectMessage } from 'twitter-archive-reader';
 import DM from './DM';
@@ -11,6 +12,7 @@ const LOADED_PER_CHUNK = 100;
 type DMProps = {
   messages: LinkedDirectMessage[];
   from?: string;
+  onDmClick?: (id: string) => void;
 };
 
 type DMState = {
@@ -23,6 +25,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
   has_bottom = true;
   has_top = true;
   dm_cache: { [id: string]: JSX.Element } = {};
+  dm_refs: { [id: string]: React.RefObject<DM> } = {};
 
   state: DMState;
 
@@ -53,6 +56,12 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     };
   }
 
+  componentDidMount() {
+    if (this.props.from) {
+      this.scrollToDm(this.props.from);
+    }
+  }
+
   getPage(current: number) {
     const start = current * LOADED_PER_CHUNK;
     const end = start + LOADED_PER_CHUNK;
@@ -77,6 +86,10 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
   };
 
   backPage = () => {
+    // Get the current top message
+    const dm_top_id = this.state.page[0].id;
+    
+    
     this.current_page_top--;
 
     if (this.current_page_top < 0) {
@@ -97,7 +110,24 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     this.setState({
       page: [...msgs, ...this.state.page]
     });
+
+    this.scrollToDm(dm_top_id);
   };
+
+  scrollToDm(id: string) {
+    // Get element
+    const dm_top = this.dm_refs[id];
+
+    if (dm_top) {
+      const el = ReactDOM.findDOMNode(dm_top.current);
+
+      setTimeout(() => {
+        if (el) {
+          (el as HTMLElement).scrollIntoView({ block: "center", inline: "nearest" });
+        }
+      }, 5);
+    }
+  }
 
   render() {
     const showed = this.state.page;
@@ -142,7 +172,15 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
           show_date = true;
         }
 
-        this.dm_cache[e.id] = <DM key={e.id} msg={e} showPp={last_owner !== actual} showDate={show_date} />;
+        this.dm_cache[e.id] = <DM 
+          key={e.id} 
+          msg={e} 
+          showPp={last_owner !== actual} 
+          showDate={show_date} 
+          onClick={this.props.onDmClick} 
+          selected={this.props.from === e.id}
+          ref={this.dm_refs[e.id] = React.createRef<DM>()}
+        />;
 
         return (divider ? 
           <div key={"divider" + e.id}>

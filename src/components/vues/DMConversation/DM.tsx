@@ -10,6 +10,8 @@ type DMProp = {
   msg: LinkedDirectMessage;
   showPp?: boolean;
   showDate?: boolean;
+  onClick?: (id: string) => void;
+  selected?: boolean;
 }
 
 type DMState = {
@@ -81,6 +83,12 @@ export default class DM extends React.Component<DMProp, DMState> {
   showDate() {
     return <div className={classes.date}>{dateFormatter('Y-m-d, H:i', this.props.msg.createdAtDate)}</div>;
   }
+  
+  onDmClick = () => {
+    if (this.props.onClick) {
+      this.props.onClick(this.dm.id);
+    }
+  };
 
   render() {
     const user = UserCache.getFromCache(this.props.msg.senderId);
@@ -98,10 +106,15 @@ export default class DM extends React.Component<DMProp, DMState> {
             {user ? "" : "#"}
           </Avatar>}
           
-
-          <div className={classes.msg + 
-          " " + (this.is_you ? classes.msg_you : classes.msg_other) +
-          " " + (!this.props.showPp ? classes.no_img : "")}>
+          <div 
+            className={classes.msg + 
+              " " + (this.is_you ? classes.msg_you : classes.msg_other) +
+              " " + (!this.props.showPp ? classes.no_img : "") + 
+              " " + (this.props.onClick ? classes.pointer : "") + 
+              " " + (this.props.selected ? classes.msg_selected : "")
+            }
+            onClick={this.onDmClick}
+          >
             {this.generateText()}
 
             {this.props.showDate && this.showDate()}

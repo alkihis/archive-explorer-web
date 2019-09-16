@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ChangeEvent, FormEvent } from 'react';
 import classes from './DMConversation.module.scss';
 import { Conversation, LinkedDirectMessage } from 'twitter-archive-reader';
-import { Drawer, Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText } from '@material-ui/core';
+import { Drawer, Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText, TextField } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -41,6 +41,8 @@ type DMState = {
   month: string;
   key: string;
   mobileOpen: boolean;
+  found: LinkedDirectMessage[] | null;
+  from: string | null;
 };
 
 export default class DMConversation extends React.Component<DMProps, DMState> {
@@ -48,8 +50,12 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     selected: null,
     month: "",
     key: "",
-    mobileOpen: false
+    mobileOpen: false,
+    found: null,
+    from: null
   };
+
+  protected searchContent: string;
 
   protected index = this.props.conversation.index;
 
@@ -62,6 +68,39 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       mobileOpen: !this.state.mobileOpen
     });
   }
+
+  handleSearchChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    this.searchContent = event.target.value;
+  };
+
+  handleDmClick = (id: string) => {
+    const msg = this.conv.single(id);
+
+    if (msg) {
+      const year = msg.createdAtDate.getFullYear();
+      const month = msg.createdAtDate.getMonth() + 1;
+
+      this.monthClicker(String(year), String(month), id);
+    }
+  };
+
+  findMsgs = (event?: FormEvent<HTMLFormElement>) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    const msgs = this.conv.find(new RegExp(this.searchContent, "i"));
+
+    // Change selected
+    this.setState({
+      found: msgs.all,
+      key: String(Math.random()),
+      from: null
+    });
+
+    return false;
+  };
 
   listOfYears() {
     const a = this.conv.raw_index;
@@ -98,9 +137,23 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
         {years_sorted.map(y => this.year(y))}
 
         <ListItem 
+          className={classes.search_input}
+        >
+          <form onSubmit={this.findMsgs} className={classes.full_w}>
+            <TextField
+              label="Find DMs"
+              className={classes.textField}
+              value={this.searchContent}
+              onChange={this.handleSearchChange}
+              margin="normal"
+            />
+          </form>
+        </ListItem>
+
+        <ListItem 
           button 
           className={classes.search_btn} 
-          onClick={undefined}
+          onClick={() => this.findMsgs()}
         >
           <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
             <SearchIcon className={classes.get_back_icon} /> <span>Find messages</span>
@@ -125,6 +178,21 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     );
   }
 
+  noSearchResults() {
+    return (
+      <CenterComponent className={classes.no_msg}>
+        <SearchIcon className={classes.icon} />
+        <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+          Not found
+        </Typography>
+
+        <Typography variant="h6">
+          Your search hasn't returned any result.
+        </Typography>
+      </CenterComponent>
+    );
+  }
+
   year(year: string) {
     return (
       <ExpansionPanel key={"year" + year}>
@@ -142,12 +210,14 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     )
   }
 
-  monthClicker(year: string, month: string) {
+  monthClicker(year: string, month: string, from: string | null = null) {
     this.setState({
       selected: year === "*" ? this.conv.all : this.conv.month(month, year).all,
       month: year === "*" ? "*" : year + "-" + month,
       key: String(Math.random()),
-      mobileOpen: false
+      mobileOpen: false,
+      found: null,
+      from
     });
   }
 
@@ -205,6 +275,19 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     );
   }
 
+  showActiveSearch() {
+    let month_text = "Search results";
+    const msg_number = this.state.found.length;
+
+    return (
+      <div className={classes.month_header}>
+        {month_text} <span className={classes.month_msg_number}>
+          <span className="bold">{msg_number}</span> message{msg_number > 1 ? "s" : ""}
+        </span>
+      </div>
+    );
+  }
+
   drawer() {
     return (
       <div>
@@ -215,6 +298,43 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     );
   }
 
+  content() {
+    if (this.state.found) {
+      return (
+        <div>
+          {this.showHeaderConv()}
+
+          <div className={classes.inner_content}>
+            {this.state.found && this.state.found.length ? 
+              (<div>
+                {this.showActiveSearch()}
+                <DMContainer key={this.state.key} messages={this.state.found} onDmClick={this.handleDmClick} />
+              </div>) :
+              this.noSearchResults()
+            }
+          </div>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div>
+          {this.showHeaderConv()}
+
+          <div className={classes.inner_content}>
+            {this.state.selected ? 
+              (<div>
+                {this.showActiveMonth()}
+                <DMContainer key={this.state.key} messages={this.state.selected} from={this.state.from} />
+              </div>) :
+              this.noMonthSelected()
+            }
+          </div>
+        </div>
+      );
+    }
+  }
+
   render() {
     return (
       <ResponsiveDrawer
@@ -223,19 +343,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
         title={"Conversation with " + this.participants}
         noPadding
         drawer={this.drawer()}
-        content={<div>
-          {this.showHeaderConv()}
-
-          <div className={classes.inner_content}>
-            {this.state.selected ? 
-              (<div>
-                {this.showActiveMonth()}
-                <DMContainer key={this.state.key} messages={this.state.selected} />
-              </div>) :
-              this.noMonthSelected()
-            }
-          </div>
-        </div>}
+        content={this.content()}
       />
     );
   }

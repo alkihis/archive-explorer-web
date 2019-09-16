@@ -101,7 +101,6 @@ $drawer_width:240px;
 
 .search_btn {
   transition: background-color .5s !important;
-  border-top: 1px solid #e0e0e0 !important;
   border-bottom: 1px solid #e0e0e0 !important;
 
   &:hover {
@@ -115,3 +114,15 @@ $drawer_width:240px;
   font-size: .8rem;
 }
 
+.search_input {
+  border-top: 1px solid #e0e0e0 !important;
+}
+
+.textField {
+  margin-top: 0 !important;
+  width: 100%;
+}
+
+.full_w {
+  width: 100%;
+}

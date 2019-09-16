@@ -27,7 +27,7 @@
     "react-virtualized": "^9.21.1",
     "socket.io-client": "^2.2.0",
     "timerize": "^1.0.3",
-    "twitter-archive-reader": "^1.3.13",
+    "twitter-archive-reader": "^1.4.0",
     "twitter-d": "^0.4.0",
     "typescript": "3.5.3"
   },

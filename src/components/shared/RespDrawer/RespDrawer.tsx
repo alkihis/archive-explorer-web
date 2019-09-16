@@ -37,19 +37,21 @@ const useStyles = makeStyles((theme: Theme) =>
       
     },
     drawerPaperFull: {
-      position: 'inherit',
-      zIndex: 'inherit',
+      position: 'fixed',
+      zIndex: 4,
       [theme.breakpoints.up('sm')]: {
         marginTop: '64px',
-        minHeight: 'calc(100vh - 64px - 56px)',
+        height: 'calc(100vh - 64px - 56px)',
+        width: drawerWidth,
       },
     },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
-      marginTop: '56px',
+      marginTop: 56,
       [theme.breakpoints.up('sm')]: {
-        marginTop: '64px',
+        marginTop: 64,
+        marginBottom: 56
       },
     },
     no_pad: {

@@ -42,6 +42,17 @@ $avatar: 38px;
   }
 }
 
+.msg_selected {
+  background-color: #ffc9c9;
+  animation: lighten 1s;
+}
+
+@keyframes lighten {
+  0% { background-color: #ff8f8f; }
+  50% { background-color: #ff3d3d; }
+  100% { background-color: #ffc9c9; }
+}
+
 .date {
   color: #6d6d6d;
   font-size: x-small;
@@ -90,4 +101,8 @@ $avatar: 38px;
 .paper {
   max-width: 90vw !important;
   max-height: unset !important;
+}
+
+.pointer {
+  cursor: pointer;
 }
