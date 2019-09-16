@@ -1,8 +1,29 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# archive-explorer-web
 
-## Available Scripts
+Browse you Twitter archive with a friendly, responsive, full experience, and quickly delete the tweets you don't want.
 
-In the project directory, you can run:
+This is the front-end side of the Archive Explorer project. See its complement, 
+[archive-explorer-node](https://github.com/alkihis/archive-explorer-node), for back-end.
+
+## Getting started
+
+Archive Explorer server needs to be started and its affilated mongodb server ready.
+
+This project use React 16.8+, Material UI for React and fully developed with **TypeScript**.
+
+The available tasks are the same as Create React App project.
+
+***MORE DOCUMENTATION WILL COME LATER***
+
+Install all the dependencies for project after cloning.
+
+```bash
+git clone https://github.com/alkihis/archive-explorer-web.git
+cd archive-explorer-web
+npm i
+```
+
+## Scripts
 
 ### `npm start`
 

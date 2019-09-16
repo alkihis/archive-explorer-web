@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import classes from './DMConversation.module.scss';
 import { Conversation, LinkedDirectMessage } from 'twitter-archive-reader';
-import { Drawer, Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText, TextField } from '@material-ui/core';
+import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText, TextField, Fab } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -77,10 +77,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     const msg = this.conv.single(id);
 
     if (msg) {
-      const year = msg.createdAtDate.getFullYear();
-      const month = msg.createdAtDate.getMonth() + 1;
-
-      this.monthClicker(String(year), String(month), id);
+      this.monthClicker("*", "", id);
     }
   };
 
@@ -90,13 +87,19 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       event.stopPropagation();
     }
 
+    // Reset scroll position
+    window.scrollTo(0, 0);
+
     const msgs = this.conv.find(new RegExp(this.searchContent, "i"));
 
     // Change selected
     this.setState({
       found: msgs.all,
       key: String(Math.random()),
-      from: null
+      from: null,
+      month: "",
+      mobileOpen: false,
+      selected: null,
     });
 
     return false;
@@ -143,7 +146,6 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
             <TextField
               label="Find DMs"
               className={classes.textField}
-              value={this.searchContent}
               onChange={this.handleSearchChange}
               margin="normal"
             />
@@ -211,6 +213,9 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
   }
 
   monthClicker(year: string, month: string, from: string | null = null) {
+    // Reset scroll position
+    window.scrollTo(0, 0);
+
     this.setState({
       selected: year === "*" ? this.conv.all : this.conv.month(month, year).all,
       month: year === "*" ? "*" : year + "-" + month,

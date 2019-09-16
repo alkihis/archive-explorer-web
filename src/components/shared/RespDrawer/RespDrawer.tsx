@@ -49,9 +49,9 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       padding: theme.spacing(3),
       marginTop: 56,
+      marginBottom: 56,
       [theme.breakpoints.up('sm')]: {
         marginTop: 64,
-        marginBottom: 56
       },
     },
     no_pad: {

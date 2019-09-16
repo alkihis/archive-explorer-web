@@ -4,8 +4,10 @@ import classes from './DMContainer.module.scss';
 import { LinkedDirectMessage } from 'twitter-archive-reader';
 import DM from './DM';
 import Sentinel from '../../shared/Sentinel/Sentinel';
-import { Divider } from '@material-ui/core';
+import { Divider, Fab, Tooltip } from '@material-ui/core';
 import { uppercaseFirst, getMonthText } from '../../../helpers';
+// TODO CHANGE ICON
+import JumpToIcon from '@material-ui/icons/LowPriority';
 
 const LOADED_PER_CHUNK = 100;
 
@@ -33,21 +35,26 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     super(props);
 
     if (this.props.from) {
-      let i = 0;
       let page = 0;
-  
-      for (const msg of this.props.messages) {
-        if (i > LOADED_PER_CHUNK) {
-          page++;
-          i = 0;
-        }
-  
-        if (msg.id === this.props.from) {
-          this.current_page_bottom = this.current_page_top = page;
-          break;
-        }
-  
-        i++;
+
+      // Découpage des pages
+      const pages: LinkedDirectMessage[][] = [];
+      let current = this.getPage(page);
+      pages.push(current);
+
+      while (current.length) {
+        current = this.getPage(++page);
+        pages.push(current);
+      }
+
+      // Search for page
+      const index = pages.findIndex(msgs => msgs.findIndex(msg => msg.id === this.props.from) !== -1);
+
+      if (index !== -1) {
+        this.current_page_bottom = this.current_page_top = index;
+      }
+      else {
+        this.current_page_bottom = this.current_page_top = 0;
       }
     }
 
@@ -69,6 +76,14 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     return this.props.messages.slice(start, end);
   }
 
+  scrollToSelected = () => {
+    const id = this.props.from;
+
+    if (id) {
+      this.scrollToDm(id);
+    }
+  }
+
   nextPage = () => {
     this.current_page_bottom++;
 
@@ -88,7 +103,6 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
   backPage = () => {
     // Get the current top message
     const dm_top_id = this.state.page[0].id;
-    
     
     this.current_page_top--;
 
@@ -191,6 +205,19 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
       })}
 
       <Sentinel onVisible={this.nextPage} triggerMore={this.has_bottom} />
+
+      {this.props.from && <Tooltip 
+        classes={{
+          tooltip: classes.big_text,
+          popper: classes.big_text
+        }} 
+        title="Jump to selected message"
+        placement="left"
+      >
+        <Fab color="primary" className={classes.fab_jump} onClick={this.scrollToSelected}>
+          <JumpToIcon />
+        </Fab>
+      </Tooltip>}
     </div>;
   }
 }
