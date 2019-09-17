@@ -63,6 +63,7 @@ export default class FinalizeLogin extends React.Component {
       req
         .then((login_data: { status: boolean, token: string }) => {
           SETTINGS.token = login_data.token;
+          localStorage.removeItem('save_token_secret');
           window.location.pathname = "/";
         })
         .catch(() => this.setState({ in_load: false, failed: true }));

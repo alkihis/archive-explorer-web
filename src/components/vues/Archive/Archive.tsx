@@ -11,6 +11,7 @@ import UserCache from '../../../classes/UserCache';
 import { THRESHOLD_PREFETCH } from '../../../const';
 import { Link } from 'react-router-dom';
 import QuickDelete from '../QuickDelete/QuickDelete';
+import Timer from 'timerize';
 
 type ArchiveState = {
   loaded: string;
@@ -20,8 +21,11 @@ type ArchiveState = {
   quick_delete_open: boolean;
 };
 
+Timer.default_format = "s";
+
 export default class Archive extends React.Component<{}, ArchiveState> {
   state: ArchiveState;
+  timer: Timer;
 
   /** True if the component is mounted. false when unmounted (don't use setState !). */
   active = true;
@@ -47,6 +51,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   // Subscribe to archive readyness
   checkOnReadyArchive() {
+    this.timer = new Timer;
+
     SETTINGS.archive.onready = async () => {
       const name = this.state.in_load;
 
@@ -95,6 +101,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         try {
           await cache_dl;
         } catch (e) { }
+
+        console.log("Archive loaded in " + this.timer.elapsed + "s");
          
         // Terminé, composant prêt !
         if (this.active)

@@ -122,7 +122,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
   startErase = () => {
     const tweets = this.selected;
 
-    Tasks.start(tweets);
+    Tasks.start(tweets, "tweet");
 
     if (this.props.onClose)
       this.props.onClose();

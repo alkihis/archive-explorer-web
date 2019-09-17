@@ -12,11 +12,15 @@ export interface TaskInformation extends TaskBaseMessage {
   failed: number;
   total: number;
   error?: string;
+  type: TaskType;
 }
 
 export interface TaskBaseMessage {
   id: string;
+  type?: TaskType;
 }
+
+export type TaskType = "tweet" | "mute" | "block" | "fav";
 
 interface TaskRequestError extends TaskBaseMessage {
   msg: string;
@@ -42,14 +46,14 @@ class TaskManager extends EventTarget {
     this.resetSocketIo();
   }
 
-  async start(tweets_ids: string[]) {
-    if (tweets_ids.length === 0)
+  async start(ids: string[], type: TaskType) {
+    if (ids.length === 0)
       return;
 
     const { status, task } = await APIHELPER.request('tasks/create.json', {
       method: 'POST',
       body_mode: 'json',
-      parameters: { tweets: tweets_ids.join(',') }
+      parameters: { ids: ids.join(',') }
     });
 
     if (status && task) {
@@ -57,11 +61,12 @@ class TaskManager extends EventTarget {
 
       this.subscriptions[task] = {
         done: 0,
-        total: tweets_ids.length,
-        remaining: tweets_ids.length,
+        total: ids.length,
+        remaining: ids.length,
         percentage: 0,
         id: task,
-        failed: 0
+        failed: 0,
+        type
       };
 
       this.subscribe(task);

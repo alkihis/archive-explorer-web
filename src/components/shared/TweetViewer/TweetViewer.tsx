@@ -315,7 +315,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           </Button>
           <Button onClick={() => { 
             this.closeConfirmModal();  
-            Tasks.start([...this.state.selected])
+            Tasks.start([...this.state.selected], "tweet")
               .catch(() => {
                 toast("Unable to start task. Check your network.", "error");
               });
