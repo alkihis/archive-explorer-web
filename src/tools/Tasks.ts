@@ -53,7 +53,7 @@ class TaskManager extends EventTarget {
     const { status, task } = await APIHELPER.request('tasks/create.json', {
       method: 'POST',
       body_mode: 'json',
-      parameters: { ids: ids.join(',') }
+      parameters: { ids: ids.join(','), type }
     });
 
     if (status && task) {

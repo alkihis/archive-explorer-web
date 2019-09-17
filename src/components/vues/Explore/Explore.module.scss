@@ -61,3 +61,42 @@ $drawer_width:240px;
   font-size: 1.1rem;
   font-weight: lighter;
 }
+
+.search_input {
+  border-top: 1px solid #e0e0e0 !important;
+}
+
+.textField {
+  margin-top: 0 !important;
+  width: 100%;
+}
+
+.search_btn {
+  transition: background-color .5s !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+
+  &:hover {
+    background-color: #e2e2ff !important;
+  }
+}
+
+.full_w {
+  width: 100%;
+}
+
+.get_back_paper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.05rem !important;
+  font-weight: 200 !important;
+  color: #00008e;
+}
+
+.get_back_icon {
+  margin-bottom: 1px;
+}
+
+.search_paper {
+  justify-content: space-around !important;
+}

@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { ChangeEvent, FormEvent } from 'react';
 import classes from './Explore.module.scss';
 import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst } from '../../../helpers';
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { AppBar, Toolbar, Typography, Drawer, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles } from '@material-ui/core';
+import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles, TextField } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 import TweetViewer from '../../shared/TweetViewer/TweetViewer';
-import { PartialTweet } from 'twitter-archive-reader';
+import { PartialTweet, TweetSearcher } from 'twitter-archive-reader';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
@@ -34,14 +35,18 @@ type ExploreState = {
   loaded: PartialTweet[] | null;
   month: string;
   mobileOpen: boolean;
+  found: PartialTweet[] | null;
 }
 
 export default class Explore extends React.Component<{}, ExploreState> {
   state: ExploreState = {
     loaded: null,
     month: "",
-    mobileOpen: false
+    mobileOpen: false,
+    found: null
   };
+
+  protected searchContent: string = "";
 
   componentDidMount() {
     setPageTitle("Explore");
@@ -51,14 +56,65 @@ export default class Explore extends React.Component<{}, ExploreState> {
     this.setState({
       mobileOpen: !this.state.mobileOpen
     });
-  }
+  };
+
+  handleSearchChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    this.searchContent = event.target.value;
+  };
+
+  findTweets = (event?: FormEvent<HTMLFormElement>) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    // Reset scroll position
+    window.scrollTo(0, 0);
+
+    const tweets = TweetSearcher.search(SETTINGS.archive.all, this.searchContent, "i");
+
+    // Change selected
+    this.setState({
+      found: tweets,
+      month: "",
+      mobileOpen: false,
+      loaded: null,
+    });
+  };
 
   listOfYears() {
     const a = SETTINGS.archive.index.years;
 
     const years_sorted = Object.keys(a).sort((a, b) => Number(b) - Number(a));
 
-    return years_sorted.map(y => this.year(y));
+    return (
+      <div>
+        {years_sorted.map(y => this.year(y))}
+
+        <ListItem 
+          className={classes.search_input}
+        >
+          <form onSubmit={this.findTweets} className={classes.full_w}>
+            <TextField
+              label="Find tweets"
+              className={classes.textField}
+              onChange={this.handleSearchChange}
+              margin="normal"
+            />
+          </form>
+        </ListItem>
+
+        <ListItem 
+          button 
+          className={classes.search_btn} 
+          onClick={() => this.findTweets()}
+        >
+          <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
+            <SearchIcon className={classes.get_back_icon} /> <span>Search in tweets</span>
+          </ListItemText>
+        </ListItem>
+      </div>
+    );
   }
 
   noMonthSelected() {
@@ -101,7 +157,8 @@ export default class Explore extends React.Component<{}, ExploreState> {
     this.setState({
       loaded: SETTINGS.archive.month(month, year),
       month: year + "-" + month,
-      mobileOpen: false
+      mobileOpen: false,
+      found: null
     });
   }
 
@@ -140,6 +197,37 @@ export default class Explore extends React.Component<{}, ExploreState> {
     );
   }
 
+  showActiveSearch() {
+    const tweets_number = this.state.found.length;
+
+    return (
+      <div className={classes.month_header}>
+        Search results <span className={classes.month_tweet_number}>
+            <span className="bold">{tweets_number}</span> tweets
+          </span>
+      </div>
+    );
+  }
+
+  content() {
+    if (this.state.found) {
+      return (
+        <div>
+          {this.showActiveSearch()}
+          <TweetViewer tweets={this.state.found} />
+        </div>
+      );
+    }
+    else {
+      return this.state.loaded ? 
+      (<div>
+        {this.showActiveMonth()}
+        <TweetViewer tweets={this.state.loaded} />
+      </div>) :
+      this.noMonthSelected();
+    }
+  }
+
   render() {
     if (!isArchiveLoaded()) {
       return <NoArchive />;
@@ -155,13 +243,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
           <Divider />
           {this.listOfYears()}
         </div>}
-        content={this.state.loaded ? 
-          (<div>
-            {this.showActiveMonth()}
-            <TweetViewer tweets={this.state.loaded} />
-          </div>) :
-          this.noMonthSelected()
-        }
+        content={this.content()}
       />
     );
   }

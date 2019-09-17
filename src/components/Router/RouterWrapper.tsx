@@ -7,7 +7,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import ArchiveIcon from '@material-ui/icons/FolderShared';
 import TasksIcon from '@material-ui/icons/CheckBox';
 import SettingsIcon from '@material-ui/icons/Settings';
-import SearchIcon from '@material-ui/icons/Search';
+import MoreIcon from '@material-ui/icons/Search';
 import classes from './RouterWrapper.module.scss';
 import { Badge } from '@material-ui/core';
 import TaskModal from '../vues/TaskModal/TaskModal';
@@ -19,8 +19,8 @@ class RouterWrapper extends Component {
     pathMap: [
       '/',
       '/explore/',
-      '/search/',
       '/dms/',
+      '/more/',
       '/settings/',
     ],
     task_opens: false,
@@ -144,8 +144,8 @@ class RouterWrapper extends Component {
         >
           <BottomNavigationAction label="Archive" icon={<ArchiveIcon />} component={Link} to={pathMap[0]} />
           <BottomNavigationAction label="Explore" icon={<ExploreIcon />} component={Link} to={pathMap[1]} />
-          <BottomNavigationAction label="Search" icon={<SearchIcon />} component={Link} to={pathMap[2]} />
-          <BottomNavigationAction label="Direct Messages" icon={<MailIcon />} component={Link} to={pathMap[3]} />
+          <BottomNavigationAction label="Direct Messages" icon={<MailIcon />} component={Link} to={pathMap[2]} />
+          <BottomNavigationAction label="More" icon={<MoreIcon />} component={Link} to={pathMap[3]} />
           <BottomNavigationAction label="Settings" icon={<SettingsIcon />} component={Link} to={pathMap[4]} />
           <BottomNavigationAction label="Tasks" icon={this.renderTaskIcon()} onClick={() => this.handleModalOpen()} />
         </BottomNavigation>

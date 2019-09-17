@@ -12,7 +12,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogAc
 import { BigPreloader } from "../../tools/PlacingComponents";
 import Settings from "../vues/Settings/Settings";
 import DirectMessages from "../vues/DirectMessages/DirectMessages";
-import Search from "../vues/Search/Search";
+import More from "../vues/More/More";
 
 class AppRouter extends React.Component {
   state: { will_validate: boolean, validation_status: boolean | null };
@@ -153,7 +153,7 @@ class AppRouter extends React.Component {
             <Route path="/explore/" component={Explore} />
             <Route path="/settings/" component={Settings} />  
             <Route path="/dms/" component={DirectMessages} />  
-            <Route path="/search/" component={Search} />  
+            <Route path="/more/" component={More} />  
             <Route component={NotFound} />
           </Switch>
           <RouterWrapper />
