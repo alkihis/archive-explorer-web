@@ -19,6 +19,15 @@ export const BigPreloader: React.FC = (props) => {
   );
 };
 
+export const Marger: React.FC<{ size: number | string }> = props => {
+  return <div style={{
+    width: '100%',
+    height: 1,
+    marginTop: props.size,
+    marginBottom: props.size
+  }} />;
+}
+
 export function internalError(message: string, additionnal_text = "", login_again = false) {
   return (
     <div>

@@ -199,11 +199,14 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
   showActiveSearch() {
     const tweets_number = this.state.found.length;
+    const tweets_percentage = (tweets_number / SETTINGS.archive.all.length) * 100;
+
+    const percentage_str = tweets_percentage < 0.1 ? tweets_percentage.toFixed(3) : tweets_percentage.toFixed(1);
 
     return (
       <div className={classes.month_header}>
         Search results <span className={classes.month_tweet_number}>
-            <span className="bold">{tweets_number}</span> tweets
+            <span className="bold">{tweets_number}</span> tweets <span className={classes.percentage}>({percentage_str}%)</span>
           </span>
       </div>
     );

@@ -7,7 +7,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import ArchiveIcon from '@material-ui/icons/FolderShared';
 import TasksIcon from '@material-ui/icons/CheckBox';
 import SettingsIcon from '@material-ui/icons/Settings';
-import MoreIcon from '@material-ui/icons/Search';
+import MoreIcon from '@material-ui/icons/MoreHoriz';
 import classes from './RouterWrapper.module.scss';
 import { Badge } from '@material-ui/core';
 import TaskModal from '../vues/TaskModal/TaskModal';

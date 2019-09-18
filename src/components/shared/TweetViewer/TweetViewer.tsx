@@ -338,19 +338,19 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             {this.state.selected.size} selected
           </div> 
 
-          <div className={classes.modal_select_all}>
+          <div className={classes.modal_grid_container}>
             <Button color="primary" onClick={() => this.checkAll()}>
               Select all
             </Button>
           </div> 
 
-          <div className={classes.modal_unselect_all}>
+          <div className={classes.modal_grid_container}>
             <Button className={classes.modal_unselect_all_color} onClick={() => this.uncheckAll()}>
               Unselect all
             </Button>
           </div> 
           
-          <div className={classes.modal_delete_all}>
+          <div className={classes.modal_grid_container}>
             <Button color="secondary" onClick={() => this.openConfirmModal()}>
               <Icon>delete_sweep</Icon>
             </Button>

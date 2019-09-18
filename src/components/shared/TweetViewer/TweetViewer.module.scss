@@ -72,8 +72,25 @@
   grid-template-columns: auto max-content max-content max-content;
   grid-gap: 15px;
   align-items: center;
+
+  @include threshold_bar {
+    grid-template-columns: max-content max-content;
+    justify-content: center;
+  }
 }
 
 .modal_unselect_all_color {
   color: #169e16 !important;
+}
+
+.modal_grid_container {
+  text-align: center;
+}
+
+.modal_selected {
+  text-align: left;
+
+  @include threshold_bar {
+    text-align: center;
+  }
 }
