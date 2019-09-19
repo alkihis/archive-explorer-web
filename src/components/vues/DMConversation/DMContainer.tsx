@@ -30,6 +30,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
   dm_refs: { [id: string]: React.RefObject<DM> } = {};
 
   state: DMState;
+  disable_scroll_for_next_load = false;
 
   constructor(props: DMProps) {
     super(props);
@@ -65,7 +66,8 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
 
   componentDidMount() {
     if (this.props.from) {
-      this.scrollToDm(this.props.from);
+      this.scrollToDm(this.props.from, 250);
+      this.disable_scroll_for_next_load = true;
     }
   }
 
@@ -125,10 +127,13 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
       page: [...msgs, ...this.state.page]
     });
 
-    this.scrollToDm(dm_top_id);
+    if (!this.disable_scroll_for_next_load)
+      this.scrollToDm(dm_top_id, 5, "start");
+
+    this.disable_scroll_for_next_load = false;
   };
 
-  scrollToDm(id: string) {
+  scrollToDm(id: string, wait_time = 5, position: ScrollLogicalPosition = "center") {
     // Get element
     const dm_top = this.dm_refs[id];
 
@@ -137,9 +142,9 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
 
       setTimeout(() => {
         if (el) {
-          (el as HTMLElement).scrollIntoView({ block: "center", inline: "nearest" });
+          (el as HTMLElement).scrollIntoView({ block: position, inline: "nearest" });
         }
-      }, 5);
+      }, wait_time);
     }
   }
 
