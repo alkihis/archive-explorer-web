@@ -72,6 +72,11 @@ class AppRouter extends React.Component {
           }
         })
     }
+    else {
+      this.setState({
+        will_validate: false
+      });
+    }
   }
 
   apiError() {
