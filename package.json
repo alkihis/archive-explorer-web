@@ -1,7 +1,7 @@
 {
   "name": "archive-explorer-web",
   "version": "0.4.0",
-  "license": "CC BY-SA 4.0",
+  "license": "CC BY-NC-SA 4.0",
   "repository": "https://github.com/alkihis/archive-explorer-web",
   "bugs": "https://github.com/alkihis/archive-explorer-web/issues",
   "dependencies": {
