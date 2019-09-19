@@ -72,7 +72,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     window.scrollTo(0, 0);
 
     let content = this.searchContent;
-    let selected_month = "";
+    let selected_month = "*";
     let selected_loaded: any = null;
 
     // Test si regex valide 
@@ -111,6 +111,21 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
     return (
       <div>
+        <ExpansionPanel expanded={false}>
+          <ExpansionPanelSummary>
+            <Typography className="bold">Full archive</Typography>
+          </ExpansionPanelSummary>
+        </ExpansionPanel>
+        <ListItem 
+          button 
+          className={"*" === this.state.month ? classes.selected_month : ""} 
+          onClick={() => this.monthClicker("*", "")}
+        >
+          <ListItemText className={classes.drawer_month}>
+            All ({SETTINGS.archive.length})
+          </ListItemText>
+        </ListItem>
+
         {years_sorted.map(y => this.year(y))}
 
         <ListItem 
@@ -176,12 +191,22 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   monthClicker(year: string, month: string) {
-    this.setState({
-      loaded: SETTINGS.archive.month(month, year),
-      month: year + "-" + month,
-      mobileOpen: false,
-      found: null
-    });
+    if (year === "*") {
+      this.setState({
+        loaded: SETTINGS.archive.all,
+        month: year,
+        mobileOpen: false,
+        found: null
+      });
+    }
+    else {
+      this.setState({
+        loaded: SETTINGS.archive.month(month, year),
+        month: year + "-" + month,
+        mobileOpen: false,
+        found: null
+      });
+    }
   }
 
   listOfMonths(year: string) {
@@ -206,8 +231,14 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   showActiveMonth() {
-    const [year, month] = this.state.month.split('-');
-    const month_text = uppercaseFirst(getMonthText(month));
+    let year = "", month_text = "Full archive";
+
+    if (this.state.month !== "*") {
+      const [_year, month] = this.state.month.split('-');
+      year = _year;
+      month_text = uppercaseFirst(getMonthText(month));
+    }
+
     const tweets_number = this.state.loaded.length;
 
     return (

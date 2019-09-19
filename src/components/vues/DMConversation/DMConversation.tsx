@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import SearchIcon from '@material-ui/icons/Search';
-import { uppercaseFirst, getMonthText, specialJoin } from '../../../helpers';
+import { uppercaseFirst, getMonthText, specialJoin, escapeRegExp } from '../../../helpers';
 import DMContainer from './DMContainer';
 import { withStyles } from '@material-ui/styles';
 import UserCache from '../../../classes/UserCache';
@@ -87,10 +87,18 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       event.stopPropagation();
     }
 
+    let content = this.searchContent;
+
+    try {
+      new RegExp(content);
+    } catch (e) {
+      content = escapeRegExp(content);
+    }
+
     // Reset scroll position
     window.scrollTo(0, 0);
 
-    const msgs = this.conv.find(new RegExp(this.searchContent, "i"));
+    const msgs = this.conv.find(new RegExp(content, "i"));
 
     // Change selected
     this.setState({
