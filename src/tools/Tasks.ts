@@ -50,29 +50,39 @@ class TaskManager extends EventTarget {
     if (ids.length === 0)
       return;
 
-    const { status, task } = await APIHELPER.request('tasks/create.json', {
-      method: 'POST',
-      body_mode: 'json',
-      parameters: { ids: ids.join(','), type }
-    });
-
-    if (status && task) {
-      toast("Task has been started.", "success");
-
-      this.subscriptions[task] = {
-        done: 0,
-        total: ids.length,
-        remaining: ids.length,
-        percentage: 0,
-        id: task,
-        failed: 0,
-        type
-      };
-
-      this.subscribe(task);
-    }
-    else {
-      throw "Unknown error";
+    try {
+      const { status, task } = await APIHELPER.request('tasks/create.json', {
+        method: 'POST',
+        body_mode: 'json',
+        parameters: { ids: ids.join(','), type }
+      });
+  
+      if (status && task) {
+        toast("Task has been started.", "success");
+  
+        this.subscriptions[task] = {
+          done: 0,
+          total: ids.length,
+          remaining: ids.length,
+          percentage: 0,
+          id: task,
+          failed: 0,
+          type
+        };
+  
+        this.subscribe(task);
+      }
+      else {
+        throw "Unknown error";
+      }
+    } catch (e) {
+      if (e && Array.isArray(e) && e[1].code === 13) {
+        // Too many tasks
+        toast("You hit the task number limit. Wait for a task completion before starting a new one.", "error");
+      }
+      else {
+        throw e;
+      }
     }
   }
 

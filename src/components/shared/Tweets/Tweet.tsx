@@ -70,7 +70,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
 
   render() {
     let user_pp = (this.original.user as PartialTweetUser).profile_image_url_https;
-
+    
     // Si c'est un tweet d'une personne qui est en cache
     if (UserCache.getFromCache(this.original.user.id_str)) {
       user_pp = UserCache.getFromCache(this.original.user.id_str).profile_image_url_https;

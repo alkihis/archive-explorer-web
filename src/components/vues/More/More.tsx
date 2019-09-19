@@ -1,11 +1,12 @@
 import React from 'react';
 import classes from './More.module.scss';
-import { isArchiveLoaded } from '../../../helpers';
+import { isArchiveLoaded, dateFormatter } from '../../../helpers';
 import SETTINGS from '../../../tools/Settings';
-import { AppBar, Toolbar, Typography, Container, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, DialogContentText } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Container, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, DialogContentText, Paper, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { Marger } from '../../../tools/PlacingComponents';
 import Tasks from '../../../tools/Tasks';
 import { toast } from '../../shared/Toaster/Toaster';
+import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 
 export default class More extends React.Component {
   renderGDPR() {
@@ -39,9 +40,110 @@ export default class More extends React.Component {
           Help
         </Typography>
 
+        {/* DOWNLOAD */}
         <Typography variant="h5" className={classes.second_title}>
           Download a Twitter archive
         </Typography>
+
+        <Typography className={classes.help_p}>
+          Learn how to download a Twitter archive with a simple tutorial.
+          It will just take minutes.
+        </Typography>
+        <HelpDL />
+
+        {/* SEARCH */}
+        <Typography variant="h5" className={classes.second_title}>
+          Search in your tweets
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          You can enhance your queries made in tweet explorer with <span className="bold">keywords</span>.
+          <br />
+        </Typography>
+        <Keywords />
+
+        <Marger size={8} />
+
+        {/* DELETION */}
+        <Typography variant="h5" className={classes.second_title}>
+          Delete tweets, favorites and more
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          Archive Explorer let you delete a batch of tweets, or other informations linked to your account.
+          <br />
+          Please note that <span className="bold">
+            every deletion is made on your Twitter account, and is irremediable
+          </span>. You will not be able to get your tweets, favorites or anything else back. 
+        </Typography>
+
+        <Typography variant="h6" className={classes.third_title}>
+          Tweets
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          For tweets, you can select tweets individually via Tweet Explorer (Explore tab), or choose from multiple months
+          and years with Quick Delete, available in the Archive tab.
+        </Typography>
+
+        <Typography variant="h6" className={classes.third_title}>
+          Favorites, mutes and blocks
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          Favorites, mutes and blocks can be deleted in this tab. This kind of removal is "all or nothing", you can't 
+          individually select which favorite or block you will remove.
+        </Typography>
+
+        <Marger size={8} />
+
+        {/* LIMITATIONS */}
+        <Typography variant="h5" className={classes.second_title}>
+          Limitations
+        </Typography>
+
+        <Typography variant="h6" className={classes.third_title}>
+          Retweet data
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          When you browse your tweets, you may see strange retweet informations: 
+          Profile picture may be yours, or Twitter name isn't good. 
+          In fact, Twitter archives contains a bad retweet data. Retweets are stored in your name,
+          and the original retweet isn't present. 
+          <br />
+          Archive Explorer tries to enhance at their maximum retweet data in order to make your experience
+          as good as possible, but it can't do miracles.
+        </Typography>
+
+        <Typography variant="h6" className={classes.third_title}>
+          Truncated tweets
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          Tweets that contains more than 140 characters are truncated in archives. It may be a bug
+          (see <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/Alkihis/status/1173857093880864768">this tweet</a>)
+          or not, Twitter hasn't given an answer yet.
+
+          <br />
+
+          You can choose to download tweets from Twitter instead from the archive in Settings to have full text,
+          but the tweet display will be considerably slower (this feature is very resource-demanding, please not abuse of it !).
+        </Typography>
+
+        <Typography variant="h6" className={classes.third_title}>
+          Tasks limit
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          Deletion tasks are very resource-demanding for server and are limited for each user.
+          You are able to start <span className="bold">3 tasks</span> in parallel. 
+          <br />
+          If you want to start another task, please wait for
+          other tasks to complete or cancel an existing task.
+        </Typography>
+
+        <Marger size="3rem" />
       </div>
     );
   }
@@ -107,6 +209,28 @@ export default class More extends React.Component {
   }
 }
 
+function HelpDL() {
+  const [open, setOpen] = React.useState(false);
+
+  const closeModal = () => {
+    setOpen(false);
+  };
+
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  return (
+    <div>
+      <Button variant="outlined" color="primary" onClick={openModal} className={classes.dl_btn}>
+        How to download an archive
+      </Button>
+
+      <DownloadGDPRModal open={open} onClose={closeModal} />
+    </div>
+  );
+}
+
 const DeleteModal: React.FC<{ 
   open?: boolean, 
   type: string,
@@ -152,7 +276,7 @@ function Favorites() {
   function handleValidate() {
     setOpen(false);
 
-    // Starting the task
+    // Starting the task TODO
     // const favs = [...SETTINGS.archive.extended_gdpr.favorites];
     const favs: string[] = Array(10000).fill("1");
 
@@ -286,17 +410,110 @@ function Mutes() {
 }
 
 function ScreenNameHistory() {
+  const rows = SETTINGS.archive.extended_gdpr.screen_name_history.map(e => {
+    return {
+      date: new Date(e.screenNameChange.changedAt),
+      sn: e.screenNameChange.changedFrom
+    }
+  });
+  rows.push({
+    date: undefined,
+    sn: SETTINGS.archive.owner_screen_name
+  });
+
   return (
     <div>
       <Typography variant="h5" className={classes.second_title}>
         Screen name history
       </Typography>
 
-      <Typography>
-        Collapses screen names: {SETTINGS.archive.extended_gdpr.screen_name_history.map(e => 
-          '@' + e.screenNameChange.changedFrom + " => @" + e.screenNameChange.changedTo
-        ).join(', ')}
-      </Typography>
+      <Paper className={classes.sn_root}>
+        <div className={classes.t_wrapper}>
+          <Table stickyHeader className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Twitter @</TableCell>
+                <TableCell align="right">Until</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map(row => (
+                <TableRow key={row.date ? row.date.toISOString() : '-'}>
+                  <TableCell className="bold">@{row.sn}</TableCell>
+                  <TableCell style={{minWidth: 120}} align="right" component="th" scope="row">
+                    {row.date ? dateFormatter("Y-m-d H:i", row.date) : '-'}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </Paper>
     </div>
+  );
+}
+
+function Keywords() {
+  return (
+    <Paper className={classes.sn_root}>
+      <div className={classes.t_wrapper}>
+        <Table stickyHeader className={classes.table_large}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Keyword</TableCell>
+              <TableCell>Content</TableCell>
+              <TableCell align="right">Description</TableCell>
+              <TableCell align="right">Example</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell component="th" scope="row" className="bold">
+                since:
+              </TableCell>
+              <TableCell>
+                [YYYY-MM-DD]
+              </TableCell>
+              <TableCell style={{minWidth: 120}} align="right">
+                Find tweets made since a specified date.
+              </TableCell>
+              <TableCell style={{minWidth: 80}} align="right" className="italic">
+                since:2018-01-02
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell component="th" scope="row" className="bold">
+                until:
+              </TableCell>
+              <TableCell>
+                [YYYY-MM-DD]
+              </TableCell>
+              <TableCell style={{minWidth: 120}} align="right">
+                Find tweets made before a specified date.
+              </TableCell>
+              <TableCell style={{minWidth: 80}} align="right" className="italic">
+                until:2018-04-02
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell component="th" scope="row" className="bold">
+                from:
+              </TableCell>
+              <TableCell>
+                [twitter @]
+              </TableCell>
+              <TableCell style={{minWidth: 120}} align="right">
+                Find tweets made by specified user.
+              </TableCell>
+              <TableCell style={{minWidth: 80}} align="right" className="italic">
+                from:Alkihis
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
+    </Paper>
   );
 }

@@ -23,14 +23,14 @@ class AppRouter extends React.Component {
     super(props);
 
     this.state = { 
-      will_validate: false,
+      will_validate: null,
       validation_status: true
     };
   }
 
   componentDidMount() {
     // Si un utilisateur est enregistré et qu'on a un token
-    if (SETTINGS.user && this.logged) {
+    if (SETTINGS.user && SETTINGS.twitter_user && this.logged) {
       // un utilisateur est valide, check en arrière plan
       this.setState({
         will_validate: false
@@ -188,6 +188,11 @@ class AppRouter extends React.Component {
   }
 
   render() {
+    if (this.state.will_validate === null) {
+      // n'affiche rien, composant en cours de chargement
+      return <div />;
+    }
+
     return (
       <div>
         {this.state.will_validate && this.renderDialogLogin()}

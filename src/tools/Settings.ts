@@ -17,12 +17,11 @@ class AESettings {
   // Globals
   protected current_user: IUser | null = null;
   protected current_archive: TwitterArchive | null = null;
+  protected _twitter_user: FullUser;
 
   archive_name: string = "";
   archive_in_load = "";
   expired = false;
-
-  twitter_user: FullUser | undefined;
 
   constructor() {
     if (localStorage.getItem('login_token')) {
@@ -58,6 +57,20 @@ class AESettings {
         }
       } catch (e) {
         localStorage.removeItem('current_user');
+      }
+    }
+    if (localStorage.getItem('twitter_user')) {
+      try {
+        const u = JSON.parse(localStorage.getItem('twitter_user'));
+
+        if (this.isTUserValid(u)) {
+          this.twitter_user = u;
+        }
+        else {
+          localStorage.removeItem('twitter_user');
+        }
+      } catch (e) {
+        localStorage.removeItem('twitter_user');
       }
     }
   }
@@ -134,6 +147,15 @@ class AESettings {
     return this.current_user;
   }
 
+  set twitter_user(v: FullUser) {
+    this._twitter_user = v;
+    localStorage.setItem('twitter_user', JSON.stringify(v));
+  }
+
+  get twitter_user() {
+    return this._twitter_user;
+  }
+
   set archive(v: TwitterArchive | null) {
     this.current_archive = v;
   }
@@ -184,6 +206,13 @@ class AESettings {
 
   protected isUserValid(u: IUser) {
     if (u.created_at && u.twitter_id && u.twitter_name && u.twitter_screen_name) {
+      return true;
+    }
+    return false;
+  }
+
+  protected isTUserValid(u: FullUser) {
+    if (u.created_at && u.profile_image_url_https && u.id_str && u.screen_name && u.name) {
       return true;
     }
     return false;

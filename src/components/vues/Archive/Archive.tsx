@@ -245,9 +245,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         </Typography>
 
         <Typography>
-          Archive created on {
-            dateFormatter("Y-m-d", new Date(SETTINGS.archive.index.archive.created_at))
-          } by {SETTINGS.archive.index.info.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
+          Archive created {!SETTINGS.archive.is_gdpr && // Hide date if gdpr (not accurate)
+          <span>
+            on {dateFormatter("Y-m-d", new Date(SETTINGS.archive.index.archive.created_at))}
+          </span>} by {SETTINGS.archive.index.info.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
         </Typography>
 
         <Typography>
