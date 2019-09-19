@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import classes from './Explore.module.scss';
-import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst } from '../../../helpers';
+import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst, escapeRegExp } from '../../../helpers';
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -71,14 +71,36 @@ export default class Explore extends React.Component<{}, ExploreState> {
     // Reset scroll position
     window.scrollTo(0, 0);
 
-    const tweets = TweetSearcher.search(SETTINGS.archive.all, this.searchContent, "i");
+    let content = this.searchContent;
+    let selected_month = "";
+    let selected_loaded: any = null;
+
+    // Test si regex valide 
+    try {
+      new RegExp(content);
+    } catch (e) {
+      // escape
+      content = escapeRegExp(content);
+    }
+
+    // Test si on doit chercher dans le mois en cours ou pas
+    let tweets: PartialTweet[] = [];
+    if (content.startsWith(':current ') && this.state.loaded) {
+      content = content.replace(/^:current /, '').trim();
+      tweets = TweetSearcher.search(this.state.loaded, content, "i");
+      selected_month = this.state.month;
+      selected_loaded = this.state.loaded;
+    }
+    else {
+      tweets = TweetSearcher.search(SETTINGS.archive.all, content.trim(), "i");
+    }
 
     // Change selected
     this.setState({
       found: tweets,
-      month: "",
+      month: selected_month,
       mobileOpen: false,
-      loaded: null,
+      loaded: selected_loaded,
     });
   };
 

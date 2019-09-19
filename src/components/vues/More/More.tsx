@@ -53,14 +53,38 @@ export default class More extends React.Component {
 
         {/* SEARCH */}
         <Typography variant="h5" className={classes.second_title}>
-          Search in your tweets
+          Search
         </Typography>
 
         <Typography className={classes.help_p}>
-          You can enhance your queries made in tweet explorer with <span className="bold">keywords</span>.
+          For both tweets and direct messages, search is case-insensitive, and supports regular expressions.
+        </Typography>
+
+        <Marger size={8} />
+
+        <Typography variant="h6" className={classes.third_title}>
+          Tweets
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          Search for the tweets you want directly in your archive. Search is made instantly, in all your tweets.
+          <br />
+          You can enhance your queries made in tweet explorer by adding <span className="bold">keywords</span>.
           <br />
         </Typography>
         <Keywords />
+
+        <Marger size={8} />
+
+        <Typography variant="h6" className={classes.third_title}>
+          Direct Messages
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          When a conversation is selected, you can find messages by their text. Once you've found the
+          message you want, just click on it to see the following and preceding DMs of the conversation.
+          <br />
+        </Typography>
 
         <Marger size={8} />
 
@@ -467,6 +491,22 @@ function Keywords() {
             </TableRow>
           </TableHead>
           <TableBody>
+            <TableRow>
+              <TableCell component="th" scope="row" className="bold">
+                :current
+              </TableCell>
+              <TableCell>
+                -
+              </TableCell>
+              <TableCell style={{minWidth: 120}} align="right">
+                Limit search to currently selected month. 
+                Search <span className="bold">must</span> begin by <span className="italic">:current</span>.
+              </TableCell>
+              <TableCell style={{minWidth: 80}} align="right" className="italic">
+                :current hello !
+              </TableCell>
+            </TableRow>
+
             <TableRow>
               <TableCell component="th" scope="row" className="bold">
                 since:
