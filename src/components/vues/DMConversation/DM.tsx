@@ -5,6 +5,7 @@ import SETTINGS from '../../../tools/Settings';
 import { Avatar, Dialog } from '@material-ui/core';
 import UserCache from '../../../classes/UserCache';
 import { dateFormatter } from '../../../helpers';
+import { REGEX_URL } from '../../../const';
 
 type DMProp = {
   msg: LinkedDirectMessage;
@@ -51,16 +52,51 @@ export default class DM extends React.Component<DMProp, DMState> {
     return !this.dm.recipientId || this.dm.recipientId === "0";
   }
 
+  renderText(text: string) {
+    const splitted = text.split(REGEX_URL).filter(e => !e.match(REGEX_URL));
+    const urls: string[] = [];
+    const regex = new RegExp(REGEX_URL);
+    
+    let matches: RegExpExecArray;
+
+    while (matches = regex.exec(text)) {
+      urls.push(matches[0]);
+    }
+
+    // Assemblage
+    let i = 0;
+    const parts: JSX.Element[] = [];
+    while (i < splitted.length) {
+      parts.push(
+        <span key={String(i) + "-0"}>
+          {splitted[i]}
+        </span>
+      );
+
+      if (i in urls) {
+        parts.push(
+          <a key={String(i) + "-1"} href={urls[i]} target="_blank" rel="noopener noreferrer">
+            {urls[i]}
+          </a>
+        );
+      }
+
+      i++;
+    }
+
+    return parts;
+  }
+
   generateText() {
     const media = this.state.img;
     const text = this.dm.text.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
 
     return (
       <div className={classes.text}>
-          {media && <img className={classes.img} src={media} onClick={() => this.setState({ img_full: true })} />}
-          {text}
+        {media && <img className={classes.img} src={media} onClick={() => this.setState({ img_full: true })} />}
+        {this.props.onClick ? text : this.renderText(text)}
       </div>
-    )
+    );
   }
 
   componentDidMount() {
