@@ -48,7 +48,7 @@ export default class DM extends React.Component<DMProp, DMState> {
   }
 
   get is_group() {
-    return this.dm.recipientId === "0";
+    return !this.dm.recipientId || this.dm.recipientId === "0";
   }
 
   generateText() {
