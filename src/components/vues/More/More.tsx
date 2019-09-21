@@ -7,6 +7,7 @@ import { Marger } from '../../../tools/PlacingComponents';
 import Tasks from '../../../tools/Tasks';
 import { toast } from '../../shared/Toaster/Toaster';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
+import { DEBUG_MODE } from '../../../const';
 
 export default class More extends React.Component {
   renderGDPR() {
@@ -300,9 +301,8 @@ function Favorites() {
   function handleValidate() {
     setOpen(false);
 
-    // Starting the task TODO
-    // const favs = [...SETTINGS.archive.extended_gdpr.favorites];
-    const favs: string[] = Array(10000).fill("1");
+    // Starting the task
+    const favs: string[] = DEBUG_MODE ? Array(10000).fill("1") : [...SETTINGS.archive.extended_gdpr.favorites];
 
     Tasks.start(favs, "fav")
       .catch(() => {
@@ -350,8 +350,7 @@ function Blocks() {
     setOpen(false);
 
     // Starting the task
-    // const blocks = [...SETTINGS.archive.extended_gdpr.blocks];
-    const blocks: string[] = Array(10000).fill("1");
+    const blocks: string[] = DEBUG_MODE ? Array(10000).fill("1") : [...SETTINGS.archive.extended_gdpr.blocks];
 
     Tasks.start(blocks, "block")
       .catch(() => {
@@ -399,8 +398,7 @@ function Mutes() {
     setOpen(false);
 
     // Starting the task
-    // const mutes = [...SETTINGS.archive.extended_gdpr.mutes];
-    const mutes: string[] = Array(10000).fill("1");
+    const mutes: string[] = DEBUG_MODE ? Array(10000).fill("1") : [...SETTINGS.archive.extended_gdpr.mutes];
 
     Tasks.start(mutes, "mute")
       .catch(() => {
