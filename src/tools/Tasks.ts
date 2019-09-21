@@ -87,13 +87,13 @@ class TaskManager extends EventTarget {
   }
 
   subscribe(id: string) {
-    console.log("Subscribing", id);
+    // console.log("Subscribing", id);
     this.socket.emit('task', id, SETTINGS.token);
     this.makeEvent('subscribe', { id });
   }
 
   unsubscribe(id: string) {
-    console.log("Unsub", id);
+    // console.log("Unsub", id);
     if (this.has(id))
       this.socket.emit('remove', id, SETTINGS.token);
 
@@ -183,7 +183,7 @@ class TaskManager extends EventTarget {
     }).then(() => {
       // Apply all the listeners needed
       this.socket.on('progression', (task: TaskInformation) => {
-        console.log("Message received", task);
+        // console.log("Message received", task);
 
         this.refresh(task.id, task);
         if (task.error) {
@@ -204,7 +204,7 @@ class TaskManager extends EventTarget {
       });
 
       this.socket.on('task end', (task: TaskBaseMessage) => {
-        console.log("Task end", task);
+        // console.log("Task end", task);
 
         if (this.has(task.id)) {
           this.info(task.id).percentage = 100;
@@ -212,7 +212,7 @@ class TaskManager extends EventTarget {
       });
 
       this.socket.on('task cancel', (task: TaskBaseMessage) => {
-        console.log("Task cancelled", task);
+        // console.log("Task cancelled", task);
 
         this.remove(task.id);
       });
