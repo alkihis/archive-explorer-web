@@ -254,7 +254,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
         <Typography>
           Account #<span className={styles.bold}>{SETTINGS.archive.index.info.id}</span> created at {
-            dateFormatter("Y-m-d H:i", moment(SETTINGS.archive.index.info.created_at).toDate())
+            dateFormatter("Y-m-d H:i", new Date(SETTINGS.archive.index.info.created_at))
           }.
         </Typography>
 
