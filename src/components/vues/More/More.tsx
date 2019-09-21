@@ -8,6 +8,7 @@ import Tasks from '../../../tools/Tasks';
 import { toast } from '../../shared/Toaster/Toaster';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 import { DEBUG_MODE } from '../../../const';
+import moment from 'moment';
 
 export default class More extends React.Component {
   renderGDPR() {
@@ -434,7 +435,7 @@ function Mutes() {
 function ScreenNameHistory() {
   const rows = SETTINGS.archive.extended_gdpr.screen_name_history.map(e => {
     return {
-      date: new Date(e.screenNameChange.changedAt),
+      date: moment(e.screenNameChange.changedAt).toDate(),
       sn: e.screenNameChange.changedFrom
     }
   });

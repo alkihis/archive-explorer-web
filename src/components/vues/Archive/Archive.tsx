@@ -12,6 +12,7 @@ import { THRESHOLD_PREFETCH } from '../../../const';
 import { Link } from 'react-router-dom';
 import QuickDelete from '../QuickDelete/QuickDelete';
 import Timer from 'timerize';
+import moment from 'moment';
 
 type ArchiveState = {
   loaded: string;
@@ -247,13 +248,13 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         <Typography>
           Archive created {!SETTINGS.archive.is_gdpr && // Hide date if gdpr (not accurate)
           <span>
-            on {dateFormatter("Y-m-d", new Date(SETTINGS.archive.index.archive.created_at))}
+            on {dateFormatter("Y-m-d", SETTINGS.archive.generation_date)}
           </span>} by {SETTINGS.archive.index.info.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
         </Typography>
 
         <Typography>
           Account #<span className={styles.bold}>{SETTINGS.archive.index.info.id}</span> created at {
-            dateFormatter("Y-m-d H:i", new Date(SETTINGS.archive.index.info.created_at))
+            dateFormatter("Y-m-d H:i", moment(SETTINGS.archive.index.info.created_at).toDate())
           }.
         </Typography>
 

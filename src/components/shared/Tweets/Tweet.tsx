@@ -4,13 +4,14 @@ import { Status, FullUser } from 'twitter-d';
 import { PartialTweet, PartialTweetUser } from 'twitter-archive-reader';
 import { Card, CardHeader, Avatar, CardContent, CardActions, Typography, Checkbox } from '@material-ui/core';
 import RetweetIcon from '@material-ui/icons/Repeat';
-import { dateFormatter } from '../../../helpers';
+import { dateFormatter, dateFromTweet } from '../../../helpers';
 import TweetImage from './TweetMedia';
 import TweetText from './TweetText';
 import { withStyles } from '@material-ui/styles';
 import { CheckboxProps } from '@material-ui/core/Checkbox';
 import SETTINGS from '../../../tools/Settings';
 import UserCache from '../../../classes/UserCache';
+import moment from 'moment';
 
 type TweetProp = {
   data: PartialTweet | Status,
@@ -134,7 +135,8 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
             disabled={!SETTINGS.can_delete}
           />
           <TweetDate 
-            date={new Date(this.original.created_at)} 
+            // @ts-ignore
+            date={dateFromTweet(this.original)} 
             id_str={this.original.id_str} 
             screen_name={(this.original.user as FullUser).screen_name} 
           />

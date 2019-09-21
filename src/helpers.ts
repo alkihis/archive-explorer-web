@@ -7,6 +7,7 @@ import DMArchive from "twitter-archive-reader";
 import { toast } from "./components/shared/Toaster/Toaster";
 import { FullUser } from "twitter-d";
 import { AUTO_TWITTER_CHECK } from "./const";
+import moment from 'moment';
 
 export function setPageTitle(title?: string) {
   document.title = "Archive Explorer" + (title ? ` - ${title}` : '');
@@ -87,7 +88,7 @@ export function dateFromTweet(tweet: PartialTweet) : Date {
   if ('created_at_d' in tweet) {
     return tweet.created_at_d;
   }
-  return tweet.created_at_d = new Date(tweet.created_at);
+  return tweet.created_at_d = moment(tweet.created_at).toDate();
 }
 
 export function prefetchAllUserData(archive: DMArchive) {
