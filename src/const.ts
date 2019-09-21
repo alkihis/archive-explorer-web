@@ -1,4 +1,4 @@
-export const DEBUG_MODE = true;
+export const DEBUG_MODE = false;
 
 export const VERSION = "1.0.0-rc";
 export const THRESHOLD_PREFETCH = 20;
