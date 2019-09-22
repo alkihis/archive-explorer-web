@@ -1,6 +1,6 @@
 export const DEBUG_MODE = true;
 
-export const VERSION = "1.0.0-rc";
+export const VERSION = "1.0.0-rc2";
 export const THRESHOLD_PREFETCH = 20;
 export const SERVER_URL = DEBUG_MODE ? "http://localhost:3128" : "https://archive-explorer.fr";
 export const AUTO_TWITTER_CHECK = !DEBUG_MODE;

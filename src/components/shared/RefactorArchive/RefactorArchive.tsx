@@ -38,7 +38,7 @@ export default class RefactorArchiveButton extends React.Component<{ message?: s
         <RefactorModal open={this.state.open} onClose={() => this.closeModal()} />
 
         {/* Button */}
-        <Button color="primary" onClick={() => this.openModal()}>
+        <Button variant="outlined" color="secondary" onClick={() => this.openModal()}>
           {this.props.message ? this.props.message : "How to fix my archive ?"}
         </Button>
       </div>
@@ -106,8 +106,11 @@ export const RefactorModal: React.FC<{ open: boolean, onClose: () => void }> = p
         <img className={classes.step} alt="Step" src={step1_mac} />
 
         <Typography className={classes.steptitle}>
-          2 - Wait for archive extraction. If extraction fails at the end, it may be possible that the archive is
-          too big for macOS archiver. 
+          2 - Wait for archive extraction. 
+        </Typography>
+
+        <Typography className={classes.steptitle}>
+          If extraction fails at the end, it may be possible that the archive is too big for macOS archiver. 
           Try installing <a href="https://www.keka.io/en/" target="_blank" rel="noopener noreferrer">Keka</a>, then
           double-finger (right) click on the archive, move the cursor to "Open with", and choose Keka.
         </Typography>
@@ -144,12 +147,6 @@ export const RefactorModal: React.FC<{ open: boolean, onClose: () => void }> = p
         </Typography>
 
         <img className={classes.step} alt="Step" src={step7_mac} />
-
-        <DialogContentText>
-          Link will come into your mailbox. 
-          It may take some time (between one hour to several days) to generate. 
-          Please be patient.
-        </DialogContentText>
       </div>
     );
   }

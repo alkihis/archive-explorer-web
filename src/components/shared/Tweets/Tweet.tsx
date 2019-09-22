@@ -11,7 +11,6 @@ import { withStyles } from '@material-ui/styles';
 import { CheckboxProps } from '@material-ui/core/Checkbox';
 import SETTINGS from '../../../tools/Settings';
 import UserCache from '../../../classes/UserCache';
-import moment from 'moment';
 
 type TweetProp = {
   data: PartialTweet | Status,

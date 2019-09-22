@@ -9,6 +9,7 @@ import { toast } from '../../shared/Toaster/Toaster';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 import { DEBUG_MODE } from '../../../const';
 import moment from 'moment';
+import RefactorArchiveButton from '../../shared/RefactorArchive/RefactorArchive';
 
 export default class More extends React.Component {
   renderGDPR() {
@@ -167,6 +168,23 @@ export default class More extends React.Component {
           <br />
           If you want to start another task, please wait for
           other tasks to complete or cancel an existing task.
+        </Typography>
+
+        <Typography variant="h6" className={classes.third_title}>
+          Archive size limit
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          Due to a technical limitation, archive are fully loaded into your navigator's memory.
+          This could be very inefficient for mobiles devices or small computers.
+          Moreover, archive size limit, due to another technical limitation, is fixed to 4 GB.
+
+          <br />
+
+          In order to smoothen your experience with Archive Explorer, you can use a Mac or a PC to make
+          your archive lighter, by following this tutorial available by clicking the button below.
+
+          <RefactorArchiveButton message="How to lighten my archive ?" className={classes.light_btn} />
         </Typography>
 
         <Marger size="3rem" />
