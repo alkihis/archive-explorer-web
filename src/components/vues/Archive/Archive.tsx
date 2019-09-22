@@ -8,15 +8,17 @@ import { CenterComponent } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
-import { THRESHOLD_PREFETCH } from '../../../const';
+import { THRESHOLD_PREFETCH, THRESHOLD_SIZE_LIMIT } from '../../../const';
 import { Link } from 'react-router-dom';
 import QuickDelete from '../QuickDelete/QuickDelete';
 import Timer from 'timerize';
 import moment from 'moment';
+import { toast } from '../../shared/Toaster/Toaster';
+import RefactorArchiveButton from '../../shared/RefactorArchive/RefactorArchive';
 
 type ArchiveState = {
   loaded: string;
-  is_error: boolean;
+  is_error: boolean | string;
   in_load: string;
   loading_state: ArchiveReadState | "prefetch";
   quick_delete_open: boolean;
@@ -114,10 +116,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       }
     };
 
-    SETTINGS.archive.onerror = () => {
+    SETTINGS.archive.onerror = (err: CustomEvent) => {
       if (this.active)
         this.setState({
-          is_error: true,
+          is_error: err.detail instanceof DOMException ? "fail" : true,
           in_load: ""
         });
       
@@ -164,6 +166,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   loadArchive(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files.length) {
       const f = e.target.files[0];
+
+      if (f.size > THRESHOLD_SIZE_LIMIT) {
+        toast("File is very heavy, this might be a problem. See how to lighten the archive in the More tab.", "warning");
+      }
 
       SETTINGS.archive = new TwitterArchive(f, true);
 
@@ -231,9 +237,19 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           Error
         </Typography>
 
+        {this.state.is_error === true ?
         <Typography>
           Archive couldn't be loaded. Please load a new archive with the required format.
         </Typography>
+        :
+        <div>
+          <Typography>
+            Archive might be too big. Maximum file size is around 2 GB. 
+          </Typography>
+
+          <RefactorArchiveButton message="How to lighten my archive ?" className={styles.lighten_btn} />
+        </div>
+        }
       </div>
     );
   }
