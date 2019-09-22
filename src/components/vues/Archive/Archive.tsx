@@ -6,13 +6,12 @@ import { setPageTitle, dateFormatter } from '../../../helpers';
 import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider, Dialog } from '@material-ui/core';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
-import TwitterArchive, { ArchiveReadState } from 'twitter-archive-reader';
+import TwitterArchive, { ArchiveReadState, parseTwitterDate } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
 import { THRESHOLD_PREFETCH, THRESHOLD_SIZE_LIMIT } from '../../../const';
 import { Link } from 'react-router-dom';
 import QuickDelete from '../QuickDelete/QuickDelete';
 import Timer from 'timerize';
-import moment from 'moment';
 import { toast } from '../../shared/Toaster/Toaster';
 import RefactorArchiveButton from '../../shared/RefactorArchive/RefactorArchive';
 
@@ -270,7 +269,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
         <Typography>
           Account #<span className={styles.bold}>{SETTINGS.archive.index.info.id}</span> created at {
-            dateFormatter("Y-m-d H:i", new Date(SETTINGS.archive.index.info.created_at))
+            dateFormatter("Y-m-d H:i", parseTwitterDate(SETTINGS.archive.index.info.created_at))
           }.
         </Typography>
 
@@ -313,7 +312,6 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   inLoad() {
     const msg = this.getLoadingMessage();
-    console.log(msg);
 
     return (
       <div>

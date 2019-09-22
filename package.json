@@ -19,7 +19,6 @@
     "event-target-shim": "^5.0.1",
     "grapheme-splitter": "^1.0.4",
     "jszip": "^3.2.2",
-    "moment": "^2.24.0",
     "node-sass": "^4.12.0",
     "notistack": "^0.8.9",
     "react": "^16.9.0",
@@ -30,7 +29,7 @@
     "react-virtualized": "^9.21.1",
     "socket.io-client": "^2.3.0",
     "timerize": "^1.0.3",
-    "twitter-archive-reader": "^1.5.0",
+    "twitter-archive-reader": "^1.5.2",
     "twitter-d": "^0.4.0",
     "typescript": "3.5.3"
   },

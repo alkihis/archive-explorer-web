@@ -3,11 +3,10 @@ import { IUser } from "./tools/interfaces";
 import SETTINGS from "./tools/Settings";
 import { PartialTweet } from "twitter-archive-reader";
 import UserCache from "./classes/UserCache";
-import DMArchive from "twitter-archive-reader";
+import TwitterArchive, { parseTwitterDate } from "twitter-archive-reader";
 import { toast } from "./components/shared/Toaster/Toaster";
 import { FullUser } from "twitter-d";
 import { AUTO_TWITTER_CHECK } from "./const";
-import moment from 'moment';
 
 export function setPageTitle(title?: string) {
   document.title = "Archive Explorer" + (title ? ` - ${title}` : '');
@@ -88,10 +87,10 @@ export function dateFromTweet(tweet: PartialTweet) : Date {
   if ('created_at_d' in tweet) {
     return tweet.created_at_d;
   }
-  return tweet.created_at_d = moment(tweet.created_at).toDate();
+  return tweet.created_at_d = parseTwitterDate(tweet.created_at);
 }
 
-export function prefetchAllUserData(archive: DMArchive) {
+export function prefetchAllUserData(archive: TwitterArchive) {
   const sets: Set<string>[] = archive.messages.all.map(e => e.participants);
 
   const users = new Set<string>();

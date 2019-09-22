@@ -45,7 +45,7 @@ export default class FinalizeLogin extends React.Component {
 
   componentDidMount() {
     // Validating access token
-    console.log(this.state);
+    // console.log(this.state);
 
     if (this.state.has_token) {
       // Validating...

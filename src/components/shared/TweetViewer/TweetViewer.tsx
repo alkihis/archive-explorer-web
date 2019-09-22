@@ -211,7 +211,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   }
 
   onTweetCheckChange(checked: boolean, id_str: string) {
-    console.log(this, checked, id_str);
+    // console.log(this, checked, id_str);
     
     const s = this.state.selected;
     if (checked) {
@@ -398,7 +398,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           >
               {t}
           </InfiniteScroll>
-          {/* <Sentinel triggerMore={true} onVisible={() => console.log("Visible bottom !!")} /> */}
       </div>
     );
   }

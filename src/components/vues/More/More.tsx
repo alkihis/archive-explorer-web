@@ -8,8 +8,8 @@ import Tasks from '../../../tools/Tasks';
 import { toast } from '../../shared/Toaster/Toaster';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 import { DEBUG_MODE } from '../../../const';
-import moment from 'moment';
 import RefactorArchiveButton from '../../shared/RefactorArchive/RefactorArchive';
+import { parseTwitterDate } from 'twitter-archive-reader';
 
 export default class More extends React.Component {
   renderGDPR() {
@@ -453,7 +453,7 @@ function Mutes() {
 function ScreenNameHistory() {
   const rows = SETTINGS.archive.extended_gdpr.screen_name_history.map(e => {
     return {
-      date: moment(e.screenNameChange.changedAt).toDate(),
+      date: parseTwitterDate(e.screenNameChange.changedAt),
       sn: e.screenNameChange.changedFrom
     }
   });
