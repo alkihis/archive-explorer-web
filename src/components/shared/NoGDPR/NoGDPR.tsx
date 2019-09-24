@@ -116,7 +116,7 @@ export const DownloadGDPRModal: React.FC<{ open: boolean, onClose: () => void }>
         onClose={props.onClose}
         scroll="body"
       >
-        <DialogTitle id="scroll-dialog-title">Download GDPR archive</DialogTitle>
+        <DialogTitle id="scroll-dialog-title">Download your archive</DialogTitle>
         <DialogContent>
           {downloadGDPRText()}
         </DialogContent>

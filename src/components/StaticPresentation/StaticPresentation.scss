@@ -1,0 +1,135 @@
+@import '../../index.scss';
+@import '../../tools/functions.scss';
+
+.static-page {
+  header {
+    background-image: linear-gradient(220deg, #08ccc3 0%, #0078D7 100%);
+    padding: 40px 30px 65px 30px;
+    color: #fff;
+    position: relative;
+    
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 300;
+    }
+
+    .avatar {
+      background-color: rgb(255, 255, 255);
+      color: black;
+      width: 48px;
+      height: 48px;
+    }
+
+    section:nth-child(3) {
+      font-size: 1.5rem;
+      opacity: .8;
+
+      @include threshold_bar {
+        text-align: justify;
+      }
+    }
+
+    .button-login {
+      padding: .7rem 2rem;
+      text-transform: uppercase;
+      font-weight: lighter;
+      background-color: rgb(255, 255, 255);
+      font-size: 1.2rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,.2);
+
+      position: absolute;
+      bottom: -1rem;
+      right: 10%;
+      
+      width: fit-content;
+      width: -moz-fit-content;
+      
+      @include threshold_bar {
+        left: 50%;
+        transform: translate(-50%,0%);
+        right: 0;
+      }
+
+      &:active {
+        color: blue;
+      }
+    }
+  }
+
+  main {
+    color: #373a3c;
+
+    p {
+      line-height: 30px;
+      opacity: .85;
+    }
+
+    section:nth-child(1) {
+      margin-top: 3rem;
+
+      h2 {
+        font-weight: 500;
+        text-align: center;
+      }
+      p {
+        text-align: center;
+        width: 50%;
+        margin: auto;
+        margin-bottom: 1.5rem;
+
+        @include threshold_bar {
+          width: 100%;
+        }
+      }
+    }
+
+    section.feature {
+      width: 100%;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      padding: 2rem 2rem;
+      box-sizing: border-box;
+
+      h3 {
+        font-size: 1.5rem;
+        margin-top: .3rem;
+      }
+
+      div {
+        max-width: 45%;
+
+        p {
+          font-size: 1.05rem;
+        }
+      }
+
+      img {
+        width: 45%;
+        border-radius: 8px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      &:nth-child(even) {
+        flex-direction: row-reverse;
+      }
+
+      @include threshold_bar {
+        flex-direction: column !important;
+
+        div {
+          width: 100%;
+          max-width: 100%;
+        }
+  
+        img {
+          width: 100%;
+          max-width: 100%;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+}

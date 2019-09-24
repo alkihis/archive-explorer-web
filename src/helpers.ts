@@ -12,6 +12,9 @@ export function setPageTitle(title?: string) {
   document.title = "Archive Explorer" + (title ? ` - ${title}` : '');
 }
 
+/**
+ * Return true if user is verified, false if token expires, null if server can't be accessed.
+ */
 export async function checkCredentials(auto_user_dl = true, check_twitter_account = AUTO_TWITTER_CHECK) {
   try {
     const reso: IUser = await APIHELPER.request('users/credentials');

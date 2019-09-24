@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, Switch, RouteComponentProps } from "react-router-dom";
 import React from 'react';
 import Explore from "../vues/Explore/Explore";
 import RouterWrapper from "./RouterWrapper";
@@ -13,9 +13,26 @@ import { BigPreloader } from "../../tools/PlacingComponents";
 import Settings from "../vues/Settings/Settings";
 import DirectMessages from "../vues/DirectMessages/DirectMessages";
 import More from "../vues/More/More";
+import { StaticContext } from "react-router";
+import StaticPresentation from "../StaticPresentation/StaticPresentation";
 
-class AppRouter extends React.Component {
-  state: { will_validate: boolean, validation_status: boolean | null };
+type RouterState = { 
+  /** True if login modal should be shown.
+   * False if login modal is hidden. 
+   * Null will stop the page affichage. */
+  modal_shown: boolean | null, 
+  /** 
+   * True if the user is logged and validated. True by default (to enable page showing),
+   * but if user is not logged, automatically set to false.
+   * When credentials are checked, must be updated.
+   * 
+   * Null mean server is not accessible.
+   */
+  validation_status: boolean | null
+};
+
+class AppRouter extends React.Component<{}, RouterState> {
+  state: RouterState;
 
   protected logged = !!SETTINGS.token;
 
@@ -23,7 +40,7 @@ class AppRouter extends React.Component {
     super(props);
 
     this.state = { 
-      will_validate: null,
+      modal_shown: null,
       validation_status: true
     };
   }
@@ -33,7 +50,7 @@ class AppRouter extends React.Component {
     if (SETTINGS.user && SETTINGS.twitter_user && this.logged) {
       // un utilisateur est valide, check en arrière plan
       this.setState({
-        will_validate: false
+        modal_shown: false
       });
 
       checkCredentials()
@@ -43,7 +60,7 @@ class AppRouter extends React.Component {
             // token invalide ou API injoignable
             this.setState({
               validation_status: is_logged,
-              will_validate: true
+              modal_shown: true
             });
           }
         })
@@ -52,7 +69,7 @@ class AppRouter extends React.Component {
     // (si user not defined, pas censé arrivé)
     else if (this.logged) {
       this.setState({
-        will_validate: true
+        modal_shown: true
       });
 
       checkCredentials()
@@ -60,7 +77,7 @@ class AppRouter extends React.Component {
           if (is_logged) {
             // Tout s'est bien passé, l'utilisateur a un token ok
             this.setState({
-              will_validate: false
+              modal_shown: false
             });
           }
           // C'est pas bon, l'utilisateur doit se déconnecter, 
@@ -74,7 +91,7 @@ class AppRouter extends React.Component {
     }
     else {
       this.setState({
-        will_validate: false
+        modal_shown: false
       });
     }
   }
@@ -168,40 +185,44 @@ class AppRouter extends React.Component {
   }
 
   unloggedRouter() {
+    const renderUnloggedRoute = (props: RouteComponentProps<any, StaticContext, any>) => {
+      if (props.location.pathname.startsWith('/login')) {
+        return <Login />;
+      }
+      else if (props.location.pathname.startsWith('/finalize')) {
+        return <FinalizeLogin {...props} />;
+      }
+      else if (props.location.pathname === "/") {
+        // Homepage (static)
+        return <StaticPresentation />;
+      }
+      else {
+        return <Redirect
+          to={{
+            pathname: "/",
+            state: { from: props.location }
+          }}
+        />;
+      }
+    };
+
     return (
       <Router>
-        <Route
-          render={props =>
-            props.location.pathname.startsWith('/login') ? (
-              <Login />
-            ) : (
-              props.location.pathname.startsWith('/finalize') ? 
-              <FinalizeLogin {...props} />
-              : (
-                <Redirect
-                  to={{
-                    pathname: "/login/",
-                    state: { from: props.location }
-                  }}
-                />
-              )
-            )
-          }
-        />
+        <Route render={renderUnloggedRoute} />
       </Router>
     );
   }
 
   render() {
-    if (this.state.will_validate === null) {
+    if (this.state.modal_shown === null) {
       // n'affiche rien, composant en cours de chargement
       return <div />;
     }
 
     return (
       <div>
-        {this.state.will_validate && this.renderDialogLogin()}
-        {!this.state.will_validate ?
+        {this.state.modal_shown && this.renderDialogLogin()}
+        {!this.state.modal_shown ?
           (this.logged ? 
             this.routerLogged() : 
             this.unloggedRouter()

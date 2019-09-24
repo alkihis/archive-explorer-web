@@ -155,10 +155,12 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   componentDidMount() {
     setPageTitle();
+    window.DEBUG.Archive = this;
   }
 
   componentWillUnmount() {
     this.active = false;
+    delete window.DEBUG.Archive;
   }
 
   // Load archive inside SETTINGS.archive
