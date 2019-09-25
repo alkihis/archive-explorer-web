@@ -134,8 +134,9 @@ export default function Login() {
           </Typography>
 
           <Typography component="h3" variant="h6" className={classes_a.catch_phrase}>
-            Explore through time, browse your old direct messages and
-            quickly delete embarrassing tweets.
+            We need a tiny access to your Twitter account to allow us starting tweet deletions,
+            access your content and your profile details. 
+            You can revoke access when you want.
           </Typography>
 
           <div className={classes.form}>

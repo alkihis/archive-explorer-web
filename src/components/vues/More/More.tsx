@@ -339,7 +339,7 @@ function Favorites() {
         You have <span className={classes.number}>{SETTINGS.archive.extended_gdpr.favorites.size}</span> tweets into your favorites.
       </Typography>
 
-      <Button variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
+      <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
         Delete all my favorited tweets
       </Button>
 
@@ -387,7 +387,7 @@ function Blocks() {
         You have blocked <span className={classes.number}>{SETTINGS.archive.extended_gdpr.blocks.size}</span> users.
       </Typography>
 
-      <Button variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
+      <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
         Delete all my blocked accounts
       </Button>
 
@@ -435,7 +435,7 @@ function Mutes() {
         You have muted <span className={classes.number}>{SETTINGS.archive.extended_gdpr.mutes.size}</span> users.
       </Typography>
 
-      <Button variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
+      <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
         Delete all my muted accounts
       </Button>
 

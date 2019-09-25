@@ -169,6 +169,9 @@ class AESettings {
   }
 
   get can_delete() {
+    if (DEBUG_MODE && window.DEBUG.force_no_delete)
+      return false;
+
     if (DEBUG_MODE)
       return true;
 

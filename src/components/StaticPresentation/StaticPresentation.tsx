@@ -169,8 +169,6 @@ const StaticPresentation: React.FC = () => {
         </Container>
       </main>
 
-      
-
       <footer>
         <Container>
           <Divider className="divider-big-margin" />
