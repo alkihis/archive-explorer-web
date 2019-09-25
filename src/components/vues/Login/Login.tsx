@@ -1,7 +1,6 @@
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Error from '@material-ui/icons/Error';
@@ -9,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { Fab, CircularProgress, Divider } from '@material-ui/core';
+import { Fab, CircularProgress } from '@material-ui/core';
 import { blue, red } from '@material-ui/core/colors';
 import sign_in_twitter from '../../../assets/sign-in-with-twitter-link.png';
 import APIHELPER from '../../../tools/ApiHelper';
@@ -19,53 +18,7 @@ import classes from './Login.module.scss';
 import { IMG_PREFIX, IMG_LIST } from '../../../const';
 
 const classes_a = classes;
-
-function Copyright() {
-  return (
-    <div>
-      <Typography variant="body2" color="textSecondary" align="center">
-        Archive Explorer is an open-source tool made by <Link 
-          color="inherit" 
-          href="https://alkihis.fr/" 
-          className={classes.underline}
-        >
-          Alkihis
-        </Link>.
-      </Typography>
-
-      <Typography variant="body2" color="textSecondary" align="center" className={classes.legal_text}>
-        Using <span className="bold">Sign in with Twitter</span>, you allow
-        <span className="bold"> Archive Explorer</span> to store your Twitter credentials
-        and your login details like current date or IP address. 
-      </Typography>
-
-      <Divider className="divider-big-margin" />
-
-      <Typography variant="body2" align="center" className={classes.github_header}>
-        GitHub links
-      </Typography>
-
-      <div className={classes.github_links}>
-        <GithubLogo url="https://github.com/alkihis/archive-explorer-node" text="Server" />
-
-        <GithubLogo url="https://github.com/alkihis/archive-explorer-web" text="Client" />
-
-        <GithubLogo url="https://github.com/alkihis/twitter-archive-reader" text="Archive reader" />
-      </div>
-    </div>
-  );
-}
-
 const IMG_CHOOSEN = IMG_PREFIX + IMG_LIST[Math.floor(Math.random()*IMG_LIST.length)];
-
-function GithubLogo(props: { url: string, text: string }) {
-  return (
-    <a rel="noopener noreferrer" target="_blank" className={classes.github_container} href={props.url}>
-      <img src="/assets/github_logo.png" className={classes.github_img} />
-      <span className={classes.github_text}>{props.text}</span>
-    </a>
-  );
-}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -211,7 +164,11 @@ export default function Login() {
             </div>
         
             <Box mt={5}>
-              <Copyright />
+              <Typography variant="body2" color="textSecondary" align="center" className={classes_a.legal_text}>
+                Using <span className="bold">Sign in with Twitter</span>, you allow
+                <span className="bold"> Archive Explorer</span> to store your Twitter credentials
+                and your login details like current date or IP address. 
+              </Typography>
             </Box>
           </div>
         </div>

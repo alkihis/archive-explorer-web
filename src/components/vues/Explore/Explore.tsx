@@ -125,6 +125,15 @@ export default class Explore extends React.Component<{}, ExploreState> {
             All ({SETTINGS.archive.length})
           </ListItemText>
         </ListItem>
+        <ListItem 
+          button 
+          className={"day" === this.state.month ? classes.selected_month : ""} 
+          onClick={() => this.monthClicker("day", "")}
+        >
+          <ListItemText className={classes.drawer_month}>
+            Tweets of the day
+          </ListItemText>
+        </ListItem>
 
         {years_sorted.map(y => this.year(y))}
 
@@ -199,6 +208,15 @@ export default class Explore extends React.Component<{}, ExploreState> {
         found: null
       });
     }
+    else if (year === "day") {
+      // Find tweets of the day
+      this.setState({
+        loaded: SETTINGS.archive.day(),
+        month: year,
+        mobileOpen: false,
+        found: null
+      });
+    }
     else {
       this.setState({
         loaded: SETTINGS.archive.month(month, year),
@@ -233,10 +251,13 @@ export default class Explore extends React.Component<{}, ExploreState> {
   showActiveMonth() {
     let year = "", month_text = "Full archive";
 
-    if (this.state.month !== "*") {
+    if (this.state.month !== "*" && this.state.month !== "day") {
       const [_year, month] = this.state.month.split('-');
       year = _year;
       month_text = uppercaseFirst(getMonthText(month));
+    }
+    else if (this.state.month === "day") {
+      month_text = "Tweets of the day";
     }
 
     const tweets_number = this.state.loaded.length;

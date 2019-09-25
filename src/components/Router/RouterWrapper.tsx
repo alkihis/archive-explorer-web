@@ -17,14 +17,15 @@ class RouterWrapper extends Component {
   state = {
     value: 0,
     pathMap: [
-      '/',
+      '/archive/',
       '/explore/',
       '/dms/',
       '/more/',
       '/settings/',
     ],
     task_opens: false,
-    tasks_running: 0
+    tasks_running: 0,
+    shown: true
   };
 
   internal_progress: Set<string> = new Set;
@@ -33,12 +34,17 @@ class RouterWrapper extends Component {
     super(props);
     this.state.value = this.calculateCurrentValue(props);
 
+    if (props.location.pathname === "/") {
+      this.state.shown = false;
+    }
+
     props.history.listen(location => {
       const value = this.calculateCurrentValue({ location });
 
       if (value > -1 && value !== this.state.value) {
         this.setState({
-          value
+          value,
+          shown: location.pathname !== '/'
         });
       }
     });
@@ -131,6 +137,10 @@ class RouterWrapper extends Component {
 
   render() {
     const { value, pathMap } = this.state;
+
+    if (!this.state.shown) {
+      return <div />;
+    }
 
     return (
       <div>

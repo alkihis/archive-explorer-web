@@ -1,9 +1,10 @@
 import React from 'react';
 import './StaticPresentation.scss';
 import { Link } from 'react-router-dom';
-import { Avatar, Container } from '@material-ui/core';
+import { Avatar, Container, Typography, Divider } from '@material-ui/core';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import { DownloadGDPRModal } from '../shared/NoGDPR/NoGDPR';
+import SETTINGS from '../../tools/Settings';
 
 const StaticPresentation: React.FC = () => {
   const [open, setOpen] = React.useState(false);
@@ -24,9 +25,7 @@ const StaticPresentation: React.FC = () => {
             <Avatar className="avatar">
               <FolderOpenIcon />
             </Avatar>
-          </section>
 
-          <section>
             <h1>Twitter Archive Explorer</h1>
           </section>
 
@@ -35,7 +34,11 @@ const StaticPresentation: React.FC = () => {
           </section>
 
           <section>
-            <Link to="/login/" className="button-login">Login</Link>
+            {(
+              SETTINGS.is_logged ?
+              <Link to="/archive/" className="button-login">Explore your archive</Link> :
+              <Link to="/login/" className="button-login">Login</Link>
+            )}
           </section>
         </Container>
       </header>
@@ -98,8 +101,82 @@ const StaticPresentation: React.FC = () => {
 
             <img alt="Sort and filter" title="Sort tweets and filter them" src="/assets/start_page/sort.png" />
           </section>
+
+          <section className="other-feature">
+            <div>
+              <h2>And even more</h2>
+
+              <div className="container">
+                <div>
+                  <h5>Travel through time</h5>
+                  <p>
+                    Explore tweets or DMs conversations directly by year or month,
+                    relive every moment spent on Twitter, no matter of how far it is.
+                  </p>
+                </div>
+
+                <div>
+                  <h5>Favorites deletion</h5>
+                  <p>
+                    You've favorited dozens of thousands of tweets, and you
+                    want to make a clean sweep of your Twitter account past ?
+                    Two clicks and it's done.
+                  </p>
+                </div>
+
+                <div>
+                  <h5>Background tasks</h5>
+                  <p>
+                    With a very large number of tweets, favorites or mutes, deletion may be long.
+                    Without installing any program, or keeping any computer on,
+                    delete with tasks started in background. 
+                    You can cancel them at any time.
+                  </p>
+                </div>
+
+                <div>
+                  <h5>Tweets of the day</h5>
+                  <p>
+                    For fun or for nostalgia, find your posted tweets in the same day, the previous years.
+                    You could be surprised !
+                  </p>
+                </div>
+
+                <div>
+                  <h5>Twitter @ history</h5>
+                  <p>
+                    As a old Twitter user, did you ever asked when you've changed your Twitter @ for the last time ?
+                    Archive Explorer let you know every name you've used, and when you've modified it.
+                  </p>
+                </div>
+
+                <div>
+                  <h5>Open and private</h5>
+                  <p>
+                    Archive Explorer makes your privacy a priority. 
+                    Not a single of your direct messages are stored in our database.
+                    Twitter archive data stays in your browser.
+                    Have some doubt ? Code is <a 
+                      href="https://github.com/alkihis/archive-explorer-web"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >open-source</a>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
         </Container>
       </main>
+
+      
+
+      <footer>
+        <Container>
+          <Divider className="divider-big-margin" />
+          <Copyright />
+        </Container>
+      </footer>
 
       <DownloadGDPRModal open={open} onClose={closeModal} />
     </div>
@@ -107,3 +184,44 @@ const StaticPresentation: React.FC = () => {
 }
 
 export default StaticPresentation;
+
+function Copyright() {
+  return (
+    <div className="copyright">
+      <Typography variant="body2" color="textSecondary" align="center">
+        Archive Explorer is an open-source tool made by <a 
+          href="https://alkihis.fr/" 
+          rel="noopener noreferrer" 
+          target="_blank"
+        >
+          Alkihis
+        </a> • <a 
+          href="https://twitter.com/alkihis/" 
+          rel="noopener noreferrer" 
+          target="_blank"
+          className="twitter-link"
+        >
+          @Alkihis
+        </a>.
+      </Typography>
+
+      <div className="github-links">
+        <GithubLogo url="https://github.com/alkihis/archive-explorer-node" text="Server" />
+
+        <GithubLogo url="https://github.com/alkihis/archive-explorer-web" text="Client" />
+
+        <GithubLogo url="https://github.com/alkihis/twitter-archive-reader" text="Archive reader" />
+      </div>
+    </div>
+  );
+}
+
+
+function GithubLogo(props: { url: string, text: string }) {
+  return (
+    <a rel="noopener noreferrer" target="_blank" className="github-container" href={props.url}>
+      <img src="/assets/github_logo.png" className="github-img" />
+      <span className="github-text">{props.text}</span>
+    </a>
+  );
+}

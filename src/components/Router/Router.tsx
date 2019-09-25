@@ -171,11 +171,12 @@ class AppRouter extends React.Component<{}, RouterState> {
       <Router>
         <div className="Router">
           <Switch>
-            <Route path="/" exact component={Archive} />  
+            <Route path="/archive/" component={Archive} />  
             <Route path="/explore/" component={Explore} />
             <Route path="/settings/" component={Settings} />  
             <Route path="/dms/" component={DirectMessages} />  
             <Route path="/more/" component={More} />  
+            <Route path="/" exact component={StaticPresentation} />
             <Route component={NotFound} />
           </Switch>
           <RouterWrapper />

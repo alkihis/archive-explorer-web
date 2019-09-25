@@ -11,7 +11,7 @@ export default function NoArchive() {
       icon={BlockIcon} 
       main={"Archive is not loaded"} 
       second={<div>
-        Please load an valid archive in <Link to="/" className={classes.archive_link}>
+        Please load an valid archive in <Link to="/archive/" className={classes.archive_link}>
           <Typography variant="inherit" color="primary">
             Archive page
           </Typography>

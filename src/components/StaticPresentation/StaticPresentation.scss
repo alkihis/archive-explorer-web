@@ -4,14 +4,35 @@
 .static-page {
   header {
     background-image: linear-gradient(220deg, #08ccc3 0%, #0078D7 100%);
-    padding: 40px 30px 65px 30px;
+    padding: 40px 30px 80px 30px;
+    min-height: 290px;
+    box-sizing: border-box;
     color: #fff;
     position: relative;
+
+    section:nth-child(1) {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      
+      h1 {
+        font-size: 2.3rem;
+        font-weight: 300;
+        margin-left: 1.3rem;
+      }
+
+      @include threshold_bar {
+        flex-direction: column;
+        justify-content: center;
+        
+        h1 {
+          margin-left: 0;
+          margin-top: 1rem;
+          text-align: center;
+        }
+      }
+    } 
     
-    h1 {
-      font-size: 2.3rem;
-      font-weight: 300;
-    }
 
     .avatar {
       background-color: rgb(255, 255, 255);
@@ -20,7 +41,7 @@
       height: 48px;
     }
 
-    section:nth-child(3) {
+    section:nth-child(2) {
       font-size: 1.5rem;
       opacity: .8;
 
@@ -32,14 +53,16 @@
     .button-login {
       padding: .7rem 2rem;
       text-transform: uppercase;
-      font-weight: lighter;
+      font-weight: 700;
       background-color: rgb(255, 255, 255);
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       box-shadow: 0 10px 20px rgba(0,0,0,.2);
 
       position: absolute;
-      bottom: -1rem;
+      bottom: -1.3rem;
       right: 10%;
+
+      letter-spacing: .05rem;
       
       width: fit-content;
       width: -moz-fit-content;
@@ -131,5 +154,102 @@
         }
       }
     }
+
+    section.other-feature {
+      width: 100%;
+
+      h2 {
+        font-size: 2rem;
+        margin-top: 1rem;
+        margin-left: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .container {
+        width: 100%;
+
+        display: grid;
+        justify-content: center;
+        grid-template-columns: auto auto auto;
+        gap: 10px;
+  
+        padding: 0 2rem;
+        padding-top: 1rem;
+        margin-bottom: 2rem;
+        box-sizing: border-box;
+
+        & > div {
+          height: 100%;
+          background-color: #ececec;
+          padding: 18px;
+          box-sizing: border-box;
+        }
+  
+        h5 {
+          font-size: 1.2rem;
+          margin-top: .3rem;
+          margin-bottom: .5rem;
+        }
+  
+        p {
+          font-size: .95rem;
+          margin: 0;
+        }
+  
+        @include threshold_bar {
+          grid-template-columns: auto;
+        }
+      }
+    }
   }
+
+  footer {
+    background: linear-gradient(#f7f7f7, #f7f7f7, #c4d9ff);
+
+    .divider-big-margin {
+      margin-top: 3rem !important;
+      margin-bottom: 0 !important;
+    }
+
+    .copyright {
+      padding: 24px;
+      padding-bottom: 4rem;
+      box-sizing: border-box;
+    }
+
+    .twitter-link {
+      color: rgb(53, 53, 53) !important;
+    }
+  }
+  
+  .github-links {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    row-gap: 10px;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 1rem;
+  
+    @include min_mobile {
+      grid-template-columns: auto;
+      gap: 1rem;
+    }
+  }
+  
+  .github-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .github-img {
+    display: block;
+    height: 24px;
+  }
+  
+  .github-text {
+    font-weight: bold;
+    margin-left: 7px;
+  }
+  
 }
