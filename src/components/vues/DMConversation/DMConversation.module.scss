@@ -65,17 +65,31 @@ $drawer_width:240px;
   font-size: 1.05rem !important;
   font-weight: 200 !important;
   color: #0078D7;
+
+  :global .dark :local & {
+    color: #52a8ee;
+  }
 }
 .get_back_icon {
   margin-bottom: 1px;
 }
 .selected_month {
   background-color: #006cc5 !important;
+
+  :global .dark :local & {
+    background-color: #4ba7f3 !important;
+  }
+
   color: white !important;
 }
 
 .no_msg {
   color: lighten($color: #000000, $amount: 30);
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 75);
+  }
+
   margin-top: 2rem;
 }
 .icon {
@@ -106,16 +120,33 @@ $drawer_width:240px;
   &:hover {
     background-color: #e2e2ff !important;
   }
+
+  :global .dark :local & {
+    border-bottom: 1px solid #31313a !important;
+
+    &:hover {
+      background-color: #5c5c85 !important;
+    }
+  }
 }
 
 .year_count {
   color: lighten($color: #000000, $amount: 30);
+  
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 75);
+  }
+
   margin-left: .2rem;
   font-size: .8rem;
 }
 
 .search_input {
   border-top: 1px solid #e0e0e0 !important;
+
+  :global .dark :local & {
+    border-top: 1px solid #31313a !important;
+  }
 }
 
 .textField {

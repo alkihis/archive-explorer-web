@@ -29,6 +29,11 @@
 .tabs {
   background-color: unset !important;
   background: linear-gradient(#036fc8, #005da9);
+
+  :global .dark :local & {
+    background: linear-gradient(#7dbcef, #073f6d);
+    color: #fff !important;
+  }
 }
 
 .avatar_holder {
@@ -64,6 +69,11 @@
 
 .conv_screen_name {
   color: rgb(65, 65, 65);
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 85);
+  }
+
   font-size: .9rem;
   grid-area: sname;
   align-self: baseline;

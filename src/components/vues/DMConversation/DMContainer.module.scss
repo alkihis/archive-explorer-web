@@ -7,6 +7,11 @@
   text-align: center;
   font-weight: 200;
   color: #797979;
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 85);
+  }
+
   font-size: .95rem;
   margin-bottom: .3rem;
 }
@@ -17,6 +22,10 @@
   right: 10px;
   background-color: #424256 !important;
   cursor: pointer;
+
+  :global .dark :local & {
+    color: white !important;
+  }
 }
 
 .big_text {

@@ -13,4 +13,8 @@
 
 .text_lighten {
   color: lighten($color: #000000, $amount: 30);
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 75);
+  }
 }

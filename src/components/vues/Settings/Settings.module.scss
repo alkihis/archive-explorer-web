@@ -50,6 +50,11 @@ $avatar_size: 60px;
 .sn {
   grid-area: screen;
   color: lighten($color: #000000, $amount: 30);
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 75);
+  }
+  
   font-size: 1.1rem;
   font-weight: 200;
   align-self: baseline;

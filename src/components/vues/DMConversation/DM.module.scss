@@ -31,6 +31,10 @@ $avatar: 38px;
   &.no_img {
     margin-right: $avatar+6px;
   }
+
+  :global .dark :local & {
+    background-color: #383742;
+  }  
 }
 
 .msg_other {
@@ -40,10 +44,18 @@ $avatar: 38px;
   &.no_img {
     margin-left: $avatar+6px;
   }
+
+  :global .dark :local & {
+    background-color: #4e4e4e;
+  }
 }
 
 .msg_selected {
   background-color: #ffc9c9;
+
+  :global .dark :local & {
+    background-color: #885656;
+  }
   animation: lighten 1s;
 }
 
@@ -53,8 +65,21 @@ $avatar: 38px;
   100% { background-color: #ffc9c9; }
 }
 
+:global .dark {
+  @keyframes lighten {
+    0% { background-color: #ff8f8f; }
+    50% { background-color: #ff3d3d; }
+    100% { background-color: #885656; }
+  }
+}
+
 .date {
   color: #6d6d6d;
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 75);
+  }
+
   font-size: x-small;
   font-weight: 300;
   text-align: right;

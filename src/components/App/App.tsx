@@ -13,11 +13,32 @@ const theme = createMuiTheme({
   },
 });
 
+const dark_theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#86caff',
+    },
+    secondary: {
+      main: '#f08ae3'
+    },
+    type: 'dark'
+  },
+  
+});
+
+const DARK = true;
+if (DARK) {
+  document.body.classList.add('dark');
+}
+else {
+  document.body.classList.remove('dark');
+}
+
 const App: React.FC = () => {
   setPageTitle();
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={dark_theme}>
       <Router />
       <Toaster />
     </ThemeProvider>

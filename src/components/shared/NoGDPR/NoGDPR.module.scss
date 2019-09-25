@@ -13,12 +13,20 @@
 
 .text_lighten {
   color: lighten($color: #000000, $amount: 30);
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 75);
+  }
 }
 
 .steptitle {
   color: lighten($color: #000000, $amount: 15);
   font-size: 1.1rem !important;
   margin: .5rem 0 !important;
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 85);
+  }
 }
 
 .step {
