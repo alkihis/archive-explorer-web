@@ -219,7 +219,7 @@ export function filterTweets(tweets: PartialTweet[]) {
     (a: PartialTweet, b: PartialTweet) => Number(BigInt(a.id_str) - BigInt(b.id_str));
   }
   else {
-    // Does not support BigInt, fallback to Collator (TO TEST TODO)
+    // Does not support BigInt, fallback to Collator
     const coll = new Intl.Collator(undefined, { numeric: true });
     
     sort_fn = (a: PartialTweet, b: PartialTweet) => (SETTINGS.sort_reverse_chrono ? 

@@ -6,7 +6,6 @@ import DM from './DM';
 import Sentinel from '../../shared/Sentinel/Sentinel';
 import { Divider, Fab, Tooltip } from '@material-ui/core';
 import { uppercaseFirst, getMonthText } from '../../../helpers';
-// TODO CHANGE ICON
 import JumpToIcon from '@material-ui/icons/LowPriority';
 
 const LOADED_PER_CHUNK = 100;
