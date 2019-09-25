@@ -4,6 +4,7 @@ import { setPageTitle } from '../../helpers';
 import Toaster from '../shared/Toaster/Toaster';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core';
+import SETTINGS from '../../tools/Settings';
 
 const theme = createMuiTheme({
   palette: {
@@ -26,23 +27,51 @@ const dark_theme = createMuiTheme({
   
 });
 
-const DARK = true;
-if (DARK) {
-  document.body.classList.add('dark');
-}
-else {
-  document.body.classList.remove('dark');
-}
+class App extends React.Component<{}, { theme: any }> {
+  state = {
+    theme: SETTINGS.dark_mode ? dark_theme : theme
+  };
 
-const App: React.FC = () => {
-  setPageTitle();
+  constructor(props: {}) {
+    super(props);
 
-  return (
-    <ThemeProvider theme={dark_theme}>
-      <Router />
-      <Toaster />
-    </ThemeProvider>
-  );
+    setPageTitle();
+
+    if (SETTINGS.dark_mode) {
+      document.body.classList.add('dark');
+    }
+  }
+
+  componentDidMount() {
+    // @ts-ignore
+    window.addEventListener('darkmodechange', this.handleToggle);
+  }
+
+  componentWillUnmount() {
+    // @ts-ignore
+    window.removeEventListener('darkmodechange', this.handleToggle);
+  }
+
+  handleToggle = (event: CustomEvent<boolean>) => {
+    if (event.detail) {
+      // dark mode on
+      document.body.classList.add('dark');
+      this.setState({ theme: dark_theme });
+    }
+    else {
+      document.body.classList.remove('dark');
+      this.setState({ theme });
+    }
+  };
+
+  render() {  
+    return (
+      <ThemeProvider theme={this.state.theme}>
+        <Router />
+        <Toaster />
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;

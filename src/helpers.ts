@@ -274,3 +274,12 @@ export function specialJoin(array: string[], sep = ", ", final_joiner = " and ")
 
   return array.slice(0, array.length - 1).join(sep) + final_joiner + array[array.length - 1];
 }
+
+export function toggleDarkMode(force: boolean = undefined) {
+  SETTINGS.dark_mode = force === undefined ? !SETTINGS.dark_mode : force;
+
+  window.dispatchEvent(new CustomEvent('darkmodechange', { detail: SETTINGS.dark_mode }));
+}
+
+// DEBUG
+window.DEBUG.dark_mode = toggleDarkMode;

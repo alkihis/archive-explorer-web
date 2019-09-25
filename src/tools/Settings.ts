@@ -18,6 +18,7 @@ class AESettings {
   protected current_user: IUser | null = null;
   protected current_archive: TwitterArchive | null = null;
   protected _twitter_user: FullUser;
+  protected _dark_mode = false;
 
   archive_name: string = "";
   archive_in_load = "";
@@ -26,6 +27,9 @@ class AESettings {
   constructor() {
     if (localStorage.getItem('login_token')) {
       this.token = localStorage.getItem('login_token');
+    }
+    if (localStorage.getItem('dark_mode')) {
+      this.dark_mode = localStorage.getItem('dark_mode') === "true";
     }
     if (localStorage.getItem('only_medias')) {
       this.only_medias = localStorage.getItem('only_medias') === "true";
@@ -73,6 +77,15 @@ class AESettings {
         localStorage.removeItem('twitter_user');
       }
     }
+  }
+
+  get dark_mode() {
+    return this._dark_mode;
+  }
+
+  set dark_mode(v: boolean) {
+    this._dark_mode = v;
+    localStorage.setItem('dark_mode', String(v));
   }
 
   get sort_reverse_chrono() {

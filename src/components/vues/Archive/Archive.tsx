@@ -121,7 +121,11 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           is_error: err.detail instanceof DOMException ? "fail" : true,
           in_load: ""
         });
-      
+
+      try {
+        console.error("Files in archive: ", Object.keys(SETTINGS.archive.raw.ls(false)));
+      } catch (e) { }
+
       SETTINGS.archive = undefined;
       SETTINGS.archive_in_load = "";
     };

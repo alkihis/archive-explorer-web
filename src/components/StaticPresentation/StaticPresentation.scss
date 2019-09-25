@@ -275,6 +275,10 @@
   .github-img {
     display: block;
     height: 24px;
+    
+    .dark & {
+      filter: invert(1);
+    }
   }
   
   .github-text {

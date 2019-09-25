@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './Settings.module.scss';
-import { setPageTitle, dateFormatter } from '../../../helpers';
+import { setPageTitle, dateFormatter, toggleDarkMode } from '../../../helpers';
 import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
@@ -14,6 +14,7 @@ type SettingsState = {
   modal_open: boolean;
   pp: boolean;
   sort_reverse_chrono: boolean;
+  dark_mode: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -25,7 +26,16 @@ export default class Settings extends React.Component<{}, SettingsState> {
     modal_open: false,
     pp: SETTINGS.pp,
     sort_reverse_chrono: SETTINGS.sort_reverse_chrono,
+    dark_mode: SETTINGS.dark_mode,
   };
+
+  changeDarkState(v: boolean) {
+    this.setState({
+      dark_mode: v
+    });
+
+    toggleDarkMode(v);
+  }
 
   changeMediaState(v: boolean) {
     this.setState({
@@ -177,7 +187,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
 
   accountSettings() {
     return (
-      <div style={{ marginBottom: 'calc(5rem + 64px)' }}>
+      <div>
         <div className={classes.acc_details}>
           <Avatar 
             alt="Twitter avatar" 
@@ -210,6 +220,25 @@ export default class Settings extends React.Component<{}, SettingsState> {
         {SETTINGS.expired && <Typography className={classes.expired}>
           Twitter credentials have expired. Please log out and log in again.
         </Typography>}
+      </div>
+    );
+  }
+
+  displaySettings() {
+    return (
+      <div style={{ marginBottom: 'calc(5rem + 64px)' }}>
+        <FormControlLabel
+          value="dark_mode"
+          control={
+            <Checkbox 
+              color="primary"
+              checked={this.state.dark_mode}
+              onChange={(_, c) => this.changeDarkState(c)} 
+            />
+          }
+          label="Enable dark mode"
+          labelPlacement="end"
+          />
       </div>
     );
   }
@@ -275,6 +304,13 @@ export default class Settings extends React.Component<{}, SettingsState> {
           </Typography>
           <Container className={classes.account_container}>
             {this.accountSettings()}
+          </Container>
+
+          <Typography variant="h4" className={classes.account_title}>
+            Display
+          </Typography>
+          <Container className={classes.account_container}>
+            {this.displaySettings()}
           </Container>
         </Container>
       </div>
