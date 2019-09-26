@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './RefactorArchive.module.scss';
-import { Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@material-ui/core';
+import { Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core';
 
 // STEPS IMG
 import step1_mac from '../../../assets/refactor_mac/1.png';

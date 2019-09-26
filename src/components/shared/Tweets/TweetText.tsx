@@ -1,11 +1,10 @@
 import React from 'react';
 import { Status } from 'twitter-d';
 import { PartialTweet } from 'twitter-archive-reader';
-// import classes from './TweetText.module.scss';
 import { unescapeTwi } from '../../../helpers';
 import Graphene from 'grapheme-splitter';
 
-const splitter = new Graphene;
+const splitter = new Graphene();
 const TWITTER_BASE = "https://twitter.com/";
 const TWITTER_HASH_BASE = "https://twitter.com/search?q=";
 

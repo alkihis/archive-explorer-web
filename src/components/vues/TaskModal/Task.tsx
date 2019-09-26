@@ -1,7 +1,7 @@
 import classes from './Task.module.scss';
 import React from 'react';
 import { TaskInformation } from '../../../tools/Tasks';
-import { ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, LinearProgress, ExpansionPanelActions, Button, Hidden } from '@material-ui/core';
+import { ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, LinearProgress, ExpansionPanelActions, Button } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RoundIcon from '@material-ui/icons/Lens';
 

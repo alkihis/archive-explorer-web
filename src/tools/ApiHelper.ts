@@ -40,7 +40,7 @@ export class APIHelper {
         var fd: FormData | string;
         // Si multipart (formdata)
         if (settings.body_mode && settings.body_mode === "multipart") {
-          fd = new FormData;
+          fd = new FormData();
   
           for (const [key, value] of Object.entries(settings.parameters)) {
             fd.append(key, value);
@@ -133,6 +133,6 @@ export class APIHelper {
 
 export const BASE_API_URL = SERVER_URL + "/api/";
 
-const APIHELPER = new APIHelper;
+const APIHELPER = new APIHelper();
 
 export default APIHELPER;

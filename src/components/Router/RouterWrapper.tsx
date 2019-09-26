@@ -28,7 +28,7 @@ class RouterWrapper extends Component {
     shown: true
   };
 
-  internal_progress: Set<string> = new Set;
+  internal_progress: Set<string> = new Set();
 
   constructor(props: RouteComponentProps) {
     super(props);

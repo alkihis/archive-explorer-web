@@ -4,6 +4,12 @@ import { FullUser } from "twitter-d";
 import { DEBUG_MODE } from "../const";
 import APIHELPER from "./ApiHelper";
 
+// Listener for dark theme
+const media_query_list = window.matchMedia('(prefers-color-scheme: dark)');
+media_query_list.addEventListener("change", function(this: MediaQueryList) {
+  SETTINGS.dark_mode = this.matches;
+});
+
 class AESettings {
   // Saved settings
   protected _token: string = "";
@@ -30,6 +36,12 @@ class AESettings {
     }
     if (localStorage.getItem('dark_mode')) {
       this.dark_mode = localStorage.getItem('dark_mode') === "true";
+    }
+    else {
+      // Initial init
+      console.log("Autodetecting prefereed mode...");
+      console.log("Dark mode on:", media_query_list.matches);
+      this.dark_mode = media_query_list.matches;
     }
     if (localStorage.getItem('only_medias')) {
       this.only_medias = localStorage.getItem('only_medias') === "true";
@@ -86,6 +98,7 @@ class AESettings {
   set dark_mode(v: boolean) {
     this._dark_mode = v;
     localStorage.setItem('dark_mode', String(v));
+    window.dispatchEvent(new CustomEvent('darkmodechange', { detail: v }));
   }
 
   get sort_reverse_chrono() {
@@ -235,7 +248,7 @@ class AESettings {
   }
 }
 
-const SETTINGS = new AESettings;
+const SETTINGS = new AESettings();
 
 export default SETTINGS;
 

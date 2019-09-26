@@ -5,7 +5,7 @@ export class Cache<T> {
     [id: string]: T
   } = {};
 
-  protected asked_by_empty: Set<string> = new Set;
+  protected asked_by_empty: Set<string> = new Set();
 
   protected readonly CHUNK_LENGTH = 100;
   protected readonly MAX_THREADS = 5;
@@ -117,7 +117,7 @@ export class Cache<T> {
   }
 
   clearFailCache() {
-    this.asked_by_empty = new Set;
+    this.asked_by_empty = new Set();
   }
 }
 

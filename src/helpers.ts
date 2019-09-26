@@ -277,8 +277,6 @@ export function specialJoin(array: string[], sep = ", ", final_joiner = " and ")
 
 export function toggleDarkMode(force: boolean = undefined) {
   SETTINGS.dark_mode = force === undefined ? !SETTINGS.dark_mode : force;
-
-  window.dispatchEvent(new CustomEvent('darkmodechange', { detail: SETTINGS.dark_mode }));
 }
 
 // DEBUG

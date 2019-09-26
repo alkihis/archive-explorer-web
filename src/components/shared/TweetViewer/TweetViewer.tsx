@@ -53,7 +53,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       scroller_key: String(Math.random()),
       delete_modal: false,
       selectible: new Set(tweets.map(t => t.id_str)),
-      selected: new Set,
+      selected: new Set(),
       modal_confirm: false
     };
 
@@ -82,26 +82,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       if (medias) {
         return (rts ? "re" : "") + "tweets with medias";
       }
-
-      /* 
-      const texts: string[] = [];
-      if (medias) {
-        texts.push("tweets with medias");
-      }
-      if (videos) {
-        texts.push("tweets with videos/GIFs");
-      }
-      if (rts) {
-        texts.push("retweets");
-      }
-
-      if (texts.length > 1) {
-        return texts.slice(0, texts.length - 1).join(', ') + " and " + texts[texts.length - 1];
-      }
-      else {
-        return texts[0];
-      } 
-      */
     }
     return "";
   }
@@ -168,7 +148,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         has_more: true,
         delete_modal: false,
         scroller_key: String(Math.random()),
-        selected: new Set,
+        selected: new Set(),
         selectible: new Set(tweets.map(i => i.id_str))
       });
     }
@@ -179,9 +159,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       selected: new Set(this.state.selectible),
       delete_modal: true
     });
-    Object.values(this.references).map(t => {
-      t.current.check();
-    });
+    Object.values(this.references).map(t => t.current.check());
   }
 
   uncheckAll() {
@@ -189,9 +167,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       selected: new Set([]),
       delete_modal: false
     });
-    Object.values(this.references).map(t => {
-      t.current.uncheck();
-    });
+    Object.values(this.references).map(t => t.current.uncheck());
   }
 
   renderTweet(t: PartialTweet, i: number) {

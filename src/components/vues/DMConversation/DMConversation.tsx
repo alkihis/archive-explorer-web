@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import classes from './DMConversation.module.scss';
 import { Conversation, LinkedDirectMessage } from 'twitter-archive-reader';
-import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText, TextField, Fab } from '@material-ui/core';
+import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText, TextField } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -263,7 +263,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
     if (user && !this.conv.is_group_conversation) {
       return (
-        <img className={classes.conv_header_img} src={user.profile_banner_url} />
+        <img className={classes.conv_header_img} alt="Conversation header" src={user.profile_banner_url} />
       );
     }
   }

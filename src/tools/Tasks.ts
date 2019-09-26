@@ -73,7 +73,7 @@ class TaskManager extends EventTarget {
         this.subscribe(task);
       }
       else {
-        throw "Unknown error";
+        throw new Error("Unknown error");
       }
     } catch (e) {
       if (e && Array.isArray(e) && e[1].code === 13) {
@@ -229,7 +229,7 @@ defineEventAttribute(TaskManager.prototype, 'unsubscribe');
 defineEventAttribute(TaskManager.prototype, 'remove');
 defineEventAttribute(TaskManager.prototype, 'progression');
 
-const Tasks = new TaskManager;
+const Tasks = new TaskManager();
 export default Tasks;
 
 window.DEBUG.tasks = Tasks;

@@ -53,7 +53,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   // Subscribe to archive readyness
   checkOnReadyArchive() {
-    this.timer = new Timer;
+    this.timer = new Timer();
 
     SETTINGS.archive.onready = async () => {
       const name = this.state.in_load;

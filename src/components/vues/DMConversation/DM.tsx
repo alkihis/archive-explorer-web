@@ -59,6 +59,7 @@ export default class DM extends React.Component<DMProp, DMState> {
     
     let matches: RegExpExecArray;
 
+    // eslint-disable-next-line
     while (matches = regex.exec(text)) {
       urls.push(matches[0]);
     }
@@ -93,7 +94,7 @@ export default class DM extends React.Component<DMProp, DMState> {
 
     return (
       <div className={classes.text}>
-        {media && <img className={classes.img} src={media} onClick={() => this.setState({ img_full: true })} />}
+        {media && <img className={classes.img} alt="" src={media} onClick={() => this.setState({ img_full: true })} />}
         {this.props.onClick ? text : this.renderText(text)}
       </div>
     );

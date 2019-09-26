@@ -218,7 +218,7 @@ function Copyright() {
 function GithubLogo(props: { url: string, text: string }) {
   return (
     <a rel="noopener noreferrer" target="_blank" className="github-container" href={props.url}>
-      <img src="/assets/github_logo.png" className="github-img" />
+      <img src="/assets/github_logo.png" alt="" className="github-img" />
       <span className="github-text">{props.text}</span>
     </a>
   );

@@ -1,6 +1,6 @@
 import React, { MouseEvent as RMouseEvent, ChangeEvent } from 'react';
 import classes from './QuickDelete.module.scss';
-import { Stepper, Step, StepLabel, Typography, Button, DialogTitle, DialogContent, DialogContentText, DialogActions, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Stepper, Step, StepLabel, Typography, Button, DialogTitle, DialogContent, DialogActions, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { getMonthText } from '../../../helpers';
@@ -19,7 +19,7 @@ type QuickDeleteState = {
 export default class QuickDelete extends React.Component<QuickDeleteProp, QuickDeleteState> {
   state: QuickDeleteState = {
     step: 0,
-    selected: new Set
+    selected: new Set()
   };
 
   index: { [year: string]: { [month: string]: string[] } } = {};
@@ -92,7 +92,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
 
   unselectAll() {
     this.setState({
-      selected: new Set
+      selected: new Set()
     });
   }
 
