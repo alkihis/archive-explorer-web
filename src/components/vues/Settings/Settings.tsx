@@ -29,12 +29,13 @@ export default class Settings extends React.Component<{}, SettingsState> {
     dark_mode: SETTINGS.dark_mode,
   };
 
-  changeDarkState(v: boolean) {
+  changeDarkState(v: boolean, refresh_settings = true) {
     this.setState({
       dark_mode: v
     });
 
-    toggleDarkMode(v);
+    if (refresh_settings)
+      toggleDarkMode(v);
   }
 
   changeMediaState(v: boolean) {
@@ -79,8 +80,20 @@ export default class Settings extends React.Component<{}, SettingsState> {
     SETTINGS.sort_reverse_chrono = v;
   }
 
+  handleDarkModeChange = (e: CustomEvent<boolean>) => {
+    this.changeDarkState(e.detail, false);
+  };
+
   componentDidMount() {
     setPageTitle("Settings");
+
+    // @ts-ignore
+    window.addEventListener('darkmodechange', this.handleDarkModeChange);
+  }
+
+  componentWillUnmount() {
+    // @ts-ignore
+    window.removeEventListener('darkmodechange', this.handleDarkModeChange);
   }
 
   tweetViewSettings() {

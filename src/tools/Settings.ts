@@ -4,11 +4,23 @@ import { FullUser } from "twitter-d";
 import { DEBUG_MODE } from "../const";
 import APIHELPER from "./ApiHelper";
 
-// Listener for dark theme
+// Check if dark theme requested
 const media_query_list = window.matchMedia('(prefers-color-scheme: dark)');
-media_query_list.addEventListener("change", function(this: MediaQueryList) {
-  SETTINGS.dark_mode = this.matches;
-});
+
+// Listen for dark mode change
+try {
+  media_query_list.addEventListener("change", () => {
+    // Refresh current setting
+    SETTINGS.dark_mode = media_query_list.matches;
+  });
+} catch (e) {
+  // needed for Safari or navs that doesn't implement EventTarget:
+  // Use of @deprecated .addListener
+  media_query_list.addListener(() => {
+    // Refresh current setting
+    SETTINGS.dark_mode = media_query_list.matches;
+  });
+}
 
 class AESettings {
   // Saved settings

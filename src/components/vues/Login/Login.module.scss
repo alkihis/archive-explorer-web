@@ -16,6 +16,15 @@
 
 .twitter_link {
   background: #d4d4d44d;
+
+  :global .dark :local & {
+    background: #dcdcdc9e;
+
+    &:hover {
+      background: #ffffffb8;
+    }
+  }
+
   padding: 10px;
   display: block;
   border: 1px #a49fb54d solid;

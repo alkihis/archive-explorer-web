@@ -183,9 +183,9 @@ export default class More extends React.Component {
 
           In order to smoothen your experience with Archive Explorer, you can use a Mac or a PC to make
           your archive lighter, by following this tutorial available by clicking the button below.
-
-          <RefactorArchiveButton message="How to lighten my archive ?" className={classes.light_btn} />
         </Typography>
+        
+        <RefactorArchiveButton message="How to lighten my archive ?" className={classes.light_btn} />
 
         <Marger size="3rem" />
       </div>
