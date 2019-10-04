@@ -2,6 +2,8 @@ import React from 'react';
 import classes from './TweetMedia.module.scss';
 import { PartialTweetEntity, MediaGDPREntity } from 'twitter-archive-reader';
 import { Dialog } from '@material-ui/core';
+// @ts-ignore
+import { Lightbox as ModalImage } from "react-modal-image";
 
 type TweetMediaProp = {
   entities: PartialTweetEntity | { media?: MediaGDPREntity[] }
@@ -93,7 +95,17 @@ export default class TweetMedia extends React.Component<TweetMediaProp, TweetMed
     }
     else {
       const image_url = used_entity[image].media_url_https;
-      obj = <img alt="Full" src={image_url} className={classes.full_img} />;
+      // obj = <img alt="Full" src={image_url} className={classes.full_img} />;
+
+      // With modal image
+      return (
+        <ModalImage 
+          medium={image_url}
+          large={image_url}
+          alt="Full image"
+          onClose={() => this.setState({ image_full: null })}
+        />
+      );
     }
 
     return (

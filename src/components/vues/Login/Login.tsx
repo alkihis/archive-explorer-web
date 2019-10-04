@@ -86,6 +86,45 @@ export default function Login() {
   setPageTitle("Login");
   const classes = useStyles({});
 
+  return (
+    <Grid container component="main" className={classes.root}>
+      <CssBaseline />
+      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <FolderOpenIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Archive Explorer
+          </Typography>
+
+          <Typography component="h3" variant="h6" className={classes_a.catch_phrase}>
+            We need a tiny access to your Twitter account to allow us starting tweet deletions,
+            access your content and your profile details. 
+            You can revoke access when you want.
+          </Typography>
+
+          <div className={classes.form}>
+            <div className={classes.wrapper + " " + classes.alignC}>
+              <LoginButton classes={classes} />
+            </div>
+        
+            <Box mt={5}>
+              <Typography variant="body2" color="textSecondary" align="center" className={classes_a.legal_text}>
+                Using <span className="bold">Sign in with Twitter</span>, you allow
+                <span className="bold"> Archive Explorer</span> to store your Twitter credentials
+                and your login details like current date or IP address. 
+              </Typography>
+            </Box>
+          </div>
+        </div>
+      </Grid>
+    </Grid>
+  );
+}
+
+const LoginButton: React.FC<{classes: any}> = (props: { classes: any }) => {
   const [loading, setLoading] = React.useState(true);
   const [success, setSuccess] = React.useState(false);
   const [error, setError] = React.useState(false);
@@ -111,6 +150,7 @@ export default function Login() {
         localStorage.setItem('save_token_secret', data.oauth_token_secret);
       })
       .catch(e => {
+        console.error("Error while fetching request token:", e);
         setLoading(false);
         setError(true);
       });
@@ -121,59 +161,29 @@ export default function Login() {
   }
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <FolderOpenIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Archive Explorer
-          </Typography>
-
-          <Typography component="h3" variant="h6" className={classes_a.catch_phrase}>
-            We need a tiny access to your Twitter account to allow us starting tweet deletions,
-            access your content and your profile details. 
-            You can revoke access when you want.
-          </Typography>
-
-          <div className={classes.form}>
-            <div className={classes.wrapper + " " + classes.alignC}>
-              {loading ? <CircularProgress className={classes.progress} />
-              : (error ? <div>
-                  <Fab
-                    aria-label="save"
-                    color="primary"
-                    className={error ? classes.buttonError : classes.buttonSuccess}
-                    onClick={handleButtonClick}
-                  >
-                    <Error />
-                  </Fab>
-                  <p>
-                    An error occured.
-                  </p>
-                </div>
-                : "")
-              }
-              {twitter_button ? <div>
-                <a href={twitter_button} className={classes_a.twitter_link}>
-                  <img src={sign_in_twitter} alt="Sign in with Twitter" className={classes.twitterImg + " " + classes_a.twitter_img} />
-                </a>
-              </div> : ""}
-            </div>
-        
-            <Box mt={5}>
-              <Typography variant="body2" color="textSecondary" align="center" className={classes_a.legal_text}>
-                Using <span className="bold">Sign in with Twitter</span>, you allow
-                <span className="bold"> Archive Explorer</span> to store your Twitter credentials
-                and your login details like current date or IP address. 
-              </Typography>
-            </Box>
+    <React.Fragment>
+      {loading ? 
+        <CircularProgress className={props.classes.progress} />
+        : (error ? <div>
+            <Fab
+              aria-label="save"
+              color="primary"
+              className={error ? props.classes.buttonError : props.classes.buttonSuccess}
+              onClick={handleButtonClick}
+            >
+              <Error />
+            </Fab>
+            <p>
+              An error occured.
+            </p>
           </div>
-        </div>
-      </Grid>
-    </Grid>
-  );
-}
+          : "")
+      }
+      {twitter_button ? <div>
+        <a href={twitter_button} className={classes_a.twitter_link}>
+          <img src={sign_in_twitter} alt="Sign in with Twitter" className={props.classes.twitterImg + " " + classes_a.twitter_img} />
+        </a>
+      </div> : ""}
+    </React.Fragment>
+  )
+};

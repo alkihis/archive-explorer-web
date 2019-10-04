@@ -173,6 +173,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       const f = e.target.files[0];
 
       if (f.size > THRESHOLD_SIZE_LIMIT) {
+        // console.log("Enter");
         toast("File is very heavy, this might be a problem. See how to lighten the archive in the More tab.", "warning");
       }
 

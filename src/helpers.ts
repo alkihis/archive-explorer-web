@@ -3,7 +3,7 @@ import { IUser } from "./tools/interfaces";
 import SETTINGS from "./tools/Settings";
 import { PartialTweet } from "twitter-archive-reader";
 import UserCache from "./classes/UserCache";
-import TwitterArchive, { parseTwitterDate } from "twitter-archive-reader";
+import TwitterArchive from "twitter-archive-reader";
 import { toast } from "./components/shared/Toaster/Toaster";
 import { FullUser } from "twitter-d";
 import { AUTO_TWITTER_CHECK } from "./const";
@@ -86,13 +86,6 @@ export async function checkCredentials(auto_user_dl = true, check_twitter_accoun
   }
 }
 
-export function dateFromTweet(tweet: PartialTweet) : Date {
-  if ('created_at_d' in tweet) {
-    return tweet.created_at_d;
-  }
-  return tweet.created_at_d = parseTwitterDate(tweet.created_at);
-}
-
 export function prefetchAllUserData(archive: TwitterArchive) {
   const sets: Set<string>[] = archive.messages.all.map(e => e.participants);
 
@@ -118,13 +111,13 @@ export function prefetchAllUserData(archive: TwitterArchive) {
  * @returns string La chaîne formatée
  */
 export function dateFormatter(schema: string, date = new Date()) : string {
-  function getDayOfTheYear(now: Date) : number {
-      const start = new Date(now.getFullYear(), 0, 0);
-      const diff = now.getTime() - start.getTime();
-      const oneDay = 1000 * 60 * 60 * 24;
-      const day = Math.floor(diff / oneDay);
-      
-      return day - 1; // Retourne de 0 à 364/365
+  function getDayOfTheYear(now: Date): number {
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now.getTime() - start.getTime();
+    const oneDay = 1000 * 60 * 60 * 24;
+    const day = Math.floor(diff / oneDay);
+
+    return day - 1; // Retourne de 0 à 364/365
   }
 
   const Y = date.getFullYear();
@@ -140,27 +133,27 @@ export function dateFormatter(schema: string, date = new Date()) : string {
   const s = ((date.getSeconds()) < 10 ? "0" : "") + String(date.getSeconds());
 
   const replacements: any = {
-      Y, m, d, i, H, g, s, n, N, L, v: date.getMilliseconds(), z: getDayOfTheYear, w: date.getDay()
+    Y, m, d, i, H, g, s, n, N, L, v: date.getMilliseconds(), z: getDayOfTheYear, w: date.getDay()
   };
 
   let str = "";
 
   // Construit la chaîne de caractères
   for (const char of schema) {
-      if (char in replacements) {
-          if (typeof replacements[char] === 'string') {
-              str += replacements[char];
-          }
-          else if (typeof replacements[char] === 'number') {
-              str += String(replacements[char]);
-          }
-          else {
-              str += String(replacements[char](date));
-          }
+    if (char in replacements) {
+      if (typeof replacements[char] === 'string') {
+        str += replacements[char];
+      }
+      else if (typeof replacements[char] === 'number') {
+        str += String(replacements[char]);
       }
       else {
-          str += char;
+        str += String(replacements[char](date));
       }
+    }
+    else {
+      str += char;
+    }
   }
 
   return str;
@@ -252,7 +245,7 @@ export function filterTweets(tweets: PartialTweet[]) {
     }
 
     return true;
-  }).sort(sort_fn)
+  }).sort(sort_fn);
 }
 
 export function isFilterApplied() {
@@ -264,7 +257,7 @@ export function escapeRegExp(string: string) {
 }
 
 export function unescapeTwi(str: string) {
-  return str.replace(/&gt;/g, ">").replace(/&lt;/g, "<");
+  return str.replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<");
 }
 
 export function specialJoin(array: string[], sep = ", ", final_joiner = " and ") : string {

@@ -1,10 +1,10 @@
 import React from 'react';
 import classes from './Tweet.module.scss';
 import { Status, FullUser } from 'twitter-d';
-import { PartialTweet, PartialTweetUser } from 'twitter-archive-reader';
+import { PartialTweet, PartialTweetUser, dateFromTweet } from 'twitter-archive-reader';
 import { Card, CardHeader, Avatar, CardContent, CardActions, Typography, Checkbox } from '@material-ui/core';
 import RetweetIcon from '@material-ui/icons/Repeat';
-import { dateFormatter, dateFromTweet } from '../../../helpers';
+import { dateFormatter } from '../../../helpers';
 import TweetImage from './TweetMedia';
 import TweetText from './TweetText';
 import { withStyles } from '@material-ui/styles';

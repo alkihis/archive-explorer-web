@@ -2,10 +2,12 @@ import classes from './DM.module.scss';
 import React from 'react';
 import { LinkedDirectMessage } from 'twitter-archive-reader';
 import SETTINGS from '../../../tools/Settings';
-import { Avatar, Dialog } from '@material-ui/core';
+import { Avatar } from '@material-ui/core';
 import UserCache from '../../../classes/UserCache';
 import { dateFormatter } from '../../../helpers';
 import { REGEX_URL } from '../../../const';
+// @ts-ignore
+import { Lightbox as ModalImage } from "react-modal-image";
 
 type DMProp = {
   msg: LinkedDirectMessage;
@@ -31,12 +33,14 @@ export default class DM extends React.Component<DMProp, DMState> {
   renderModal() {
     const used_entity = this.state.img;
 
+    // With modal image
     return (
-      <Dialog classes={
-        {paper: classes.paper}
-      } onClose={() => this.setState({ img_full: null })} open={true}>
-        <img alt="Full" src={used_entity} className={classes.full_img} />
-      </Dialog>
+      <ModalImage 
+        medium={used_entity}
+        large={used_entity}
+        alt="Full image"
+        onClose={() => this.setState({ img_full: null })}
+      />
     );
   }
 

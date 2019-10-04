@@ -56,6 +56,10 @@ $drawer_width:240px;
 
   &:hover {
     background-color: #e2e2ff !important;
+
+    :global .dark :local & {
+      background-color: #5c5c85 !important;
+    }
   }
 }
 .get_back_paper {
