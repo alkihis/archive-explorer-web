@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import classes from './DMConversation.module.scss';
-import { Conversation, LinkedDirectMessage } from 'twitter-archive-reader';
+import { Conversation, LinkedDirectMessage, SubConversation } from 'twitter-archive-reader';
 import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText, TextField } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
@@ -77,7 +77,13 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     const msg = this.conv.single(id);
 
     if (msg) {
-      this.monthClicker("*", "", id);
+      if (this.state.month !== "*") {
+        const [selected_year, selected_month] = this.state.month.split('-');
+        this.monthClicker(selected_year, selected_month, id);
+      }
+      else {
+        this.monthClicker("*", "", id);
+      }
     }
   };
 
@@ -89,23 +95,70 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
     let content = this.searchContent;
 
-    try {
-      new RegExp(content);
-    } catch (e) {
-      content = escapeRegExp(content);
+    // Try to extract :current
+    let choosen_month = "*";
+    let search_results: SubConversation;
+    let since_date: Date = null;
+    let until_date: Date = null;
+
+    // Search for since or until
+    const s_results = content.match(/since:(\d{4}-\d{2}-\d{2})/);
+
+    if (s_results) {
+      content = content.replace(/ *since:(\d{4}-\d{2}-\d{2}) */, '').trim();
+      since_date = new Date(s_results[1]);
+    }
+
+    const u_results = content.match(/until:(\d{4}-\d{2}-\d{2})/);
+
+    if (u_results) {
+      content = content.replace(/ *until:(\d{4}-\d{2}-\d{2}) */, '').trim();
+      until_date = new Date(u_results[1]);
+    }
+
+    // Search for current
+    if (content.startsWith(':current ')) {
+      content = content.slice(':current '.length);
+      choosen_month = this.state.month;
+
+      try {
+        new RegExp(content);
+      } catch (e) {
+        content = escapeRegExp(content);
+      }
+
+      // Create a subconversation from actual DMs
+      search_results = new SubConversation(this.state.selected, this.conv.infos.me)
+        .find(new RegExp(content, "i"));
+    }
+    else {
+      // Search global
+      try {
+        new RegExp(content);
+      } catch (e) {
+        content = escapeRegExp(content);
+      }
+
+      search_results = this.conv.find(new RegExp(content, "i"));
+    }
+
+    // Filter
+    if (since_date || until_date) {
+      search_results = search_results.between(
+        since_date ? since_date : new Date('1900-01-01'),
+        until_date ? until_date : new Date()
+      );
     }
 
     // Reset scroll position
     window.scrollTo(0, 0);
 
-    const msgs = this.conv.find(new RegExp(content, "i"));
-
     // Change selected
     this.setState({
-      found: msgs.all,
+      found: search_results.all,
       key: String(Math.random()),
       from: null,
-      month: "",
+      month: choosen_month,
       mobileOpen: false,
       selected: null,
     });
