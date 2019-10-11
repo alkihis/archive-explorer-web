@@ -13,8 +13,17 @@ import { Badge } from '@material-ui/core';
 import TaskModal from '../vues/TaskModal/TaskModal';
 import Tasks, { TaskInformation, TaskBaseMessage } from '../../tools/Tasks';
 
-class RouterWrapper extends Component {
-  state = {
+interface RouterWrapperProps extends RouteComponentProps {}
+interface RouterWrapperState {
+  value: number,
+  pathMap: string[],
+  task_opens: boolean,
+  tasks_running: number,
+  shown: boolean,
+};
+
+class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
+  state: RouterWrapperState = {
     value: 0,
     pathMap: [
       '/archive/',
@@ -172,5 +181,4 @@ class RouterWrapper extends Component {
   }
 }
 
-// @ts-ignore
 export default withRouter(RouterWrapper);
