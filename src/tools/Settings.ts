@@ -11,14 +11,14 @@ const media_query_list = window.matchMedia('(prefers-color-scheme: dark)');
 try {
   media_query_list.addEventListener("change", () => {
     // Refresh current setting
-    SETTINGS.dark_mode = media_query_list.matches;
+    SETTINGS.passive_dark_mode = media_query_list.matches;
   });
 } catch (e) {
   // needed for Safari or navs that doesn't implement EventTarget:
   // Use of @deprecated .addListener
   media_query_list.addListener(() => {
     // Refresh current setting
-    SETTINGS.dark_mode = media_query_list.matches;
+    SETTINGS.passive_dark_mode = media_query_list.matches;
   });
 }
 
@@ -36,7 +36,8 @@ class AESettings {
   protected current_user: IUser | null = null;
   protected current_archive: TwitterArchive | null = null;
   protected _twitter_user: FullUser;
-  protected _dark_mode = false;
+  protected _dark_mode: boolean = null;
+  protected _dark_mode_auto = media_query_list.matches;
 
   archive_name: string = "";
   archive_in_load = "";
@@ -104,12 +105,21 @@ class AESettings {
   }
 
   get dark_mode() {
-    return this._dark_mode;
+    if (this._dark_mode !== null)
+      return this._dark_mode;
+    return this._dark_mode_auto;
   }
 
   set dark_mode(v: boolean) {
     this._dark_mode = v;
     localStorage.setItem('dark_mode', String(v));
+    window.dispatchEvent(new CustomEvent('darkmodechange', { detail: v }));
+  }
+
+  set passive_dark_mode(v: boolean) {
+    this._dark_mode = null;
+    localStorage.removeItem('dark_mode');
+    this._dark_mode_auto = v;
     window.dispatchEvent(new CustomEvent('darkmodechange', { detail: v }));
   }
 
