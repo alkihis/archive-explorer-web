@@ -47,6 +47,14 @@ class RouterWrapper extends Component {
           shown: location.pathname !== '/'
         });
       }
+      else if (
+        (this.state.shown && location.pathname === "/") ||
+        (!this.state.shown && location.pathname !== "/")
+      ) {
+        this.setState({
+          shown: location.pathname !== "/"
+        });
+      }
     });
   }
 
