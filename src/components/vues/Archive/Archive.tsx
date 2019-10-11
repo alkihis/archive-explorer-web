@@ -173,11 +173,13 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       const f = e.target.files[0];
 
       if (f.size > THRESHOLD_SIZE_LIMIT) {
-        // console.log("Enter");
+        console.warn("File too heavy !");
         toast("File is very heavy, this might be a problem. See how to lighten the archive in the More tab.", "warning");
       }
 
       SETTINGS.archive = new TwitterArchive(f, true);
+
+      console.log("Loading a new archive: ", f.name);
 
       this.setState({
         loaded: "",

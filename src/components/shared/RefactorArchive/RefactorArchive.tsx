@@ -11,13 +11,6 @@ import step5_mac from '../../../assets/refactor_mac/5.png';
 import step6_mac from '../../../assets/refactor_mac/6.png';
 import step7_mac from '../../../assets/refactor_mac/7.png';
 
-import step1_win from '../../../assets/refactor_windows/1.png';
-import step2_win from '../../../assets/refactor_windows/2.png';
-import step3_win from '../../../assets/refactor_windows/3.png';
-import step4_win from '../../../assets/refactor_windows/4.png';
-import step5_win from '../../../assets/refactor_windows/5.png';
-import step6_win from '../../../assets/refactor_windows/6.png';
-
 export default class RefactorArchiveButton extends React.Component<{ message?: string, className?: string }, { open: boolean }> {
   state = {
     open: false
@@ -50,48 +43,31 @@ export const RefactorModal: React.FC<{ open: boolean, onClose: () => void }> = p
   const device_mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
 
   const RefactorText = () => {
-    return device_mac ? RefactorMac() : RefactorWin();
+    return !device_mac ? RefactorMac() : RefactorWin();
   }
 
   const RefactorWin = () => {
     return (
       <div>
-        <Typography className={classes.steptitle}>
-          1 - Extract the archive using a right-click, then "Extract all".
+        <Typography variant="h6" className={classes.beforestep}>
+          Lighten your archive on Windows/Linux
         </Typography>
 
-        <img className={classes.step} alt="Step" src={step1_win} />
-
         <Typography className={classes.steptitle}>
-          2 - Click on "Extract" on the bottom right of the window.
+          1 - Open the archive by double-clicking on it.
         </Typography>
 
-        <img className={classes.step} alt="Step" src={step2_win} />
-
         <Typography className={classes.steptitle}>
-          3 - In the automatically created directory, delete the folder named "tweet_media",
-          using a right-click, and click on "Delete".
+          2 - In the archive, choose the "tweet_media" directory, right-click on it, and choose "Delete" or "Remove".
         </Typography>
 
-        <img className={classes.step} alt="Step" src={step3_win} />
-
         <Typography className={classes.steptitle}>
-          4 - Select all elements from the directory using <span className="bold">CTRL + A</span>.
+          3 - Confirm your action.
         </Typography>
 
-        <img className={classes.step} alt="Step" src={step4_win} />
-
         <Typography className={classes.steptitle}>
-          5 - Right-click on any element, select "Send to..." then "Compressed folder" to create a new archive.
+          4 - Use the modified archive in Archive Explorer.
         </Typography>
-
-        <img className={classes.step} alt="Step" src={step5_win} />
-
-        <Typography className={classes.steptitle}>
-          6 - Use the newly created archive in Archive Explorer.
-        </Typography>
-
-        <img className={classes.step} alt="Step" src={step6_win} />
       </div>
     );
   }
