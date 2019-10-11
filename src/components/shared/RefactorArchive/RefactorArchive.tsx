@@ -43,7 +43,7 @@ export const RefactorModal: React.FC<{ open: boolean, onClose: () => void }> = p
   const device_mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
 
   const RefactorText = () => {
-    return !device_mac ? RefactorMac() : RefactorWin();
+    return device_mac ? RefactorMac() : RefactorWin();
   }
 
   const RefactorWin = () => {
