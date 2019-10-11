@@ -72,11 +72,8 @@ export default class More extends React.Component {
         <Typography className={classes.help_p}>
           Search for the tweets you want directly in your archive. Search is made instantly, in all your tweets.
           <br />
-          You can enhance your queries made in tweet explorer by adding <span className="bold">keywords</span>.
-          <br />
         </Typography>
-        <Keywords />
-
+      
         <Marger size={8} />
 
         <Typography variant="h6" className={classes.third_title}>
@@ -88,6 +85,18 @@ export default class More extends React.Component {
           message you want, just click on it to see the following and preceding DMs of the conversation.
           <br />
         </Typography>
+
+        <Marger size={8} />
+
+        <Typography variant="h6" className={classes.third_title}>
+          Keywords
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          You can enhance all your queries made in tweet / direct message explorer by adding <span className="bold">keywords</span>.
+          <br />
+        </Typography>
+        <Keywords />
 
         <Marger size={8} />
 
@@ -532,7 +541,7 @@ function Keywords() {
                 [YYYY-MM-DD]
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                Find tweets made since a specified date.
+                Find tweets/DMs made since a specified date.
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 since:2018-01-02
@@ -547,7 +556,7 @@ function Keywords() {
                 [YYYY-MM-DD]
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                Find tweets made before a specified date.
+                Find tweets/DMs made before a specified date.
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 until:2018-04-02
@@ -562,7 +571,7 @@ function Keywords() {
                 [twitter @]
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                Find tweets made by specified user.
+                Find tweets made by specified user (only available for tweets).
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 from:Alkihis
