@@ -211,7 +211,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     else if (year === "day") {
       // Find tweets of the day
       this.setState({
-        loaded: SETTINGS.archive.day(),
+        loaded: SETTINGS.archive.fromThatDay(),
         month: year,
         mobileOpen: false,
         found: null

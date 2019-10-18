@@ -55,7 +55,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     from: null
   };
 
-  protected searchContent: string;
+  protected searchContent: string = "";
 
   protected index = this.props.conversation.index;
 
@@ -117,7 +117,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     }
 
     // Search for current
-    if (content.startsWith(':current ')) {
+    if (content.startsWith(':current ') && this.state.month) {
       content = content.slice(':current '.length);
       choosen_month = this.state.month;
 
@@ -160,7 +160,6 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       from: null,
       month: choosen_month,
       mobileOpen: false,
-      selected: null,
     });
 
     return false;

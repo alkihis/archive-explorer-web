@@ -6,6 +6,11 @@
   grid-gap: 10px;
   align-items: center;
 
+  // TODO CHECK IF OK
+  max-width: 1200px;
+  margin: auto;
+  // ENDOF TODO
+
   @include mobile_large {
     display: block;
   }

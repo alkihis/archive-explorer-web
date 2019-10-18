@@ -5,8 +5,8 @@
   "repository": "https://github.com/alkihis/archive-explorer-web",
   "bugs": "https://github.com/alkihis/archive-explorer-web/issues",
   "dependencies": {
-    "@material-ui/core": "^4.5.0",
-    "@material-ui/icons": "^4.4.3",
+    "@material-ui/core": "^4.5.1",
+    "@material-ui/icons": "^4.5.1",
     "@types/jest": "24.0.18",
     "@types/jszip": "^3.1.6",
     "@types/node": "12.7.2",
@@ -30,7 +30,7 @@
     "react-virtualized": "^9.21.1",
     "socket.io-client": "^2.3.0",
     "timerize": "^1.0.3",
-    "twitter-archive-reader": "^1.5.7",
+    "twitter-archive-reader": "^1.6.1",
     "twitter-d": "^0.4.0",
     "typescript": "3.5.3"
   },
