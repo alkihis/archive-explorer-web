@@ -54,7 +54,6 @@ class AESettings {
       // Initial init
       console.log("Autodetecting prefereed mode...");
       console.log("Dark mode on:", media_query_list.matches);
-      this.dark_mode = media_query_list.matches;
     }
     if (localStorage.getItem('only_medias')) {
       this.only_medias = localStorage.getItem('only_medias') === "true";
@@ -111,16 +110,29 @@ class AESettings {
   }
 
   set dark_mode(v: boolean) {
+    if (v === null) {
+      localStorage.removeItem('dark_mode');
+      const current = media_query_list.matches;
+      this._dark_mode = null;
+      window.dispatchEvent(new CustomEvent('darkmodechange', { detail: current }));
+
+      return;
+    }
+
     this._dark_mode = v;
     localStorage.setItem('dark_mode', String(v));
     window.dispatchEvent(new CustomEvent('darkmodechange', { detail: v }));
   }
 
   set passive_dark_mode(v: boolean) {
-    this._dark_mode = null;
-    localStorage.removeItem('dark_mode');
     this._dark_mode_auto = v;
-    window.dispatchEvent(new CustomEvent('darkmodechange', { detail: v }));
+
+    if (this.is_auto_dark_mode)
+      window.dispatchEvent(new CustomEvent('darkmodechange', { detail: v }));
+  }
+
+  get is_auto_dark_mode() {
+    return this._dark_mode === null;
   }
 
   get sort_reverse_chrono() {

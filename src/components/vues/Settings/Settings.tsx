@@ -15,6 +15,7 @@ type SettingsState = {
   pp: boolean;
   sort_reverse_chrono: boolean;
   dark_mode: boolean;
+  auto_dark_mode: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -27,15 +28,42 @@ export default class Settings extends React.Component<{}, SettingsState> {
     pp: SETTINGS.pp,
     sort_reverse_chrono: SETTINGS.sort_reverse_chrono,
     dark_mode: SETTINGS.dark_mode,
+    auto_dark_mode: SETTINGS.is_auto_dark_mode,
   };
 
   changeDarkState(v: boolean, refresh_settings = true) {
     this.setState({
-      dark_mode: v
+      dark_mode: v,
+      auto_dark_mode: false
     });
 
     if (refresh_settings)
       toggleDarkMode(v);
+  }
+
+  changeAutoDarkState(v: boolean, refresh_settings = true) {
+    if (v) {
+      this.setState({
+        dark_mode: SETTINGS.dark_mode,
+        auto_dark_mode: true
+      });
+    }
+    else {
+      this.setState({
+        dark_mode: SETTINGS.dark_mode,
+        auto_dark_mode: false
+      });
+    }
+
+    if (refresh_settings) {
+      if (v) {
+        SETTINGS.dark_mode = null;
+      }
+      else {
+        const actual = SETTINGS.dark_mode;
+        SETTINGS.dark_mode = actual;
+      }
+    }
   }
 
   changeMediaState(v: boolean) {
@@ -81,7 +109,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
   }
 
   handleDarkModeChange = (e: CustomEvent<boolean>) => {
-    this.changeDarkState(e.detail, false);
+    this.changeAutoDarkState(SETTINGS.is_auto_dark_mode, false);
   };
 
   componentDidMount() {
@@ -240,18 +268,34 @@ export default class Settings extends React.Component<{}, SettingsState> {
   displaySettings() {
     return (
       <div style={{ marginBottom: 'calc(5rem + 64px)' }}>
-        <FormControlLabel
-          value="dark_mode"
-          control={
-            <Checkbox 
-              color="primary"
-              checked={this.state.dark_mode}
-              onChange={(_, c) => this.changeDarkState(c)} 
+        <FormGroup>
+          <FormControlLabel
+            value="auto_dark_mode"
+            control={
+              <Checkbox 
+                color="primary"
+                checked={this.state.auto_dark_mode}
+                onChange={(_, c) => this.changeAutoDarkState(c)} 
+              />
+            }
+            label="Automatic dark mode"
+            labelPlacement="end"
             />
-          }
-          label="Enable dark mode"
-          labelPlacement="end"
+
+          <FormControlLabel
+            value="dark_mode"
+            control={
+              <Checkbox 
+                color="primary"
+                checked={this.state.dark_mode}
+                onChange={(_, c) => this.changeDarkState(c)} 
+                disabled={this.state.auto_dark_mode}
+              />
+            }
+            label="Enable dark mode"
+            labelPlacement="end"
           />
+        </FormGroup>
       </div>
     );
   }
