@@ -12,6 +12,18 @@ import { Link } from 'react-router-dom';
 import TweetCache from '../../../classes/TweetCache';
 import Tasks from '../../../tools/Tasks';
 import { toast } from '../Toaster/Toaster';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import SortIcon from '@material-ui/icons/Sort';
+import Hot from '@material-ui/icons/Whatshot';
+import Favorite from '@material-ui/icons/Star';
+import Retweet from '@material-ui/icons/Repeat';
+import Time from '@material-ui/icons/Schedule';
+import TweetUser from '@material-ui/icons/Person';
+import All from '@material-ui/icons/AllInclusive';
+import Videos from '@material-ui/icons/Videocam';
+import Pictures from '@material-ui/icons/Collections';
+
  
 type ViewerProps = {
   tweets: PartialTweet[];
@@ -28,6 +40,13 @@ type ViewerState = {
   readonly selectible: Set<string>;
   selected: Set<string>;
   modal_confirm: boolean;
+  key: string;
+
+  /** Filters */
+  show_type: string;
+  sort_type: string;
+  sort_way: string;
+  media_filter: string;
 };
 
 const DEFAULT_CHUNK_LEN = 26;
@@ -43,6 +62,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
   constructor(props: ViewerProps) {
     super(props);
+
     const tweets = filterTweets(this.props.tweets);
 
     this.state = {
@@ -54,7 +74,12 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       delete_modal: false,
       selectible: new Set(tweets.map(t => t.id_str)),
       selected: new Set(),
-      modal_confirm: false
+      modal_confirm: false,
+      key: String(Math.random()),
+      sort_type: SETTINGS.sort_type,
+      show_type: SETTINGS.show_type,
+      sort_way: SETTINGS.sort_way,
+      media_filter: SETTINGS.media_filter,
     };
 
     // Needed because REACT is shit
@@ -62,6 +87,133 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     this.renderTweet = this.renderTweet.bind(this);
   }
 
+  /** FILTERS */
+  handleShowModeChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: string[]) => {
+    if (value.length === 0) {
+      return;
+    }
+
+    SETTINGS.show_type = value.length > 1 ? 'all' : value[0];
+    this.setState({
+      show_type: value.length > 1 ? 'all' : value[0],
+      key: String(Math.random())
+    });
+  };
+
+  handleSortTypeChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: string) => {
+    if (!value) {
+      return;
+    }
+    
+    SETTINGS.sort_type = value;
+    this.setState({
+      sort_type: value,
+      key: String(Math.random())
+    });
+  };
+
+  handleSortWayChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: string) => {
+    if (!value) {
+      return;
+    }
+
+    SETTINGS.sort_way = value;
+    this.setState({
+      sort_way: value,
+      key: String(Math.random())
+    });
+  };
+
+  handleMediaChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: string) => {
+    if (!value) {
+      return;
+    }
+
+    SETTINGS.media_filter = value;
+    this.setState({
+      media_filter: value,
+      key: String(Math.random())
+    });
+  };
+
+  renderFilters() {
+    return (
+      <div className={classes.toggleContainer}>
+        {/* Show mode (all, retweets only, tweets only) */}
+        <ToggleButtonGroup
+          value={this.state.show_type === "all" ? ['retweets', 'tweets'] : [this.state.show_type]}
+          onChange={this.handleShowModeChange}
+          className={classes.inlineToggleButton}
+        >
+          <ToggleButton value="tweets">
+            <TweetUser />
+          </ToggleButton>
+          <ToggleButton value="retweets">
+            <Retweet />
+          </ToggleButton>
+        </ToggleButtonGroup>
+
+        {/* Sort mode (time, popular, retweets, favorites) */}
+        <ToggleButtonGroup
+          value={this.state.sort_type}
+          exclusive
+          onChange={this.handleSortTypeChange}
+          className={classes.inlineToggleButton}
+        >
+          <ToggleButton value="time">
+            <Time />
+          </ToggleButton>
+          <ToggleButton value="popular">
+            <Hot />
+          </ToggleButton>
+          <ToggleButton value="retweets">
+            <Retweet />
+          </ToggleButton>
+          <ToggleButton value="favorites">
+            <Favorite />
+          </ToggleButton>
+        </ToggleButtonGroup>
+
+        {/* Sort mode (asc desc) */}
+        <ToggleButtonGroup
+          value={this.state.sort_way}
+          exclusive
+          onChange={this.handleSortWayChange}
+          className={classes.inlineToggleButton}
+        >
+          <ToggleButton value="asc">
+            <SortIcon style={{transform: 'rotate(180deg)'}} />
+          </ToggleButton>
+          <ToggleButton value="desc">
+            <SortIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
+
+        {/* Media mode (with pic, with video...) */}
+        <ToggleButtonGroup
+          value={this.state.media_filter}
+          exclusive
+          onChange={this.handleMediaChange}
+          className={classes.inlineToggleButton}
+        >
+          <ToggleButton value="none">
+            <All />
+          </ToggleButton>
+          <ToggleButton value="pic">
+            <Pictures />
+          </ToggleButton>
+          <ToggleButton 
+            value="video" 
+            disabled={!SETTINGS.archive.is_gdpr}
+          >
+            <Videos />
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </div>
+    );
+  }
+
+  /** MODAL */
   openConfirmModal() {
     this.setState({ modal_confirm: true });
   }
@@ -86,6 +238,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     return "";
   }
 
+  /** GET TWEETS */
   loadTweets(page: number) {
     page -= 1;
 
@@ -136,8 +289,9 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     }
   }
 
-  componentDidUpdate(prev_props: ViewerProps) {
-    if (prev_props.tweets !== this.props.tweets) {
+  /** REFRESH COMPONENT */
+  componentDidUpdate(prev_props: ViewerProps, prev_state: ViewerState) {
+    if (prev_props.tweets !== this.props.tweets || prev_state.key !== this.state.key) {
       // Tweets change, component reset
       this.references = {};
       this.cache = {};
@@ -154,6 +308,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     }
   }
 
+  /** METHODS FOR TWEETS */
   checkAll() {
     this.setState({
       selected: new Set(this.state.selectible),
@@ -212,58 +367,69 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
   noTweetsProp() {
     return (
-      <CenterComponent className={classes.no_tweets}>
-        <NoTweetsIcon className={classes.icon} />
-        <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-          This element does not contain any tweets. :(
-        </Typography>
-      </CenterComponent>
+      <>
+        {this.renderFilters()}
+        <CenterComponent className={classes.no_tweets}>
+          <NoTweetsIcon className={classes.icon} />
+          <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+            This element does not contain any tweets. :(
+          </Typography>
+        </CenterComponent>
+      </>
     );
   }
 
   noTweetsState() {
     return (
-      <CenterComponent className={classes.no_tweets}>
-        <NoTweetsIcon className={classes.icon} />
-        <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-          This element does not contain any tweets. :(
-        </Typography>
-        <Typography variant="h6">
-          It seems you have applied filters 
-          that hide all the tweets that can be displayed.
-        </Typography>
+      <>
+        {this.renderFilters()}
+        <CenterComponent className={classes.no_tweets}>
+          <NoTweetsIcon className={classes.icon} />
+          <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+            This element does not contain any tweets. :(
+          </Typography>
+          <Typography variant="h6">
+            It seems you have applied filters 
+            that hide all the tweets that can be displayed.
+          </Typography>
 
-        <Button component={Link} to="/settings/" color="primary" style={{marginTop: '1.5rem'}}>
-          Manage filters
-        </Button>
-      </CenterComponent>
+          <Button component={Link} to="/settings/" color="primary" style={{marginTop: '1.5rem'}}>
+            Manage filters
+          </Button>
+        </CenterComponent>
+      </>
     );
   }
 
   noTweetsLeft() {
     return (
-      <CenterComponent className={classes.no_tweets}>
-        <NoTweetsIcon className={classes.icon} />
-        <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-          No tweets to display here
-        </Typography>
+      <>
+        {this.renderFilters()}
+        <CenterComponent className={classes.no_tweets}>
+          {this.renderFilters()}
 
-        <Typography>
-          All tweets are deleted, or you don't have the permission to read them.
-        </Typography>
+          <NoTweetsIcon className={classes.icon} />
+          <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+            No tweets to display here
+          </Typography>
 
-        <Typography>
-          Try disabling the "Download tweets" function into settings.
-        </Typography>
+          <Typography>
+            All tweets are deleted, or you don't have the permission to read them.
+          </Typography>
 
-        <Typography>
-          You could also try to log in with another Twitter account.
-        </Typography>
+          <Typography>
+            Try disabling the "Download tweets" function into settings.
+          </Typography>
 
-        <Button component={Link} to="/settings/" color="primary" style={{marginTop: '1.5rem'}}>
-          Settings
-        </Button>
-      </CenterComponent>
+          <Typography>
+            You could also try to log in with another Twitter account.
+          </Typography>
+
+          <Button component={Link} to="/settings/" color="primary" style={{marginTop: '1.5rem'}}>
+            Settings
+          </Button>
+        </CenterComponent>
+      </>
     );
   }
 
@@ -358,22 +524,24 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
     return (
       <div>
-          {this.state.modal_confirm && this.confirmDeletionModal()}
+        {this.renderFilters()}
 
-          {this.askDeletionModal()}
+        {this.state.modal_confirm && this.confirmDeletionModal()}
 
-          {warning && <div className={classes.warning_filters}>Showing only {warning}</div>}
-          
-          <InfiniteScroll
-              className={classes.card_container}
-              pageStart={0}
-              loadMore={p => this.loadTweets(p)}
-              hasMore={this.state.has_more}
-              loader={this.loader()}
-              key={this.state.scroller_key}
-          >
-              {t}
-          </InfiniteScroll>
+        {this.askDeletionModal()}
+
+        {warning && <div className={classes.warning_filters}>Showing only {warning}</div>}
+        
+        <InfiniteScroll
+          className={classes.card_container}
+          pageStart={0}
+          loadMore={p => this.loadTweets(p)}
+          hasMore={this.state.has_more}
+          loader={this.loader()}
+          key={this.state.scroller_key}
+        >
+          {t}
+        </InfiniteScroll>
       </div>
     );
   }

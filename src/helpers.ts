@@ -206,23 +206,77 @@ export function uppercaseFirst(str: string) {
 export function filterTweets(tweets: PartialTweet[]) {
   let sort_fn: (a: PartialTweet, b: PartialTweet) => number; 
   
-  if (typeof BigInt !== 'undefined') {
-    sort_fn = SETTINGS.sort_reverse_chrono ? 
-    (a: PartialTweet, b: PartialTweet) => Number(BigInt(b.id_str) - BigInt(a.id_str)) :
-    (a: PartialTweet, b: PartialTweet) => Number(BigInt(a.id_str) - BigInt(b.id_str));
+  // Every thing is asc by default !
+  if (SETTINGS.sort_type === "time") {
+    if (typeof BigInt !== 'undefined') {
+      sort_fn = (a: PartialTweet, b: PartialTweet) => Number(BigInt(a.id_str) - BigInt(b.id_str));
+    }
+    else {
+      // Does not support BigInt, fallback to Collator
+      const coll = new Intl.Collator(undefined, { numeric: true });
+      sort_fn = (a: PartialTweet, b: PartialTweet) => coll.compare(a.id_str, b.id_str);
+    }
+  }
+  else if (SETTINGS.sort_type === "popular") {
+    sort_fn = (a: PartialTweet, b: PartialTweet) => {
+      let score_a = 0, score_b = 0;
+
+      if (a.retweet_count !== undefined && !isNaN(a.retweet_count)) {
+        score_a += (a.retweet_count * 5);
+      }
+      if (b.retweet_count !== undefined && !isNaN(b.retweet_count)) {
+        score_b += (b.retweet_count * 5);
+      }
+
+      if (a.favorite_count !== undefined && !isNaN(a.favorite_count)) {
+        score_a += a.favorite_count;
+      }
+      if (b.favorite_count !== undefined && !isNaN(b.favorite_count)) {
+        score_b += b.favorite_count;
+      }
+
+      return score_a - score_b;
+    };
+  }
+  else if (SETTINGS.sort_type === "retweets") {
+    sort_fn = (a: PartialTweet, b: PartialTweet) => {
+      if (a.retweet_count !== undefined && b.retweet_count !== undefined) {
+        return a.retweet_count - b.retweet_count;
+      }
+      if (a.retweet_count !== undefined) {
+        return a.retweet_count - 0;
+      }
+      if (b.retweet_count !== undefined) {
+        return 0 - b.retweet_count;
+      }
+      return 0;
+    };
   }
   else {
-    // Does not support BigInt, fallback to Collator
-    const coll = new Intl.Collator(undefined, { numeric: true });
-    
-    sort_fn = (a: PartialTweet, b: PartialTweet) => (SETTINGS.sort_reverse_chrono ? 
-      coll.compare(b.id_str, a.id_str) :
-      coll.compare(a.id_str, b.id_str)
-    );
+    // favorites
+    sort_fn = (a: PartialTweet, b: PartialTweet) => {
+      if (a.favorite_count !== undefined && b.favorite_count !== undefined) {
+        return a.favorite_count - b.favorite_count;
+      }
+      if (a.favorite_count !== undefined) {
+        return a.favorite_count - 0;
+      }
+      if (b.favorite_count !== undefined) {
+        return 0 - b.favorite_count;
+      }
+      return 0;
+    };
   }
 
-  return tweets.filter(t => {
-    if (SETTINGS.only_rts && !t.retweeted_status) {
+  const rt_only = SETTINGS.show_type === "retweets";
+  const tweet_only = SETTINGS.show_type === "tweets";
+
+  const res = tweets.filter(t => {
+    if (rt_only && !t.retweeted_status) {
+      return false;
+    }
+
+    if (tweet_only && t.retweeted_status) {
       return false;
     }
 
@@ -246,6 +300,12 @@ export function filterTweets(tweets: PartialTweet[]) {
 
     return true;
   }).sort(sort_fn);
+
+  if (SETTINGS.sort_way === "desc") {
+    res.reverse();
+  }
+
+  return res;
 }
 
 export function isFilterApplied() {

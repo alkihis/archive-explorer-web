@@ -61,8 +61,9 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       SETTINGS.archive_name = name;
       SETTINGS.archive_in_load = "";
 
-      if (!SETTINGS.archive.is_gdpr) {
-        SETTINGS.only_videos = false;
+      // Si jamais on est en tri vidéo seulement, réinitialise
+      if (!SETTINGS.archive.is_gdpr && SETTINGS.media_filter === "video") {
+        SETTINGS.media_filter = "none";
       }
 
       // Reset le statut "utilisateurs impossibles à trouver"

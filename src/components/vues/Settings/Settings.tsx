@@ -7,26 +7,18 @@ import IIcon from '@material-ui/icons/Info';
 import ExtendedActionsMenu from './ExtendedActionsMenu';
 
 type SettingsState = {
-  only_medias: boolean;
-  only_videos: boolean;
   download: boolean;
-  only_rts: boolean;
   modal_open: boolean;
   pp: boolean;
-  sort_reverse_chrono: boolean;
   dark_mode: boolean;
   auto_dark_mode: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
   state: SettingsState = {
-    only_medias: SETTINGS.only_medias,
-    only_videos: SETTINGS.only_videos,
     download: SETTINGS.tweet_dl,
-    only_rts: SETTINGS.only_rts,
     modal_open: false,
     pp: SETTINGS.pp,
-    sort_reverse_chrono: SETTINGS.sort_reverse_chrono,
     dark_mode: SETTINGS.dark_mode,
     auto_dark_mode: SETTINGS.is_auto_dark_mode,
   };
@@ -66,20 +58,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
     }
   }
 
-  changeMediaState(v: boolean) {
-    this.setState({
-      only_medias: v
-    });
-    SETTINGS.only_medias = v;
-  }
-
-  changeVideoState(v: boolean) {
-    this.setState({
-      only_videos: v
-    });
-    SETTINGS.only_videos = v;
-  }
-
   changeTweetDLState(v: boolean) {
     this.setState({
       download: v
@@ -87,25 +65,11 @@ export default class Settings extends React.Component<{}, SettingsState> {
     SETTINGS.tweet_dl = v;
   }
 
-  changeRTState(v: boolean) {
-    this.setState({
-      only_rts: v
-    });
-    SETTINGS.only_rts = v;
-  }
-
   changePPState(v: boolean) {
     this.setState({
       pp: v
     });
     SETTINGS.pp = v;
-  }
-
-  changeTweetSortReverse(v: boolean) {
-    this.setState({
-      sort_reverse_chrono: v
-    });
-    SETTINGS.sort_reverse_chrono = v;
   }
 
   handleDarkModeChange = (e: CustomEvent<boolean>) => {
@@ -127,61 +91,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
   tweetViewSettings() {
     return (
       <FormControl component="fieldset">
-        <FormLabel focused style={{marginTop: '1rem', marginBottom: '.5rem'}}>Media settings</FormLabel>
-        <FormGroup>
-          <FormControlLabel
-            value="media"
-            control={
-              <Checkbox 
-                color="primary"
-                checked={this.state.only_medias}
-                onChange={(_, c) => this.changeMediaState(c)} 
-              />
-            }
-            label="Show only tweets with medias"
-            labelPlacement="end"
-          />
-          
-          {/* Tooltip + Checkbox disabled */}
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <FormControlLabel
-              value="media"
-              control={
-                <Checkbox 
-                  color="primary" 
-                  checked={this.state.only_videos}
-                  onChange={(_, c) => this.changeVideoState(c)}
-                />
-              }
-              disabled={!!SETTINGS.archive && !SETTINGS.archive.is_gdpr}
-              label="Show only tweets with videos or GIFs"
-              labelPlacement="end"
-            />
-            {!!SETTINGS.archive && !SETTINGS.archive.is_gdpr && 
-            <Tooltip classes={{
-              tooltip: classes.big_text,
-              popper: classes.big_text
-            }} title="This filter is not available with a classic archive">
-              <IIcon className={classes.icon} />
-            </Tooltip>}
-          </div>
-        </FormGroup>
-
         <FormLabel focused style={{marginTop: '1rem', marginBottom: '.5rem'}}>Tweet settings</FormLabel>
         <FormGroup>
-          <FormControlLabel
-            value="media"
-            control={
-              <Checkbox 
-                color="primary" 
-                checked={this.state.sort_reverse_chrono}
-                onChange={(_, c) => this.changeTweetSortReverse(c)}
-              />
-            }
-            label="Sort tweets by more recent"
-            labelPlacement="end"
-          />
-
           <FormControlLabel
             value="media"
             control={
@@ -193,19 +104,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
               />
             }
             label="Download tweets from Twitter (gives more accurate infos)"
-            labelPlacement="end"
-          />
-
-          <FormControlLabel
-            value="media"
-            control={
-              <Checkbox 
-                color="primary" 
-                checked={this.state.only_rts}
-                onChange={(_, c) => this.changeRTState(c)} 
-              />
-            }
-            label="Show only retweets (hide you own tweets)"
             labelPlacement="end"
           />
 

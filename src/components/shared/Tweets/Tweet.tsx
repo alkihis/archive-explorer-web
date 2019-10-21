@@ -4,6 +4,7 @@ import { Status, FullUser } from 'twitter-d';
 import { PartialTweet, PartialTweetUser, dateFromTweet } from 'twitter-archive-reader';
 import { Card, CardHeader, Avatar, CardContent, CardActions, Typography, Checkbox } from '@material-ui/core';
 import RetweetIcon from '@material-ui/icons/Repeat';
+import FavoriteIcon from '@material-ui/icons/Star';
 import { dateFormatter } from '../../../helpers';
 import TweetImage from './TweetMedia';
 import TweetText from './TweetText';
@@ -133,6 +134,9 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
             checked={this.state.checked}
             disabled={!SETTINGS.can_delete}
           />
+
+          <TweetActions tweet={this.original} />
+
           <TweetDate 
             // @ts-ignore
             date={dateFromTweet(this.original)} 
@@ -143,6 +147,21 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
       </Card>
     )
   }
+}
+
+function TweetActions(props: { tweet: Status }) {
+  const rt = props.tweet.retweet_count && !isNaN(props.tweet.retweet_count) ? props.tweet.retweet_count : 0;
+  const fav = props.tweet.favorite_count && !isNaN(props.tweet.favorite_count) ? props.tweet.favorite_count : 0;
+  return (
+    <div className={classes.rt_container}>
+      <div className={classes.rt_number}>
+        {rt} <RetweetIcon className={classes.rt_icon} />
+      </div>
+      <div className={classes.fav_number}>
+        {fav} <FavoriteIcon className={classes.fav_icon} />
+      </div>
+    </div>
+  );
 }
 
 function TweetDate(props: { date: Date, screen_name: string, id_str: string }) {

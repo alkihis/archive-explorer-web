@@ -25,12 +25,13 @@ try {
 class AESettings {
   // Saved settings
   protected _token: string = "";
-  protected _only_medias: boolean = false;
-  protected _only_videos = false;
   protected _auto_tweet_download = false;
-  protected _only_rts = false;
   protected _pp = true;
-  protected _sort_reverse_chrono = true;
+
+  protected _sort_way: string;
+  protected _sort_type: string;
+  protected _show_type: string;
+  protected _media_filter: string;
 
   // Globals
   protected current_user: IUser | null = null;
@@ -55,23 +56,35 @@ class AESettings {
       console.log("Autodetecting prefereed mode...");
       console.log("Dark mode on:", media_query_list.matches);
     }
-    if (localStorage.getItem('only_medias')) {
-      this.only_medias = localStorage.getItem('only_medias') === "true";
-    }
-    if (localStorage.getItem('only_videos')) {
-      this.only_videos = localStorage.getItem('only_videos') === "true";
-    }
     if (localStorage.getItem('auto_tweet_download')) {
       this.tweet_dl = localStorage.getItem('auto_tweet_download') === "true";
-    }
-    if (localStorage.getItem('only_rts')) {
-      this.only_rts = localStorage.getItem('only_rts') === "true";
     }
     if (localStorage.getItem('pp')) {
       this.pp = localStorage.getItem('pp') === "true";
     }
-    if (localStorage.getItem('sort_reverse_chrono')) {
-      this.sort_reverse_chrono = localStorage.getItem('sort_reverse_chrono') === "true";
+    if (localStorage.getItem('sort_way')) {
+      this.sort_way = localStorage.getItem('sort_way');
+    }
+    else {
+      this.sort_way = "desc";
+    }
+    if (localStorage.getItem('sort_type')) {
+      this.sort_type = localStorage.getItem('sort_type');
+    }
+    else {
+      this.sort_type = "time";
+    }
+    if (localStorage.getItem('show_type')) {
+      this.show_type = localStorage.getItem('show_type');
+    }
+    else {
+      this.show_type = "all";
+    }
+    if (localStorage.getItem('media_filter')) {
+      this.media_filter = localStorage.getItem('media_filter');
+    }
+    else {
+      this.media_filter = "none";
     }
     if (localStorage.getItem('current_user')) {
       try {
@@ -135,13 +148,40 @@ class AESettings {
     return this._dark_mode === null;
   }
 
-  get sort_reverse_chrono() {
-    return this._sort_reverse_chrono;
+  get show_type() {
+    return this._show_type;
   }
 
-  set sort_reverse_chrono(v: boolean) {
-    this._sort_reverse_chrono = v;
-    localStorage.setItem('sort_reverse_chrono', String(v));
+  set show_type(v: string) {
+    localStorage.setItem('show_type', v);
+    this._show_type = v;
+  }
+
+  get sort_type() {
+    return this._sort_type;
+  }
+
+  set sort_type(v: string) {
+    localStorage.setItem('sort_type', v);
+    this._sort_type = v;
+  }
+
+  get sort_way() {
+    return this._sort_way;
+  }
+
+  set sort_way(v: string) {
+    localStorage.setItem('sort_way', v);
+    this._sort_way = v;
+  }
+
+  get media_filter() {
+    return this._media_filter;
+  }
+
+  set media_filter(v: string) {
+    localStorage.setItem('media_filter', v);
+    this._media_filter = v;
   }
 
   get pp() {
@@ -163,30 +203,15 @@ class AESettings {
   }
 
   get only_medias() {
-    return this._only_medias;
-  }
-
-  set only_medias(v: boolean) {
-    this._only_medias = v;
-    localStorage.setItem('only_medias', String(v));
+    return this._media_filter === "video" || this._media_filter === "pic";
   }
 
   get only_videos() {
-    return this._only_videos;
-  }
-
-  set only_videos(v: boolean) {
-    this._only_videos = v;
-    localStorage.setItem('only_videos', String(v));
+    return this._media_filter === "video";
   }
 
   get only_rts() {
-    return this._only_rts;
-  }
-
-  set only_rts(v: boolean) {
-    this._only_rts = v;
-    localStorage.setItem('only_rts', String(v));
+    return this._show_type === "retweets";
   }
 
   get tweet_dl() {

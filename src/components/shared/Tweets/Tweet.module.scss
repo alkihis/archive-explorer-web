@@ -15,13 +15,15 @@
 }
 
 .card_action {
-  justify-content: space-between;
+  display: grid !important;
+  grid-template-columns: min-content auto auto;
 }
 
 .date {
   font-weight: 200;
   font-size: 12px;
   margin-right: .7rem;
+  justify-self: end;
 }
 
 .link {
@@ -41,6 +43,33 @@
     color: rgb(73, 73, 255);
     text-decoration: underline;
   }
+}
+
+.rt_container {
+  display: flex;
+  justify-content: start;
+}
+
+.rt_number, .fav_number {
+  display: flex;
+  align-items: flex-start;
+  font-size: .9rem;
+  color: lighten($color: #000000, $amount: 20) !important;
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 80) !important;
+  }
+}
+
+.rt_number {
+  margin-right: 1rem;
+  margin-left: .3rem;
+}
+
+.rt_icon, .fav_icon {
+  font-size: 1.1rem !important;
+  margin-left: .3rem;
+  margin-bottom: 1px;
 }
 
 .card_title {
