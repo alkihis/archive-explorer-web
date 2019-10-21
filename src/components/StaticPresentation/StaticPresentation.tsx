@@ -93,9 +93,12 @@ const StaticPresentation: React.FC = () => {
               <p>
                 Specific wishes ? Specific filters.
                 <br />
-                Explore more precisly your archive by choosing a content filter : Find your
-                favorites retweets and selfies from years ago !
+                Want to explore your shared videos ?
+                See your most popular posts of all times ?
+                Browse through your content without seeing the retweets ?<br />
 
+                Explore more precisly your archive by choosing a content filter : 
+                Find your favorites retweets, selfies and top tweets from years ago !
               </p>
             </div>
 

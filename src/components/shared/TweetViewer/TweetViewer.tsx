@@ -23,6 +23,7 @@ import TweetUser from '@material-ui/icons/Person';
 import All from '@material-ui/icons/AllInclusive';
 import Videos from '@material-ui/icons/Videocam';
 import Pictures from '@material-ui/icons/Collections';
+import CustomTooltip from '../CustomTooltip/CustomTooltip';
 
  
 type ViewerProps = {
@@ -146,10 +147,15 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           className={classes.inlineToggleButton}
         >
           <ToggleButton value="tweets">
-            <TweetUser />
+            <CustomTooltip title="Show your tweets">
+              <TweetUser />
+            </CustomTooltip>
           </ToggleButton>
+
           <ToggleButton value="retweets">
-            <Retweet />
+            <CustomTooltip title="Show your retweets">
+              <Retweet />
+            </CustomTooltip>
           </ToggleButton>
         </ToggleButtonGroup>
 
@@ -161,16 +167,27 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           className={classes.inlineToggleButton}
         >
           <ToggleButton value="time">
-            <Time />
+            <CustomTooltip title="Sort by date">
+              <Time />
+            </CustomTooltip>
           </ToggleButton>
+
           <ToggleButton value="popular">
-            <Hot />
+            <CustomTooltip title="Sort by popularity">
+              <Hot />
+            </CustomTooltip>
           </ToggleButton>
+
           <ToggleButton value="retweets">
-            <Retweet />
+            <CustomTooltip title="Sort by retweet count">
+              <Retweet />
+            </CustomTooltip>
           </ToggleButton>
+
           <ToggleButton value="favorites">
-            <Favorite />
+            <CustomTooltip title="Sort by favorite count">
+              <Favorite />
+            </CustomTooltip>
           </ToggleButton>
         </ToggleButtonGroup>
 
@@ -182,10 +199,15 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           className={classes.inlineToggleButton}
         >
           <ToggleButton value="asc">
-            <SortIcon style={{transform: 'rotate(180deg)'}} />
+            <CustomTooltip title="Ascending sort">
+              <SortIcon style={{transform: 'rotate(180deg)'}} />
+            </CustomTooltip>
           </ToggleButton>
+
           <ToggleButton value="desc">
-            <SortIcon />
+            <CustomTooltip title="Descending sort">
+              <SortIcon />
+            </CustomTooltip>
           </ToggleButton>
         </ToggleButtonGroup>
 
@@ -197,16 +219,24 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           className={classes.inlineToggleButton}
         >
           <ToggleButton value="none">
-            <All />
+            <CustomTooltip title="Show all tweets">
+              <All />
+            </CustomTooltip>
           </ToggleButton>
+
           <ToggleButton value="pic">
-            <Pictures />
+            <CustomTooltip title="Show tweets with medias">
+              <Pictures />
+            </CustomTooltip>
           </ToggleButton>
+
           <ToggleButton 
             value="video" 
             disabled={!SETTINGS.archive.is_gdpr}
           >
-            <Videos />
+            <CustomTooltip title="Show tweets with videos or GIFs">
+              <Videos />
+            </CustomTooltip>
           </ToggleButton>
         </ToggleButtonGroup>
       </div>
@@ -220,22 +250,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
   closeConfirmModal() {
     this.setState({ modal_confirm: false });
-  }
-
-  warningMessageFilter() {
-    const filters = [SETTINGS.only_medias, SETTINGS.only_videos, SETTINGS.only_rts];
-
-    if (filters.some(e => e)) {
-      const [medias, videos, rts] = filters;
-
-      if (videos) {
-        return (rts ? "re" : "") + "tweets with videos/GIFs";
-      }
-      if (medias) {
-        return (rts ? "re" : "") + "tweets with medias";
-      }
-    }
-    return "";
   }
 
   /** GET TWEETS */
@@ -513,8 +527,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       return this.noTweetsState();
     }
 
-    const warning = this.warningMessageFilter();
-
     const t = this.state.current_page.map(this.renderTweet);
 
     // no tweets available (all deleted)
@@ -529,8 +541,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         {this.state.modal_confirm && this.confirmDeletionModal()}
 
         {this.askDeletionModal()}
-
-        {warning && <div className={classes.warning_filters}>Showing only {warning}</div>}
         
         <InfiniteScroll
           className={classes.card_container}
