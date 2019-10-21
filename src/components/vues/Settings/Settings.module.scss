@@ -1,3 +1,5 @@
+@import '../../../tools/functions.scss';
+
 .big_text {
   font-size: 13px !important;
 }
@@ -45,6 +47,24 @@ $avatar_size: 60px;
   grid-area: img;
   height: $avatar_size !important;
   width: $avatar_size !important;
+}
+
+.version {
+  margin-top: 2rem;
+  margin-bottom: 64px;
+  color: lighten($color: #000000, $amount: 25);
+  font-style: italic;
+  text-align: right;
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 75);
+  }
+}
+
+.version_pos {
+  position: absolute;
+  bottom: 72px;
+  right: 1rem;
 }
 
 .sn {

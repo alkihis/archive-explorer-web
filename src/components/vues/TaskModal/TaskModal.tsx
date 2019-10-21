@@ -281,7 +281,11 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
 
   emptyTask() {
     return (
-      <EmptyMessage main="Empty task list" second="Tweet deletion tasks can be started through tweet explorer." icon={TimelineIcon} />
+      <EmptyMessage 
+        main="Empty task list" 
+        second="Deletion tasks can be started through tweet explorer or from More tab." 
+        icon={TimelineIcon} 
+      />
     );
   }
 

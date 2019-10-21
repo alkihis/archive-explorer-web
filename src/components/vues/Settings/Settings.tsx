@@ -5,6 +5,7 @@ import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, For
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
 import ExtendedActionsMenu from './ExtendedActionsMenu';
+import { VERSION } from '../../../const';
 
 type SettingsState = {
   download: boolean;
@@ -72,7 +73,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
     SETTINGS.pp = v;
   }
 
-  handleDarkModeChange = (e: CustomEvent<boolean>) => {
+  handleDarkModeChange = (_: CustomEvent<boolean>) => {
     this.changeAutoDarkState(SETTINGS.is_auto_dark_mode, false);
   };
 
@@ -91,7 +92,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
   tweetViewSettings() {
     return (
       <FormControl component="fieldset">
-        <FormLabel focused style={{marginTop: '1rem', marginBottom: '.5rem'}}>Tweet settings</FormLabel>
         <FormGroup>
           <FormControlLabel
             value="media"
@@ -165,7 +165,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
 
   displaySettings() {
     return (
-      <div style={{ marginBottom: 'calc(5rem + 64px)' }}>
+      <div>
         <FormGroup>
           <FormControlLabel
             value="auto_dark_mode"
@@ -245,15 +245,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
         </AppBar>
 
         <Container maxWidth="lg" className={classes.root}>
-          <Typography variant="h4" className="bold">
-            Tweet view
-          </Typography>
-          <Container>
-            {this.tweetViewSettings()}
-          </Container>
-
-          {/* <Divider className="divider-big-margin" /> */}
-
           <Typography variant="h4" className={classes.account_title}>
             Account
           </Typography>
@@ -262,10 +253,21 @@ export default class Settings extends React.Component<{}, SettingsState> {
           </Container>
 
           <Typography variant="h4" className={classes.account_title}>
+            Tweets
+          </Typography>
+          <Container className={classes.account_container}>
+            {this.tweetViewSettings()}
+          </Container>
+
+          <Typography variant="h4" className={classes.account_title}>
             Display
           </Typography>
           <Container className={classes.account_container}>
             {this.displaySettings()}
+          </Container>
+
+          <Container className={classes.version}>
+            <div className={classes.version_pos}>Archive Explorer version {VERSION}</div>
           </Container>
         </Container>
       </div>
