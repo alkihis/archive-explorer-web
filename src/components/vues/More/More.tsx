@@ -179,12 +179,16 @@ export default class More extends React.Component {
         </Typography>
 
         <Typography variant="h6" className={classes.third_title}>
-          Archive size limit
+          Archive size
         </Typography>
 
         <Typography className={classes.help_p}>
-          Due to a technical limitation, archive are fully loaded into your navigator's memory.
+          Due to a technical limitation, archive is fully loaded into your navigator's memory.
           This could be very inefficient for mobiles devices or small computers.
+          <br />
+
+          In very specific cases, if you have too many medias in your direct messages, load can fail. You can delete the folder
+          <span className="bold"> direct_message_media</span> in your archive to lighten it.
         </Typography>
 
         <Marger size="3rem" />

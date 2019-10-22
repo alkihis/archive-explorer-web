@@ -240,7 +240,6 @@ export default class StreamZip extends events.EventEmitter {
   }
 
   readCentralDirectoryComplete = () => {
-    console.log(this.op)
     var buffer = this.op.win.buffer;
     var pos = this.op.lastBufferPosition;
     try {
