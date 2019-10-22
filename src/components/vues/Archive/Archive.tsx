@@ -14,6 +14,8 @@ import QuickDelete from '../QuickDelete/QuickDelete';
 import Timer from 'timerize';
 import { toast } from '../../shared/Toaster/Toaster';
 import RefactorArchiveButton from '../../shared/RefactorArchive/RefactorArchive';
+import { createTrimmedArchive } from '../../../tools/StreamZip';
+import JSZip from 'jszip';
 
 type ArchiveState = {
   loaded: string;
@@ -169,27 +171,32 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   }
 
   // Load archive inside SETTINGS.archive
-  loadArchive(e: React.ChangeEvent<HTMLInputElement>) {
+  async loadArchive(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files.length) {
-      const f = e.target.files[0];
+      let f: File | JSZip = e.target.files[0];
+      const filename = f.name;
 
       if (f.size > THRESHOLD_SIZE_LIMIT) {
         console.warn("File too heavy !");
         toast("File is very heavy, this might be a problem. See how to lighten the archive in the More tab.", "warning");
+
+        console.log("Converting archive...");
+        f = await createTrimmedArchive(f);
+        console.log("Done");
       }
 
       SETTINGS.archive = new TwitterArchive(f, true);
 
-      console.log("Loading a new archive: ", f.name);
+      console.log("Loading a new archive: ", filename);
 
       this.setState({
         loaded: "",
-        in_load: f.name,
+        in_load: filename,
         is_error: false,
         loading_state: "reading"
       });
       SETTINGS.archive_name = "";
-      SETTINGS.archive_in_load = f.name;
+      SETTINGS.archive_in_load = filename;
 
       this.checkOnReadyArchive();
     }
