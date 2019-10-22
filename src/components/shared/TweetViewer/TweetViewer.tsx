@@ -406,10 +406,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             It seems you have applied filters 
             that hide all the tweets that can be displayed.
           </Typography>
-
-          <Button component={Link} to="/settings/" color="primary" style={{marginTop: '1.5rem'}}>
-            Manage filters
-          </Button>
         </CenterComponent>
       </>
     );
