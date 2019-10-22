@@ -12,8 +12,6 @@ import { THRESHOLD_PREFETCH, THRESHOLD_SIZE_LIMIT } from '../../../const';
 import { Link } from 'react-router-dom';
 import QuickDelete from '../QuickDelete/QuickDelete';
 import Timer from 'timerize';
-import { toast } from '../../shared/Toaster/Toaster';
-import RefactorArchiveButton from '../../shared/RefactorArchive/RefactorArchive';
 import { createTrimmedArchive } from '../../../tools/StreamZip';
 import JSZip from 'jszip';
 
@@ -21,7 +19,7 @@ type ArchiveState = {
   loaded: string;
   is_error: boolean | string;
   in_load: string;
-  loading_state: ArchiveReadState | "prefetch";
+  loading_state: ArchiveReadState | "prefetch" | "converting";
   quick_delete_open: boolean;
 };
 
@@ -171,18 +169,14 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   }
 
   // Load archive inside SETTINGS.archive
-  async loadArchive(e: React.ChangeEvent<HTMLInputElement>) {
+  loadArchive(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files.length) {
-      let f: File | JSZip = e.target.files[0];
+      let f: File | Promise<JSZip> = e.target.files[0];
       const filename = f.name;
 
       if (f.size > THRESHOLD_SIZE_LIMIT) {
-        console.warn("File too heavy !");
-        toast("File is very heavy, this might be a problem. See how to lighten the archive in the More tab.", "warning");
-
         console.log("Converting archive...");
-        f = await createTrimmedArchive(f);
-        console.log("Done");
+        f = createTrimmedArchive(f);
       }
 
       SETTINGS.archive = new TwitterArchive(f, true);
@@ -193,7 +187,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         loaded: "",
         in_load: filename,
         is_error: false,
-        loading_state: "reading"
+        loading_state: f instanceof Promise ? "converting" : "reading"
       });
       SETTINGS.archive_name = "";
       SETTINGS.archive_in_load = filename;
@@ -218,6 +212,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         return "Reading user informations";
       case "prefetch":
         return "Gathering user informations";
+      case "converting":
+        return "Archive is quite heavy, lightening a bit...";
     }
   }
 
@@ -253,19 +249,9 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           Error
         </Typography>
 
-        {this.state.is_error === true ?
         <Typography>
           Archive couldn't be loaded. Please load a new archive with the required format.
         </Typography>
-        :
-        <div>
-          <Typography>
-            Archive might be too big. Maximum file size is around 2 GB. 
-          </Typography>
-
-          <RefactorArchiveButton message="How to lighten my archive ?" className={styles.lighten_btn} />
-        </div>
-        }
       </div>
     );
   }
@@ -333,7 +319,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return (
       <div>
         <Typography variant="h5" component="h2" className={styles.title}>
-          Loading...
+          {this.state.loading_state === "converting" ? "Please wait" : "Loading..."}
         </Typography>
         <Typography className={styles.subtitle}>
           {msg}

@@ -503,9 +503,7 @@ export async function createTrimmedArchive(file: File) {
           }
           else {
             try {
-              console.log("Converting", entry.name);
               builded.file(entry.name, await s.entryData(entry.name));
-              console.log("Converted")
             } catch (e) { console.error(e) }
           }
       }
@@ -754,12 +752,8 @@ function parseZipTime(timebytes: number, datebytes: number) {
 }
 
 /**
- * Read from a Blob into a buffer
- * @param file 
- * @param buffer 
- * @param offset_in_buffer 
- * @param length 
- * @param position_in_file 
+ * Read a part of a Blob into a Node.js buffer,
+ * from position to position+length, into Buffer offset to offset+length 
  */
 async function readFromFile(file: Blob, buffer: Buffer, offset_in_buffer: number, length: number, position_in_file: number) {
   const sliced = file.slice(position_in_file, position_in_file + length);

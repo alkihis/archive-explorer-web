@@ -8,7 +8,6 @@ import Tasks from '../../../tools/Tasks';
 import { toast } from '../../shared/Toaster/Toaster';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 import { DEBUG_MODE } from '../../../const';
-import RefactorArchiveButton from '../../shared/RefactorArchive/RefactorArchive';
 import { parseTwitterDate } from 'twitter-archive-reader';
 
 export default class More extends React.Component {
@@ -186,15 +185,7 @@ export default class More extends React.Component {
         <Typography className={classes.help_p}>
           Due to a technical limitation, archive are fully loaded into your navigator's memory.
           This could be very inefficient for mobiles devices or small computers.
-          Moreover, archive size limit, due to another technical limitation, is fixed to 4 GB.
-
-          <br />
-
-          In order to smoothen your experience with Archive Explorer, you can use a Mac or a PC to make
-          your archive lighter, by following this tutorial available by clicking the button below.
         </Typography>
-        
-        <RefactorArchiveButton message="How to lighten my archive ?" className={classes.light_btn} />
 
         <Marger size="3rem" />
       </div>

@@ -4,7 +4,7 @@ export const VERSION = "1.1.0";
 export const THRESHOLD_PREFETCH = 20;
 export const SERVER_URL = DEBUG_MODE ? "http://localhost:3128" : "https://archive-explorer.fr";
 export const AUTO_TWITTER_CHECK = !DEBUG_MODE;
-export const THRESHOLD_SIZE_LIMIT = 1.5 * 1024 * 1024 * 1024;
+export const THRESHOLD_SIZE_LIMIT = 0.75 * 1024 * 1024 * 1024;
 
 export const IMG_PREFIX = "/assets/";
 export const IMG_LIST: string[] = [
