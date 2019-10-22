@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import SearchIcon from '@material-ui/icons/Search';
+import ErrorIcon from '@material-ui/icons/ErrorOutline';
 import { uppercaseFirst, getMonthText, specialJoin, escapeRegExp } from '../../../helpers';
 import DMContainer from './DMContainer';
 import { withStyles } from '@material-ui/styles';
@@ -197,6 +198,16 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           </ListItemText>
         </ListItem>
 
+        <ListItem 
+          button 
+          className={"day" === this.state.month ? classes.selected_month : ""} 
+          onClick={() => this.monthClicker("day", "")}
+        >
+          <ListItemText className={classes.drawer_month}>
+            Messages of the day
+          </ListItemText>
+        </ListItem>
+
         {years_sorted.map(y => this.year(y))}
 
         <ListItem 
@@ -255,6 +266,21 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     );
   }
 
+  noMessagesInMonth() {
+    return (
+      <CenterComponent className={classes.no_msg}>
+        <ErrorIcon className={classes.icon} />
+        <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+          No message
+        </Typography>
+
+        <Typography variant="h6">
+          You don't have any message here.
+        </Typography>
+      </CenterComponent>
+    );
+  }
+
   year(year: string) {
     return (
       <ExpansionPanel key={"year" + year}>
@@ -275,6 +301,18 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
   monthClicker(year: string, month: string, from: string | null = null) {
     // Reset scroll position
     window.scrollTo(0, 0);
+
+    if (year === "day") {
+      this.setState({
+        selected: this.conv.fromThatDay().all,
+        month: year,
+        key: String(Math.random()),
+        mobileOpen: false,
+        found: null,
+        from
+      });
+      return;
+    }
 
     this.setState({
       selected: year === "*" ? this.conv.all : this.conv.month(month, year).all,
@@ -324,7 +362,10 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     let month_text = "All messages";
     let year = "";
 
-    if (this.state.month !== "*") {
+    if (this.state.month === "day") {
+      month_text = "DMs of the day";
+    }
+    else if (this.state.month !== "*") {
       const [_year, month] = this.state.month.split('-');
       year = _year;
       month_text = uppercaseFirst(getMonthText(month));
@@ -382,18 +423,29 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       );
     }
     else {
+      let content: JSX.Element;
+
+      if (this.state.selected) {
+        if (this.state.selected.length) {
+          content = <div>
+            {this.showActiveMonth()}
+            <DMContainer key={this.state.key} messages={this.state.selected} from={this.state.from} />
+          </div>;
+        }
+        else {
+          content = this.noMessagesInMonth();
+        }
+      }
+      else {
+        content = this.noMonthSelected();
+      }
+
       return (
         <div>
           {this.showHeaderConv()}
 
           <div className={classes.inner_content}>
-            {this.state.selected ? 
-              (<div>
-                {this.showActiveMonth()}
-                <DMContainer key={this.state.key} messages={this.state.selected} from={this.state.from} />
-              </div>) :
-              this.noMonthSelected()
-            }
+            {content}
           </div>
         </div>
       );
