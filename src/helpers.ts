@@ -268,15 +268,16 @@ export function filterTweets(tweets: PartialTweet[]) {
     };
   }
 
-  const rt_only = SETTINGS.show_type === "retweets";
-  const tweet_only = SETTINGS.show_type === "tweets";
-
   const res = tweets.filter(t => {
-    if (rt_only && !t.retweeted_status) {
+    if (!SETTINGS.allow_rts && t.retweeted_status) {
       return false;
     }
 
-    if (tweet_only && t.retweeted_status) {
+    if (!SETTINGS.allow_self && !t.retweeted_status) {
+      return false;
+    }
+
+    if (!SETTINGS.allow_mentions && t.text.startsWith('@')) {
       return false;
     }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { PartialTweet } from 'twitter-archive-reader';
 import InfiniteScroll from 'react-infinite-scroller';
-import SETTINGS from '../../../tools/Settings';
+import SETTINGS, { TweetSortType, TweetSortWay, TweetMediaFilters } from '../../../tools/Settings';
 import Tweet from '../Tweets/Tweet';
 import classes from './TweetViewer.module.scss';
 import { filterTweets } from '../../../helpers';
@@ -22,6 +22,7 @@ import Time from '@material-ui/icons/Schedule';
 import TweetUser from '@material-ui/icons/Person';
 import All from '@material-ui/icons/AllInclusive';
 import Videos from '@material-ui/icons/Videocam';
+import MentionIcon from '@material-ui/icons/Reply';
 import Pictures from '@material-ui/icons/Collections';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
 
@@ -44,10 +45,12 @@ type ViewerState = {
   key: string;
 
   /** Filters */
-  show_type: string;
-  sort_type: string;
-  sort_way: string;
-  media_filter: string;
+  sort_type: TweetSortType;
+  sort_way: TweetSortWay;
+  media_filter: TweetMediaFilters;
+  allow_rts: boolean;
+  allow_self: boolean;
+  allow_mentions: boolean;
 };
 
 const DEFAULT_CHUNK_LEN = 26;
@@ -64,6 +67,19 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   constructor(props: ViewerProps) {
     super(props);
 
+    // Actualise les filtres en fonction du type de l'archive
+    if (!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl) {
+      // Désactive les filters inaccessibles
+      // Si jamais on est en tri vidéo seulement, réinitialise
+      if (SETTINGS.media_filter === "video") {
+        SETTINGS.media_filter = "none";
+      }
+      // Pareil pour le temps
+      if (SETTINGS.sort_type !== "time") {
+        SETTINGS.sort_type = "time";
+      }
+    }
+
     const tweets = filterTweets(this.props.tweets);
 
     this.state = {
@@ -78,9 +94,11 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       modal_confirm: false,
       key: String(Math.random()),
       sort_type: SETTINGS.sort_type,
-      show_type: SETTINGS.show_type,
       sort_way: SETTINGS.sort_way,
       media_filter: SETTINGS.media_filter,
+      allow_mentions: SETTINGS.allow_mentions,
+      allow_rts: SETTINGS.allow_rts,
+      allow_self: SETTINGS.allow_self
     };
 
     // Needed because REACT is shit
@@ -94,14 +112,19 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       return;
     }
 
-    SETTINGS.show_type = value.length > 1 ? 'all' : value[0];
+    SETTINGS.allow_mentions = value.includes('mentions');
+    SETTINGS.allow_rts = value.includes('retweets');
+    SETTINGS.allow_self = value.includes('self');
+
     this.setState({
-      show_type: value.length > 1 ? 'all' : value[0],
+      allow_mentions: SETTINGS.allow_mentions,
+      allow_rts: SETTINGS.allow_rts,
+      allow_self: SETTINGS.allow_self,
       key: String(Math.random())
     });
   };
 
-  handleSortTypeChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: string) => {
+  handleSortTypeChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: TweetSortType) => {
     if (!value) {
       return;
     }
@@ -113,7 +136,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     });
   };
 
-  handleSortWayChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: string) => {
+  handleSortWayChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: TweetSortWay) => {
     if (!value) {
       return;
     }
@@ -125,7 +148,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     });
   };
 
-  handleMediaChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: string) => {
+  handleMediaChange = (_: React.MouseEvent<HTMLElement, MouseEvent>, value: TweetMediaFilters) => {
     if (!value) {
       return;
     }
@@ -138,15 +161,27 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   };
 
   renderFilters() {
+    const show_types = [];
+
+    if (SETTINGS.allow_mentions) {
+      show_types.push("mentions");
+    }
+    if (SETTINGS.allow_rts) {
+      show_types.push("retweets");
+    }
+    if (SETTINGS.allow_self) {
+      show_types.push("self");
+    }
+
     return (
       <div className={classes.toggleContainer}>
-        {/* Show mode (all, retweets only, tweets only) */}
+        {/* Show mode (all, retweets only, tweets only, mentions) */}
         <ToggleButtonGroup
-          value={this.state.show_type === "all" ? ['retweets', 'tweets'] : [this.state.show_type]}
+          value={show_types}
           onChange={this.handleShowModeChange}
           className={classes.inlineToggleButton}
         >
-          <ToggleButton value="tweets">
+          <ToggleButton value="self">
             <CustomTooltip title="Show your tweets">
               <TweetUser />
             </CustomTooltip>
@@ -155,6 +190,12 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           <ToggleButton value="retweets">
             <CustomTooltip title="Show your retweets">
               <Retweet />
+            </CustomTooltip>
+          </ToggleButton>
+
+          <ToggleButton value="mentions">
+            <CustomTooltip title="Show replies">
+              <MentionIcon />
             </CustomTooltip>
           </ToggleButton>
         </ToggleButtonGroup>
@@ -172,19 +213,28 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             </CustomTooltip>
           </ToggleButton>
 
-          <ToggleButton value="popular">
+          <ToggleButton 
+            value="popular" 
+            disabled={!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl}
+          >
             <CustomTooltip title="Sort by popularity">
               <Hot />
             </CustomTooltip>
           </ToggleButton>
 
-          <ToggleButton value="retweets">
+          <ToggleButton 
+            value="retweets" 
+            disabled={!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl}
+          >
             <CustomTooltip title="Sort by retweet count">
               <Retweet />
             </CustomTooltip>
           </ToggleButton>
 
-          <ToggleButton value="favorites">
+          <ToggleButton 
+            value="favorites" 
+            disabled={!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl}
+          >
             <CustomTooltip title="Sort by favorite count">
               <Favorite />
             </CustomTooltip>
@@ -232,7 +282,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
           <ToggleButton 
             value="video" 
-            disabled={!SETTINGS.archive.is_gdpr}
+            disabled={!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl}
           >
             <CustomTooltip title="Show tweets with videos or GIFs">
               <Videos />

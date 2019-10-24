@@ -4,6 +4,10 @@ import { FullUser } from "twitter-d";
 import { DEBUG_MODE } from "../const";
 import APIHELPER from "./ApiHelper";
 
+export type TweetSortType = "time" | "popular" | "retweets" | "favorites";
+export type TweetSortWay = "asc" | "desc";
+export type TweetMediaFilters = "none" | "pic" | "video";
+
 // Check if dark theme requested
 const media_query_list = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -28,10 +32,12 @@ class AESettings {
   protected _auto_tweet_download = false;
   protected _pp = true;
 
-  protected _sort_way: string;
-  protected _sort_type: string;
-  protected _show_type: string;
-  protected _media_filter: string;
+  protected _sort_way: TweetSortWay;
+  protected _sort_type: TweetSortType;
+  protected _media_filter: TweetMediaFilters;
+  protected _allow_rts: boolean = true;
+  protected _allow_self: boolean = true;
+  protected _allow_mentions: boolean = true;
 
   // Globals
   protected current_user: IUser | null = null;
@@ -63,25 +69,28 @@ class AESettings {
       this.pp = localStorage.getItem('pp') === "true";
     }
     if (localStorage.getItem('sort_way')) {
-      this.sort_way = localStorage.getItem('sort_way');
+      this.sort_way = localStorage.getItem('sort_way') as TweetSortWay;
     }
     else {
       this.sort_way = "desc";
     }
     if (localStorage.getItem('sort_type')) {
-      this.sort_type = localStorage.getItem('sort_type');
+      this.sort_type = localStorage.getItem('sort_type') as TweetSortType;
     }
     else {
       this.sort_type = "time";
     }
-    if (localStorage.getItem('show_type')) {
-      this.show_type = localStorage.getItem('show_type');
+    if (localStorage.getItem('allow_rts')) {
+      this.allow_rts = localStorage.getItem('allow_rts') === "true";
     }
-    else {
-      this.show_type = "all";
+    if (localStorage.getItem('allow_mentions')) {
+      this.allow_mentions = localStorage.getItem('allow_mentions') === "true";
+    }
+    if (localStorage.getItem('allow_self')) {
+      this.allow_self = localStorage.getItem('allow_self') === "true";
     }
     if (localStorage.getItem('media_filter')) {
-      this.media_filter = localStorage.getItem('media_filter');
+      this.media_filter = localStorage.getItem('media_filter') as TweetMediaFilters;
     }
     else {
       this.media_filter = "none";
@@ -148,20 +157,38 @@ class AESettings {
     return this._dark_mode === null;
   }
 
-  get show_type() {
-    return this._show_type;
+  get allow_self() {
+    return this._allow_self;
   }
 
-  set show_type(v: string) {
-    localStorage.setItem('show_type', v);
-    this._show_type = v;
+  set allow_self(v: boolean) {
+    localStorage.setItem('allow_self', String(v));
+    this._allow_self = v;
+  }
+
+  get allow_mentions() {
+    return this._allow_mentions;
+  }
+
+  set allow_mentions(v: boolean) {
+    localStorage.setItem('allow_mentions', String(v));
+    this._allow_mentions = v;
+  }
+
+  get allow_rts() {
+    return this._allow_rts;
+  }
+
+  set allow_rts(v: boolean) {
+    localStorage.setItem('allow_rts', String(v));
+    this._allow_rts = v;
   }
 
   get sort_type() {
     return this._sort_type;
   }
 
-  set sort_type(v: string) {
+  set sort_type(v: TweetSortType) {
     localStorage.setItem('sort_type', v);
     this._sort_type = v;
   }
@@ -170,7 +197,7 @@ class AESettings {
     return this._sort_way;
   }
 
-  set sort_way(v: string) {
+  set sort_way(v: TweetSortWay) {
     localStorage.setItem('sort_way', v);
     this._sort_way = v;
   }
@@ -179,7 +206,7 @@ class AESettings {
     return this._media_filter;
   }
 
-  set media_filter(v: string) {
+  set media_filter(v: TweetMediaFilters) {
     localStorage.setItem('media_filter', v);
     this._media_filter = v;
   }
@@ -208,10 +235,6 @@ class AESettings {
 
   get only_videos() {
     return this._media_filter === "video";
-  }
-
-  get only_rts() {
-    return this._show_type === "retweets";
   }
 
   get tweet_dl() {
