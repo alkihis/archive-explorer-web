@@ -68,7 +68,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     super(props);
 
     // Actualise les filtres en fonction du type de l'archive
-    if (!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl) {
+    if (!SETTINGS.archive.is_gdpr) {
       // Désactive les filters inaccessibles
       // Si jamais on est en tri vidéo seulement, réinitialise
       if (SETTINGS.media_filter === "video") {
@@ -215,7 +215,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
           <ToggleButton 
             value="popular" 
-            disabled={!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl}
+            disabled={!SETTINGS.archive.is_gdpr}
           >
             <CustomTooltip title="Sort by popularity">
               <Hot />
@@ -224,7 +224,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
           <ToggleButton 
             value="retweets" 
-            disabled={!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl}
+            disabled={!SETTINGS.archive.is_gdpr}
           >
             <CustomTooltip title="Sort by retweet count">
               <Retweet />
@@ -233,7 +233,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
           <ToggleButton 
             value="favorites" 
-            disabled={!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl}
+            disabled={!SETTINGS.archive.is_gdpr}
           >
             <CustomTooltip title="Sort by favorite count">
               <Favorite />
@@ -282,7 +282,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
           <ToggleButton 
             value="video" 
-            disabled={!SETTINGS.archive.is_gdpr && !SETTINGS.tweet_dl}
+            disabled={!SETTINGS.archive.is_gdpr}
           >
             <CustomTooltip title="Show tweets with videos or GIFs">
               <Videos />

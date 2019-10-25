@@ -31,6 +31,10 @@
   overflow: auto;
 }
 
+.th {
+  z-index: unset !important;
+}
+
 .sn_root {
   width: 100%;
   margin-top: .5rem;

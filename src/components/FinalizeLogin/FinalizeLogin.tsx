@@ -13,6 +13,7 @@ export default class FinalizeLogin extends React.Component {
   protected save_token_secret = localStorage.getItem("save_token_secret");
   protected oauth_token: string;
   protected oauth_verifier: string;
+  protected oauth_denied: string;
 
   constructor(props: RouteComponentProps) {
     super(props);
@@ -33,6 +34,9 @@ export default class FinalizeLogin extends React.Component {
       }
       if ('oauth_verifier' in params) {
         this.oauth_verifier = params.oauth_verifier;
+      }
+      if ('denied' in params) {
+        this.oauth_denied = params.denied;
       }
     }
 
@@ -81,6 +85,10 @@ export default class FinalizeLogin extends React.Component {
     );
   }
 
+  renderDenied() {
+    return internalError("Login aborted", "You have cancelled login operation in Twitter. If you're not logged, you can't access Archive Explorer.", true);
+  }
+
   renderTokenMiss() {
     return internalError("Missing token", "In order to authentificate, Twitter need to send some credentials. They're missing.", true);
   }
@@ -90,16 +98,27 @@ export default class FinalizeLogin extends React.Component {
   }
 
   render() {
+    let content: string | JSX.Element = "";
+
+    if (this.state.has_token) {
+      if (this.state.in_load) {
+        content = this.renderWaiting();
+      }
+      else {
+        content = this.renderFailed();
+      }
+    }
+    else if (this.oauth_denied) {
+      content = this.renderDenied();
+    }
+    else {
+      content = this.renderTokenMiss();
+    }
+
     return (
       <div className="FinalizeLogin">
         <CenterComponent style={{height: '100vh'}}>
-          {this.state.has_token ? (
-            this.state.in_load ? 
-            this.renderWaiting() :
-            this.renderFailed()
-          ) : 
-            this.renderTokenMiss()
-          }
+          {content}
         </CenterComponent>
       </div>
     );

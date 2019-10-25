@@ -292,6 +292,7 @@ class AESettings {
 
   logout(reload = true, revoke = false) {
     const is_logged = this.is_logged;
+    localStorage.removeItem("save_token_secret");
 
     if (revoke && is_logged) {
       // Revoke without specifing token: revoking current

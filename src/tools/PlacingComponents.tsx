@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, CircularProgress, Typography, CardContent, Button } from "@material-ui/core";
 import LoginIcon from '@material-ui/icons/Refresh';
 import SETTINGS from "./Settings";
+import { Link } from "react-router-dom";
 
 export const CenterComponent = (props: any) => {
   return (
@@ -46,9 +47,11 @@ export function internalError(message: string, additionnal_text = "", login_agai
         </p>
 
         {login_again ? (
-          <Button onClick={() => SETTINGS.logout()} color="primary" style={{width: '100%', marginTop: '1.5rem'}}>
-            <LoginIcon style={{marginRight: '3%'}} /> Login again
-          </Button>
+          <Link to="/login">
+            <Button onClick={() => SETTINGS.logout(false)} color="primary" style={{width: '100%', marginTop: '1.5rem'}}>
+              <LoginIcon style={{marginRight: '3%'}} /> Login again
+            </Button>
+          </Link>
         ) : "" }
       </CardContent>
     </div>

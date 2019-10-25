@@ -142,7 +142,7 @@ const LoginButton: React.FC<{classes: any}> = (props: { classes: any }) => {
   }
 
   function runGetter() {
-    APIHELPER.request('users/request', { method: 'POST' })
+    APIHELPER.request('users/request', { method: 'POST', auth: false })
       .then((data: RequestTokenRequest) => {
         setLoading(false);
 

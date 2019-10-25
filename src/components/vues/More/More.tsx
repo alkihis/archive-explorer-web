@@ -477,8 +477,8 @@ function ScreenNameHistory() {
           <Table stickyHeader className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell>Twitter @</TableCell>
-                <TableCell align="right">Until</TableCell>
+                <TableCell className={classes.th}>Twitter @</TableCell>
+                <TableCell className={classes.th} align="right">Until</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -505,10 +505,10 @@ function Keywords() {
         <Table stickyHeader className={classes.table_large}>
           <TableHead>
             <TableRow>
-              <TableCell>Keyword</TableCell>
-              <TableCell>Content</TableCell>
-              <TableCell align="right">Description</TableCell>
-              <TableCell align="right">Example</TableCell>
+              <TableCell className={classes.th}>Keyword</TableCell>
+              <TableCell className={classes.th}>Content</TableCell>
+              <TableCell align="right" className={classes.th}>Description</TableCell>
+              <TableCell align="right" className={classes.th}>Example</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
