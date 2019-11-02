@@ -36,28 +36,21 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
     active_tab: 0,
   };
 
+  protected in_dl = false;
+
   protected position: number = 0;
   protected should_scroll = false;
 
-  componentDidMount() {
-    setPageTitle("Direct messages");
+  constructor(props: DMProps) {
+    super(props);
 
     if (isArchiveLoaded() && SETTINGS.archive.is_gdpr) {
-      const participants = new Set<string>();
-
-      for (const conv of SETTINGS.archive.messages.all) {
-        for (const p of conv.participants) {
-          participants.add(p);
-        }
-      }
-
-      UserCache.bulk([...participants])
-        .finally(() => {
-          this.setState({
-            ready: true
-          });
-        });
+      this.downloadUsers();
     }
+  }
+
+  componentDidMount() {
+    setPageTitle("Direct messages");
   }
 
   componentDidUpdate() {
@@ -65,6 +58,30 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
       this.should_scroll = false;
       window.scrollTo(0, this.position);
     }
+    // Si c'est pas OK, que l'archive est chargée et valide, et qu'on est pas en téléchargement
+    else if (!this.state.ready && isArchiveLoaded() && SETTINGS.archive.is_gdpr && !this.in_dl) {
+      this.downloadUsers();
+    }
+  }
+
+  downloadUsers() {
+    this.in_dl = true;
+    const participants = new Set<string>();
+
+    for (const conv of SETTINGS.archive.messages.all) {
+      for (const p of conv.participants) {
+        participants.add(p);
+      }
+    }
+
+    UserCache.bulk([...participants])
+      .finally(() => {
+        this.setState({
+          ready: true
+        });
+
+        this.in_dl = false;
+      });
   }
 
   handleRemoveConversation = () => {

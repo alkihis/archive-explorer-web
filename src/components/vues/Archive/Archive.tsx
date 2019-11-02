@@ -265,7 +265,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         </Typography>
 
         <Typography>
-          You don't have any archive loaded. Load an archive using the "load archive" button.
+          You don't have any archive loaded. 
+          <br />
+          Load an archive using the button below, 
+          or drag-and-drop your archive here.
         </Typography>
       </div>
     );
@@ -447,10 +450,12 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     e.preventDefault();
   };
 
-  handleDragEnter = () => {
+  handleDragEnter = (e: Event) => {
     if (this.last_refresh + 200 > Date.now()) {
       return;
     }
+
+    console.log((e as DragEvent));
 
     if (!this.state.in_load && !this.state.in_drag)
       this.setState({
