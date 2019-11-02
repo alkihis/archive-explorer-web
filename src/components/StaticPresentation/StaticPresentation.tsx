@@ -5,9 +5,12 @@ import { Avatar, Container, Typography, Divider } from '@material-ui/core';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import { DownloadGDPRModal } from '../shared/NoGDPR/NoGDPR';
 import SETTINGS from '../../tools/Settings';
+import { setPageTitle } from '../../helpers';
+import APIHELPER from '../../tools/ApiHelper';
 
 const StaticPresentation: React.FC = () => {
   const [open, setOpen] = React.useState(false);
+  setPageTitle("Twitter Archive Explorer")
 
   const closeModal = () => {
     setOpen(false);
@@ -81,6 +84,7 @@ const StaticPresentation: React.FC = () => {
                 You've used an overkill block list and you want to reverse it ?
                 Archive Explorer is a tool made for clear your old tweets, by month, year or even
                 with a text query. You'll also be able to delete muted and blocked users !
+                This tool already helps to delete <DeletedCounter /> tweets !
               </p>
             </div>
 
@@ -226,3 +230,22 @@ function GithubLogo(props: { url: string, text: string }) {
     </a>
   );
 }
+
+type DCProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
+
+const DeletedCounter: React.FC<DCProps> = (props: DCProps) => {
+  const [deleted, setDeleted] = React.useState<number>(undefined);
+
+  if (deleted === undefined) {
+    APIHELPER.request('deleted_count', { auth: false, method: 'GET' })
+      .then((resp: { count: number }) => {
+        setDeleted(resp.count);
+      });
+  }
+
+  return (
+    <span {...props}>
+      {deleted !== undefined ? deleted : "•••"}
+    </span>
+  );
+};

@@ -11,6 +11,7 @@ import UserCache from '../../../classes/UserCache';
 import { THRESHOLD_PREFETCH, THRESHOLD_SIZE_LIMIT } from '../../../const';
 import { Link } from 'react-router-dom';
 import QuickDelete from '../QuickDelete/QuickDelete';
+import FileUploadIcon from '@material-ui/icons/CloudUpload';
 import Timer from 'timerize';
 import { createTrimmedArchive } from '../../../tools/StreamZip';
 import JSZip from 'jszip';
@@ -21,6 +22,7 @@ type ArchiveState = {
   in_load: string;
   loading_state: ArchiveReadState | "prefetch" | "converting";
   quick_delete_open: boolean;
+  in_drag: boolean;
 };
 
 Timer.default_format = "s";
@@ -32,6 +34,9 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   /** True if the component is mounted. false when unmounted (don't use setState !). */
   active = true;
 
+  card_ref = React.createRef<HTMLDivElement>();
+  last_refresh: number = 0;
+
   constructor(props: any) {
     super(props);
 
@@ -42,6 +47,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       is_error: false,
       in_load: SETTINGS.archive_in_load,
       quick_delete_open: false,
+      in_drag: false
     };
 
     // Subscribe to archive readyness when in load
@@ -156,6 +162,26 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   componentDidMount() {
     setPageTitle();
     window.DEBUG.Archive = this;
+
+    setTimeout(() => {
+      const card = this.card_ref.current;
+
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        card.addEventListener(eventName, this.handleEventPropagation, true);
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        card.addEventListener(eventName, this.handleDragEnter, true);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        card.addEventListener(eventName, this.handleDragEnd, true);
+      });
+
+      ['drop'].forEach(eventName => {
+        card.addEventListener(eventName, this.handleDrop, true);
+      });
+    }, 200);
   }
 
   componentWillUnmount() {
@@ -164,9 +190,17 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   }
 
   // Load archive inside SETTINGS.archive
-  loadArchive(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files.length) {
-      let f: File | Promise<JSZip> = e.target.files[0];
+  loadArchive(e: React.ChangeEvent<HTMLInputElement> | File) {
+    let f: File | Promise<JSZip>;
+
+    if (e instanceof File) {
+      f = e;
+    }
+    else if (e.target.files.length) {
+      f = e.target.files[0];
+    }
+
+    if (f && f instanceof File) {
       const filename = f.name;
 
       if (f.size > THRESHOLD_SIZE_LIMIT) {
@@ -371,8 +405,20 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     );
   }
 
+  dragdrop() {
+    return (
+      <div className={styles.dragdrop}>
+        <FileUploadIcon className={styles.fu_icon} />
+        <h3 className={styles.fu_text}>Drop your archive here</h3>
+      </div>
+    );
+  }
+
   loadRightContent() {
-    if (this.state.loaded) {
+    if (this.state.in_drag) {
+      return this.dragdrop();
+    }
+    else if (this.state.loaded) {
       // Chargée
       return this.loaded();
     }
@@ -389,8 +435,55 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       return this.emptyArchive();
     }
   }
+
+  loadRightActions() {
+    if (!this.state.in_load && !this.state.in_drag) {
+      return this.loadButton();
+    }
+  }
+
+  handleEventPropagation = (e: Event) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  handleDragEnter = () => {
+    if (this.last_refresh + 200 > Date.now()) {
+      return;
+    }
+
+    if (!this.state.in_load && !this.state.in_drag)
+      this.setState({
+        in_drag: true
+      });
+  };
+
+  handleDragEnd = () => {
+    this.last_refresh = Date.now();
+
+    if (!this.state.in_load && this.state.in_drag)
+      this.setState({
+        in_drag: false
+      });
+  };
+
+  handleDrop = (e: Event) => {
+    if (!this.state.in_load) {
+      this.setState({
+        in_drag: false
+      });
+  
+      const files = (e as DragEvent).dataTransfer.files;
+  
+      if (files && files.length) {
+        this.loadArchive(files[0]);
+      }
+    }
+  };
   
   render() {
+    const actions = this.loadRightActions();
+
     return (
       <div className={styles.root}>
         <AppBar position="static">
@@ -405,13 +498,13 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   
         <Container maxWidth="sm" className={styles.center}>
           <CenterComponent>
-            <Card className={styles.card}>
+            <Card innerRef={this.card_ref} className={styles.card}>
               <CardContent>
                 {this.loadRightContent()}
               </CardContent>
-              <CardActions>
-                {!this.state.in_load && this.loadButton()}
-              </CardActions>
+              {actions && <CardActions>
+                {actions}
+              </CardActions>}
             </Card>
           </CenterComponent>
         </Container>

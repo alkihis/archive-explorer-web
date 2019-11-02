@@ -66,3 +66,27 @@
   margin-top: 1.2rem;
   margin-bottom: 1rem;
 }
+
+.dragdrop {
+  height: 200px;
+  border: 3px dashed #d6d6d6;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #b8b8b8 !important;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.fu_icon {
+  height: 72px !important;
+  width: 72px !important;
+  display: block !important;
+}
+
+.fu_text {
+  font-weight: 300;
+  font-size: 1.5rem;
+  margin: .3rem 0 !important;
+}
