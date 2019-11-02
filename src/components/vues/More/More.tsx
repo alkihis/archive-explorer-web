@@ -566,7 +566,7 @@ function Keywords() {
                 [twitter @]
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                Find tweets made by specified user (only available for tweets).
+                Find tweets/DMs sent by specified user.
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 from:Alkihis

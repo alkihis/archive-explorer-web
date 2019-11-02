@@ -12,6 +12,8 @@ import DMContainer from './DMContainer';
 import { withStyles } from '@material-ui/styles';
 import UserCache from '../../../classes/UserCache';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
+import { FullUser } from 'twitter-d';
+import { toast } from '../../shared/Toaster/Toaster';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -102,6 +104,26 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     let since_date: Date = null;
     let until_date: Date = null;
 
+    const selected_users: FullUser[] = [];
+
+    // Search for from
+    const from_results = content.match(/from:(.+?)\b/);
+
+    if (from_results) {
+      const users = from_results[1].split(',').map(e => e.trim());
+      content = content.replace(/from:(.+?)\b/, '').trim();
+
+      for (const u of users) {
+        const res = UserCache.getFromCacheByApproximateName(u);
+
+        if (!res.length) {
+          toast(`User ${u} cannot be resolved, it will be ignored.`, "warning");
+        }
+
+        selected_users.push(...res);
+      }
+    }
+
     // Search for since or until
     const s_results = content.match(/since:(\d{4}-\d{2}-\d{2})/);
 
@@ -132,6 +154,9 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       search_results = new SubConversation(this.state.selected, this.conv.infos.me)
         .find(new RegExp(content, "i"));
     }
+    else if (!content) {
+      search_results = this.conv;
+    }
     else {
       // Search global
       try {
@@ -141,6 +166,10 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       }
 
       search_results = this.conv.find(new RegExp(content, "i"));
+    }
+    
+    if (selected_users.length) {
+      search_results = search_results.sender(selected_users.map(u => u.id_str));
     }
 
     // Filter
