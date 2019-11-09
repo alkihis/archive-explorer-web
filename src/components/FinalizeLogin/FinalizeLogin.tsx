@@ -6,6 +6,7 @@ import { setPageTitle } from '../../helpers';
 import { Typography } from '@material-ui/core';
 import APIHELPER from '../../tools/ApiHelper';
 import SETTINGS from '../../tools/Settings';
+import LANG from '../../classes/Lang/Language';
 
 export default class FinalizeLogin extends React.Component {
   state: { in_load: boolean, failed: boolean, has_token: boolean };
@@ -79,22 +80,22 @@ export default class FinalizeLogin extends React.Component {
       <div>
         <BigPreloader />
         <Typography color="textPrimary" style={{marginTop: '30px'}}>
-          Checking your Twitter account...
+          {LANG.check_account_wait}
         </Typography>
       </div>
     );
   }
 
   renderDenied() {
-    return internalError("Login aborted", "You have cancelled login operation in Twitter. If you're not logged, you can't access Archive Explorer.", true);
+    return internalError(LANG.aborted_login, LANG.aborted_login_more, true);
   }
 
   renderTokenMiss() {
-    return internalError("Missing token", "In order to authentificate, Twitter need to send some credentials. They're missing.", true);
+    return internalError(LANG.missing_token, LANG.missing_token_more, true);
   }
 
   renderFailed() {
-    return internalError("Invalid request", "Request is invalid, or token has expired. Try to log in again.", true);
+    return internalError(LANG.invalid_request, LANG.invalid_request_more, true);
   }
 
   render() {

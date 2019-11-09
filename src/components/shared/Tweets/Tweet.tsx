@@ -172,7 +172,7 @@ function TweetDate(props: { date: Date, screen_name: string, id_str: string }) {
         target="_blank" 
         rel="noopener noreferrer"
         className={classes.link}
-      >{dateFormatter("Y-m-d H:i:s", props.date)}</a>
+      >{SETTINGS.lang === "fr" ? dateFormatter("d/m/Y H:i:s", props.date) : dateFormatter("Y-m-d H:i:s", props.date)}</a>
     </div>
   );
 }

@@ -25,6 +25,7 @@ import Videos from '@material-ui/icons/Videocam';
 import MentionIcon from '@material-ui/icons/Reply';
 import Pictures from '@material-ui/icons/Collections';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
+import LANG from '../../../classes/Lang/Language';
 
  
 type ViewerProps = {
@@ -182,19 +183,19 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           className={classes.inlineToggleButton}
         >
           <ToggleButton value="self">
-            <CustomTooltip title="Show your tweets">
+            <CustomTooltip title={LANG.show_your_tweets}>
               <TweetUser />
             </CustomTooltip>
           </ToggleButton>
 
           <ToggleButton value="retweets">
-            <CustomTooltip title="Show your retweets">
+            <CustomTooltip title={LANG.show_retweets}>
               <Retweet />
             </CustomTooltip>
           </ToggleButton>
 
           <ToggleButton value="mentions">
-            <CustomTooltip title="Show replies">
+            <CustomTooltip title={LANG.show_replies}>
               <MentionIcon />
             </CustomTooltip>
           </ToggleButton>
@@ -208,7 +209,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           className={classes.inlineToggleButton}
         >
           <ToggleButton value="time">
-            <CustomTooltip title="Sort by date">
+            <CustomTooltip title={LANG.sort_by_date}>
               <Time />
             </CustomTooltip>
           </ToggleButton>
@@ -217,7 +218,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             value="popular" 
             disabled={!SETTINGS.archive.is_gdpr}
           >
-            <CustomTooltip title="Sort by popularity">
+            <CustomTooltip title={LANG.sort_by_popular}>
               <Hot />
             </CustomTooltip>
           </ToggleButton>
@@ -226,7 +227,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             value="retweets" 
             disabled={!SETTINGS.archive.is_gdpr}
           >
-            <CustomTooltip title="Sort by retweet count">
+            <CustomTooltip title={LANG.sort_by_rt_count}>
               <Retweet />
             </CustomTooltip>
           </ToggleButton>
@@ -235,7 +236,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             value="favorites" 
             disabled={!SETTINGS.archive.is_gdpr}
           >
-            <CustomTooltip title="Sort by favorite count">
+            <CustomTooltip title={LANG.sort_by_fav_count}>
               <Favorite />
             </CustomTooltip>
           </ToggleButton>
@@ -249,13 +250,13 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           className={classes.inlineToggleButton}
         >
           <ToggleButton value="asc">
-            <CustomTooltip title="Ascending sort">
+            <CustomTooltip title={LANG.sort_asc}>
               <SortIcon style={{transform: 'rotate(180deg)'}} />
             </CustomTooltip>
           </ToggleButton>
 
           <ToggleButton value="desc">
-            <CustomTooltip title="Descending sort">
+            <CustomTooltip title={LANG.sort_desc}>
               <SortIcon />
             </CustomTooltip>
           </ToggleButton>
@@ -269,13 +270,13 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           className={classes.inlineToggleButton}
         >
           <ToggleButton value="none">
-            <CustomTooltip title="Show all tweets">
+            <CustomTooltip title={LANG.show_all_tweets}>
               <All />
             </CustomTooltip>
           </ToggleButton>
 
           <ToggleButton value="pic">
-            <CustomTooltip title="Show tweets with medias">
+            <CustomTooltip title={LANG.show_with_medias}>
               <Pictures />
             </CustomTooltip>
           </ToggleButton>
@@ -284,7 +285,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             value="video" 
             disabled={!SETTINGS.archive.is_gdpr}
           >
-            <CustomTooltip title="Show tweets with videos or GIFs">
+            <CustomTooltip title={LANG.show_with_videos}>
               <Videos />
             </CustomTooltip>
           </ToggleButton>
@@ -436,7 +437,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         <CenterComponent className={classes.no_tweets}>
           <NoTweetsIcon className={classes.icon} />
           <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-            This element does not contain any tweets. :(
+            {LANG.contains_any_tweets}. :(
           </Typography>
         </CenterComponent>
       </>
@@ -450,11 +451,10 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         <CenterComponent className={classes.no_tweets}>
           <NoTweetsIcon className={classes.icon} />
           <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-            This element does not contain any tweets. :(
+            {LANG.contains_any_tweets}. :(
           </Typography>
           <Typography variant="h6">
-            It seems you have applied filters 
-            that hide all the tweets that can be displayed.
+            {LANG.filters_that_hide}
           </Typography>
         </CenterComponent>
       </>
@@ -470,23 +470,23 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
           <NoTweetsIcon className={classes.icon} />
           <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-            No tweets to display here
+            {LANG.no_tweets_to_display}
           </Typography>
 
           <Typography>
-            All tweets are deleted, or you don't have the permission to read them.
+            {LANG.deleted_or_no_permission_to_show}
           </Typography>
 
           <Typography>
-            Try disabling the "Download tweets" function into settings.
+            {LANG.try_disable_download}
           </Typography>
 
           <Typography>
-            You could also try to log in with another Twitter account.
+            {LANG.try_another_login_info}
           </Typography>
 
           <Button component={Link} to="/settings/" color="primary" style={{marginTop: '1.5rem'}}>
-            Settings
+            {LANG.settings}
           </Button>
         </CenterComponent>
       </>
@@ -500,30 +500,28 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         onClose={() => this.closeConfirmModal()}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle>Delete selected tweets ?</DialogTitle>
+        <DialogTitle>{LANG.delete_selected_tweets} ?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            The tweets will be deleted from <span className="bold">Twitter</span>.
+            {LANG.tweets_deleted_from} <span className="bold">Twitter</span>.
           </DialogContentText>
           <DialogContentText>
-            A deletion task will be started. 
-            You can't restore tweets after they're been removed from Twitter.
-            Are you sure you want to do this ?
+            {LANG.deletion_modal_text}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.closeConfirmModal()} color="primary" autoFocus>
-            No
+            {LANG.no}
           </Button>
           <Button onClick={() => { 
             this.closeConfirmModal();  
             Tasks.start([...this.state.selected], "tweet")
               .catch(() => {
-                toast("Unable to start task. Check your network.", "error");
+                toast(LANG.task_start_error, "error");
               });
             this.uncheckAll();
           }} color="secondary">
-            Yes
+            {LANG.yes}
           </Button>
         </DialogActions>
       </Dialog>
@@ -537,18 +535,18 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         }>
         <div className={classes.modal_grid_root}>
           <div className={classes.modal_selected}>
-            {this.state.selected.size} selected
+            {this.state.selected.size} {LANG.selected}
           </div> 
 
           <div className={classes.modal_grid_container}>
             <Button color="primary" onClick={() => this.checkAll()}>
-              Select all
+              {LANG.select_all}
             </Button>
           </div> 
 
           <div className={classes.modal_grid_container}>
             <Button className={classes.modal_unselect_all_color} onClick={() => this.uncheckAll()}>
-              Unselect all
+              {LANG.unselect_all}
             </Button>
           </div> 
           

@@ -7,6 +7,7 @@ import { DownloadGDPRModal } from '../shared/NoGDPR/NoGDPR';
 import SETTINGS from '../../tools/Settings';
 import { setPageTitle } from '../../helpers';
 import APIHELPER from '../../tools/ApiHelper';
+import LANG from '../../classes/Lang/Language';
 
 const StaticPresentation: React.FC = () => {
   const [open, setOpen] = React.useState(false);
@@ -33,14 +34,14 @@ const StaticPresentation: React.FC = () => {
           </section>
 
           <section>
-            Explore through time, browse your old direct messages and quickly delete embarrassing tweets.
+            {LANG.catch_phrase}
           </section>
 
           <section>
             {(
               SETTINGS.is_logged ?
-              <Link to="/archive/" className="button-login">Explore your archive</Link> :
-              <Link to="/login/" className="button-login">Login</Link>
+              <Link to="/archive/" className="button-login">{LANG.explore_archive}</Link> :
+              <Link to="/login/" className="button-login">{LANG.login}</Link>
             )}
           </section>
         </Container>
@@ -50,124 +51,103 @@ const StaticPresentation: React.FC = () => {
         <Container>
           <section>
             <h2>
-              What's a Twitter Archive ?
+              {LANG.whats_a_archive} ?
             </h2>
 
             <p>
-              An archive is a compilation of all your actions inside the social network. It contains all your tweets,
-              direct messages, moments, favorites, blocks and many more. 
+              {LANG.whats_a_archive_p1}
               <br />
               <a href="#!" onClick={openModal} className="dl-btn">
-                Learn how to download your archive
+                {LANG.how_to_download}
               </a>.
             </p>
           </section>
 
           <section className="feature">
             <div>
-              <h3>Powerful search</h3>
+              <h3>{LANG.powerful_search}</h3>
               <p>
-                Archive Explorer let you find in seconds tweets and direct messages. 
-                With a simple text field, search by word, phrase or even using regular expressions.
-                All that you want is within easy reach.
+                {LANG.powerful_search_p1}
               </p>
             </div>
 
-            <img alt="Search" title="Powerful search" src="/assets/start_page/search.png" />
+            <img alt="Search" title={LANG.powerful_search} src="/assets/start_page/search.png" />
           </section>
 
           <section className="feature">
             <div>
-              <h3>Clean your account</h3>
+              <h3>{LANG.clean_your_account}</h3>
               <p>
-                The 13 years old you did post embarrassing tweets you don't even remember ?
-                You've used an overkill block list and you want to reverse it ?
-                Archive Explorer is a tool made for clear your old tweets, by month, year or even
-                with a text query. You'll also be able to delete muted and blocked users !
-                This tool already helps to delete <DeletedCounter /> tweets !
+                {LANG.clean_your_account_p1} <DeletedCounter /> {LANG.tweets} !
               </p>
             </div>
 
-            <img alt="Tasks" title="Clean with tasks" src="/assets/start_page/task.jpg" />
+            <img alt="Tasks" title={LANG.clean_your_account} src="/assets/start_page/task.jpg" />
           </section>
 
           <section className="feature">
             <div>
-              <h3>Sort and filter tweets</h3>
+              <h3>{LANG.sort_and_filter_tweets}</h3>
               <p>
-                Specific wishes ? Specific filters.
+                {LANG.specific_wishes}
                 <br />
-                Want to explore your shared videos ?
-                See your most popular posts of all times ?
-                Browse through your content without seeing the retweets ?<br />
-
-                Explore more precisly your archive by choosing a content filter : 
-                Find your favorites retweets, selfies and top tweets from years ago !
+                {LANG.explore_sort_p1}
+                <br />
+                {LANG.explore_sort_p2}
               </p>
             </div>
 
-            <img alt="Sort and filter" title="Sort tweets and filter them" src="/assets/start_page/sort.png" />
+            <img alt={LANG.sort_and_filter_tweets} title={LANG.sort_and_filter_tweets} src="/assets/start_page/sort.png" />
           </section>
 
           <section className="other-feature">
             <div>
-              <h2>And even more</h2>
+              <h2>{LANG.even_more}</h2>
 
               <div className="container">
                 <div>
-                  <h5>Travel through time</h5>
+                  <h5>{LANG.travel_through_time}</h5>
                   <p>
-                    Explore tweets or DMs conversations directly by year or month,
-                    relive every moment spent on Twitter, no matter of how far it is.
+                    {LANG.travel_through_time_p1}
                   </p>
                 </div>
 
                 <div>
-                  <h5>Favorites deletion</h5>
+                  <h5>{LANG.fav_deletion}</h5>
                   <p>
-                    You've favorited dozens of thousands of tweets, and you
-                    want to make a clean sweep of your Twitter account past ?
-                    Two clicks and it's done.
+                    {LANG.fav_deletion_p1}
                   </p>
                 </div>
 
                 <div>
-                  <h5>Background tasks</h5>
+                  <h5>{LANG.background_tasks}</h5>
                   <p>
-                    With a very large number of tweets, favorites or mutes, deletion may be long.
-                    Without installing any program, or keeping any computer on,
-                    delete with tasks started in background. 
-                    You can cancel them at any time.
+                    {LANG.background_tasks_p1}
                   </p>
                 </div>
 
                 <div>
-                  <h5>Tweets of the day</h5>
+                  <h5>{LANG.tweets_of_the_day}</h5>
                   <p>
-                    For fun or for nostalgia, find your posted tweets in the same day, the previous years.
-                    You could be surprised !
+                    {LANG.tweets_of_the_day_p1}
                   </p>
                 </div>
 
                 <div>
-                  <h5>Twitter @ history</h5>
+                  <h5>{LANG.twitter_at_history}</h5>
                   <p>
-                    As a old Twitter user, did you ever asked when you've changed your Twitter @ for the last time ?
-                    Archive Explorer let you know every name you've used, and when you've modified it.
+                    {LANG.twitter_at_history_p1}
                   </p>
                 </div>
 
                 <div>
-                  <h5>Open and private</h5>
+                  <h5>{LANG.open_and_private}</h5>
                   <p>
-                    Archive Explorer makes your privacy a priority. 
-                    Not a single of your direct messages are stored in our database.
-                    Twitter archive data stays in your browser.
-                    Have some doubt ? Code is <a 
+                    {LANG.open_and_private_p1} <a 
                       href="https://github.com/alkihis/archive-explorer-web"
                       rel="noopener noreferrer"
                       target="_blank"
-                    >open-source</a>.
+                    >{LANG.open_source}</a>.
                   </p>
                 </div>
               </div>
@@ -194,7 +174,7 @@ function Copyright() {
   return (
     <div className="copyright">
       <Typography variant="body2" color="textSecondary" align="center">
-        Archive Explorer is an open-source tool made by <a 
+        {LANG.ae_made_by} <a 
           href="https://alkihis.fr/" 
           rel="noopener noreferrer" 
           target="_blank"

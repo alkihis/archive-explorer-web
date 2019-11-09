@@ -10,6 +10,7 @@ import step3 from '../../../assets/steps/3.png';
 import step6 from '../../../assets/steps/6.png';
 import step7 from '../../../assets/steps/7.png';
 import step8 from '../../../assets/steps/8.png';
+import LANG from '../../../classes/Lang/Language';
 
 export default class NoGDPR extends React.Component<{ icon: any, message?: string }, { open: boolean }> {
   state = {
@@ -38,7 +39,7 @@ export default class NoGDPR extends React.Component<{ icon: any, message?: strin
             <Icon className={classes.icon} />
 
             <Typography variant="h4" style={{marginTop: "1rem", marginBottom: ".7rem", textAlign: 'center'}}>
-              GDPR archive is required
+              {LANG.gdpr_required}
             </Typography>
 
             {this.props.message && <Typography variant="h6">
@@ -46,15 +47,15 @@ export default class NoGDPR extends React.Component<{ icon: any, message?: strin
             </Typography>}
 
             <Typography variant="h6">
-              Please load an valid GDPR archive in <Link to="/" className={classes.link}>
+              {LANG.load_valid_gdpr_in} <Link to="/" className={classes.link}>
                 <Typography variant="inherit" color="primary">
-                  Archive page
+                  {LANG.archive_page}
                 </Typography>
               </Link>.
             </Typography>
 
             <div style={{marginTop: "1rem"}}>
-              <Button color="primary" onClick={() => this.openModal()}>How to download an GDPR archive ?</Button>
+              <Button color="primary" onClick={() => this.openModal()}>{LANG.how_to_download_gdpr} ?</Button>
             </div>
           </CenterComponent>
         </div>
@@ -68,43 +69,41 @@ export const DownloadGDPRModal: React.FC<{ open: boolean, onClose: () => void }>
     return (
       <div>
         <Typography className={classes.steptitle}>
-          1 - Log in on <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter.com</a>.
+          1 - {LANG.login_on} <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter.com</a>.
         </Typography>
 
         <Typography className={classes.steptitle}>
-          2 - Click on the three dots, "More", right above the tweet button.
+          2 - {LANG.dl_gdpr_step_2}.
         </Typography>
 
         <img className={classes.step} alt="Step" src={step2} />
 
         <Typography className={classes.steptitle}>
-          3 - Select "Settings and privacy".
+          3 - {LANG.dl_gdpr_step_3}.
         </Typography>
 
         <img className={classes.step} alt="Step" src={step3} />
 
         <Typography className={classes.steptitle}>
-          4 - Scroll at the end of the container and select "See your Twitter data".
+          4 - {LANG.dl_gdpr_step_4}.
         </Typography>
 
         <img className={classes.step} alt="Step" src={step6} />
 
         <Typography className={classes.steptitle}>
-          5 - You should see a password input. Enter your password and click "Confirm".
+          5 - {LANG.dl_gdpr_step_5}.
         </Typography>
 
         <img className={classes.step} alt="Step" src={step7} />
 
         <Typography className={classes.steptitle}>
-          6 - You can now click on the first "Request data" button.
+          6 - {LANG.dl_gdpr_step_6}.
         </Typography>
 
         <img className={classes.step} style={{height: '150px'}} alt="Step" src={step8} />
 
         <DialogContentText>
-          Link will come into your mailbox. 
-          It may take some time (between one hour to several days) to generate. 
-          Please be patient.
+          {LANG.dl_gdpr_step_end}
         </DialogContentText>
       </div>
     );
@@ -116,13 +115,13 @@ export const DownloadGDPRModal: React.FC<{ open: boolean, onClose: () => void }>
         onClose={props.onClose}
         scroll="body"
       >
-        <DialogTitle id="scroll-dialog-title">Download your archive</DialogTitle>
+        <DialogTitle id="scroll-dialog-title">{LANG.download_your_archive}</DialogTitle>
         <DialogContent>
           {downloadGDPRText()}
         </DialogContent>
         <DialogActions>
           <Button onClick={props.onClose} color="primary">
-            Close
+            {LANG.close}
           </Button>
         </DialogActions>
       </Dialog>

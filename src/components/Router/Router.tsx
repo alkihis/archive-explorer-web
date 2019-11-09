@@ -15,6 +15,7 @@ import DirectMessages from "../vues/DirectMessages/DirectMessages";
 import More from "../vues/More/More";
 import { StaticContext } from "react-router";
 import StaticPresentation from "../StaticPresentation/StaticPresentation";
+import LANG from "../../classes/Lang/Language";
 
 type RouterState = { 
   /** True if login modal should be shown.
@@ -100,19 +101,18 @@ class AppRouter extends React.Component<{}, RouterState> {
     if (this.state.validation_status === false) {
       return (
         <div>
-          <DialogTitle>Login error</DialogTitle>
+          <DialogTitle>{LANG.login_error_title}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              You credentials seems to be invalid.
-              Try to log out and log in again.
+              {LANG.login_error_text}
             </DialogContentText>
             <DialogContentText>
-              If the problem persists, try again later.
+              {LANG.login_error_persists}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => SETTINGS.logout()} color="primary">
-              Log out
+              {LANG.logout}
             </Button>
           </DialogActions>
         </div>  
@@ -122,20 +122,19 @@ class AppRouter extends React.Component<{}, RouterState> {
     else {
       return (
         <div>
-          <DialogTitle>Server unavailable</DialogTitle>
+          <DialogTitle>{LANG.server_unavailable}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Archive Explorer could not dialog with its server-side.
-              You may be offline, or the server is temporary unavailable.
+              {LANG.server_unavailable_text}
             </DialogContentText>
 
             <DialogContentText>
-              Try again later.
+              {LANG.try_again_later}.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => SETTINGS.reload()} color="primary">
-              Reload
+              {LANG.reload}
             </Button>
           </DialogActions>
         </div>  
@@ -153,7 +152,7 @@ class AppRouter extends React.Component<{}, RouterState> {
         {this.state.validation_status ? 
         /* L'utilisateur doit attendre que l'API réponde */
           <div>
-            <DialogTitle>Login in...</DialogTitle>
+            <DialogTitle>{LANG.login_in}...</DialogTitle>
             <DialogContent style={{ padding: '30px 100px' }}>
               <BigPreloader />
             </DialogContent>

@@ -3,6 +3,7 @@ import { Status } from 'twitter-d';
 import { PartialTweet } from 'twitter-archive-reader';
 import { unescapeTwi } from '../../../helpers';
 import Graphene from 'grapheme-splitter';
+import LANG from '../../../classes/Lang/Language';
 
 const splitter = new Graphene();
 const TWITTER_BASE = "https://twitter.com/";
@@ -39,7 +40,7 @@ export default class TweetText extends React.Component<TweetTextProp> {
             <a 
               target="_blank" 
               rel="noopener noreferrer" 
-              title={'Link to ' + u.display_url} 
+              title={LANG.link_to + ' ' + u.display_url} 
               href={u.expanded_url}
               key={String(frags.length)}
             >{u.display_url}</a>
@@ -68,7 +69,7 @@ export default class TweetText extends React.Component<TweetTextProp> {
           <a 
             target="_blank" 
             rel="noopener noreferrer" 
-            title={'Link to picture ' + m.display_url} 
+            title={LANG.link_to + ' ' + LANG.picture + ' ' + m.display_url} 
             href={m.expanded_url}
             key={String(frags.length)}
           >{m.display_url}</a>

@@ -3,6 +3,7 @@ import { TwitterArchive } from "twitter-archive-reader";
 import { FullUser } from "twitter-d";
 import { DEBUG_MODE } from "../const";
 import APIHELPER from "./ApiHelper";
+import { AuthorizedLangs, isAuthorizedLang } from "../classes/Lang/Language";
 
 export type TweetSortType = "time" | "popular" | "retweets" | "favorites";
 export type TweetSortWay = "asc" | "desc";
@@ -31,6 +32,7 @@ class AESettings {
   protected _token: string = "";
   protected _auto_tweet_download = false;
   protected _pp = true;
+  protected _lang: AuthorizedLangs = 'en';
 
   protected _sort_way: TweetSortWay;
   protected _sort_type: TweetSortType;
@@ -89,6 +91,11 @@ class AESettings {
     if (localStorage.getItem('allow_self')) {
       this.allow_self = localStorage.getItem('allow_self') === "true";
     }
+    if (localStorage.getItem('lang')) {
+      try {
+        this.lang = localStorage.getItem('lang') as AuthorizedLangs;
+      } catch (e) {}
+    }
     if (localStorage.getItem('media_filter')) {
       this.media_filter = localStorage.getItem('media_filter') as TweetMediaFilters;
     }
@@ -123,6 +130,19 @@ class AESettings {
         localStorage.removeItem('twitter_user');
       }
     }
+  }
+
+  get lang() : AuthorizedLangs {
+    return this._lang;
+  }
+
+  set lang(v: AuthorizedLangs) {
+    if (!isAuthorizedLang(v)) {
+      throw new Error("Language " + v + " is not valid");
+    }
+
+    this._lang = v;
+    localStorage.setItem('lang', v);
   }
 
   get dark_mode() {

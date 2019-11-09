@@ -7,6 +7,7 @@ import TwitterArchive from "twitter-archive-reader";
 import { toast } from "./components/shared/Toaster/Toaster";
 import { FullUser } from "twitter-d";
 import { AUTO_TWITTER_CHECK } from "./const";
+import LANG from "./classes/Lang/Language";
 
 export function setPageTitle(title?: string, absolute = false) {
   if (!absolute)
@@ -38,7 +39,7 @@ export async function checkCredentials(auto_user_dl = true, check_twitter_accoun
               if (c.code === 11) {
                 // Token expiré
                 SETTINGS.expired = true;
-                toast("Twitter credentials have expired. Please log out and log in again.", "error");
+                toast(LANG.credentials_expired, "error");
                 return;
               }
               
@@ -49,7 +50,7 @@ export async function checkCredentials(auto_user_dl = true, check_twitter_accoun
           }
       
           // API unavailable (fetch promise reject), or other error
-          toast("Twitter account can't be verified. You may be unable to delete tweets.", "warning");
+          toast(LANG.account_unverifable, "warning");
         });
     }
 
@@ -171,29 +172,29 @@ export function getMonthText(month: string) {
 
   switch (m) {
     case 1:
-      return "January";
+      return LANG.january;
     case 2:
-      return "February";
+      return LANG.february;
     case 3:
-      return "March";
+      return LANG.march;
     case 4:
-      return "April";
+      return LANG.april;
     case 5:
-      return "May";
+      return LANG.may;
     case 6:
-      return "June";
+      return LANG.june;
     case 7:
-      return "July";
+      return LANG.july;
     case 8:
-      return "August";
+      return LANG.august;
     case 9:
-      return "September";
+      return LANG.september;
     case 10:
-      return "October";
+      return LANG.october;
     case 11:
-      return "November";
+      return LANG.november;
     case 12:
-      return "December";
+      return LANG.december;
   }
 }
 
@@ -324,7 +325,11 @@ export function unescapeTwi(str: string) {
   return str.replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<");
 }
 
-export function specialJoin(array: string[], sep = ", ", final_joiner = " and ") : string {
+export function specialJoin(array: string[], sep = ", ", final_joiner?: string) : string {
+  if (final_joiner === undefined) {
+    final_joiner = " " + LANG.and + " ";
+  }
+
   if (array.length < 2) {
     return array.join(sep);
   }
