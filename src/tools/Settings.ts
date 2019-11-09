@@ -32,7 +32,7 @@ class AESettings {
   protected _token: string = "";
   protected _auto_tweet_download = false;
   protected _pp = true;
-  protected _lang: AuthorizedLangs = 'en';
+  protected _lang: AuthorizedLangs = window.navigator.language.includes('fr') ? 'fr' : 'en';
 
   protected _sort_way: TweetSortWay;
   protected _sort_type: TweetSortType;
@@ -53,6 +53,9 @@ class AESettings {
   expired = false;
 
   constructor() {
+    // Refresh html lang attribute
+    document.documentElement.lang = this._lang;
+
     if (localStorage.getItem('login_token')) {
       this.token = localStorage.getItem('login_token');
     }

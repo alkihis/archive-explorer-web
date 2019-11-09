@@ -157,7 +157,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
           onClick={() => this.findTweets()}
         >
           <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
-            <SearchIcon className={classes.get_back_icon} /> <span>{LANG.search_in_tweets}</span>
+            <SearchIcon className={classes.get_back_icon} /> <span>{LANG.search_now}</span>
           </ListItemText>
         </ListItem>
       </div>

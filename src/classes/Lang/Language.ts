@@ -24,7 +24,7 @@ const LANG: Locale = new Proxy(LanguageDatabase, {
     if (prop in obj.en) {
       return obj.en[prop];
     }
-    return undefined;
+    return "{" + SETTINGS.lang + "." + prop + "}";
   },
   set: function() {
     throw new Error("Setting a language data is forbidden");

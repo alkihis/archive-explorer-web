@@ -259,7 +259,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           onClick={() => this.findMsgs()}
         >
           <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
-            <SearchIcon className={classes.get_back_icon} /> <span>{LANG.find_dms}</span>
+            <SearchIcon className={classes.get_back_icon} /> <span>{LANG.search_now}</span>
           </ListItemText>
         </ListItem>
       </div>
@@ -393,7 +393,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     let year = "";
 
     if (this.state.month === "day") {
-      month_text = LANG.dms_of_the_day;
+      month_text = LANG.messages_of_the_day;
     }
     else if (this.state.month !== "*") {
       const [_year, month] = this.state.month.split('-');

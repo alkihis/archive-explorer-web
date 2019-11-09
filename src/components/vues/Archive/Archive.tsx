@@ -292,7 +292,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return (
       <div>
         <Typography variant="h5" component="h2" className={styles.title}>
-          <span className={styles.filename}>{this.calcTruncated()}</span> is loaded.
+          <span className={styles.filename}>{this.calcTruncated()}</span> {LANG.is_loaded}.
         </Typography>
 
         <Typography>
@@ -351,7 +351,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return (
       <div>
         <Typography variant="h5" component="h2" className={styles.title}>
-          {this.state.loading_state === "converting" ? "Please wait" : "Loading..."}
+          {this.state.loading_state === "converting" ? 
+            LANG.please_wait : 
+            LANG.loading
+          }
         </Typography>
         <Typography className={styles.subtitle}>
           {msg}

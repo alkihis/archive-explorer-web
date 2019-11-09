@@ -149,7 +149,7 @@ export default class More extends React.Component {
         </Typography>
 
         <Typography className={classes.help_p}>
-          {LANG.truncated_tweets_p1} <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/Alkihis/status/1173857093880864768">{LANG.this_tweet}</a>)
+          {LANG.truncated_tweets_p1} <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/Alkihis/status/1173857093880864768">{LANG.this_tweet}</a>){" "}
           {LANG.truncated_tweets_p2}
 
           <br />

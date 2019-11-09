@@ -3,6 +3,7 @@ export default {
   error: 'Error',
   user: 'User',
   all: "All",
+  archive: 'Archive',
   cancel: 'Cancel',
   continue: "Continue",
   not_found: "Not found",
@@ -29,7 +30,7 @@ export default {
   invalid_request_more: "Request is invalid, or token has expired. Try to log in again.",
   check_account_wait: 'Checking your Twitter account...',
   login_error_title: "Login error",
-  login_error_text: "You credentials seems to be invalid.\nTry to log out and log in again.",
+  login_error_text: "Your credentials seems to be invalid.\nTry to log out and log in again.",
   login_error_persists: "If the problem persists, try again later.",
   logout: 'Logout',
   server_unavailable: "Server unavailable",
@@ -148,12 +149,12 @@ export default {
 
   /** BEGIN ARCHIVE CMPT */
   reading_dms: "Reading direct messages",
-  reading_fav_moments_other: "Reading favorites, moments, and other informations",
+  reading_fav_moments_other: "Reading favorites, moments, and other information",
   indexing_tweets: "Indexing tweets",
   unzipping: "Unzipping",
   reading_tweets: "Reading tweets",
-  reading_user_infos: "Reading user informations",
-  gathering_user_data: "Gathering user informations",
+  reading_user_infos: "Reading user information",
+  gathering_user_data: "Gathering user information",
   lightening_archive: "Archive is quite heavy, lightening a bit...",
   load_an_archive: "Load an archive",
   no_archive_loaded: "You don't have any archive loaded.",
@@ -173,6 +174,9 @@ export default {
   another_f: 'another',
   quick_delete: "Quick delete",
   drop_archive_here: "Drop your archive here",
+  loading: "Loading...",
+  please_wait: "Please wait",
+  is_loaded: "is loaded",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */
@@ -201,7 +205,6 @@ export default {
   no_message: "No message",
   any_message_here: "You don't have any message here",
   all_messages: "All messages",
-  dms_of_the_day: "DMs of the day",
   conversation_with: "Conversation with",
   /** END DMConversation CMPT */
 
@@ -209,7 +212,7 @@ export default {
   explore: "Explore",
   full_archive: "Full archive",
   find_tweets: "Find tweets",
-  search_in_tweets: "Search in tweets",
+  search_now: "Search",
   choose_month_tweets: "Choose a month to see your tweets",
   search_results: "Search results",
   /** END Explore CMPT */
@@ -311,7 +314,7 @@ export default {
   keywords_p1: "You can enhance all your queries made in tweet / direct message explorer by adding",
   keywords: "keywords",
   delete_tweets_more: "Delete tweets, favorites and more",
-  delete_tweets_more_p1: "Archive Explorer let you delete a batch of tweets, or other informations linked to your account.",
+  delete_tweets_more_p1: "Archive Explorer let you delete a batch of tweets, or other information linked to your account.",
   delete_tweets_more_p2: "Please note that",
   delete_tweets_more_p3: "every deletion is made on your Twitter account, and is irremediable",
   delete_tweets_more_p4: "You will not be able to get your tweets, favorites or anything else back.",
@@ -322,7 +325,7 @@ export default {
   individually select which favorite or block you will remove.`,
   limitations: "Limitations",
   retweet_data: "Retweet data",
-  retweet_data_p1: `When you browse your tweets, you may see strange retweet informations: 
+  retweet_data_p1: `When you browse your tweets, you may see strange retweet information: 
   Profile picture may be yours, or Twitter name isn't good. 
   In fact, Twitter archives contains a bad retweet data. Retweets are stored in your name,
   and the original retweet isn't present. `,

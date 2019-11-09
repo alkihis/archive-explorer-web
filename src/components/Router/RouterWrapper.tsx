@@ -12,6 +12,7 @@ import classes from './RouterWrapper.module.scss';
 import { Badge } from '@material-ui/core';
 import TaskModal from '../vues/TaskModal/TaskModal';
 import Tasks, { TaskInformation, TaskBaseMessage } from '../../tools/Tasks';
+import LANG from '../../classes/Lang/Language';
 
 interface RouterWrapperProps extends RouteComponentProps {}
 interface RouterWrapperState {
@@ -169,12 +170,12 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
           showLabels
           className={"nav primary " + classes.stick_to_bottom + " " + classes.bottom_bar}
         >
-          <BottomNavigationAction label="Archive" icon={<ArchiveIcon />} component={Link} to={pathMap[0]} />
-          <BottomNavigationAction label="Explore" icon={<ExploreIcon />} component={Link} to={pathMap[1]} />
-          <BottomNavigationAction label="Direct Messages" icon={<MailIcon />} component={Link} to={pathMap[2]} />
-          <BottomNavigationAction label="More" icon={<MoreIcon />} component={Link} to={pathMap[3]} />
-          <BottomNavigationAction label="Settings" icon={<SettingsIcon />} component={Link} to={pathMap[4]} />
-          <BottomNavigationAction label="Tasks" icon={this.renderTaskIcon()} onClick={() => this.handleModalOpen()} />
+          <BottomNavigationAction label={LANG.archive} icon={<ArchiveIcon />} component={Link} to={pathMap[0]} />
+          <BottomNavigationAction label={LANG.explore} icon={<ExploreIcon />} component={Link} to={pathMap[1]} />
+          <BottomNavigationAction label={LANG.direct_messages} icon={<MailIcon />} component={Link} to={pathMap[2]} />
+          <BottomNavigationAction label={LANG.more} icon={<MoreIcon />} component={Link} to={pathMap[3]} />
+          <BottomNavigationAction label={LANG.settings} icon={<SettingsIcon />} component={Link} to={pathMap[4]} />
+          <BottomNavigationAction label={LANG.tasks} icon={this.renderTaskIcon()} onClick={() => this.handleModalOpen()} />
         </BottomNavigation>
       </div>
     );
