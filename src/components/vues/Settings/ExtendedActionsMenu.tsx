@@ -8,6 +8,7 @@ import { toast } from '../../shared/Toaster/Toaster';
 import classes from './ExtendedActions.module.scss';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { dateFormatter } from '../../../helpers';
+import LANG from '../../../classes/Lang/Language';
 
 type MState = {
   anchor: HTMLElement;
@@ -54,7 +55,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
         });
       })
       .catch(() => {
-        toast("Unable to load sessions. Try again later", "error");
+        toast(LANG.unable_load_sessions, "error");
       });
   }
 
@@ -106,7 +107,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
         SETTINGS.reload();
       })
       .catch(() => {
-        toast("Unable to delete account. Check your network.", "error");
+        toast(LANG.unable_delete_account, "error");
       });
 
     // Close modal
@@ -120,7 +121,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
 
     APIHELPER.request('users/tokens/revoke', { method: 'POST', parameters: { token: id } })
       .catch(() => {
-        toast("Unable to revoke token. Try again later.", "error");
+        toast(LANG.unable_revoke_token, "error");
       });
   }
 
@@ -132,20 +133,20 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
         >
           <Typography className={classes.heading}>
             Session <span className="bold">{index + 1}</span>
-            {"current" in e ? <span className="bold"> (current)</span> : ""}
+            {"current" in e ? <span className="bold"> ({LANG.current})</span> : ""}
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
           <Typography>
-            Session created on <span className="bold">{dateFormatter("Y-m-d", new Date(e.date))} </span> 
-            with IP address <span className="bold">{e.login_ip}</span>.
+            {LANG.session_created_on} <span className="bold">{dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", new Date(e.date))} </span> 
+            {LANG.with_ip_address} <span className="bold">{e.login_ip}</span>.
           </Typography>
           <Typography>
-            Last use on <span className="bold">{dateFormatter("Y-m-d", new Date(e.last_use))}</span>.
+            {LANG.last_use_on} <span className="bold">{dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", new Date(e.last_use))}</span>.
           </Typography>
 
           <Button color="secondary" onClick={() => this.revokeToken(e.token)} className={classes.revoke_btn}>
-            Revoke
+            {LANG.revoke}
           </Button>
         </ExpansionPanelDetails>
       </ExpansionPanel>
@@ -163,7 +164,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
     else if (this.state.tokens.length === 0) {
       return (
         <Typography variant="h6">
-          You don't any open session.
+          {LANG.no_open_session}.
         </Typography>
       );
     }
@@ -187,7 +188,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
         </DialogContent>
         <DialogActions>
           <Button onClick={this.closeGestionToken} color="primary">
-            Close
+            {LANG.close}
           </Button>
         </DialogActions>
       </Dialog>
@@ -200,22 +201,21 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
         open={true}
         onClose={this.closeModalOne}
       >
-        <DialogTitle>Delete your account ?</DialogTitle>
+        <DialogTitle>{LANG.delete_your_account} ?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            You will be disconnect from every device you've used to explore archives.
-            Are you sure you want to continue ?
+            {LANG.delete_account_1_text}
           </DialogContentText>
           <DialogContentText>
-            You can re-create an account later using the <span className="bold">Sign in with Twitter</span> button.
+            {LANG.delete_account_2_text} <span className="bold">{LANG.sign_in_with_twitter}</span> {LANG.button_delete_account}.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.closeModalOne} color="primary" autoFocus>
-            Cancel
+            {LANG.cancel}
           </Button>
           <Button onClick={this.openModalTwo} color="secondary">
-            Continue
+            {LANG.continue}
           </Button>
         </DialogActions>
       </Dialog>
@@ -224,21 +224,21 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
 
   modalDeleteConfirm() {
     const content = <div>
-      <DialogTitle>Delete your account ?</DialogTitle>
+      <DialogTitle>{LANG.delete_your_account} ?</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please confirm your action.
+          {LANG.confirm_action}.
         </DialogContentText>
         <DialogContentText>
-          <span className="bold">If you currently have running tasks, they will be cancelled.</span>
+          <span className="bold">{LANG.will_cancel_running_tasks}.</span>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={this.closeModalTwo} color="primary" autoFocus>
-          Cancel
+          {LANG.cancel}
         </Button>
         <Button onClick={this.closeAndDelete} color="secondary">
-          Delete account
+          {LANG.delete_account}
         </Button>
       </DialogActions>
     </div>;
@@ -267,7 +267,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
         {this.state.modal_delete_2 && this.modalDeleteConfirm()}
 
         <Button onClick={this.handleClick} color="primary">
-          Advanced settings
+          {LANG.advanced_settings}
         </Button>
         <Menu
           anchorEl={this.state.anchor}
@@ -275,8 +275,8 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
           open={Boolean(this.state.anchor)}
           onClose={this.handleClose}
         >
-          <MenuItem onClick={this.openGestionToken}>Open sessions</MenuItem>
-          <MenuItem onClick={this.openModalOne}>Delete my account</MenuItem>
+          <MenuItem onClick={this.openGestionToken}>{LANG.open_sessions}</MenuItem>
+          <MenuItem onClick={this.openModalOne}>{LANG.delete_my_account}</MenuItem>
         </Menu>
       </div>
     );

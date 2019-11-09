@@ -9,12 +9,13 @@ import { toast } from '../../shared/Toaster/Toaster';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 import { DEBUG_MODE } from '../../../const';
 import { parseTwitterDate } from 'twitter-archive-reader';
+import LANG from '../../../classes/Lang/Language';
 
 export default class More extends React.Component {
   renderGDPR() {
     return <div>
       <Typography variant="h4" className={classes.main_title}>
-        Extended archive data
+        {LANG.extended_archive_data}
       </Typography>
 
       <Favorites />
@@ -39,27 +40,26 @@ export default class More extends React.Component {
     return (
       <div>
         <Typography variant="h4" className={classes.main_title}>
-          Help
+          {LANG.help}
         </Typography>
 
         {/* DOWNLOAD */}
         <Typography variant="h5" className={classes.second_title}>
-          Download a Twitter archive
+          {LANG.download_twitter_archive}
         </Typography>
 
         <Typography className={classes.help_p}>
-          Learn how to download a Twitter archive with a simple tutorial.
-          It will just take minutes.
+          {LANG.learn_how_to_download}
         </Typography>
         <HelpDL />
 
         {/* SEARCH */}
         <Typography variant="h5" className={classes.second_title}>
-          Search
+          {LANG.search}
         </Typography>
 
         <Typography className={classes.help_p}>
-          For both tweets and direct messages, search is case-insensitive, and supports regular expressions.
+          {LANG.search_p1}
         </Typography>
 
         <Marger size={8} />
@@ -69,30 +69,29 @@ export default class More extends React.Component {
         </Typography>
 
         <Typography className={classes.help_p}>
-          Search for the tweets you want directly in your archive. Search is made instantly, in all your tweets.
+          {LANG.tweets_p1}
           <br />
         </Typography>
       
         <Marger size={8} />
 
         <Typography variant="h6" className={classes.third_title}>
-          Direct Messages
+          {LANG.direct_messages}
         </Typography>
 
         <Typography className={classes.help_p}>
-          When a conversation is selected, you can find messages by their text. Once you've found the
-          message you want, just click on it to see the following and preceding DMs of the conversation.
+          {LANG.direct_messages_p1}
           <br />
         </Typography>
 
         <Marger size={8} />
 
         <Typography variant="h6" className={classes.third_title}>
-          Keywords
+          {LANG.keywords_upper}
         </Typography>
 
         <Typography className={classes.help_p}>
-          You can enhance all your queries made in tweet / direct message explorer by adding <span className="bold">keywords</span>.
+          {LANG.keywords_p1} <span className="bold">{LANG.keywords}</span>.
           <br />
         </Typography>
         <Keywords />
@@ -101,15 +100,15 @@ export default class More extends React.Component {
 
         {/* DELETION */}
         <Typography variant="h5" className={classes.second_title}>
-          Delete tweets, favorites and more
+          {LANG.delete_tweets_more}
         </Typography>
 
         <Typography className={classes.help_p}>
-          Archive Explorer let you delete a batch of tweets, or other informations linked to your account.
+          {LANG.delete_tweets_more_p1}
           <br />
-          Please note that <span className="bold">
-            every deletion is made on your Twitter account, and is irremediable
-          </span>. You will not be able to get your tweets, favorites or anything else back. 
+          {LANG.delete_tweets_more_p2} <span className="bold">
+            {LANG.delete_tweets_more_p3}
+          </span> {LANG.delete_tweets_more_p4}.  
         </Typography>
 
         <Typography variant="h6" className={classes.third_title}>
@@ -117,78 +116,67 @@ export default class More extends React.Component {
         </Typography>
 
         <Typography className={classes.help_p}>
-          For tweets, you can select tweets individually via Tweet Explorer (Explore tab), or choose from multiple months
-          and years with Quick Delete, available in the Archive tab.
+          {LANG.tweets_more_p1}
         </Typography>
 
         <Typography variant="h6" className={classes.third_title}>
-          Favorites, mutes and blocks
+          {LANG.favs_mutes_blocks}
         </Typography>
 
         <Typography className={classes.help_p}>
-          Favorites, mutes and blocks can be deleted in this tab. This kind of removal is "all or nothing", you can't 
-          individually select which favorite or block you will remove.
+          {LANG.favs_mutes_blocks_p1}
         </Typography>
 
         <Marger size={8} />
 
         {/* LIMITATIONS */}
         <Typography variant="h5" className={classes.second_title}>
-          Limitations
+          {LANG.limitations}
         </Typography>
 
         <Typography variant="h6" className={classes.third_title}>
-          Retweet data
+          {LANG.retweet_data}
         </Typography>
 
         <Typography className={classes.help_p}>
-          When you browse your tweets, you may see strange retweet informations: 
-          Profile picture may be yours, or Twitter name isn't good. 
-          In fact, Twitter archives contains a bad retweet data. Retweets are stored in your name,
-          and the original retweet isn't present. 
+          {LANG.retweet_data_p1}
           <br />
-          Archive Explorer tries to enhance at their maximum retweet data in order to make your experience
-          as good as possible, but it can't do miracles.
+          {LANG.retweet_data_p2}
         </Typography>
 
         <Typography variant="h6" className={classes.third_title}>
-          Truncated tweets
+          {LANG.truncated_tweets}
         </Typography>
 
         <Typography className={classes.help_p}>
-          Tweets that contains more than 140 characters are truncated in archives. It may be a bug
-          (see <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/Alkihis/status/1173857093880864768">this tweet</a>)
-          or not, Twitter hasn't given an answer yet.
+          {LANG.truncated_tweets_p1} <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/Alkihis/status/1173857093880864768">{LANG.this_tweet}</a>)
+          {LANG.truncated_tweets_p2}
 
           <br />
 
-          You can choose to download tweets from Twitter instead from the archive in Settings to have full text,
-          but the tweet display will be considerably slower (this feature is very resource-demanding, please not abuse of it !).
+          {LANG.truncated_tweets_p3}
         </Typography>
 
         <Typography variant="h6" className={classes.third_title}>
-          Tasks limit
+          {LANG.tasks_limit}
         </Typography>
 
         <Typography className={classes.help_p}>
-          Deletion tasks are very resource-demanding for server and are limited for each user.
-          You are able to start <span className="bold">3 tasks</span> in parallel. 
+          {LANG.tasks_limit_p1} <span className="bold">{LANG.tasks_limit_p2}</span> {LANG.tasks_limit_p3} 
           <br />
-          If you want to start another task, please wait for
-          other tasks to complete or cancel an existing task.
+          {LANG.tasks_limit_p4}
         </Typography>
 
         <Typography variant="h6" className={classes.third_title}>
-          Archive size
+          {LANG.archive_size}
         </Typography>
 
         <Typography className={classes.help_p}>
-          Due to a technical limitation, archive is fully loaded into your navigator's memory.
-          This could be very inefficient for mobiles devices or small computers.
+          {LANG.archive_size_p1}
           <br />
 
-          In very specific cases, if you have too many medias in your direct messages, load can fail. You can delete the folder
-          <span className="bold"> direct_message_media</span> in your archive to lighten it.
+          {LANG.archive_size_p2}
+          <span className="bold"> direct_message_media</span> {LANG.archive_size_p3}
         </Typography>
 
         <Marger size="3rem" />
@@ -199,13 +187,11 @@ export default class More extends React.Component {
   renderClassic() {
     return <div>
       <Typography variant="h4" className={classes.main_title}>
-        Extended archive data
+        {LANG.extended_archive_data}
       </Typography>
 
       <Typography>
-        Classic archive is not supported.
-        You should have a GDPR archive to access many options here.
-        Learn how to download a GDPR archive with the help below.
+        {LANG.classic_not_supported}
       </Typography>
 
       <Divider className="divider-big-margin" />
@@ -215,12 +201,11 @@ export default class More extends React.Component {
   renderNoArchive() {
     return <div>
       <Typography variant="h4" className={classes.main_title}>
-        Archive is not loaded
+        {LANG.archive_not_loaded}
       </Typography>
 
       <Typography>
-        Here, you will have access to many options, like removing your blocks, cleaning your favorites and more.
-        To start, learn how to download a archive with the help below.
+        {LANG.archive_not_loaded_p1}
       </Typography>
 
       <Divider className="divider-big-margin" />
@@ -244,7 +229,7 @@ export default class More extends React.Component {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" color="inherit">
-            More
+            {LANG.more}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -271,7 +256,7 @@ function HelpDL() {
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={openModal} className={classes.dl_btn}>
-        How to download an archive
+        {LANG.how_to_download}
       </Button>
 
       <DownloadGDPRModal open={open} onClose={closeModal} />
@@ -291,19 +276,19 @@ const DeleteModal: React.FC<{
       open={props.open}
       onClose={props.onClose}
     >
-      <DialogTitle>Delete all your {props.type} ?</DialogTitle>
+      <DialogTitle>{LANG.delete_all_your} {props.type} ?</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          This action will permanently remove all your {props.type} from your Twitter account.
-          Are you sure you want to do this ?
+          {LANG.permanently_remove_your} {props.type} {LANG.from_twitter_account}.
+          {LANG.are_you_sure_you_want} ?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onCancel} color="primary" autoFocus>
-          Cancel
+          {LANG.cancel}
         </Button>
         <Button onClick={props.onValidate} color="secondary">
-          Start task
+          {LANG.start_task}
         </Button>
       </DialogActions>
     </Dialog>
@@ -329,22 +314,22 @@ function Favorites() {
 
     Tasks.start(favs, "fav")
       .catch(() => {
-        toast("Unable to start task. Check your network.", "error");
+        toast(LANG.task_start_error, "error");
       });
   }
 
   return (
     <div>
       <Typography variant="h5" className={classes.second_title}>
-        Favorites
+        {LANG.favorites}
       </Typography>
 
       <Typography>
-        You have <span className={classes.number}>{SETTINGS.archive.extended_gdpr.favorites.size}</span> tweets into your favorites.
+        {LANG.you_have} <span className={classes.number}>{SETTINGS.archive.extended_gdpr.favorites.size}</span> {LANG.tweets_in_your_favorites}.
       </Typography>
 
       <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
-        Delete all my favorited tweets
+        {LANG.delete_all_favorites}
       </Button>
 
       <DeleteModal 
@@ -377,22 +362,22 @@ function Blocks() {
 
     Tasks.start(blocks, "block")
       .catch(() => {
-        toast("Unable to start task. Check your network.", "error");
+        toast(LANG.task_start_error, "error");
       });
   }
 
   return (
     <div>
       <Typography variant="h5" className={classes.second_title}>
-        Blocks
+        {LANG.blocks}
       </Typography>
 
       <Typography>
-        You have blocked <span className={classes.number}>{SETTINGS.archive.extended_gdpr.blocks.size}</span> users.
+        {LANG.you_have_blocked} <span className={classes.number}>{SETTINGS.archive.extended_gdpr.blocks.size}</span> {LANG.users}.
       </Typography>
 
       <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
-        Delete all my blocked accounts
+        {LANG.delete_all_blocked}
       </Button>
 
       <DeleteModal 
@@ -425,22 +410,22 @@ function Mutes() {
 
     Tasks.start(mutes, "mute")
       .catch(() => {
-        toast("Unable to start task. Check your network.", "error");
+        toast(LANG.task_start_error, "error");
       });
   }
 
   return (
     <div>
       <Typography variant="h5" className={classes.second_title}>
-        Mutes
+        {LANG.mutes}
       </Typography>
 
       <Typography>
-        You have muted <span className={classes.number}>{SETTINGS.archive.extended_gdpr.mutes.size}</span> users.
+        {LANG.you_have_muted} <span className={classes.number}>{SETTINGS.archive.extended_gdpr.mutes.size}</span> {LANG.users}.
       </Typography>
 
       <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
-        Delete all my muted accounts
+        {LANG.delete_all_muted}
       </Button>
 
       <DeleteModal 
@@ -469,7 +454,7 @@ function ScreenNameHistory() {
   return (
     <div>
       <Typography variant="h5" className={classes.second_title}>
-        Screen name history
+        {LANG.screen_name_history}
       </Typography>
 
       <Paper className={classes.sn_root}>
@@ -477,8 +462,8 @@ function ScreenNameHistory() {
           <Table stickyHeader className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell className={classes.th}>Twitter @</TableCell>
-                <TableCell className={classes.th} align="right">Until</TableCell>
+                <TableCell className={classes.th}>{LANG.twitter_at}</TableCell>
+                <TableCell className={classes.th} align="right">{LANG.until}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -486,7 +471,7 @@ function ScreenNameHistory() {
                 <TableRow key={row.date ? row.date.toISOString() : '-'}>
                   <TableCell className="bold">@{row.sn}</TableCell>
                   <TableCell style={{minWidth: 120}} align="right" component="th" scope="row">
-                    {row.date ? dateFormatter("Y-m-d H:i", row.date) : '-'}
+                    {row.date ? dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y H:i" : "Y-m-d H:i", row.date) : '-'}
                   </TableCell>
                 </TableRow>
               ))}
@@ -505,10 +490,10 @@ function Keywords() {
         <Table stickyHeader className={classes.table_large}>
           <TableHead>
             <TableRow>
-              <TableCell className={classes.th}>Keyword</TableCell>
-              <TableCell className={classes.th}>Content</TableCell>
-              <TableCell align="right" className={classes.th}>Description</TableCell>
-              <TableCell align="right" className={classes.th}>Example</TableCell>
+              <TableCell className={classes.th}>{LANG.keyword}</TableCell>
+              <TableCell className={classes.th}>{LANG.content}</TableCell>
+              <TableCell align="right" className={classes.th}>{LANG.description}</TableCell>
+              <TableCell align="right" className={classes.th}>{LANG.example}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -520,8 +505,8 @@ function Keywords() {
                 -
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                Limit search to currently selected month. 
-                Search <span className="bold">must</span> begin by <span className="italic">:current</span>.
+                {LANG.limit_search_to_month} 
+                {LANG.search} <span className="bold">must</span> begin by <span className="italic">:current</span>.
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 :current hello !
@@ -536,7 +521,7 @@ function Keywords() {
                 [YYYY-MM-DD]
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                Find tweets/DMs made since a specified date.
+                {LANG.find_tweets_since}
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 since:2018-01-02
@@ -551,7 +536,7 @@ function Keywords() {
                 [YYYY-MM-DD]
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                Find tweets/DMs made before a specified date.
+                {LANG.find_tweets_until}
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 until:2018-04-02
@@ -566,7 +551,7 @@ function Keywords() {
                 [twitter @]
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                Find tweets/DMs sent by specified user.
+                {LANG.find_tweets_from}
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 from:Alkihis

@@ -8,6 +8,7 @@ import { dateFormatter } from '../../../helpers';
 import { REGEX_URL } from '../../../const';
 // @ts-ignore
 import { Lightbox as ModalImage } from "react-modal-image";
+import LANG from '../../../classes/Lang/Language';
 
 type DMProp = {
   msg: LinkedDirectMessage;
@@ -38,7 +39,7 @@ export default class DM extends React.Component<DMProp, DMState> {
       <ModalImage 
         medium={used_entity}
         large={used_entity}
-        alt="Full image"
+        alt={LANG.full_image}
         onClose={() => this.setState({ img_full: null })}
       />
     );
@@ -122,7 +123,7 @@ export default class DM extends React.Component<DMProp, DMState> {
   }
 
   showDate() {
-    return <div className={classes.date}>{dateFormatter('Y-m-d, H:i', this.props.msg.createdAtDate)}</div>;
+    return <div className={classes.date}>{dateFormatter(SETTINGS.lang === "fr" ? 'd/m/Y, H:i' : 'Y-m-d, H:i', this.props.msg.createdAtDate)}</div>;
   }
   
   onDmClick = () => {

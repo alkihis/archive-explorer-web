@@ -15,6 +15,7 @@ import FileUploadIcon from '@material-ui/icons/CloudUpload';
 import Timer from 'timerize';
 import { createTrimmedArchive } from '../../../tools/StreamZip';
 import JSZip from 'jszip';
+import LANG from '../../../classes/Lang/Language';
 
 type ArchiveState = {
   loaded: string;
@@ -228,21 +229,21 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   getLoadingMessage() {
     switch (this.state.loading_state) {
       case "dm_read":
-        return "Reading direct messages";
+        return LANG.reading_dms;
       case "extended_read":
-        return "Reading favorites, moments, and other informations";
+        return LANG.reading_fav_moments_other;
       case "indexing":
-        return "Indexing tweets";
+        return LANG.indexing_tweets;
       case "reading":
-        return "Unzipping";
+        return LANG.unzipping;
       case "tweet_read":
-        return "Reading tweets";
+        return LANG.reading_tweets;
       case "user_read":
-        return "Reading user informations";
+        return LANG.reading_user_infos;
       case "prefetch":
-        return "Gathering user informations";
+        return LANG.gathering_user_data;
       case "converting":
-        return "Archive is quite heavy, lightening a bit...";
+        return LANG.lightening_archive;
     }
   }
 
@@ -261,14 +262,13 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return (
       <div>
         <Typography className={styles.title} variant="h5" component="h2" color="textSecondary">
-          Load an archive
+          {LANG.load_an_archive}
         </Typography>
 
         <Typography>
-          You don't have any archive loaded. 
+          {LANG.no_archive_loaded}
           <br />
-          Load an archive using the button below, 
-          or drag-and-drop your archive here.
+          {LANG.load_or_drag_drop}
         </Typography>
       </div>
     );
@@ -278,11 +278,11 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return (
       <div>
         <Typography variant="h5" component="h2" className={styles.title} color="error">
-          Error
+          {LANG.error}
         </Typography>
 
         <Typography>
-          Archive couldn't be loaded. Please load a new archive with the required format.
+          {LANG.archive_bad_format}
         </Typography>
       </div>
     );
@@ -296,15 +296,15 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         </Typography>
 
         <Typography>
-          Archive created {!SETTINGS.archive.is_gdpr && // Hide date if gdpr (not accurate)
+          {LANG.archive_created} {!SETTINGS.archive.is_gdpr && // Hide date if gdpr (not accurate)
           <span>
-            on {dateFormatter("Y-m-d", SETTINGS.archive.generation_date)}
-          </span>} by {SETTINGS.archive.index.info.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
+            {LANG.on_date} {dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", SETTINGS.archive.generation_date)}
+          </span>} {LANG.by_date} {SETTINGS.archive.index.info.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
         </Typography>
 
         <Typography>
-          Account #<span className={styles.bold}>{SETTINGS.archive.index.info.id}</span> created at {
-            dateFormatter("Y-m-d H:i", parseTwitterDate(SETTINGS.archive.index.info.created_at))
+          {LANG.account} #<span className={styles.bold}>{SETTINGS.archive.index.info.id}</span> {LANG.created_at} {
+            dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y H:i" : "Y-m-d H:i", parseTwitterDate(SETTINGS.archive.index.info.created_at))
           }.
         </Typography>
 
@@ -314,7 +314,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
         { SETTINGS.archive.is_gdpr &&
           <Typography style={{marginTop: '.3rem'}} className={styles.dmsinfowrapper}>
-            <span className={styles.dmsinfo}>{SETTINGS.archive.messages.count}</span> direct messages in 
+            <span className={styles.dmsinfo}>{SETTINGS.archive.messages.count}</span> {LANG.direct_messages_in} 
             <span className={styles.dmsinfo}> {SETTINGS.archive.messages.length}</span> conversations
           </Typography>
         }
@@ -329,7 +329,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           <Divider className="divider-margin" />
 
           <Typography className={styles.cannot_delete}>
-            You don't own this archive, you aren't able to delete tweets from it.
+            {LANG.dont_own_archive}
           </Typography>
         </div>}
 
@@ -337,8 +337,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           <Divider className="divider-margin" />
 
           <Typography className={styles.cannot_delete}>
-            Twitter credentials have expired, you aren't able to delete tweets.  
-            Log out and in again in <Link to="/settings/">Settings</Link>.
+            {LANG.credentials_expired_cant_deleted} 
+            {LANG.logout_and_in_in} <Link to="/settings/">{LANG.settings}</Link>.
           </Typography>
         </div>}
       </div>
@@ -368,7 +368,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return (
       <div className="center-space-between">
         <Button color="primary" onClick={() => (this.element.querySelector('[data-archive-input]') as HTMLElement).click()}>
-          Load{this.state.loaded || this.state.is_error ? " another" : ""} archive
+          {LANG.load}{this.state.loaded || this.state.is_error ? " " + LANG.another_f : ""} archive
         </Button>
         <input type="file" data-archive-input="" onChange={(e) => this.loadArchive(e)} hidden />
 
@@ -380,7 +380,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   buttonQuickDelete() {
     return (
       <Button color="secondary" onClick={this.handleModalOpen}>
-        Quick delete
+        {LANG.quick_delete}
       </Button>
     );
   }
@@ -412,7 +412,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return (
       <div className={styles.dragdrop}>
         <FileUploadIcon className={styles.fu_icon} />
-        <h3 className={styles.fu_text}>Drop your archive here</h3>
+        <h3 className={styles.fu_text}>{LANG.drop_archive_here}</h3>
       </div>
     );
   }

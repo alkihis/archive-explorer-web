@@ -9,6 +9,7 @@ import TweetIcon from '@material-ui/icons/Message';
 import BlockIcon from '@material-ui/icons/Block';
 import MuteIcon from '@material-ui/icons/VolumeOff';
 import FavIcon from '@material-ui/icons/Star';
+import LANG from '../../../classes/Lang/Language';
 
 type TaskP = {
   data: TaskInformation;
@@ -42,13 +43,13 @@ export default class Task extends React.Component<TaskP> {
   textForTask() {
     switch (this.props.data.type) {
       case "tweet":
-        return "Tweet deletion";
+        return LANG.tweet_deletion;
       case "fav":
-        return "Favorites deletion";
+        return LANG.favorite_deletion;
       case "block":
-        return "Blocks deletion";
+        return LANG.block_deletion;
       case "mute":
-        return "Mutes deletion";
+        return LANG.mute_deletion;
     }
   }
 
@@ -72,15 +73,15 @@ export default class Task extends React.Component<TaskP> {
             {this.textForTask()} <span className={classes.task_id}> #{this.id}</span>
 
             <span className={classes.header_info}> (
-              <span className="bold">{completed}/{total}</span>, <span className="bold">{this.props.data.percentage.toFixed(0)}</span>% completed)
+              <span className="bold">{completed}/{total}</span>, <span className="bold">{this.props.data.percentage.toFixed(0)}</span>% {LANG.completed})
             </span>
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
           <Typography className={classes.counts}>
-            <span className="bold">{this.props.data.done}</span> deleted,
-            <span className="bold"> {this.props.data.failed}</span> failed,
-            <span className="bold"> {this.props.data.remaining}</span> remaining.
+            <span className="bold">{this.props.data.done}</span> {LANG.deleted},
+            <span className="bold"> {this.props.data.failed}</span> {LANG.failed},
+            <span className="bold"> {this.props.data.remaining}</span> {LANG.remaining}.
           </Typography>
 
           <LinearProgress variant="determinate" className={this.is_over ? classes.bar_over : classes.bar} value={this.props.data.percentage} />
@@ -88,15 +89,15 @@ export default class Task extends React.Component<TaskP> {
 
         <ExpansionPanelActions>
           {!this.is_over && <Button size="small" onClick={() => this.props.onCancel(this.id)}>
-            Cancel
+            {LANG.cancel}
           </Button>}
           
           {!this.props.is_subscribed && <Button size="small" color="primary" onClick={() => this.props.onSubChange(true, this.id)}>
-            Subscribe
+            {LANG.subscribe}
           </Button>}
 
           {this.props.is_subscribed && <Button size="small" color="primary" onClick={() => this.props.onSubChange(false, this.id)}>
-            Unsubscribe
+            {LANG.unsubscribe}
           </Button>}
           
         </ExpansionPanelActions>

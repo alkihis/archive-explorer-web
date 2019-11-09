@@ -10,6 +10,7 @@ import TimelineIcon from '@material-ui/icons/Timeline';
 import CompletedIcon from '@material-ui/icons/Check';
 import SubscribedIcon from '@material-ui/icons/Sync';
 import UnSubbedIcon from '@material-ui/icons/CloudQueue';
+import LANG from '../../../classes/Lang/Language';
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -218,7 +219,7 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
       return (
         <div className={classes.no_sub}>
           <Typography variant="h6" className={classes.no_sub_text}>
-            You don't have any subscription.
+            {LANG.any_subscription}.
           </Typography>
         </div>
       );
@@ -246,7 +247,7 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
 
     // Error
     return <div className={classes.error_load}>
-      Unable to load running tasks from server. Check your network.
+      {LANG.unable_fetch_tasks}
     </div>;
   }
 
@@ -262,17 +263,17 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
     return (
       <div>  
         <Typography variant="h5" className={classes.title}>
-          <SubscribedIcon className={classes.icon} /> <span>Subscribed</span>
+          <SubscribedIcon className={classes.icon} /> <span>{LANG.subscribed}</span>
         </Typography>
         {this.generateSubscribed()}
     
         {is_running_unsub_task && <Typography variant="h5" className={classes.title}>
-         <UnSubbedIcon className={classes.icon} /> <span>Other running tasks</span>
+         <UnSubbedIcon className={classes.icon} /> <span>{LANG.other_running_tasks}</span>
         </Typography>}
         {this.generateUnSub()}
 
         {is_completed_tasks && <Typography variant="h5" className={classes.title}>
-          <CompletedIcon className={classes.icon} /> <span>Completed</span>
+          <CompletedIcon className={classes.icon} /> <span>{LANG.completed_upper}</span>
         </Typography>}
         {this.generateOverTasks()}
       </div>
@@ -282,8 +283,8 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
   emptyTask() {
     return (
       <EmptyMessage 
-        main="Empty task list" 
-        second="Deletion tasks can be started through tweet explorer or from More tab." 
+        main={LANG.empty_task_list}
+        second={LANG.can_be_started_with_explorer}
         icon={TimelineIcon} 
       />
     );
@@ -321,10 +322,10 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
         <AppBar className={classes.app_bar}>
           <Toolbar>
             <Typography variant="h6" className={classes.nav_title}>
-              Tasks
+              {LANG.tasks}
             </Typography>
             <Button color="inherit" onClick={this.handleClose}>
-              close
+              {LANG.close}
             </Button>
           </Toolbar>
         </AppBar>

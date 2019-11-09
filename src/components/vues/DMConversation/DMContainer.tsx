@@ -7,6 +7,7 @@ import Sentinel from '../../shared/Sentinel/Sentinel';
 import { Divider, Fab, Tooltip } from '@material-ui/core';
 import { uppercaseFirst, getMonthText } from '../../../helpers';
 import JumpToIcon from '@material-ui/icons/LowPriority';
+import LANG from '../../../classes/Lang/Language';
 
 const LOADED_PER_CHUNK = 100;
 
@@ -215,7 +216,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
           tooltip: classes.big_text,
           popper: classes.big_text
         }} 
-        title="Jump to selected message"
+        title={LANG.jump_to_message}
         placement="left"
       >
         <Fab color="primary" className={classes.fab_jump} onClick={this.scrollToSelected}>

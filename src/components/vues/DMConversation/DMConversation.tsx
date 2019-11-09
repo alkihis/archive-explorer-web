@@ -14,6 +14,7 @@ import UserCache from '../../../classes/UserCache';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import { FullUser } from 'twitter-d';
 import { toast } from '../../shared/Toaster/Toaster';
+import LANG from '../../../classes/Lang/Language';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -117,7 +118,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
         const res = UserCache.getFromCacheByApproximateName(u);
 
         if (!res.length) {
-          toast(`User ${u} cannot be resolved, it will be ignored.`, "warning");
+          toast(`${LANG.user} ${u} ${LANG.user_not_resolved_end}.`, "warning");
         }
 
         selected_users.push(...res);
@@ -208,13 +209,13 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           onClick={this.props.getBack}
         >
           <ListItemText classes={{ primary: classes.get_back_paper }}>
-            <LeftArrowIcon className={classes.get_back_icon} /> <span>Back to conversations</span>
+            <LeftArrowIcon className={classes.get_back_icon} /> <span>{LANG.back_to_conversations}</span>
           </ListItemText>
         </ListItem>
 
         <ExpansionPanel expanded={false}>
           <ExpansionPanelSummary>
-            <Typography className="bold">Full conversation</Typography>
+            <Typography className="bold">{LANG.full_conversation}</Typography>
           </ExpansionPanelSummary>
         </ExpansionPanel>
         <ListItem 
@@ -223,7 +224,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           onClick={() => this.monthClicker("*", "")}
         >
           <ListItemText className={classes.drawer_month}>
-            All ({this.conv.length})
+            {LANG.all} ({this.conv.length})
           </ListItemText>
         </ListItem>
 
@@ -233,7 +234,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           onClick={() => this.monthClicker("day", "")}
         >
           <ListItemText className={classes.drawer_month}>
-            Messages of the day
+            {LANG.messages_of_the_day}
           </ListItemText>
         </ListItem>
 
@@ -244,7 +245,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
         >
           <form onSubmit={this.findMsgs} className={classes.full_w}>
             <TextField
-              label="Find DMs"
+              label={LANG.find_dms}
               className={classes.textField}
               onChange={this.handleSearchChange}
               margin="normal"
@@ -258,7 +259,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           onClick={() => this.findMsgs()}
         >
           <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
-            <SearchIcon className={classes.get_back_icon} /> <span>Find messages</span>
+            <SearchIcon className={classes.get_back_icon} /> <span>{LANG.find_dms}</span>
           </ListItemText>
         </ListItem>
       </div>
@@ -270,11 +271,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       <CenterComponent className={classes.no_msg}>
         <LeftArrowIcon className={classes.icon} />
         <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-          Select a month
+          {LANG.select_a_month}
         </Typography>
 
         <Typography variant="h6">
-          Choose a month to see your direct messages.
+          {LANG.choose_month_messages}
         </Typography>
       </CenterComponent>
     );
@@ -285,11 +286,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       <CenterComponent className={classes.no_msg}>
         <SearchIcon className={classes.icon} />
         <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-          Not found
+          {LANG.not_found}
         </Typography>
 
         <Typography variant="h6">
-          Your search hasn't returned any result.
+          {LANG.search_no_results}.
         </Typography>
       </CenterComponent>
     );
@@ -300,11 +301,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       <CenterComponent className={classes.no_msg}>
         <ErrorIcon className={classes.icon} />
         <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-          No message
+          {LANG.no_message}
         </Typography>
 
         <Typography variant="h6">
-          You don't have any message here.
+          {LANG.any_message_here}.
         </Typography>
       </CenterComponent>
     );
@@ -388,11 +389,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
   }
 
   showActiveMonth() {
-    let month_text = "All messages";
+    let month_text = LANG.all_messages;
     let year = "";
 
     if (this.state.month === "day") {
-      month_text = "DMs of the day";
+      month_text = LANG.dms_of_the_day;
     }
     else if (this.state.month !== "*") {
       const [_year, month] = this.state.month.split('-');
@@ -486,7 +487,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       <ResponsiveDrawer
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
-        title={"Conversation with " + this.participants}
+        title={LANG.conversation_with + " " + this.participants}
         noPadding
         drawer={this.drawer()}
         content={this.content()}

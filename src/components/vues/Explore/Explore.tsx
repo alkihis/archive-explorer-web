@@ -11,6 +11,7 @@ import { PartialTweet, TweetSearcher } from 'twitter-archive-reader';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
+import LANG from '../../../classes/Lang/Language';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -49,7 +50,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   protected searchContent: string = "";
 
   componentDidMount() {
-    setPageTitle("Explore");
+    setPageTitle(LANG.explore);
   }
 
   handleDrawerToggle = () => {
@@ -113,7 +114,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       <div>
         <ExpansionPanel expanded={false}>
           <ExpansionPanelSummary>
-            <Typography className="bold">Full archive</Typography>
+            <Typography className="bold">{LANG.full_archive}</Typography>
           </ExpansionPanelSummary>
         </ExpansionPanel>
         <ListItem 
@@ -122,7 +123,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
           onClick={() => this.monthClicker("*", "")}
         >
           <ListItemText className={classes.drawer_month}>
-            All ({SETTINGS.archive.length})
+            {LANG.all} ({SETTINGS.archive.length})
           </ListItemText>
         </ListItem>
         <ListItem 
@@ -131,7 +132,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
           onClick={() => this.monthClicker("day", "")}
         >
           <ListItemText className={classes.drawer_month}>
-            Tweets of the day
+            {LANG.tweets_of_the_day}
           </ListItemText>
         </ListItem>
 
@@ -142,7 +143,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
         >
           <form onSubmit={this.findTweets} className={classes.full_w}>
             <TextField
-              label="Find tweets"
+              label={LANG.find_tweets}
               className={classes.textField}
               onChange={this.handleSearchChange}
               margin="normal"
@@ -156,7 +157,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
           onClick={() => this.findTweets()}
         >
           <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
-            <SearchIcon className={classes.get_back_icon} /> <span>Search in tweets</span>
+            <SearchIcon className={classes.get_back_icon} /> <span>{LANG.search_in_tweets}</span>
           </ListItemText>
         </ListItem>
       </div>
@@ -168,11 +169,11 @@ export default class Explore extends React.Component<{}, ExploreState> {
       <CenterComponent className={classes.no_tweets}>
         <LeftArrowIcon className={classes.icon} />
         <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
-          Select a month
+          {LANG.select_a_month}
         </Typography>
 
         <Typography variant="h6">
-          Choose a month to see your tweets.
+          {LANG.choose_month_tweets}.
         </Typography>
       </CenterComponent>
     );
@@ -249,7 +250,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   showActiveMonth() {
-    let year = "", month_text = "Full archive";
+    let year = "", month_text = LANG.full_archive;
 
     if (this.state.month !== "*" && this.state.month !== "day") {
       const [_year, month] = this.state.month.split('-');
@@ -257,7 +258,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       month_text = uppercaseFirst(getMonthText(month));
     }
     else if (this.state.month === "day") {
-      month_text = "Tweets of the day";
+      month_text = LANG.tweets_of_the_day;
     }
 
     const tweets_number = this.state.loaded.length;
@@ -279,7 +280,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
     return (
       <div className={classes.month_header}>
-        Search results <span className={classes.month_tweet_number}>
+        {LANG.search_results} <span className={classes.month_tweet_number}>
             <span className="bold">{tweets_number}</span> tweets <span className={classes.percentage}>({percentage_str}%)</span>
           </span>
       </div>
@@ -314,7 +315,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       <ResponsiveDrawer 
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
-        title="Explore"
+        title={LANG.explore}
         drawer={<div>
           <div className={classes.toolbar} />
           <Divider />

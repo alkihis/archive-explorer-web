@@ -6,6 +6,7 @@ import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
 import ExtendedActionsMenu from './ExtendedActionsMenu';
 import { VERSION } from '../../../const';
+import LANG from '../../../classes/Lang/Language';
 
 type SettingsState = {
   download: boolean;
@@ -78,7 +79,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
   };
 
   componentDidMount() {
-    setPageTitle("Settings");
+    setPageTitle(LANG.settings);
 
     // @ts-ignore
     window.addEventListener('darkmodechange', this.handleDarkModeChange);
@@ -103,7 +104,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
                 disabled={SETTINGS.expired}
               />
             }
-            label="Download tweets from Twitter (gives more accurate infos)"
+            label={LANG.download_from_twitter_checkbox}
             labelPlacement="end"
           />
 
@@ -116,7 +117,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
                 onChange={(_, c) => this.changePPState(c)} 
               />
             }
-            label="Show profile pictures"
+            label={LANG.show_profile_pictures}
             labelPlacement="end"
           />
         </FormGroup>
@@ -137,19 +138,19 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <div className={classes.sn}>@{SETTINGS.twitter_user.screen_name}</div>
 
           <Button className={classes.logout} onClick={() => this.handleClickOpen()} color="secondary">
-            Logout
+            {LANG.logout}
           </Button>
         </div>
 
         <div style={{display: 'flex', alignItems: 'center'}}>
           <Typography>
-            Account created on 
-            <span className="bold"> {dateFormatter("Y-m-d", new Date(SETTINGS.user.created_at))}</span>.
+            {LANG.account_created_on} 
+            <span className="bold"> {dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", new Date(SETTINGS.user.created_at))}</span>.
           </Typography>
           <Tooltip placement="top" classes={{
               tooltip: classes.big_text,
               popper: classes.big_text
-            }} title="That's all the information we have from you. Archive Explorer doesn't store any other kind of data.">
+            }} title={LANG.thats_all_infos}>
               <IIcon className={classes.icon + " " + classes.account_icon} />
           </Tooltip>
         </div>
@@ -157,7 +158,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
         <ExtendedActionsMenu />
 
         {SETTINGS.expired && <Typography className={classes.expired}>
-          Twitter credentials have expired. Please log out and log in again.
+          {LANG.twitter_credentials_expired}.
         </Typography>}
       </div>
     );
@@ -176,7 +177,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
                 onChange={(_, c) => this.changeAutoDarkState(c)} 
               />
             }
-            label="Automatic dark mode"
+            label={LANG.automatic_dark_mode}
             labelPlacement="end"
             />
 
@@ -190,7 +191,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
                 disabled={this.state.auto_dark_mode}
               />
             }
-            label="Enable dark mode"
+            label={LANG.enable_dark_mode}
             labelPlacement="end"
           />
         </FormGroup>
@@ -214,18 +215,18 @@ export default class Settings extends React.Component<{}, SettingsState> {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Logout</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{LANG.logout}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to log out ? You can't use this application again until you're logged in again.
+            {LANG.really_want_to_logout}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.handleClose()} color="primary" autoFocus>
-            Cancel
+            {LANG.cancel}
           </Button>
           <Button onClick={() => SETTINGS.logout(true, true)} color="secondary">
-            Logout
+            {LANG.logout}
           </Button>
         </DialogActions>
       </Dialog>
@@ -239,14 +240,14 @@ export default class Settings extends React.Component<{}, SettingsState> {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" color="inherit">
-              Settings
+              {LANG.settings}
             </Typography>
           </Toolbar>
         </AppBar>
 
         <Container maxWidth="lg" className={classes.root}>
           <Typography variant="h4" className={classes.account_title}>
-            Account
+            {LANG.account}
           </Typography>
           <Container className={classes.account_container}>
             {this.accountSettings()}
@@ -260,7 +261,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
           </Container>
 
           <Typography variant="h4" className={classes.account_title}>
-            Display
+            {LANG.display}
           </Typography>
           <Container className={classes.account_container}>
             {this.displaySettings()}

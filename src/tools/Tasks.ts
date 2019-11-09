@@ -4,6 +4,7 @@ import SETTINGS from './Settings';
 import EventTarget, { defineEventAttribute } from 'event-target-shim';
 import APIHELPER from './ApiHelper';
 import { toast } from '../components/shared/Toaster/Toaster';
+import LANG from '../classes/Lang/Language';
 
 export interface TaskInformation extends TaskBaseMessage {
   percentage: number;
@@ -58,7 +59,7 @@ class TaskManager extends EventTarget {
       });
   
       if (status && task) {
-        toast("Task has been started.", "success");
+        toast(LANG.task_started, "success");
   
         this.subscriptions[task] = {
           done: 0,
@@ -78,7 +79,7 @@ class TaskManager extends EventTarget {
     } catch (e) {
       if (e && Array.isArray(e) && e[1].code === 13) {
         // Too many tasks
-        toast("You hit the task number limit. Wait for a task completion before starting a new one.", "error");
+        toast(LANG.task_rate_limit, "error");
       }
       else {
         throw e;
@@ -121,7 +122,7 @@ class TaskManager extends EventTarget {
 
     await APIHELPER.request(`tasks/destroy/${id}.json`, { method: 'POST' });
 
-    toast("Task has been cancelled.", "info");
+    toast(LANG.task_cancelled, "info");
   }
 
   async stopAll() { 
@@ -133,7 +134,7 @@ class TaskManager extends EventTarget {
 
     await APIHELPER.request('tasks/destroy/all.json', { method: 'POST' });
 
-    toast("All tasks has been stopped.", "info");
+    toast(LANG.tasks_stopped, "info");
   }
 
   /** All tasks running (even non subcribed). Fires APIErrors when failing to get tasks. */
@@ -147,7 +148,7 @@ class TaskManager extends EventTarget {
     this.makeEvent('progression', data);
 
     if (data.percentage >= 100) {
-      toast(`Task #${id} has ended.`, "success");
+      toast(`${LANG.task} #${id} ${LANG.has_ended}.`, "success");
     }
   }
 

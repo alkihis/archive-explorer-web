@@ -13,10 +13,9 @@ import { CenterComponent, BigPreloader, specialJoinJSX } from '../../../tools/Pl
 import EmptyMessage from '../../shared/EmptyMessage/EmptyMessage';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { FullUser } from 'twitter-d';
+import LANG from '../../../classes/Lang/Language';
 
-type DMProps = {
-
-};
+type DMProps = {};
 
 type DMState = {
   /** Selected conversation */
@@ -50,7 +49,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
   }
 
   componentDidMount() {
-    setPageTitle("Direct messages");
+    setPageTitle(LANG.direct_messages);
   }
 
   componentDidUpdate() {
@@ -207,7 +206,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
 
           {this.state.active_tab === 1 && <div>
             <Typography className={classes.conv_title} variant="h6"> 
-              Group conversations
+              {LANG.group_conversations}
             </Typography>
 
             <div className={classes.conv_container}>
@@ -237,7 +236,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
     if (!SETTINGS.archive.is_gdpr) {
       return <NoGDPR 
         icon={MailIcon} 
-        message="Loaded archive does not support direct messages." 
+        message={LANG.archive_no_dms} 
       />;
     }
 
@@ -255,7 +254,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" noWrap>
-              Direct Messages
+              {LANG.direct_messages}
             </Typography>
           </Toolbar>
         </AppBar>
@@ -264,7 +263,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
               <BigPreloader />
 
               <div className={classes.preloader_msg}>
-                Loading user details
+                {LANG.downloading_users}
               </div>
             </CenterComponent>
           </Container> }

@@ -3,6 +3,7 @@ import { Grid, CircularProgress, Typography, CardContent, Button } from "@materi
 import LoginIcon from '@material-ui/icons/Refresh';
 import SETTINGS from "./Settings";
 import { Link } from "react-router-dom";
+import LANG from "../classes/Lang/Language";
 
 export const CenterComponent = (props: any) => {
   return (
@@ -34,7 +35,7 @@ export function internalError(message: string, additionnal_text = "", login_agai
     <div>
       <CardContent>
         <Typography variant="h3" gutterBottom>
-          Error
+          {LANG.error}
         </Typography>
 
         <hr/>
@@ -49,7 +50,7 @@ export function internalError(message: string, additionnal_text = "", login_agai
         {login_again ? (
           <Link to="/login">
             <Button onClick={() => SETTINGS.logout(false)} color="primary" style={{width: '100%', marginTop: '1.5rem'}}>
-              <LoginIcon style={{marginRight: '3%'}} /> Login again
+              <LoginIcon style={{marginRight: '3%'}} /> {LANG.login_again}
             </Button>
           </Link>
         ) : "" }
@@ -64,7 +65,7 @@ export function specialJoinJSX(array: string[], options: {
   class_element?: string, 
   class_joiner?: string 
 } = {}) : JSX.Element {
-  options = Object.assign({ sep: ", ", final_joiner: " and ", class_joiner: "no-bold" }, options);
+  options = Object.assign({ sep: ", ", final_joiner: " " + LANG.and + " ", class_joiner: "no-bold" }, options);
 
   if (array.length < 2) {
     return <span>{array[0]}</span>;

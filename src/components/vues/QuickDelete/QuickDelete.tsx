@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { getMonthText } from '../../../helpers';
 import RoundIcon from '@material-ui/icons/Lens';
 import Tasks from '../../../tools/Tasks';
+import LANG from '../../../classes/Lang/Language';
 
 type QuickDeleteProp = {
   onClose?: (event?: RMouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -44,9 +45,9 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
 
   stepName(index: number) {
     if (index) {
-      return "Start task";
+      return LANG.start_task;
     }
-    return "Select months";
+    return LANG.select_months;
   }
 
   isYearSelected(year: string) {
@@ -134,12 +135,12 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
     return (
       <div className={classes.starter_container}>
         <Typography variant="h6">
-          Delete selected tweet{c > 1 ? "s" : ""} ?
+          {LANG.delete_selected_tweet}{c > 1 ? "s" : ""} ?
         </Typography>
 
         <Typography className={classes.starter_details}>
-          <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} will be <span className="bold">permanently</span> deleted from Twitter. 
-          Do you really want to do that ?
+          <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} {LANG.will_be} <span className="bold">{LANG.permanently}</span> {LANG.deleted_from_twitter}. 
+          {LANG.do_you_really_want_to_do} ?
         </Typography>
       </div>
     );
@@ -166,10 +167,10 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
       <div>
         <div className={classes.buttons_month}>
           <Button color="primary" onClick={() => this.selectAYear(year)}>
-            Select all
+            {LANG.select_all}
           </Button>
           <Button color="secondary" onClick={() => this.unselectAYear(year)}>
-            Unselect all
+            {LANG.unselect_all}
           </Button>
         </div>
 
@@ -219,17 +220,17 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
     return (
       <div className={classes.month_selector_root}>
         <Typography className={classes.count}>
-          <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} selected.
+          <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} {LANG.selected}.
         </Typography>
 
         {this.generateYears()}
 
         <div className={classes.select_all_holder}>
           <Button color="primary" onClick={() => this.selectAll()}>
-            Select all
+            {LANG.select_all}
           </Button>
           <Button color="secondary" onClick={() => this.unselectAll()}>
-            Unselect all
+            {LANG.unselect_all}
           </Button>
         </div>
       </div>
@@ -257,17 +258,17 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
   render() {
     return (
       <div>
-        <DialogTitle>Quick delete</DialogTitle>
+        <DialogTitle>{LANG.quick_delete}</DialogTitle>
         <DialogContent dividers>
           {this.renderStepper()}
         </DialogContent>
         <DialogActions className={classes.actions}>
           <Button onClick={this.props.onClose}>
-            Close
+            {LANG.close}
           </Button>
 
           {this.state.step > 0 ? <Button color="primary" onClick={this.previousStep}>
-            Previous
+            {LANG.previous}
           </Button> : <div />}
 
           {this.state.step === 0 && <Button 
@@ -276,7 +277,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
             onClick={this.nextStep}
             className={classes.to_end}
           >
-            Next
+            {LANG.next}
           </Button>}
 
           {this.state.step > 0 && <Button 
@@ -284,7 +285,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
             onClick={this.startErase} 
             className={classes.to_end}
           >
-            Erase tweets
+            {LANG.erase_tweets}
           </Button>}
         </DialogActions>
       </div>

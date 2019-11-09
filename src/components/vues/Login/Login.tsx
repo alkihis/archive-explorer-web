@@ -16,6 +16,7 @@ import { RequestTokenRequest } from '../../../tools/interfaces';
 import { setPageTitle } from '../../../helpers';
 import classes from './Login.module.scss';
 import { IMG_PREFIX, IMG_LIST } from '../../../const';
+import LANG from '../../../classes/Lang/Language';
 
 const classes_a = classes;
 const IMG_CHOOSEN = IMG_PREFIX + IMG_LIST[Math.floor(Math.random()*IMG_LIST.length)];
@@ -100,9 +101,7 @@ export default function Login() {
           </Typography>
 
           <Typography component="h3" variant="h6" className={classes_a.catch_phrase}>
-            We need a tiny access to your Twitter account to allow us starting tweet deletions,
-            access your content and your profile details. 
-            You can revoke access when you want.
+            {LANG.tiny_access_text}
           </Typography>
 
           <div className={classes.form}>
@@ -112,9 +111,8 @@ export default function Login() {
         
             <Box mt={5}>
               <Typography variant="body2" color="textSecondary" align="center" className={classes_a.legal_text}>
-                Using <span className="bold">Sign in with Twitter</span>, you allow
-                <span className="bold"> Archive Explorer</span> to store your Twitter credentials
-                and your login details like current date or IP address. 
+                {LANG.using} <span className="bold">{LANG.sign_in_with_twitter}</span>, {LANG.you_allow}
+                <span className="bold"> Archive Explorer</span> {LANG.login_details_store_end}. 
               </Typography>
             </Box>
           </div>
@@ -166,7 +164,6 @@ const LoginButton: React.FC<{classes: any}> = (props: { classes: any }) => {
         <CircularProgress className={props.classes.progress} />
         : (error ? <div>
             <Fab
-              aria-label="save"
               color="primary"
               className={error ? props.classes.buttonError : props.classes.buttonSuccess}
               onClick={handleButtonClick}
@@ -174,14 +171,14 @@ const LoginButton: React.FC<{classes: any}> = (props: { classes: any }) => {
               <Error />
             </Fab>
             <p>
-              An error occured.
+              {LANG.error_occured}.
             </p>
           </div>
           : "")
       }
       {twitter_button ? <div>
         <a href={twitter_button} className={classes_a.twitter_link}>
-          <img src={sign_in_twitter} alt="Sign in with Twitter" className={props.classes.twitterImg + " " + classes_a.twitter_img} />
+          <img src={sign_in_twitter} alt={LANG.sign_in_with_twitter} className={props.classes.twitterImg + " " + classes_a.twitter_img} />
         </a>
       </div> : ""}
     </React.Fragment>
