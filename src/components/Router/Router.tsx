@@ -15,7 +15,8 @@ import DirectMessages from "../vues/DirectMessages/DirectMessages";
 import More from "../vues/More/More";
 import { StaticContext } from "react-router";
 import StaticPresentation from "../StaticPresentation/StaticPresentation";
-import LANG from "../../classes/Lang/Language";
+import LANG, { AvailableLanguages } from "../../classes/Lang/Language";
+import LanguageChanger from "../LanguageChanger/LanguageChanger";
 
 type RouterState = { 
   /** True if login modal should be shown.
@@ -176,6 +177,13 @@ class AppRouter extends React.Component<{}, RouterState> {
             <Route path="/dms/" component={DirectMessages} />  
             <Route path="/more/" component={More} />  
             <Route path="/" exact component={StaticPresentation} />
+
+            {/* Langs autochange */}
+            {Object.keys(AvailableLanguages)
+              .map(lang => <Route key={lang} path={`/${lang}/`} component={LanguageChanger} />)
+            }
+
+            {/* Not found page */}
             <Route component={NotFound} />
           </Switch>
           <RouterWrapper />

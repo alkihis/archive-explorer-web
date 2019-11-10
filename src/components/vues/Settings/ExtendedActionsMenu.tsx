@@ -145,9 +145,9 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
             {LANG.last_use_on} <span className="bold">{dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", new Date(e.last_use))}</span>.
           </Typography>
 
-          <Button color="secondary" onClick={() => this.revokeToken(e.token)} className={classes.revoke_btn}>
+          {!("current" in e) && <Button color="secondary" onClick={() => this.revokeToken(e.token)} className={classes.revoke_btn}>
             {LANG.revoke}
-          </Button>
+          </Button>}
         </ExpansionPanelDetails>
       </ExpansionPanel>
     ));
