@@ -95,9 +95,13 @@ class AESettings {
       this.allow_self = localStorage.getItem('allow_self') === "true";
     }
     if (localStorage.getItem('lang')) {
-      try {
-        this.lang = localStorage.getItem('lang') as AuthorizedLangs;
-      } catch (e) {}
+      const l = localStorage.getItem('lang');
+      if (isAuthorizedLang(l)) {
+        this._lang = l;
+      }
+      else {
+        localStorage.removeItem('lang');
+      }
     }
     if (localStorage.getItem('media_filter')) {
       this.media_filter = localStorage.getItem('media_filter') as TweetMediaFilters;
@@ -144,8 +148,14 @@ class AESettings {
       throw new Error("Language " + v + " is not valid");
     }
 
+    const old = this._lang;
+
     this._lang = v;
     localStorage.setItem('lang', v);
+
+    if (old !== v) {
+      window.dispatchEvent(new CustomEvent('root.refresh'));
+    }
   }
 
   get dark_mode() {

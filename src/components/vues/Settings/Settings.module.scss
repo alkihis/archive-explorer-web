@@ -7,8 +7,22 @@
   color: lighten($color: #000000, $amount: 70);
 }
 
+.formControl {
+  margin: 1rem 0 !important;
+  min-width: 200px !important;
+  display: block !important
+}
+
+.select {
+  min-width: 200px !important;
+}
+
 .account_container {
   margin-top: 1rem;
+}
+.display_container {
+  margin-top: 1rem;
+  margin-bottom: 100px;
 }
 
 .root {
@@ -55,6 +69,7 @@ $avatar_size: 60px;
   color: lighten($color: #000000, $amount: 25);
   font-style: italic;
   text-align: right;
+  position: relative;
 
   :global .dark :local & {
     color: lighten($color: #000000, $amount: 75);

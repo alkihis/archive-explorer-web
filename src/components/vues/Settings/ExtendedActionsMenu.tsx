@@ -207,7 +207,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
             {LANG.delete_account_1_text}
           </DialogContentText>
           <DialogContentText>
-            {LANG.delete_account_2_text} <span className="bold">{LANG.sign_in_with_twitter}</span> {LANG.button_delete_account}.
+            {LANG.delete_account_2_text} <span className="bold">{LANG.sign_in_with_twitter}</span>{LANG.button_delete_account}.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -36,10 +36,10 @@ export default {
   server_unavailable: "Serveur indisponible",
   server_unavailable_text: `Archive Explorer ne peut pas dialoguer avec son côté serveur.
   Vous êtes peut-être hors ligne, ou le serveur est temporairement indisponible.`,
-  try_again_later: "Ré-essayez ultérieurement",
+  try_again_later: "Réessayez ultérieurement",
   reload: "Recharger",
   login_in: "Se connecter",
-  archive_not_loaded: "Aucune archive n'est chargée",
+  archive_not_loaded: "Aucune archive chargée",
   load_valid_in: "Veuillez charger une archive valide sur la",
   load_valid_gdpr_in: "Veuillez charger une archive RGPD valide sur la",
   archive_page: "page Archive",
@@ -83,6 +83,7 @@ export default {
   settings: 'Paramètres',
   select_all: 'Tout sélectionner',
   unselect_all: 'Tout desélectionner',
+  selected_without_s: 'sélectionné',
   selected: 'sélectionnés',
   yes: 'Oui',
   no: 'Non',
@@ -108,7 +109,7 @@ export default {
   clean_your_account: "Nettoyez votre compte",
   clean_your_account_p1: `Le vous de 13 ans a posté des tweets gênants dont vous ne vous souvenez même pas ?
   Vous avez utilisé une block-list bien trop grande pour vous et vous avez envie d'annuler ça ?
-  Archive Explorer est un outil conçu pour supprimer vos vieuw tweets, par mois, année ou même via une recherche. 
+  Archive Explorer est un outil conçu pour supprimer vos vieux tweets, par mois, année ou même via une recherche. 
   Vous serez également capable de supprimer les utilisateurs blockés ou mis en sourdine de votre compte !
   Cet outil a déjà permis la suppression de`,
   tweets: "tweets",
@@ -129,11 +130,11 @@ export default {
   Deux clics, et c'est fini.`,
   background_tasks: "Tâches en arrière-plan",
   background_tasks_p1: `Avec un nombre considérable de tweets, favoris ou mutes, leur suppression peut être longue.
-  Sans installer aucun programme, ou laissez un ordinateur allumé, supprimez avec des tâches lancées en
+  Sans installer aucun programme, ou laisser un ordinateur allumé, supprimez avec des tâches lancées en
   arrière-plan. Vous pouvez les annuler à tout moment.`,
   tweets_of_the_day: "Tweets du jour",
-  tweets_of_the_day_p1: `Juste pour le fun, ou par nostlagie, trouvez vos tweets postés le même jour,
-  les années précédentes. Vous pourrez être supris•e !`,
+  tweets_of_the_day_p1: `Juste pour le fun, ou par nostalgie, trouvez vos tweets postés le même jour,
+  les années précédentes. Vous pourrez être surpris•e !`,
   twitter_at_history: "Historique de vos @ Twitter ",
   twitter_at_history_p1: `En tant qu'utilisateur chevronné de Twitter, vous êtes vous déjà demandé
   quand vous avez changé votre @ Twitter pour la dernière fois ?
@@ -145,6 +146,9 @@ export default {
   Vous avez un doute ? Le code est`,
   open_source: "open-source",
   ae_made_by: "Archive Explorer est un outil open-source réalisé par",
+  server: 'Serveur',
+  client: 'Client',
+  archive_reader: 'Lecteur d\'archive',
   /** END PRESENTATION PAGE */
 
   /** BEGIN ARCHIVE CMPT */
@@ -158,13 +162,13 @@ export default {
   lightening_archive: "L'archive est un peu lourde, allègement en cours...",
   load_an_archive: "Charger une archive",
   no_archive_loaded: "Aucune archive n'est chargée.",
-  load_or_drag_drop: `Chargez une archive en utilisant le bouton ci-dessous, ou déposez une archive ici.`,
-  archive_bad_format: "L'archive ne peut pas être chargée. Chargez une nouvelle archive dans le format requis.",
+  load_or_drag_drop: `Chargez une archive en utilisant le bouton ci-dessous, ou déposez-en une ici.`,
+  archive_bad_format: "L'archive ne peut pas être chargée. Chargez-en une nouvelle dans le format requis.",
   archive_created: "Archive créée",
   on_date: "le",
   by_date: "par",
   account: "Compte",
-  created_at: "crée le",
+  created_at: "créé le",
   direct_messages_in: "messages privés dans",
   dont_own_archive: "Vous n'êtes pas le créateur de cette archive, vous ne pourrez pas en supprimer les tweets.",
   credentials_expired_cant_deleted: "Les clés d'accès Twitter ont expiré, vous ne pourrez pas supprimer de tweets.",
@@ -195,12 +199,12 @@ export default {
 
   /** BEGIN DMConversation CMPT */
   user_not_resolved_end: "ne peut pas être résolu, il sera ignoré",
-  back_to_conversations: "Retour aux conversations",
+  back_to_conversations: "Liste des conversations",
   full_conversation: "Conversation entière",
   messages_of_the_day: "Messages du jour",
   find_dms: "Trouver des messages",
-  select_a_month: "Choisir un mois",
-  choose_month_messages: "Sélectionnez un mois pour voir vos messages privés.",
+  select_a_month: "Sélectionnez un mois",
+  choose_month_messages: "Choisissez un mois pour voir vos messages privés.",
   no_message: "Aucun message",
   any_message_here: "Vous n'avez aucun message ici",
   all_messages: "Tous les messages",
@@ -230,7 +234,7 @@ export default {
 
   /** BEGIN QuickDelete CMPT */
   start_task: "Lancer la tâche",
-  select_months: "Choisir des mois",
+  select_months: "Sélection de mois",
   delete_selected_tweet: "Supprimer les tweets sélectionnés",
   will_be: "vont être",
   permanently: "définitivement",
@@ -246,7 +250,7 @@ export default {
   unable_delete_account: "Impossible de supprimer votre compte. Vérifiez votre connexion à Internet.",
   unable_revoke_token: "Impossible de révoquer cette clé. Réessayez ultérieurement.",
   current: 'actuelle',
-  session_created_on: "Session crée le",
+  session_created_on: "Session créée le",
   with_ip_address: "avec l'adresse IP",
   last_use_on: "Dernière utilisation le",
   revoke: "Révoquer",
@@ -265,13 +269,14 @@ export default {
 
   download_from_twitter_checkbox: "Télécharger les tweets depuis Twitter (donne des informations plus précises)",
   show_profile_pictures: "Afficher les images de profil",
-  account_created_on: "Compte crée le",
-  thats_all_infos: "C'est toutes les informations que nous avons sur vous. Archive Explorer ne stocke aucune autre donnée.",
+  account_created_on: "Compte créé le",
+  thats_all_infos: "Ce sont toutes les informations que nous avons sur vous. Archive Explorer ne stocke aucune autre donnée.",
   twitter_credentials_expired: "Les clés d'accès à Twitter ont expiré. Veuillez vous reconnecter",
   automatic_dark_mode: "Mode nuit automatique",
   enable_dark_mode: "Activer le mode nuit",
   really_want_to_logout: "Voulez-vous vous déconnecter ? Vous ne pourrez plus utiliser cette application tant que vous ne vous serez pas reconnecté.",
   display: "Affichage",
+  language: "Langue",
   /** END Settings-ExtendedActionsMenu CMPT */
 
   /** BEGIN Task CMPT */
@@ -279,9 +284,9 @@ export default {
   favorite_deletion: "Suppression de favoris",
   block_deletion: "Suppression de blocks",
   mute_deletion: "Suppression de mutes",
-  completed: "terminé(e)s",
-  deleted: "supprimé(e)s",
-  failed: "échoué(e)s",
+  completed: "terminé",
+  deleted: "supprimés",
+  failed: "échoués",
   remaining: "restants",
   subscribe: "S'abonner",
   unsubscribe: "Se désabonner",
@@ -308,82 +313,85 @@ export default {
   tweets_p1: "Cherchez les tweets que vous souhaitez directement via votre archive. La recherche se fait instantanément, dans tous vos tweets.",
   direct_messages_p1: `Quand une conversation est sélectionnée, vous pouvez trouver des messages via leur contenu. Lorsque vous avez
   trouvé celui que vous souhaitez, un simple clic sur celui-ci vous montre les messages suivant et précédant dans la conversation.`,
-  keywords_upper: "Mots clé",
-  keywords_p1: "Chaque recherche dans les tweets / messages privées peut être améliorée en ajoutant des",
+  keywords_upper: "Mots clés",
+  keywords_p1: "Chaque recherche dans les tweets / messages privés peut être améliorée en ajoutant des",
   keywords: "mots clés",
-  delete_tweets_more: "Supprimer des tweets, des favories et plus encore",
-
-  // TODO
-  delete_tweets_more_p1: "Archive Explorer let you delete a batch of tweets, or other informations linked to your account.",
-  delete_tweets_more_p2: "Please note that",
-  delete_tweets_more_p3: "every deletion is made on your Twitter account, and is irremediable",
-  delete_tweets_more_p4: "You will not be able to get your tweets, favorites or anything else back.",
-  tweets_more_p1: `For tweets, you can select tweets individually via Tweet Explorer (Explore tab), or choose from multiple months
-  and years with Quick Delete, available in the Archive tab.`,
-  favs_mutes_blocks: "Favorites, mutes and blocks",
-  favs_mutes_blocks_p1: `Favorites, mutes and blocks can be deleted in this tab. This kind of removal is "all or nothing", you can't 
-  individually select which favorite or block you will remove.`,
+  delete_tweets_more: "Supprimer des tweets, des favoris et plus encore",
+  delete_tweets_more_p1: "Archive Explorer vous aide à supprimer des tweets, ou d'autres informations liées à votre compte.",
+  delete_tweets_more_p2: "Veuillez noter que",
+  delete_tweets_more_p3: "chaque suppression est réalisée sur votre compte Twitter, et est irréversible.",
+  delete_tweets_more_p4: "Vous ne serez pas capable de récupérer vos tweets, favoris ou autres informations supprimées",
+  tweets_more_p1: `Pour les tweets, vous pouvez les sélectionner individuellement dans l'explorateur de tweets (onglet Explorer), 
+  ou choisir depuis plusieurs mois ou années dans la Suppression rapide, accessible dans l'onglet Archive.`,
+  favs_mutes_blocks: "Favoris, mutes et blocks",
+  favs_mutes_blocks_p1: `Les favoris, mutes et blocks peuvent être supprimés dans cet onglet. Ce type de suppression est "tout ou rien", vous ne pouvez pas
+  sélectionner individuellement quel favori ou block vous allez supprimer.`,
   limitations: "Limitations",
-  retweet_data: "Retweet data",
-  retweet_data_p1: `When you browse your tweets, you may see strange retweet informations: 
-  Profile picture may be yours, or Twitter name isn't good. 
-  In fact, Twitter archives contains a bad retweet data. Retweets are stored in your name,
-  and the original retweet isn't present. `,
-  retweet_data_p2: `Archive Explorer tries to enhance at their maximum retweet data in order to make your experience
-  as good as possible, but it can't do miracles.`,
-  truncated_tweets: "Truncated tweets",
-  truncated_tweets_p1: `Tweets that contains more than 140 characters are truncated in archives. It may be a bug
-  (see`,
-  this_tweet: "this tweet",
-  truncated_tweets_p2: `or not, Twitter hasn't given an answer yet.`,
-  truncated_tweets_p3: `You can choose to download tweets from Twitter instead from the archive in Settings to have full text,
-  but the tweet display will be considerably slower (this feature is very resource-demanding, please not abuse of it !).`,
-  tasks_limit: "Tasks limit",
-  tasks_limit_p1: `Deletion tasks are very resource-demanding for server and are limited for each user.
-  You are able to start`,
-  tasks_limit_p2: `3 tasks`,
-  tasks_limit_p3: `in parallel.`,
-  tasks_limit_p4: `If you want to start another task, please wait for
-  other tasks to complete or cancel an existing task.`,
-  archive_size: "Archive size",
-  archive_size_p1: `Due to a technical limitation, archive is fully loaded into your navigator's memory.
-  This could be very inefficient for mobiles devices or small computers.`,
-  archive_size_p2: `In very specific cases, if you have too many medias in your direct messages, load can fail. You can delete the folder`,
-  archive_size_p3: "in your archive to lighten it.",
-  classic_not_supported: `Classic archive is not supported.
-  You should have a GDPR archive to access many options here.
-  Learn how to download a GDPR archive with the help below.`,
-  archive_not_loaded_p1: `Here, you will have access to many options, like removing your blocks, cleaning your favorites and more.
-  To start, learn how to download a archive with the help below.`,
+  retweet_data: "Données des retweets",
+  retweet_data_p1: `Lorsque vous naviguez dans vos tweets, vous pouvez apercevoir que les retweets contiennent des données étranges :
+  L'image de profil peut être la vôtre, ou le TN n'est pas bon.
+  En réalité, les archives Twitter contiennent des données partielles. Les retweets sont stockés en votre nom,
+  et le tweet retweeté original n'est pas présent.`,
+  retweet_data_p2: `Archive Explorer essaie d'étendre au maximum les données fournies, pour rendre votre expérience la plus agréable possible,
+  mais il est impossible de faire des miracles.`,
+  truncated_tweets: "Tweets tronqués",
+  truncated_tweets_p1: `Les tweets contenant plus de 140 caractères peuvent être tronqués. Ceci est peut être un bug 
+  (voir`,
+  this_tweet: "ce tweet",
+  truncated_tweets_p2: `ou non, Twitter n'a fourni aucun élément de réponse.`,
+  truncated_tweets_p3: `Vous pouvez activer une option permettant de télécharger les tweets depuis Twitter plutôt
+  que depuis l'archive dans les Paramètres, afin d'avoir le texte complet.
+  Cependant, l'affichage des tweets sera considérablement plus lent.`,
+  tasks_limit: "Limites de tâches",
+  tasks_limit_p1: `Les tâches de suppression sont très demandeuses de ressources pour le serveur et sont,
+  par conséquent, limitées pour chaque utilisateur. Vous êtes capable de démarrer`,
+  tasks_limit_p2: `3 tâches`,
+  tasks_limit_p3: `en simultané.`,
+  tasks_limit_p4: `Si vous souhaitez lancer une autre tâche, merci d'attendre la fin de vos suppressions ou en annulez en une.`,
+  archive_size: "Taille de l'archive",
+  archive_size_p1: `En raison d'une limitation technique, l'archive est entièrement chargée dans
+  la mémoire vive de notre navigateur web. Ceci peut être très peu optimisé pour les appareils mobiles ou les petites configurations.`,
+  archive_size_p2: `Dans certains cas précis, si vous avez trop de photos dans vos messages privés, le chargement de l'archive peut échouer. Vous pouvez supprimer le dossier`,
+  archive_size_p3: "dans votre archive pour l'alléger.",
+  classic_not_supported: `L'archive classique n'est pas supportée.
+  Vous devez avoir une archive RGPD afin d'accéder aux options disponibles ici.
+  Apprenez à télécharger une archive RGPD avec l'aide ci-dessous.`,
+  archive_not_loaded_p1: `Ici, vous avez accès à de nombreuses options supplémentaires, comme la suppression
+  des blocks, des favoris et encore plus.
+  Pour commencer, apprenez à télécharger une archive Twitter avec l'aide ci-dessous.`,
   more: "Plus",
-  delete_all_your: "Delete all your",
-  permanently_remove_your: "This action will permanently remove all your",
-  from_twitter_account: "from your Twitter account.",
-  are_you_sure_you_want: "Are you sure you want to do this",
-  favorites: "Favorites",
-  you_have: "You have",
-  tweets_in_your_favorites: "tweets into your favorites",
-  delete_all_favorites: "Delete all my favorited tweets",
+  delete_all_your: "Supprimer tous vos",
+  permanently_remove_your: "Cette action va supprimer définitivement tous vos",
+  from_twitter_account: "de votre compte Twitter",
+  are_you_sure_you_want: "Êtes-vous sûr•e que vous souhaitez faire ceci",
+  favorites: "Favoris",
+  you_have: "Vous avez",
+  tweets_in_your_favorites: "tweets dans vos favoris",
+  delete_all_favorites: "Supprimer tous vos tweets mis en favori",
   blocks: "Blocks",
-  you_have_blocked: "You have blocked",
-  users: "users",
-  delete_all_blocked: "Delete all my blocked accounts",
+  you_have_blocked: "Vous avez bloqué",
+  users: "utilisateurs",
+  delete_all_blocked: "Supprimer tous vos comptes bloqués",
   mutes: "Mutes",
-  you_have_muted: "You have muted",
-  delete_all_muted: "Delete all my muted accounts",
-  screen_name_history: "Screen name history",
-  twitter_at: "Twitter @",
-  until: "Until",
-  keyword: "Keyword",
-  content: "Content",
+  you_have_muted: "Vous avez mis en sourdine",
+  delete_all_muted: "Supprimer tous les comptes mis en sourdine (mutes)",
+  screen_name_history: "Historique des noms",
+  twitter_at: "@ Twitter",
+  until: "Jusqu'à",
+  keyword: "Mot clé",
+  content: "Contenu",
   description: "Description",
-  example: "Example",
-  limit_search_to_month: "Limit search to currently selected month.",
-  must: "must",
-  begin_by: "begin by",
-  find_tweets_since: "Find tweets/DMs made since a specified date.",
-  find_tweets_until: "Find tweets/DMs made before a specified date.",
-  find_tweets_from: "Find tweets/DMs sent by specified user.",
+  example: "Exemple",
+  limit_search_to_month: "Limite la recherche au mois sélectionné.",
+  the_search: "La recherche",
+  must: "doit",
+  begin_by: "commencer par",
+  find_tweets_since: "Cherche les tweets/messages postés après une date.",
+  find_tweets_until: "Cherche les tweets/messages postés avant une date.",
+  find_tweets_from: "Cherche les tweets/messages postés par un utilisateur.",
+  favorites_modal: "tweets mis en favori",
+  blocked_modal: "comptes bloqués",
+  muted_modal: "comptes mis en sourdine",
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

@@ -279,7 +279,7 @@ const DeleteModal: React.FC<{
       <DialogTitle>{LANG.delete_all_your} {props.type} ?</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {LANG.permanently_remove_your} {props.type} {LANG.from_twitter_account}.
+          {LANG.permanently_remove_your} {props.type} {LANG.from_twitter_account}.{" "}
           {LANG.are_you_sure_you_want} ?
         </DialogContentText>
       </DialogContent>
@@ -333,7 +333,7 @@ function Favorites() {
       </Button>
 
       <DeleteModal 
-        type="favorites"
+        type={LANG.favorites_modal}
         open={open}
         onClose={handleClose}
         onValidate={handleValidate}
@@ -381,7 +381,7 @@ function Blocks() {
       </Button>
 
       <DeleteModal 
-        type="blocked accounts"
+        type={LANG.blocked_modal}
         open={open}
         onClose={handleClose}
         onValidate={handleValidate}
@@ -429,7 +429,7 @@ function Mutes() {
       </Button>
 
       <DeleteModal 
-        type="muted accounts"
+        type={LANG.muted_modal}
         open={open}
         onClose={handleClose}
         onValidate={handleValidate}
@@ -505,8 +505,8 @@ function Keywords() {
                 -
               </TableCell>
               <TableCell style={{minWidth: 120}} align="right">
-                {LANG.limit_search_to_month} 
-                {LANG.search} <span className="bold">must</span> begin by <span className="italic">:current</span>.
+                {LANG.limit_search_to_month}{" "}
+                {LANG.the_search} <span className="bold">{LANG.must}</span> {LANG.begin_by} <span className="italic">:current</span>.
               </TableCell>
               <TableCell style={{minWidth: 80}} align="right" className="italic">
                 :current hello !

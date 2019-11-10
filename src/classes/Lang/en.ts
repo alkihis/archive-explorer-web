@@ -84,6 +84,7 @@ export default {
   select_all: 'Select all',
   unselect_all: 'Unselect all',
   selected: 'selected',
+  selected_without_s: 'selected',
   yes: 'Yes',
   no: 'No',
   task_start_error: "Unable to start task. Check your network.",
@@ -145,6 +146,9 @@ export default {
   Have some doubt ? Code is`,
   open_source: "open-source",
   ae_made_by: "Archive Explorer is an open-source tool made by",
+  server: 'Server',
+  client: 'Client',
+  archive_reader: 'Archive reader',
   /** END PRESENTATION PAGE */
 
   /** BEGIN ARCHIVE CMPT */
@@ -256,7 +260,7 @@ export default {
   delete_account_1_text: `You will be disconnect from every device you've used to explore archives.
   Are you sure you want to continue ?`,
   delete_account_2_text: "You can re-create an account later using the",
-  button_delete_account: "button", // french: no, in d_a_2
+  button_delete_account: " button", // french: no, in d_a_2
   confirm_action: "Please confirm your action",
   will_cancel_running_tasks: "If you currently have running tasks, they will be cancelled",
   delete_account: "Delete account",
@@ -273,6 +277,7 @@ export default {
   enable_dark_mode: "Enable dark mode",
   really_want_to_logout: "Do you want to log out ? You can't use this application again until you're logged in again.",
   display: "Display",
+  language: "Language",
   /** END Settings-ExtendedActionsMenu CMPT */
 
   /** BEGIN Task CMPT */
@@ -316,8 +321,8 @@ export default {
   delete_tweets_more: "Delete tweets, favorites and more",
   delete_tweets_more_p1: "Archive Explorer let you delete a batch of tweets, or other information linked to your account.",
   delete_tweets_more_p2: "Please note that",
-  delete_tweets_more_p3: "every deletion is made on your Twitter account, and is irremediable",
-  delete_tweets_more_p4: "You will not be able to get your tweets, favorites or anything else back.",
+  delete_tweets_more_p3: "every deletion is made on your Twitter account, and is irremediable.",
+  delete_tweets_more_p4: "You will not be able to get your tweets, favorites or anything else back",
   tweets_more_p1: `For tweets, you can select tweets individually via Tweet Explorer (Explore tab), or choose from multiple months
   and years with Quick Delete, available in the Archive tab.`,
   favs_mutes_blocks: "Favorites, mutes and blocks",
@@ -358,7 +363,7 @@ export default {
   more: "More",
   delete_all_your: "Delete all your",
   permanently_remove_your: "This action will permanently remove all your",
-  from_twitter_account: "from your Twitter account.",
+  from_twitter_account: "from your Twitter account",
   are_you_sure_you_want: "Are you sure you want to do this",
   favorites: "Favorites",
   you_have: "You have",
@@ -379,11 +384,15 @@ export default {
   description: "Description",
   example: "Example",
   limit_search_to_month: "Limit search to currently selected month.",
+  the_search: "Search",
   must: "must",
   begin_by: "begin by",
   find_tweets_since: "Find tweets/DMs made since a specified date.",
   find_tweets_until: "Find tweets/DMs made before a specified date.",
   find_tweets_from: "Find tweets/DMs sent by specified user.",
+  favorites_modal: "favorites",
+  blocked_modal: "blocked accounts",
+  muted_modal: "muted accounts",
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

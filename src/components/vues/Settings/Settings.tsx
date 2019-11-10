@@ -1,12 +1,12 @@
 import React from 'react';
 import classes from './Settings.module.scss';
 import { setPageTitle, dateFormatter, toggleDarkMode } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar, InputLabel, Select, MenuItem } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
 import ExtendedActionsMenu from './ExtendedActionsMenu';
 import { VERSION } from '../../../const';
-import LANG from '../../../classes/Lang/Language';
+import LANG, { AvailableLanguages, AuthorizedLangs } from '../../../classes/Lang/Language';
 
 type SettingsState = {
   download: boolean;
@@ -14,6 +14,7 @@ type SettingsState = {
   pp: boolean;
   dark_mode: boolean;
   auto_dark_mode: boolean;
+  lang: AuthorizedLangs;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -23,6 +24,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
     pp: SETTINGS.pp,
     dark_mode: SETTINGS.dark_mode,
     auto_dark_mode: SETTINGS.is_auto_dark_mode,
+    lang: SETTINGS.lang,
   };
 
   changeDarkState(v: boolean, refresh_settings = true) {
@@ -76,6 +78,16 @@ export default class Settings extends React.Component<{}, SettingsState> {
 
   handleDarkModeChange = (_: CustomEvent<boolean>) => {
     this.changeAutoDarkState(SETTINGS.is_auto_dark_mode, false);
+  };
+
+  handleLanguageChange = (evt: React.ChangeEvent<{
+    value: unknown;
+  }>) => {
+    const val = evt.target.value;
+    this.setState({
+      lang: val as AuthorizedLangs
+    });
+    SETTINGS.lang = val as AuthorizedLangs;
   };
 
   componentDidMount() {
@@ -168,6 +180,20 @@ export default class Settings extends React.Component<{}, SettingsState> {
     return (
       <div>
         <FormGroup>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="lang-select">{LANG.language}</InputLabel>
+            <Select
+              labelId="lang-select"
+              value={this.state.lang}
+              onChange={this.handleLanguageChange}
+              className={classes.select}
+            >
+              {Object.entries(AvailableLanguages).map(lang => (
+                <MenuItem key={lang[0]} value={lang[0]}>{lang[1]}</MenuItem>  
+              ))}
+            </Select>
+          </FormControl>
+
           <FormControlLabel
             value="auto_dark_mode"
             control={
@@ -263,7 +289,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <Typography variant="h4" className={classes.account_title}>
             {LANG.display}
           </Typography>
-          <Container className={classes.account_container}>
+          <Container className={classes.display_container}>
             {this.displaySettings()}
           </Container>
 

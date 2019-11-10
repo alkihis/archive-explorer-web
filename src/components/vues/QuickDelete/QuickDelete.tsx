@@ -140,7 +140,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
 
         <Typography className={classes.starter_details}>
           <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} {LANG.will_be} <span className="bold">{LANG.permanently}</span> {LANG.deleted_from_twitter}. 
-          {LANG.do_you_really_want_to_do} ?
+          {" "}{LANG.do_you_really_want_to_do} ?
         </Typography>
       </div>
     );
@@ -220,7 +220,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
     return (
       <div className={classes.month_selector_root}>
         <Typography className={classes.count}>
-          <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} {LANG.selected}.
+          <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} {LANG.selected_without_s}{c > 1 ? "s" : ""}.
         </Typography>
 
         {this.generateYears()}

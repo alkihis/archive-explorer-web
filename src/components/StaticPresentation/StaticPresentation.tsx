@@ -191,11 +191,11 @@ function Copyright() {
       </Typography>
 
       <div className="github-links">
-        <GithubLogo url="https://github.com/alkihis/archive-explorer-node" text="Server" />
+        <GithubLogo url="https://github.com/alkihis/archive-explorer-node" text={LANG.server} />
 
-        <GithubLogo url="https://github.com/alkihis/archive-explorer-web" text="Client" />
+        <GithubLogo url="https://github.com/alkihis/archive-explorer-web" text={LANG.client} />
 
-        <GithubLogo url="https://github.com/alkihis/twitter-archive-reader" text="Archive reader" />
+        <GithubLogo url="https://github.com/alkihis/twitter-archive-reader" text={LANG.archive_reader} />
       </div>
     </div>
   );

@@ -44,12 +44,15 @@ class App extends React.Component<{}, { theme: any }> {
 
   componentDidMount() {
     // @ts-ignore
-    window.addEventListener('darkmodechange', this.handleToggle);
+    window.addEventListener('darkmodechange', this.handleToggle); 
+    window.addEventListener('root.refresh', this.handleLangChange);
+    window.DEBUG.root = this;
   }
 
   componentWillUnmount() {
     // @ts-ignore
     window.removeEventListener('darkmodechange', this.handleToggle);
+    window.removeEventListener('root.refresh', this.handleLangChange);
   }
 
   handleToggle = (event: CustomEvent<boolean>) => {
@@ -62,6 +65,13 @@ class App extends React.Component<{}, { theme: any }> {
       document.body.classList.remove('dark');
       this.setState({ theme });
     }
+  };
+  
+  handleLangChange = () => {
+    const lang = SETTINGS.lang;
+    
+    document.documentElement.lang = lang;
+    this.forceUpdate();
   };
 
   render() {  

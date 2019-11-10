@@ -151,7 +151,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
       <Card key={conv.id} className={classes.card_root} onClick={oncardclick}>
         <CardContent>
           <div className={classes.group_conv_container}>
-            <div className={classes.group_conv}><span className="no-bold">Conversation with</span> {names}</div>
+            <div className={classes.group_conv}><span className="no-bold">{LANG.conversation_with}</span> {names}</div>
             <div className={classes.group_conv_screen_name}>{s_n}</div>
           </div>
 
@@ -189,7 +189,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
         <AppBar position="static" className={classes.tabs}>
           <Tabs value={this.state.active_tab} onChange={this.changeActiveTab} centered>
             <Tab label="Conversations" disabled={singles.length === 0} />
-            <Tab label="Group conversations" disabled={groups.length === 0} />
+            <Tab label={LANG.group_conversations} disabled={groups.length === 0} />
           </Tabs>
         </AppBar>
 

@@ -111,6 +111,12 @@
     grid-template-columns: max-content max-content;
     justify-content: center;
   }
+
+  @include min_mobile {
+    &:lang(fr) {
+      grid-template-columns: max-content;
+    }
+  }
 }
 
 .modal_unselect_all_color {

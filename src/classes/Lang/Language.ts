@@ -12,6 +12,11 @@ export function isAuthorizedLang(lang: string) : lang is AuthorizedLangs {
   return lang in LanguageDatabase;
 }
 
+export const AvailableLanguages = {
+  fr: "Français",
+  en: "English",
+};
+
 interface Locale {
   [message: string]: string | undefined; 
 }
