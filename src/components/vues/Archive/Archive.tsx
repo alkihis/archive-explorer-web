@@ -458,8 +458,6 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       return;
     }
 
-    console.log((e as DragEvent));
-
     if (!this.state.in_load && !this.state.in_drag)
       this.setState({
         in_drag: true
