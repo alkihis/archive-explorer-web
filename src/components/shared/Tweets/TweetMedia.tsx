@@ -4,6 +4,7 @@ import { PartialTweetEntity, MediaGDPREntity } from 'twitter-archive-reader';
 import { Dialog } from '@material-ui/core';
 // @ts-ignore
 import { Lightbox as ModalImage } from "react-modal-image";
+import LANG from '../../../classes/Lang/Language';
 
 type TweetMediaProp = {
   entities: PartialTweetEntity | { media?: MediaGDPREntity[] }
@@ -102,7 +103,7 @@ export default class TweetMedia extends React.Component<TweetMediaProp, TweetMed
         <ModalImage 
           medium={image_url}
           large={image_url}
-          alt="Full image"
+          alt={LANG.full_image}
           onClose={() => this.setState({ image_full: null })}
         />
       );

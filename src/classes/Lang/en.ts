@@ -149,6 +149,8 @@ export default {
   server: 'Server',
   client: 'Client',
   archive_reader: 'Archive reader',
+  help_with_donate: "You find this website useful ? You can help me with your ❤️ by",
+  little: "donating a little",
   /** END PRESENTATION PAGE */
 
   /** BEGIN ARCHIVE CMPT */

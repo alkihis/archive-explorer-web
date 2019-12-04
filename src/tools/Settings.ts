@@ -350,17 +350,11 @@ class AESettings {
   }
 
   protected isUserValid(u: IUser) {
-    if (u.created_at && u.twitter_id && u.twitter_name && u.twitter_screen_name) {
-      return true;
-    }
-    return false;
+    return !!(u.created_at && u.twitter_id && u.twitter_name && u.twitter_screen_name);
   }
 
   protected isTUserValid(u: FullUser) {
-    if (u.created_at && u.profile_image_url_https && u.id_str && u.screen_name && u.name) {
-      return true;
-    }
-    return false;
+    return !!(u.created_at && u.profile_image_url_https && u.id_str && u.screen_name && u.name);
   }
 }
 

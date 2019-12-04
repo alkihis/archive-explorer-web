@@ -117,7 +117,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
         {this.renderMedia()}
         
         <CardContent>
-          <Typography variant="body2" className="pre-line" color="textSecondary" component="p">
+          <Typography variant="body2" className="pre-line break-all" color="textSecondary" component="p">
             <TweetText data={this.props.data} />
           </Typography>
         </CardContent>

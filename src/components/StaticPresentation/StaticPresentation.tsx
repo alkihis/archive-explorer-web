@@ -8,6 +8,7 @@ import SETTINGS from '../../tools/Settings';
 import { setPageTitle } from '../../helpers';
 import APIHELPER from '../../tools/ApiHelper';
 import LANG from '../../classes/Lang/Language';
+import FindUseful from './FindUseful';
 
 const StaticPresentation: React.FC = () => {
   const [open, setOpen] = React.useState(false);
@@ -189,6 +190,8 @@ function Copyright() {
           @Alkihis
         </a>.
       </Typography>
+
+      <FindUseful />
 
       <div className="github-links">
         <GithubLogo url="https://github.com/alkihis/archive-explorer-node" text={LANG.server} />

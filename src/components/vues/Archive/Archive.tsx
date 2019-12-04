@@ -8,12 +8,11 @@ import { CenterComponent } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState, parseTwitterDate } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
-import { THRESHOLD_PREFETCH, THRESHOLD_SIZE_LIMIT } from '../../../const';
+import { THRESHOLD_PREFETCH } from '../../../const';
 import { Link } from 'react-router-dom';
 import QuickDelete from '../QuickDelete/QuickDelete';
 import FileUploadIcon from '@material-ui/icons/CloudUpload';
 import Timer from 'timerize';
-import { createTrimmedArchive } from '../../../tools/StreamZip';
 import JSZip from 'jszip';
 import LANG from '../../../classes/Lang/Language';
 
@@ -203,11 +202,6 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
     if (f && f instanceof File) {
       const filename = f.name;
-
-      if (f.size > THRESHOLD_SIZE_LIMIT) {
-        console.log("Converting archive...");
-        f = createTrimmedArchive(f);
-      }
 
       SETTINGS.archive = new TwitterArchive(f, true);
 

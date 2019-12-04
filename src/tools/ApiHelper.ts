@@ -25,6 +25,8 @@ export class APIHelper {
       settings.parameters = {};
     }
 
+    let fd: FormData | string;
+
     // Build parameters
     if (Object.keys(settings.parameters).length) {
       // Encodage dans la query
@@ -37,7 +39,6 @@ export class APIHelper {
       }
       // Encodage POST (dans le body)
       else {
-        var fd: FormData | string;
         // Si multipart (formdata)
         if (settings.body_mode && settings.body_mode === "multipart") {
           fd = new FormData();

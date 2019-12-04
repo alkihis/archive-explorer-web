@@ -7,6 +7,7 @@ import IIcon from '@material-ui/icons/Info';
 import ExtendedActionsMenu from './ExtendedActionsMenu';
 import { VERSION } from '../../../const';
 import LANG, { AvailableLanguages, AuthorizedLangs } from '../../../classes/Lang/Language';
+import FindUseful from '../../StaticPresentation/FindUseful';
 
 type SettingsState = {
   download: boolean;
@@ -272,6 +273,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
         </AppBar>
 
         <Container maxWidth="lg" className={classes.root}>
+          <FindUseful />
+
           <Typography variant="h4" className={classes.account_title}>
             {LANG.account}
           </Typography>
