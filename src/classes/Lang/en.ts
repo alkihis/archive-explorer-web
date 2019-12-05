@@ -190,6 +190,7 @@ export default {
   group_conversations: "Group conversations",
   archive_no_dms: "Loaded archive does not support direct messages.",
   downloading_users: "Loading user details",
+  reading_dm_img: "Building direct messages images",
   /** END DMS CMPT */
 
   /** BEGIN DM CMPT */

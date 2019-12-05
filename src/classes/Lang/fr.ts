@@ -189,6 +189,7 @@ export default {
   group_conversations: "Conversations de groupe",
   archive_no_dms: "L'archive chargée ne supporte pas les messages privés.",
   downloading_users: "Chargement des données utilisateur",
+  reading_dm_img: "Préparation des médias de vos messages privés",
   /** END DMS CMPT */
 
   /** BEGIN DM CMPT */

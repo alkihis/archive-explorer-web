@@ -15,7 +15,7 @@
     "@types/react-dom": "16.9.0",
     "@types/react-infinite-scroller": "^1.2.1",
     "@types/react-router-dom": "^4.3.5",
-    "@types/react-virtualized": "^9.21.5",
+    "@types/react-virtualized": "^9.21.6",
     "@types/socket.io-client": "^1.4.32",
     "event-target-shim": "^5.0.1",
     "grapheme-splitter": "^1.0.4",
@@ -31,7 +31,7 @@
     "react-virtualized": "^9.21.2",
     "socket.io-client": "^2.3.0",
     "timerize": "^1.0.3",
-    "twitter-archive-reader": "^2.0.0",
+    "twitter-archive-reader": "^2.0.3",
     "twitter-d": "^0.4.0",
     "typescript": "3.5.3"
   },

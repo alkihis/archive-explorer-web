@@ -22,7 +22,7 @@ type DMState = {
   conversation: Conversation | null;
 
   /** Wait for user download */
-  ready: boolean;
+  ready: boolean | null;
 
   /** Tab for group/non group */
   active_tab: number;
@@ -31,7 +31,7 @@ type DMState = {
 export default class DirectMessages extends React.Component<DMProps, DMState> {
   state: DMState = {
     conversation: null,
-    ready: false,
+    ready: null,
     active_tab: 0,
   };
 
@@ -40,19 +40,36 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
   protected position: number = 0;
   protected should_scroll = false;
 
-  constructor(props: DMProps) {
-    super(props);
-
-    if (isArchiveLoaded() && SETTINGS.archive.is_gdpr) {
-      this.downloadUsers();
-    }
-  }
-
   componentDidMount() {
+    if (isArchiveLoaded() && SETTINGS.archive.is_gdpr) {
+       // Chargement des médias de l'archive si nécessaire
+      if (SETTINGS.archive.requiresDmImageZipLoad()) {
+        SETTINGS.archive.loadCurrentDmImageZip()
+          .then(() => {
+            this.setState({
+              ready: false
+            });
+            
+            this.downloadUsers();
+          });
+      }
+      else {
+        this.setState({
+          ready: false
+        });
+
+        this.downloadUsers();
+      }
+    }
+
     setPageTitle(LANG.direct_messages);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(_: DMProps, old_state: DMState) {
+    if (old_state.ready === null) {
+      return;
+    }
+
     if (this.should_scroll) {
       this.should_scroll = false;
       window.scrollTo(0, this.position);
@@ -263,7 +280,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
               <BigPreloader />
 
               <div className={classes.preloader_msg}>
-                {LANG.downloading_users}
+                {this.state.ready === null ? LANG.reading_dm_img : LANG.downloading_users}
               </div>
             </CenterComponent>
           </Container> }
