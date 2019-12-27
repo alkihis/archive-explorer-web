@@ -220,7 +220,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
     return (
       <div className={classes.month_selector_root}>
         <Typography className={classes.count}>
-          <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} {LANG.selected_without_s}{c > 1 ? "s" : ""}.
+          <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} {LANG.selected_without_s}{c > 1 ? LANG.past_s : ""}.
         </Typography>
 
         {this.generateYears()}

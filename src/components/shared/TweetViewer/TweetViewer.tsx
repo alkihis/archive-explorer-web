@@ -535,7 +535,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         }>
         <div className={classes.modal_grid_root}>
           <div className={classes.modal_selected}>
-            {this.state.selected.size} {LANG.selected_without_s}{this.state.selected.size > 1 ? 's' : ''}
+            {this.state.selected.size} {LANG.selected_without_s}{this.state.selected.size > 1 ? LANG.past_s : ''}
           </div> 
 
           <div className={classes.modal_grid_container}>

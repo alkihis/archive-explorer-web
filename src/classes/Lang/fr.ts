@@ -124,8 +124,8 @@ export default {
   travel_through_time: "Voyagez à travers le temps",
   travel_through_time_p1: `Explorez vos tweets ou conversations privées directement par mois ou année,
   revivez chaque moment passé sur Twitter, sans aucune barrière temporelle.`,
-  fav_deletion: "Suppression de favoris",
-  fav_deletion_p1: `Vous avez mis en favori des dizaines de milliers de tweets,
+  fav_deletion: "Suppression de blocks",
+  fav_deletion_p1: `Vous avez blocké des dizaines de milliers d'utilisateurs avec une block-list,
   et vous avez envie de faire table rase du passé ?
   Deux clics, et c'est fini.`,
   background_tasks: "Tâches en arrière-plan",
@@ -369,7 +369,7 @@ export default {
   are_you_sure_you_want: "Êtes-vous sûr•e que vous souhaitez faire ceci",
   favorites: "Favoris",
   you_have: "Vous avez",
-  tweets_in_your_favorites: "tweets dans vos favoris",
+  tweets_in_your_favorites: "tweets dans vos favoris. Attention: En raison d'un bug de l'API Twitter, la suppression de favoris peut ne pas être complète",
   delete_all_favorites: "Supprimer tous vos tweets mis en favori",
   blocks: "Blocks",
   you_have_blocked: "Vous avez bloqué",
@@ -409,5 +409,7 @@ export default {
   task: "Tâche",
   has_ended: "s'est terminée",
   /** END Tasks file */
+
+  past_s: "s",
 
 } as { [msg: string]: string };

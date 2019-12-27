@@ -124,12 +124,12 @@ export default {
   travel_through_time: "Travel through time",
   travel_through_time_p1: `Explore tweets or DMs conversations directly by year or month,
   relive every moment spent on Twitter, no matter of how far it is.`,
-  fav_deletion: "Favorites deletion",
-  fav_deletion_p1: `You've favorited dozens of thousands of tweets, and you
+  fav_deletion: "Blocks deletion",
+  fav_deletion_p1: `You've blocked dozens of thousands of users, through a block-list, and you
   want to make a clean sweep of your Twitter account past ?
   Two clicks and it's done.`,
   background_tasks: "Background tasks",
-  background_tasks_p1: `With a very large number of tweets, favorites or mutes, deletion may be long.
+  background_tasks_p1: `With a very large number of tweets, blocks or mutes, deletion may be long.
   Without installing any program, or keeping any computer on,
   delete with tasks started in background. 
   You can cancel them at any time.`,
@@ -370,7 +370,7 @@ export default {
   are_you_sure_you_want: "Are you sure you want to do this",
   favorites: "Favorites",
   you_have: "You have",
-  tweets_in_your_favorites: "tweets into your favorites",
+  tweets_in_your_favorites: "tweets into your favorites. Warning: Due to a Twitter API bug, deletion of favorites could not be complete",
   delete_all_favorites: "Delete all my favorited tweets",
   blocks: "Blocks",
   you_have_blocked: "You have blocked",
@@ -411,5 +411,6 @@ export default {
   has_ended: "has ended",
   /** END Tasks file */
 
+  past_s: "",
 
 } as { [msg: string]: string };
