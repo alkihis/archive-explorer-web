@@ -67,6 +67,10 @@ code {
   word-break: break-all;
 }
 
+.break-word {
+  overflow-wrap: break-word;
+}
+
 .divider-big-margin {
   margin: 1.2rem auto !important;
 }

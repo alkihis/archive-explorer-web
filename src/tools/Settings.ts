@@ -31,6 +31,7 @@ class AESettings {
   // Saved settings
   protected _token: string = "";
   protected _auto_tweet_download = false;
+  protected _auto_rt_download = true;
   protected _pp = true;
   protected _lang: AuthorizedLangs = window.navigator.language.includes('fr') ? 'fr' : 'en';
 
@@ -69,6 +70,9 @@ class AESettings {
     }
     if (localStorage.getItem('auto_tweet_download')) {
       this.tweet_dl = localStorage.getItem('auto_tweet_download') === "true";
+    }
+    if (localStorage.getItem('auto_rt_download')) {
+      this.rt_dl = localStorage.getItem('auto_rt_download') === "true";
     }
     if (localStorage.getItem('pp')) {
       this.pp = localStorage.getItem('pp') === "true";
@@ -277,6 +281,15 @@ class AESettings {
   set tweet_dl(v: boolean) {
     this._auto_tweet_download = v;
     localStorage.setItem('auto_tweet_download', String(v));
+  }
+
+  get rt_dl() {
+    return this._auto_rt_download;
+  }
+
+  set rt_dl(v: boolean) {
+    this._auto_rt_download = v;
+    localStorage.setItem('auto_rt_download', String(v));
   }
 
   set user(v: IUser) {

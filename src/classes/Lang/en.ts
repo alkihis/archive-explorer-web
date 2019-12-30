@@ -222,6 +222,12 @@ export default {
   search_now: "Search",
   choose_month_tweets: "Choose a month to see your tweets",
   search_results: "Search results",
+  year: "Year",
+  moments_of_decade: "Highlights of decade",
+  search_with_case_sensitive: "Case-sensitive search",
+  multiline_regex_dot: "[Regex] Dot matches new line",
+  search_match_tweet_name: "Search matches TN/screen name",
+  search_options: "Search options",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
@@ -272,6 +278,7 @@ export default {
   delete_my_account: "Delete my account",
 
   download_from_twitter_checkbox: "Download tweets from Twitter (gives more accurate infos)",
+  download_rt_from_twitter_checkbox: "Download retweets automatically (GDPR archives contains bad RT data)",
   show_profile_pictures: "Show profile pictures",
   account_created_on: "Account created on",
   thats_all_infos: "That's all the information we have from you. Archive Explorer doesn't store any other kind of data.",

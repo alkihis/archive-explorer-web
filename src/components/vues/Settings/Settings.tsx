@@ -16,6 +16,7 @@ type SettingsState = {
   dark_mode: boolean;
   auto_dark_mode: boolean;
   lang: AuthorizedLangs;
+  download_rt: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -26,6 +27,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
     dark_mode: SETTINGS.dark_mode,
     auto_dark_mode: SETTINGS.is_auto_dark_mode,
     lang: SETTINGS.lang,
+    download_rt: SETTINGS.rt_dl,
   };
 
   changeDarkState(v: boolean, refresh_settings = true) {
@@ -68,6 +70,13 @@ export default class Settings extends React.Component<{}, SettingsState> {
       download: v
     });
     SETTINGS.tweet_dl = v;
+  }
+
+  changeRtDLState(v: boolean) {
+    this.setState({
+      download_rt: v
+    });
+    SETTINGS.rt_dl = v;
   }
 
   changePPState(v: boolean) {
@@ -118,6 +127,20 @@ export default class Settings extends React.Component<{}, SettingsState> {
               />
             }
             label={LANG.download_from_twitter_checkbox}
+            labelPlacement="end"
+          />
+
+          <FormControlLabel
+            value="media"
+            control={
+              <Checkbox 
+                color="primary" 
+                checked={this.state.download_rt}
+                onChange={(_, c) => this.changeRtDLState(c)}
+                disabled={SETTINGS.expired || this.state.download}
+              />
+            }
+            label={LANG.download_rt_from_twitter_checkbox}
             labelPlacement="end"
           />
 

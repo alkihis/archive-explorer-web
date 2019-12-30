@@ -108,6 +108,16 @@ export class Cache<T> {
     return null;
   }
 
+  set(id: string, value: T) {
+    this.cache[id] = value;
+  }
+
+  groupSet(id: string, value: Iterable<T>) {
+    for (const t of value) {
+      this.cache[id] = t;
+    }
+  }
+
   getFromCache(id: string) {
     return this.cache[id];
   }
@@ -117,6 +127,11 @@ export class Cache<T> {
   }
 
   clearFailCache() {
+    this.asked_by_empty = new Set();
+  }
+
+  clear() {
+    this.cache = {};
     this.asked_by_empty = new Set();
   }
 }

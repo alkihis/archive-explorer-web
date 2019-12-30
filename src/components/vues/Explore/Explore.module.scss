@@ -14,6 +14,13 @@ $drawer_width:240px;
 .drawerPaper {
   width: $drawer_width;
 }
+.clicked {
+  background-color: #565656 !important;
+  font-weight: bold !important;
+}
+:global body:not(.dark) :local .clicked {
+  background-color: #cacaca !important;
+}
 .content {
   margin-top: 64px;
   margin-left: $drawer_width;

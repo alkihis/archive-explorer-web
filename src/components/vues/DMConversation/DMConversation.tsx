@@ -1,7 +1,7 @@
-import React, { ChangeEvent, FormEvent } from 'react';
+import React from 'react';
 import classes from './DMConversation.module.scss';
 import { Conversation, LinkedDirectMessage, SubConversation } from 'twitter-archive-reader';
-import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText, TextField } from '@material-ui/core';
+import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -15,6 +15,7 @@ import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import { FullUser } from 'twitter-d';
 import { toast } from '../../shared/Toaster/Toaster';
 import LANG from '../../../classes/Lang/Language';
+import { SearchOptions } from '../Explore/Explore';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -59,8 +60,6 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     from: null
   };
 
-  protected searchContent: string = "";
-
   protected index = this.props.conversation.index;
 
   get conv() {
@@ -72,10 +71,6 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       mobileOpen: !this.state.mobileOpen
     });
   }
-
-  handleSearchChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    this.searchContent = event.target.value;
-  };
 
   handleDmClick = (id: string) => {
     const msg = this.conv.single(id);
@@ -91,14 +86,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     }
   };
 
-  findMsgs = (event?: FormEvent<HTMLFormElement>) => {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    let content = this.searchContent;
-
+  findMsgs = (content: string, settings: SearchSettings[]) => {
     // Try to extract :current
     let choosen_month = "*";
     let search_results: SubConversation;
@@ -140,6 +128,16 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       until_date = new Date(u_results[1]);
     }
 
+    let flags = "i";
+    if (settings) {
+      if (settings.includes("case-sensitive")) {
+        flags = "";
+      }
+      if (settings.includes("single-line")) {
+        flags += "s";
+      }
+    }
+
     // Search for current
     if (content.startsWith(':current ') && this.state.month) {
       content = content.slice(':current '.length);
@@ -153,7 +151,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
       // Create a subconversation from actual DMs
       search_results = new SubConversation(this.state.selected, this.conv.infos.me)
-        .find(new RegExp(content, "i"));
+        .find(new RegExp(content, flags));
     }
     else if (!content) {
       search_results = this.conv;
@@ -166,7 +164,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
         content = escapeRegExp(content);
       }
 
-      search_results = this.conv.find(new RegExp(content, "i"));
+      search_results = this.conv.find(new RegExp(content, flags));
     }
     
     if (selected_users.length) {
@@ -240,28 +238,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
         {years_sorted.map(y => this.year(y))}
 
-        <ListItem 
-          className={classes.search_input}
-        >
-          <form onSubmit={this.findMsgs} className={classes.full_w}>
-            <TextField
-              label={LANG.find_dms}
-              className={classes.textField}
-              onChange={this.handleSearchChange}
-              margin="normal"
-            />
-          </form>
-        </ListItem>
-
-        <ListItem 
-          button 
-          className={classes.search_btn} 
-          onClick={() => this.findMsgs()}
-        >
-          <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
-            <SearchIcon className={classes.get_back_icon} /> <span>{LANG.search_now}</span>
-          </ListItemText>
-        </ListItem>
+        <SearchOptions
+          fieldLabel={LANG.find_dms}
+          options={ALLOWED_SEARCH_TYPES}
+          onClick={(modes, content) => this.findMsgs(content, modes)}
+        />
       </div>
     );
   }
@@ -505,3 +486,10 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     return specialJoin(names);
   }
 }
+
+const ALLOWED_SEARCH_TYPES = {
+  "case-sensitive": LANG.search_with_case_sensitive,
+  "single-line": LANG.multiline_regex_dot,
+};
+
+type SearchSettings = keyof typeof ALLOWED_SEARCH_TYPES;

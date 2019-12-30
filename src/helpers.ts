@@ -1,7 +1,7 @@
 import APIHELPER from "./tools/ApiHelper";
 import { IUser } from "./tools/interfaces";
-import SETTINGS from "./tools/Settings";
-import { PartialTweet } from "twitter-archive-reader";
+import SETTINGS, { TweetSortType, TweetSortWay } from "./tools/Settings";
+import { PartialTweet, dateFromTweet } from "twitter-archive-reader";
 import UserCache from "./classes/UserCache";
 import TwitterArchive from "twitter-archive-reader";
 import { toast } from "./components/shared/Toaster/Toaster";
@@ -202,16 +202,21 @@ export function uppercaseFirst(str: string) {
   return str.slice(0, 1).toLocaleUpperCase() + str.slice(1);
 }
 
-/**
- * Filter and sort tweets
- * 
- * @param tweets 
- */
-export function filterTweets(tweets: PartialTweet[]) {
+interface SortFilterTweetsSettings {
+  sort_type: TweetSortType,
+  allow_rts: boolean,
+  allow_self: boolean,
+  allow_mentions: boolean,
+  only_medias: boolean,
+  only_videos: boolean,
+  sort_way: TweetSortWay,
+}
+
+export function sortAndFilterTweetsFromSettings(tweets: PartialTweet[], settings: SortFilterTweetsSettings) {
   let sort_fn: (a: PartialTweet, b: PartialTweet) => number; 
   
   // Every thing is asc by default !
-  if (SETTINGS.sort_type === "time") {
+  if (settings.sort_type === "time") {
     if (typeof BigInt !== 'undefined') {
       sort_fn = (a: PartialTweet, b: PartialTweet) => Number(BigInt(a.id_str) - BigInt(b.id_str));
     }
@@ -221,28 +226,10 @@ export function filterTweets(tweets: PartialTweet[]) {
       sort_fn = (a: PartialTweet, b: PartialTweet) => coll.compare(a.id_str, b.id_str);
     }
   }
-  else if (SETTINGS.sort_type === "popular") {
-    sort_fn = (a: PartialTweet, b: PartialTweet) => {
-      let score_a = 0, score_b = 0;
-
-      if (a.retweet_count !== undefined && !isNaN(a.retweet_count)) {
-        score_a += (a.retweet_count * 5);
-      }
-      if (b.retweet_count !== undefined && !isNaN(b.retweet_count)) {
-        score_b += (b.retweet_count * 5);
-      }
-
-      if (a.favorite_count !== undefined && !isNaN(a.favorite_count)) {
-        score_a += a.favorite_count;
-      }
-      if (b.favorite_count !== undefined && !isNaN(b.favorite_count)) {
-        score_b += b.favorite_count;
-      }
-
-      return score_a - score_b;
-    };
+  else if (settings.sort_type === "popular") {
+    sort_fn = (a: PartialTweet, b: PartialTweet) => scoreOfTweet(a) - scoreOfTweet(b);
   }
-  else if (SETTINGS.sort_type === "retweets") {
+  else if (settings.sort_type === "retweets") {
     sort_fn = (a: PartialTweet, b: PartialTweet) => {
       if (a.retweet_count !== undefined && b.retweet_count !== undefined) {
         return a.retweet_count - b.retweet_count;
@@ -273,23 +260,23 @@ export function filterTweets(tweets: PartialTweet[]) {
   }
 
   const res = tweets.filter(t => {
-    if (!SETTINGS.allow_rts && t.retweeted_status) {
+    if (!settings.allow_rts && t.retweeted_status) {
       return false;
     }
 
-    if (!SETTINGS.allow_self && !t.retweeted_status) {
+    if (!settings.allow_self && !t.retweeted_status) {
       return false;
     }
 
-    if (!SETTINGS.allow_mentions && t.text.startsWith('@')) {
+    if (!settings.allow_mentions && t.text.startsWith('@')) {
       return false;
     }
 
-    if (SETTINGS.only_medias && (!t.entities || !t.entities.media || !t.entities.media.length)) {
+    if (settings.only_medias && (!t.entities || !t.entities.media || !t.entities.media.length)) {
       return false;
     }
 
-    if (SETTINGS.only_videos) {
+    if (settings.only_videos) {
       if (
         !t.extended_entities || 
         !t.extended_entities.media || 
@@ -306,15 +293,113 @@ export function filterTweets(tweets: PartialTweet[]) {
     return true;
   }).sort(sort_fn);
 
-  if (SETTINGS.sort_way === "desc") {
+  if (settings.sort_way === "desc") {
     res.reverse();
   }
 
   return res;
 }
 
+/**
+ * Filter and sort tweets
+ * 
+ * @param tweets 
+ */
+export function filterTweets(tweets: PartialTweet[], with_moments?: boolean) {
+  if (with_moments) {
+    // TODO do not hardcode decade
+    const years = findMomentsOfYears(tweets, getDecadeFrom(2010));
+
+    // For each year, sort and filter
+    for (const year in years) {
+      years[year] = sortAndFilterTweetsFromSettings(years[year], SETTINGS);
+    }
+
+    let year_entries = Object.entries(years);
+    // Collapse every year together (following desc or TIME ASC if specified)
+    if (SETTINGS.sort_way === "asc" && SETTINGS.sort_type === "time") {
+      // sort asc
+      year_entries = year_entries.sort((a, b) => Number(a[0]) - Number(b[0]));
+    }
+    else {
+      // sort year desc
+      year_entries = year_entries.sort((a, b) => Number(b[0]) - Number(a[0]));
+    }
+
+    // Collapse years together
+    return [].concat(...year_entries.map(e => e[1])) as PartialTweet[];
+  }
+  return sortAndFilterTweetsFromSettings(tweets, SETTINGS);
+}
+
+export function scoreOfTweet(tweet: PartialTweet) {
+  if ('score' in tweet) {
+    return tweet['score'] as number;
+  }
+
+  let score = 0;
+  if (tweet.retweet_count !== undefined && !isNaN(tweet.retweet_count)) {
+    score += (tweet.retweet_count * 5);
+  }
+  if (tweet.favorite_count !== undefined && !isNaN(tweet.favorite_count)) {
+    score += tweet.favorite_count;
+  }
+  // @ts-ignore
+  tweet['score'] = score;
+
+  return score;
+}
+
+/**
+ * Find moments of selected {years} in {tweets}
+ * 
+ * Moments are the most {max_elements} popular tweets of a year.
+ * 
+ * Tweets with popularity < {threshold} will be skipped.
+ * 
+ * Unfortunatly, we can't check the number of replies to the tweet to check if it's popular...
+ */
+export function findMomentsOfYears(tweets: PartialTweet[], years: Iterable<number> = [new Date().getFullYear()], max_elements = 10, threshold = 5) {
+  const sort_fn = (a: PartialTweet, b: PartialTweet) => scoreOfTweet(b) - scoreOfTweet(a);
+  
+  const ys = new Set(years);
+  const years_to_tweets: {[year: string]: PartialTweet[]} = {};
+
+  for (const tweet of tweets) {
+    if (scoreOfTweet(tweet) < threshold) {
+      continue;
+    }
+
+    const year = dateFromTweet(tweet).getFullYear();
+
+    if (ys.has(year)) {
+      if (year in years_to_tweets) {
+        years_to_tweets[year].push(tweet);
+      }
+      else {
+        years_to_tweets[year] = [tweet];
+      }
+    }
+  }
+
+  // Tweets sorted by years and {threshold} of score applied
+  for (const y in years_to_tweets) {
+    years_to_tweets[y] = years_to_tweets[y].sort(sort_fn).slice(0, max_elements);
+  }
+
+  // Tweets sorted & filtered by popularity with array of {max_elements}
+  return years_to_tweets;
+}
+
 export function isFilterApplied() {
   return SETTINGS.only_medias || SETTINGS.only_medias || SETTINGS.only_videos;
+}
+
+export function* getDecadeFrom(year: number) {
+  let i = -1;
+  while (++i < 10) {
+    yield year + i;
+  }
 }
 
 export function escapeRegExp(string: string) {
@@ -339,6 +424,25 @@ export function specialJoin(array: string[], sep = ", ", final_joiner?: string) 
 
 export function toggleDarkMode(force: boolean = undefined) {
   SETTINGS.dark_mode = force === undefined ? !SETTINGS.dark_mode : force;
+}
+
+export function truncateInteractionCount(count: number) {
+  if (count >= 1000) {
+    if (count >= 10000) {
+      if (count >= 1000000) {
+        if (count >= 10000000) {
+          return `${Math.trunc(count / 1000000)}M`;
+        }
+
+        return `${Math.trunc(count / 100000) / 10}M`;
+      }
+
+      return `${Math.trunc(count / 1000)}K`;
+    }
+    
+    return `${Math.trunc(count / 100) / 10}K`;
+  }
+  return String(count);
 }
 
 // DEBUG

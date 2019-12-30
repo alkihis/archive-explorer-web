@@ -221,6 +221,12 @@ export default {
   search_now: "Rechercher",
   choose_month_tweets: "Choisissez un mois pour voir vos tweets",
   search_results: "Résultats de la recherche",
+  year: "Année",
+  moments_of_decade: "Moments de la décennie",
+  search_with_case_sensitive: "Recherche sensible à la casse",
+  multiline_regex_dot: "[Regex] Point (.) valide le retour à la ligne",
+  search_match_tweet_name: "Recherche dans le TN ou @ Twitter",
+  search_options: "Options de recherche",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
@@ -271,6 +277,7 @@ export default {
   delete_my_account: "Supprimer le compte",
 
   download_from_twitter_checkbox: "Télécharger les tweets depuis Twitter (donne des informations plus précises)",
+  download_rt_from_twitter_checkbox: "Télécharger les retweets automatiquement (les archives RGPD contiennent des données de RT partielles)",
   show_profile_pictures: "Afficher les images de profil",
   account_created_on: "Compte créé le",
   thats_all_infos: "Ce sont toutes les informations que nous avons sur vous. Archive Explorer ne stocke aucune autre donnée.",

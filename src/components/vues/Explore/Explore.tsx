@@ -1,10 +1,10 @@
-import React, { ChangeEvent, FormEvent } from 'react';
+import React from 'react';
 import classes from './Explore.module.scss';
 import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst, escapeRegExp } from '../../../helpers';
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles, TextField } from '@material-ui/core';
+import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles, TextField, Menu, MenuItem } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import TweetViewer from '../../shared/TweetViewer/TweetViewer';
 import { PartialTweet, TweetSearcher } from 'twitter-archive-reader';
@@ -37,6 +37,7 @@ type ExploreState = {
   month: string;
   mobileOpen: boolean;
   found: PartialTweet[] | null;
+  anchorSearch: HTMLElement | null;
 }
 
 export default class Explore extends React.Component<{}, ExploreState> {
@@ -44,10 +45,9 @@ export default class Explore extends React.Component<{}, ExploreState> {
     loaded: null,
     month: "",
     mobileOpen: false,
-    found: null
+    found: null,
+    anchorSearch: null,
   };
-
-  protected searchContent: string = "";
 
   componentDidMount() {
     setPageTitle(LANG.explore);
@@ -59,20 +59,10 @@ export default class Explore extends React.Component<{}, ExploreState> {
     });
   };
 
-  handleSearchChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    this.searchContent = event.target.value;
-  };
-
-  findTweets = (event?: FormEvent<HTMLFormElement>) => {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
+  findTweets = (content: string, settings?: SearchTypes[]) => {
     // Reset scroll position
     window.scrollTo(0, 0);
 
-    let content = this.searchContent;
     let selected_month = "*";
     let selected_loaded: any = null;
 
@@ -84,16 +74,30 @@ export default class Explore extends React.Component<{}, ExploreState> {
       content = escapeRegExp(content);
     }
 
+    let flags = "i";
+    let search_in = ['text', 'user.screen_name', 'user.name'];
+    if (settings) {
+      if (settings.includes("case-sensitive")) {
+        flags = "";
+      }
+      if (settings.includes("single-line")) {
+        flags += "s";
+      }
+      if (!settings.includes("match-tn")) {
+        search_in = ['text'];
+      }
+    }
+
     // Test si on doit chercher dans le mois en cours ou pas
     let tweets: PartialTweet[] = [];
     if (content.startsWith(':current ') && this.state.loaded) {
       content = content.replace(/^:current /, '').trim();
-      tweets = TweetSearcher.search(this.state.loaded, content, "i");
+      tweets = TweetSearcher.search(this.state.loaded, content, flags, undefined, search_in);
       selected_month = this.state.month;
       selected_loaded = this.state.loaded;
     }
     else {
-      tweets = TweetSearcher.search(SETTINGS.archive.all, content.trim(), "i");
+      tweets = TweetSearcher.search(SETTINGS.archive.all, content.trim(), flags, undefined, search_in);
     }
 
     // Change selected
@@ -126,6 +130,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
             {LANG.all} ({SETTINGS.archive.length})
           </ListItemText>
         </ListItem>
+
         <ListItem 
           button 
           className={"day" === this.state.month ? classes.selected_month : ""} 
@@ -136,30 +141,24 @@ export default class Explore extends React.Component<{}, ExploreState> {
           </ListItemText>
         </ListItem>
 
+        {SETTINGS.archive.is_gdpr && <ListItem 
+          button 
+          className={"moments" === this.state.month ? classes.selected_month : ""} 
+          onClick={() => this.monthClicker("moments", "")}
+        >
+          <ListItemText className={classes.drawer_month}>
+            {LANG.moments_of_decade}
+          </ListItemText>
+        </ListItem>}
+
         {years_sorted.map(y => this.year(y))}
 
-        <ListItem 
-          className={classes.search_input}
-        >
-          <form onSubmit={this.findTweets} className={classes.full_w}>
-            <TextField
-              label={LANG.find_tweets}
-              className={classes.textField}
-              onChange={this.handleSearchChange}
-              margin="normal"
-            />
-          </form>
-        </ListItem>
-
-        <ListItem 
-          button 
-          className={classes.search_btn} 
-          onClick={() => this.findTweets()}
-        >
-          <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
-            <SearchIcon className={classes.get_back_icon} /> <span>{LANG.search_now}</span>
-          </ListItemText>
-        </ListItem>
+        <SearchOptions
+          onClick={(settings, text) => this.findTweets(text, settings)}
+          options={ALLOWED_SEARCH_TYPES}
+          default={["match-tn"]}
+          fieldLabel={LANG.find_tweets}
+        />
       </div>
     );
   }
@@ -201,7 +200,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   monthClicker(year: string, month: string) {
-    if (year === "*") {
+    if (year === "*" || year === "moments") {
       this.setState({
         loaded: SETTINGS.archive.all,
         month: year,
@@ -251,8 +250,8 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
   showActiveMonth() {
     let year = "", month_text = LANG.full_archive;
-
-    if (this.state.month !== "*" && this.state.month !== "day") {
+    
+    if (this.state.month !== "*" && this.state.month !== "day" && this.state.month !== "moments") {
       const [_year, month] = this.state.month.split('-');
       year = _year;
       month_text = uppercaseFirst(getMonthText(month));
@@ -260,14 +259,18 @@ export default class Explore extends React.Component<{}, ExploreState> {
     else if (this.state.month === "day") {
       month_text = LANG.tweets_of_the_day;
     }
+    else if (this.state.month === "moments") {
+      month_text = LANG.moments_of_decade;
+    }
 
     const tweets_number = this.state.loaded.length;
 
     return (
       <div className={classes.month_header}>
-        {month_text} {year} <span className={classes.month_tweet_number}>
-            <span className="bold">{tweets_number}</span> tweets
-          </span>
+        {month_text} {year} {" "}
+        {this.state.month !== 'moments' && <span className={classes.month_tweet_number}>
+          <span className="bold">{tweets_number}</span> tweets
+        </span>}
       </div>
     );
   }
@@ -292,7 +295,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       return (
         <div>
           {this.showActiveSearch()}
-          <TweetViewer tweets={this.state.found} />
+          <TweetViewer tweets={this.state.found} withMoments={this.state.month === "moments"} />
         </div>
       );
     }
@@ -300,7 +303,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       return this.state.loaded ? 
       (<div>
         {this.showActiveMonth()}
-        <TweetViewer tweets={this.state.loaded} />
+        <TweetViewer tweets={this.state.loaded} withMoments={this.state.month === "moments"} />
       </div>) :
       this.noMonthSelected();
     }
@@ -325,4 +328,112 @@ export default class Explore extends React.Component<{}, ExploreState> {
       />
     );
   }
+}
+
+const ALLOWED_SEARCH_TYPES = {
+  "case-sensitive": LANG.search_with_case_sensitive,
+  "match-tn": LANG.search_match_tweet_name,
+  "single-line": LANG.multiline_regex_dot,
+};
+type SearchTypes = keyof typeof ALLOWED_SEARCH_TYPES;
+
+export function SearchOptions<T>(props: { 
+  onClick?: (modes: (keyof T)[], text: string) => void;
+  options: T,
+  default?: (keyof T)[],
+  fieldLabel?: string
+}) {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [position, setPosition] = React.useState({ left: 0, top: 0 });
+  const [options, setOptions] = React.useState(props.default ? props.default as string[] : []);
+  const [searchInput, setSearchInput] = React.useState("");
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  function onContextMenu(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    setAnchorEl(e.currentTarget);
+    setPosition({ left: e.clientX + 1, top: e.clientY });
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function handleMenuClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>) {
+    const d = e.currentTarget;
+    const elem = d.dataset.item;
+
+    if (options.includes(elem)) {
+      setOptions(options.filter(item => item !== elem));
+    }
+    else {
+      setOptions([...options, elem]);
+    }
+  }
+
+  function handleClick() {
+    if (props.onClick)
+      props.onClick(options as (keyof T)[], searchInput);
+  }
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    handleClick();
+  }
+
+  function handleSearchInputChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    setSearchInput(event.target.value);
+  }
+
+  return (
+    <>
+      <ListItem 
+        className={classes.search_input}
+      >
+        <form onSubmit={handleSubmit} className={classes.full_w}>
+          <TextField
+            label={props.fieldLabel}
+            className={classes.textField}
+            onChange={handleSearchInputChange}
+            margin="normal"
+          />
+        </form>
+      </ListItem>
+
+      <ListItem 
+        button 
+        className={classes.search_btn} 
+        onClick={handleClick}
+        onContextMenu={onContextMenu}
+      >
+        <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
+          <SearchIcon className={classes.get_back_icon} /> <span>{LANG.search_now}</span>
+        </ListItemText>
+      </ListItem>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        anchorPosition={position}
+        anchorReference="anchorPosition"
+      >
+        <MenuItem disabled dense>
+          {LANG.search_options}
+        </MenuItem>
+
+        {Object.entries(props.options).map(([option, text]) => (
+          <MenuItem
+            data-item={option}
+            key={option}
+            onClick={handleMenuClick} 
+            className={options.includes(option) ? classes.clicked : ""}
+          >
+            {text}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
 }

@@ -16,6 +16,20 @@
   }
 }
 
+.card_container_year {
+  @extend .card_container;
+  margin: 0;
+}
+
+.year_header {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  margin-left: 1vw !important;
+  font-style: italic !important;
+  margin-top: .5rem !important;
+  margin-bottom: 1rem !important;
+}
+
 .toggleContainer {
   margin: 1rem 0;
   display: grid;

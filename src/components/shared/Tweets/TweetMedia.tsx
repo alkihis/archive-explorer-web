@@ -1,23 +1,38 @@
 import React from 'react';
 import classes from './TweetMedia.module.scss';
-import { PartialTweetEntity, MediaGDPREntity } from 'twitter-archive-reader';
+import { PartialTweetEntity, MediaGDPREntity, PartialTweet } from 'twitter-archive-reader';
 import { Dialog } from '@material-ui/core';
 // @ts-ignore
 import { Lightbox as ModalImage } from "react-modal-image";
 import LANG from '../../../classes/Lang/Language';
-
-type TweetMediaProp = {
-  entities: PartialTweetEntity | { media?: MediaGDPREntity[] }
-};
+import { TweetContext } from './TweetContext';
+import { Status } from 'twitter-d';
 
 type TweetMediaState = {
   image_full: number | null
 }
 
-export default class TweetMedia extends React.Component<TweetMediaProp, TweetMediaState> {
+export default class TweetMedia extends React.Component<{}, TweetMediaState> {
+  static contextType = TweetContext;
+  context!: PartialTweet | Status;
+
   state: TweetMediaState = {
     image_full: null
   };
+
+  get entities() : PartialTweetEntity | { media?: MediaGDPREntity[] } {
+    if (this.context.extended_entities) {
+      if (this.context.extended_entities.media && this.context.extended_entities.media.length) {
+        return this.context.extended_entities as { media?: MediaGDPREntity[] };
+      }
+    }
+
+    if (this.context.entities && this.context.entities.media && this.context.entities.media.length) {
+      return this.context.entities as PartialTweetEntity; 
+    }
+
+    return { media: [] };
+  }
 
   renderImages() {
     return (this.media as MediaGDPREntity[]).map((m, i) => {
@@ -35,7 +50,7 @@ export default class TweetMedia extends React.Component<TweetMediaProp, TweetMed
     // Remove the possible query string
     m.video_info.variants.forEach(e => e.url = e.url.split('?', 2)[0]);
 
-    const valids = m.video_info.variants.filter(e => e.bitrate && e.url.endsWith('.mp4'));
+    const valids = m.video_info.variants.filter(e => e.bitrate !== undefined && e.url.endsWith('.mp4'));
 
     const bitrates = valids.map(e => Number(e.bitrate));
     const better = bitrates.indexOf(Math.max(...bitrates));
@@ -119,7 +134,7 @@ export default class TweetMedia extends React.Component<TweetMediaProp, TweetMed
   }
 
   get media() {
-    return this.props.entities.media;
+    return this.entities.media;
   }
 
   render() {

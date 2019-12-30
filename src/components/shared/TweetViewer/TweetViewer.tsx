@@ -1,5 +1,5 @@
 import React from 'react';
-import { PartialTweet } from 'twitter-archive-reader';
+import { PartialTweet, dateFromTweet } from 'twitter-archive-reader';
 import InfiniteScroll from 'react-infinite-scroller';
 import SETTINGS, { TweetSortType, TweetSortWay, TweetMediaFilters } from '../../../tools/Settings';
 import Tweet from '../Tweets/Tweet';
@@ -30,7 +30,8 @@ import LANG from '../../../classes/Lang/Language';
  
 type ViewerProps = {
   tweets: PartialTweet[];
-  chunk_len?: number;
+  withMoments?: boolean;
+  chunkLen?: number;
 };
 
 type ViewerState = {
@@ -81,10 +82,10 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       }
     }
 
-    const tweets = filterTweets(this.props.tweets);
+    const tweets = filterTweets(this.props.tweets, this.props.withMoments);
 
     this.state = {
-      chunk_len: this.props.chunk_len ? this.props.chunk_len : DEFAULT_CHUNK_LEN,
+      chunk_len: this.props.chunkLen ? this.props.chunkLen : DEFAULT_CHUNK_LEN,
       has_more: true,
       tweets,
       current_page: [],
@@ -323,8 +324,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       // do dl
       TweetCache.bulk(tweets.map(t => t.id_str))
         .then(data => {
-          const t = Object.values(data);
-          console.log(t, "excepted", tweets.length);
+          const t = tweets.map(t => data[t.id_str]).filter(t => t);
+          // console.log(t, "excepted", tweets.length);
     
           // @ts-ignore
           this.state.current_page.push(...t);
@@ -343,6 +344,19 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           });
         })
     }
+    else if (SETTINGS.archive.is_gdpr && SETTINGS.rt_dl && !SETTINGS.expired) {
+      TweetCache.bulkRts(tweets)
+        .then(tweets => {
+          console.log(tweets);
+          this.state.current_page.push(...tweets);
+          const current_page = this.state.current_page;
+
+          this.setState({
+            current_page,
+            has_more: tweets.length > 0
+          });
+        }); 
+    }
     else {
       this.state.current_page.push(...tweets);
 
@@ -356,11 +370,15 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
   /** REFRESH COMPONENT */
   componentDidUpdate(prev_props: ViewerProps, prev_state: ViewerState) {
-    if (prev_props.tweets !== this.props.tweets || prev_state.key !== this.state.key) {
+    if (
+      prev_props.tweets !== this.props.tweets || 
+      prev_state.key !== this.state.key || 
+      this.props.withMoments !== prev_props.withMoments
+    ) {
       // Tweets change, component reset
       this.references = {};
       this.cache = {};
-      const tweets = filterTweets(this.props.tweets);
+      const tweets = filterTweets(this.props.tweets, this.props.withMoments);
       this.setState({
         current_page: [],
         tweets,
@@ -466,8 +484,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       <>
         {this.renderFilters()}
         <CenterComponent className={classes.no_tweets}>
-          {this.renderFilters()}
-
           <NoTweetsIcon className={classes.icon} />
           <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
             {LANG.no_tweets_to_display}
@@ -571,11 +587,56 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       return this.noTweetsState();
     }
 
-    const t = this.state.current_page.map(this.renderTweet);
-
     // no tweets available (all deleted)
-    if (t.length === 0 && !this.state.has_more) {
+    if (this.state.current_page.length === 0 && !this.state.has_more) {
       return this.noTweetsLeft();
+    }
+
+    let tweet_rendered_data: any;
+    if (this.props.withMoments) {
+      let current_year: number = null;
+      let current_year_tweet_count = 0;
+
+      // Render tweets with "year headers" when year changes
+      tweet_rendered_data = this.state.current_page.map((tweet, i) => {
+        const current_tweet_date = dateFromTweet(tweet).getFullYear();
+        const t = this.renderTweet(tweet, i);
+        
+        if (current_tweet_date !== current_year) {
+          // must show year
+          current_year = current_tweet_date;
+          const previous_count = current_year_tweet_count;
+          // Reset the tweet count: we change current year
+          current_year_tweet_count = 1;
+
+          return (
+            <React.Fragment key={i}>
+              {/* 
+                If the previous year has a odd tweet count, 
+                we must inject a empty container to go to next line (max 2 tweets per line).
+              */}
+              {previous_count % 2 !== 0 && <div className={classes.card_container} />}
+
+              <div className={classes.card_container_year}>
+                <Typography className={classes.year_header}>
+                  {LANG.year} {current_tweet_date}
+                </Typography>
+              </div>
+              <div className={classes.card_container} />
+        
+              {t}
+            </React.Fragment>
+          );
+        }
+        else {
+          current_year_tweet_count++;
+
+          return t;
+        }
+      });
+    }
+    else {
+      tweet_rendered_data = this.state.current_page.map(this.renderTweet);
     }
 
     return (
@@ -594,7 +655,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           loader={this.loader()}
           key={this.state.scroller_key}
         >
-          {t}
+          {tweet_rendered_data}
         </InfiniteScroll>
       </div>
     );

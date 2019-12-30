@@ -4,16 +4,17 @@ import { PartialTweet } from 'twitter-archive-reader';
 import { unescapeTwi } from '../../../helpers';
 import Graphene from 'grapheme-splitter';
 import LANG from '../../../classes/Lang/Language';
+import { TweetContext } from './TweetContext';
+import { Typography } from '@material-ui/core';
 
 const splitter = new Graphene();
 const TWITTER_BASE = "https://twitter.com/";
 const TWITTER_HASH_BASE = "https://twitter.com/search?q=";
 
-type TweetTextProp = {
-  data: PartialTweet | Status,
-};
+export default class TweetText extends React.Component {
+  static contextType = TweetContext;
+  context!: PartialTweet | Status;
 
-export default class TweetText extends React.Component<TweetTextProp> {
   calculateFragments() {
     const frags: [number, number, JSX.Element][] = [];
 
@@ -115,10 +116,14 @@ export default class TweetText extends React.Component<TweetTextProp> {
   }
 
   get tweet() {
-    return this.props.data;
+    return this.context;
   }
 
   render() {
-    return this.renderText(this.calculateFragments());
+    return (
+      <Typography variant="body2" className="pre-line break-word" color="textSecondary" component="p">
+        {this.renderText(this.calculateFragments())}
+      </Typography>
+    );
   }
 }

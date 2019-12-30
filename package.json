@@ -33,7 +33,7 @@
     "timerize": "^1.0.3",
     "twitter-archive-reader": "^2.0.7",
     "twitter-d": "^0.4.0",
-    "typescript": "3.5.3"
+    "typescript": "^3.7.3"
   },
   "scripts": {
     "start": "react-scripts start",
