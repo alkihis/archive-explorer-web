@@ -347,7 +347,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     else if (SETTINGS.archive.is_gdpr && SETTINGS.rt_dl && !SETTINGS.expired) {
       TweetCache.bulkRts(tweets)
         .then(tweets => {
-          console.log(tweets);
           this.state.current_page.push(...tweets);
           const current_page = this.state.current_page;
 

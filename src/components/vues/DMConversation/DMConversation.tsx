@@ -86,7 +86,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     }
   };
 
-  findMsgs = (content: string, settings: SearchSettings[]) => {
+  findMsgs = (content: string, settings: string[]) => {
     // Try to extract :current
     let choosen_month = "*";
     let search_results: SubConversation;
@@ -198,6 +198,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     const a = this.conv.raw_index;
 
     const years_sorted = Object.keys(a).sort((a, b) => Number(b) - Number(a));
+
+    const ALLOWED_SEARCH_TYPES = {
+      "case-sensitive": LANG.search_with_case_sensitive,
+      "single-line": LANG.multiline_regex_dot,
+    };
 
     return (
       <div>
@@ -486,10 +491,3 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     return specialJoin(names);
   }
 }
-
-const ALLOWED_SEARCH_TYPES = {
-  "case-sensitive": LANG.search_with_case_sensitive,
-  "single-line": LANG.multiline_regex_dot,
-};
-
-type SearchSettings = keyof typeof ALLOWED_SEARCH_TYPES;

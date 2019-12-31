@@ -59,7 +59,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     });
   };
 
-  findTweets = (content: string, settings?: SearchTypes[]) => {
+  findTweets = (content: string, settings?: string[]) => {
     // Reset scroll position
     window.scrollTo(0, 0);
 
@@ -114,6 +114,14 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
     const years_sorted = Object.keys(a).sort((a, b) => Number(b) - Number(a));
 
+    const ALLOWED_SEARCH_TYPES = {
+      "case-sensitive": LANG.search_with_case_sensitive,
+      "match-tn": LANG.search_match_tweet_name,
+      "single-line": LANG.multiline_regex_dot,
+    };
+
+    const can_show_moments_decade = Date.now() < (new Date("2020-02-01")).getTime();
+
     return (
       <div>
         <ExpansionPanel expanded={false}>
@@ -141,7 +149,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
           </ListItemText>
         </ListItem>
 
-        {SETTINGS.archive.is_gdpr && <ListItem 
+        {SETTINGS.archive.is_gdpr && can_show_moments_decade && <ListItem 
           button 
           className={"moments" === this.state.month ? classes.selected_month : ""} 
           onClick={() => this.monthClicker("moments", "")}
@@ -329,13 +337,6 @@ export default class Explore extends React.Component<{}, ExploreState> {
     );
   }
 }
-
-const ALLOWED_SEARCH_TYPES = {
-  "case-sensitive": LANG.search_with_case_sensitive,
-  "match-tn": LANG.search_match_tweet_name,
-  "single-line": LANG.multiline_regex_dot,
-};
-type SearchTypes = keyof typeof ALLOWED_SEARCH_TYPES;
 
 export function SearchOptions<T>(props: { 
   onClick?: (modes: (keyof T)[], text: string) => void;
