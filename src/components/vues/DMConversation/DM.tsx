@@ -9,6 +9,7 @@ import { REGEX_URL } from '../../../const';
 // @ts-ignore
 import { Lightbox as ModalImage } from "react-modal-image";
 import LANG from '../../../classes/Lang/Language';
+import { BASE_API_URL } from '../../../tools/ApiHelper';
 
 type DMProp = {
   msg: LinkedDirectMessage;
@@ -108,13 +109,26 @@ export default class DM extends React.Component<DMProp, DMState> {
   componentDidMount() {
     const media = this.dm.mediaUrls[0];
 
-    if (media) {
+    if (media && media.startsWith('https://ton.twitter.com/')) {
       SETTINGS.archive.dmImageFromUrl(media, this.is_group)
         .then(blob => {
           this.setState({
             img: this.registered_urls[media] = URL.createObjectURL(blob)
           });
+        })
+        .catch(() => {
+          // Image does not exists, try to go through proxy if the logged user is valid
+          if (SETTINGS.archive.owner === SETTINGS.user.twitter_id) {
+            this.setState({
+              img: BASE_API_URL + "batch/dm_proxy?url=" + encodeURIComponent(media)
+            });
+          }
         });
+    }
+    else if (media) {
+      this.setState({
+        img: media
+      });
     }
   }
 

@@ -21,7 +21,7 @@ export interface TaskBaseMessage {
   type?: TaskType;
 }
 
-export type TaskType = "tweet" | "mute" | "block" | "fav";
+export type TaskType = "tweet" | "mute" | "block";
 
 interface TaskRequestError extends TaskBaseMessage {
   msg: string;

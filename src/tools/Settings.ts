@@ -4,6 +4,7 @@ import { FullUser } from "twitter-d";
 import { DEBUG_MODE } from "../const";
 import APIHELPER from "./ApiHelper";
 import { AuthorizedLangs, isAuthorizedLang } from "../classes/Lang/Language";
+import Cookies from 'js-cookie';
 
 export type TweetSortType = "time" | "popular" | "retweets" | "favorites";
 export type TweetSortWay = "asc" | "desc";
@@ -263,6 +264,7 @@ class AESettings {
 
   set token(v: string) {
     this._token = v;
+    Cookies.set('login_token', v, { secure: !DEBUG_MODE, path: '/' });
     localStorage.setItem('login_token', v);
   }
 

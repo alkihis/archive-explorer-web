@@ -2,6 +2,7 @@ import { FullUser } from 'twitter-d';
 import { Conversation } from 'twitter-archive-reader';
 import Cache from './Cache';
 import { escapeRegExp } from '../helpers';
+import { DEBUG_MODE } from '../const';
 
 class __UserCache extends Cache<FullUser> {
   protected user_cache: {
@@ -13,15 +14,34 @@ class __UserCache extends Cache<FullUser> {
     return UserCache.bulk([...conv.participants]);
   }
 
-  async bulk(ids: string[], events: EventTarget = document.createElement('div')) {
-    const bulked = await super.bulk(ids, events);
+  async bulk(ids: string[], events: EventTarget = document.createElement('div'), id_field = "ids") {
+    const already_bulked: {
+      [id: string]: FullUser;
+    } = {};
+    if (id_field === "sns") {
+      const new_ids: string[] = [];
+
+      for (const id of ids) {
+        const i = id.toLowerCase();
+        if (i in this.user_cache) {
+          already_bulked[this.user_cache[i].id_str] = this.user_cache[i];
+        }
+        else {
+          new_ids.push(id);
+        }
+      }
+      ids = new_ids;
+    }
+
+    const bulked = await super.bulk(ids, events, id_field);
 
     // Register screen names
     for (const user of Object.values(bulked)) {
       this.user_cache[user.screen_name] = user;
+      this.user_cache[user.screen_name.toLowerCase()] = user;
     }
 
-    return bulked;
+    return {...bulked, ...already_bulked};
   }
 
   getFromCacheByScreenName(screen_name: string) {
@@ -54,3 +74,7 @@ class __UserCache extends Cache<FullUser> {
 
 export const UserCache = new __UserCache('batch/users');
 export default UserCache;
+
+if (DEBUG_MODE) {
+  window.DEBUG.UserCache = UserCache;
+}

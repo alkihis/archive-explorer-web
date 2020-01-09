@@ -8,7 +8,7 @@ import RoundIcon from '@material-ui/icons/Lens';
 import TweetIcon from '@material-ui/icons/Message';
 import BlockIcon from '@material-ui/icons/Block';
 import MuteIcon from '@material-ui/icons/VolumeOff';
-import FavIcon from '@material-ui/icons/Star';
+import UnknownIcon from '@material-ui/icons/HighlightOff';
 import LANG from '../../../classes/Lang/Language';
 
 type TaskP = {
@@ -31,12 +31,12 @@ export default class Task extends React.Component<TaskP> {
     switch (this.props.data.type) {
       case "tweet":
         return TweetIcon;
-      case "fav":
-        return FavIcon;
       case "block":
         return BlockIcon;
       case "mute":
         return MuteIcon;
+      default:
+        return UnknownIcon;
     }
   }
 
@@ -44,12 +44,12 @@ export default class Task extends React.Component<TaskP> {
     switch (this.props.data.type) {
       case "tweet":
         return LANG.tweet_deletion;
-      case "fav":
-        return LANG.favorite_deletion;
       case "block":
         return LANG.block_deletion;
       case "mute":
         return LANG.mute_deletion;
+      default:
+        return LANG.unknown_deletion;
     }
   }
 

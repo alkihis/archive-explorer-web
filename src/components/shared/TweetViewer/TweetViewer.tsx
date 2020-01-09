@@ -26,12 +26,14 @@ import MentionIcon from '@material-ui/icons/Reply';
 import Pictures from '@material-ui/icons/Collections';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
 import LANG from '../../../classes/Lang/Language';
+import TweetNumberChart from '../../charts/TweetNumberChart/TweetNumberChart';
 
  
 type ViewerProps = {
   tweets: PartialTweet[];
   withMoments?: boolean;
   chunkLen?: number;
+  showChart?: { month: string, year: string } | boolean;
 };
 
 type ViewerState = {
@@ -645,6 +647,10 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         {this.state.modal_confirm && this.confirmDeletionModal()}
 
         {this.askDeletionModal()}
+
+        {this.props.showChart && <TweetNumberChart key="1"
+          dayView={typeof this.props.showChart === "boolean" ? undefined : this.props.showChart} 
+        />}
         
         <InfiniteScroll
           className={classes.card_container}

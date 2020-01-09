@@ -1,5 +1,4 @@
 import React from 'react';
-import { Status } from 'twitter-d';
 import { PartialTweet } from 'twitter-archive-reader';
 import { unescapeTwi } from '../../../helpers';
 import Graphene from 'grapheme-splitter';
@@ -11,14 +10,47 @@ const splitter = new Graphene();
 const TWITTER_BASE = "https://twitter.com/";
 const TWITTER_HASH_BASE = "https://twitter.com/search?q=";
 
-export default class TweetText extends React.Component {
-  static contextType = TweetContext;
-  context!: PartialTweet | Status;
+function TweetText() {
+  const tweet = React.useContext(TweetContext) as PartialTweet;
 
-  calculateFragments() {
+  function renderText() {
+    const parts: JSX.Element[] = [];
+    const original_t = tweet.retweeted_status ? tweet.retweeted_status : tweet;
+    const entities_fragments = calculateTextForEntities();
+
+    // @ts-ignore Ralentit énormément le code. A utiliser avec parcimonie
+    const original_string = splitter.splitGraphemes(original_t.full_text ? original_t.full_text : original_t.text);
+
+    let last_end = 0;
+    let i = 1;
+
+    // Assemble les fragments et les lie avec les parties 
+    // de la chaîne originale entre eux
+    for (const [begin, end, element] of entities_fragments) {
+      if (begin !== last_end) {
+        parts.push(<span key={String(entities_fragments.length + i)}>{
+          unescapeTwi(original_string.slice(last_end, begin).join(""))
+        }</span>);
+      }
+      parts.push(element);
+      last_end = end;
+      i++;
+    }
+
+    // Rend le reste de la chaîne originale si besoin
+    if (original_string.length !== last_end) {
+      parts.push(<span key={String(entities_fragments.length + i)}>{
+        unescapeTwi(original_string.slice(last_end).join(""))
+      }</span>);
+    }
+
+    return parts;
+  }
+
+  function calculateTextForEntities() {
     const frags: [number, number, JSX.Element][] = [];
 
-    const t = this.tweet.retweeted_status ? this.tweet.retweeted_status : this.tweet;
+    const t = tweet.retweeted_status ? tweet.retweeted_status : tweet;
 
     if (t.entities) {
       if (t.entities.user_mentions && t.entities.user_mentions.length) {
@@ -82,48 +114,11 @@ export default class TweetText extends React.Component {
     return frags.sort((a, b) => a[0] - b[0]);
   }
 
-  renderText(frags: [number, number, JSX.Element][]) {
-    const parts: JSX.Element[] = [];
-    const original_t = this.tweet.retweeted_status ? this.tweet.retweeted_status : this.tweet;
-
-    // @ts-ignore Ralentit énormément le code. A utiliser avec parcimonie
-    const original_string = splitter.splitGraphemes(original_t.full_text ? original_t.full_text : original_t.text);
-
-    let last_end = 0;
-    let i = 1;
-
-    // Assemble les fragments et les lie avec les parties 
-    // de la chaîne originale entre eux
-    for (const [begin, end, element] of frags) {
-      if (begin !== last_end) {
-        parts.push(<span key={String(frags.length + i)}>{
-          unescapeTwi(original_string.slice(last_end, begin).join(""))
-        }</span>);
-      }
-      parts.push(element);
-      last_end = end;
-      i++;
-    }
-
-    // Rend le reste de la chaîne originale si besoin
-    if (original_string.length !== last_end) {
-      parts.push(<span key={String(frags.length + i)}>{
-        unescapeTwi(original_string.slice(last_end).join(""))
-      }</span>);
-    }
-
-    return parts;
-  }
-
-  get tweet() {
-    return this.context;
-  }
-
-  render() {
-    return (
-      <Typography variant="body2" className="pre-line break-word" color="textSecondary" component="p">
-        {this.renderText(this.calculateFragments())}
-      </Typography>
-    );
-  }
+  return (
+    <Typography variant="body2" className="pre-wrap break-word" color="textSecondary" component="p">
+      {renderText()}
+    </Typography>
+  );
 }
+
+export default TweetText;

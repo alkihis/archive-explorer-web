@@ -18,10 +18,6 @@ export default class More extends React.Component {
         {LANG.extended_archive_data}
       </Typography>
 
-      <Favorites />
-
-      <Marger size={8} />
-
       <Mutes />
 
       <Marger size={8} />
@@ -294,54 +290,6 @@ const DeleteModal: React.FC<{
     </Dialog>
   );
 };
-
-function Favorites() {
-  const [open, setOpen] = React.useState(false);
-
-  function handleClickOpen() {
-    setOpen(true);
-  }
-
-  function handleClose() {
-    setOpen(false);
-  }
-
-  function handleValidate() {
-    setOpen(false);
-
-    // Starting the task
-    const favs: string[] = DEBUG_MODE ? Array(10000).fill("1") : [...SETTINGS.archive.extended_gdpr.favorites];
-
-    Tasks.start(favs, "fav")
-      .catch(() => {
-        toast(LANG.task_start_error, "error");
-      });
-  }
-
-  return (
-    <div>
-      <Typography variant="h5" className={classes.second_title}>
-        {LANG.favorites}
-      </Typography>
-
-      <Typography>
-        {LANG.you_have} <span className={classes.number}>{SETTINGS.archive.extended_gdpr.favorites.size}</span> {LANG.tweets_in_your_favorites}.
-      </Typography>
-
-      <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
-        {LANG.delete_all_favorites}
-      </Button>
-
-      <DeleteModal 
-        type={LANG.favorites_modal}
-        open={open}
-        onClose={handleClose}
-        onValidate={handleValidate}
-        onCancel={handleClose}
-      />
-    </div>
-  );
-}
 
 function Blocks() {
   const [open, setOpen] = React.useState(false);

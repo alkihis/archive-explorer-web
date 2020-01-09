@@ -4,7 +4,7 @@ import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst, escapeRegE
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles, TextField, Menu, MenuItem } from '@material-ui/core';
+import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles, TextField, Menu, MenuItem, makeStyles, createStyles, Theme, Dialog, DialogContent, DialogActions, DialogTitle, Button, Hidden } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import TweetViewer from '../../shared/TweetViewer/TweetViewer';
 import { PartialTweet, TweetSearcher } from 'twitter-archive-reader';
@@ -12,6 +12,16 @@ import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import LANG from '../../../classes/Lang/Language';
+import { DEBUG_MODE } from '../../../const';
+
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import InsertChartIcon from '@material-ui/icons/InsertChart';
+import TweetCountChartIcon from '@material-ui/icons/ShowChart';
+import MostMentionnedIcon from '@material-ui/icons/Forum';
+import TweetNumberChart from '../../charts/TweetNumberChart/TweetNumberChart';
+import MostMentionned from '../../charts/MostMentionned/MostMentionned';
+
 
 const ExpansionPanel = withStyles({
   root: {
@@ -53,11 +63,29 @@ export default class Explore extends React.Component<{}, ExploreState> {
     setPageTitle(LANG.explore);
   }
 
+  componentWillUnmount() {
+    if (DEBUG_MODE && window.DEBUG.loadedMonth) {
+      delete window.DEBUG.loadedMonth;
+    }
+  }
+
   handleDrawerToggle = () => {
     this.setState({
       mobileOpen: !this.state.mobileOpen
     });
   };
+  
+  get can_show_speeddial() {
+    return !!this.state.month && (!this.is_special_month || this.is_all);
+  }
+
+  get is_special_month() {
+    return this.state.month.split('-').length === 1;
+  }
+
+  get is_all() {
+    return this.state.month === "*";
+  }
 
   findTweets = (content: string, settings?: string[]) => {
     // Reset scroll position
@@ -299,20 +327,24 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   content() {
+    if (DEBUG_MODE) {
+      window.DEBUG.loadedMonth = this.state.loaded;
+    }
+
     if (this.state.found) {
       return (
-        <div>
+        <>
           {this.showActiveSearch()}
           <TweetViewer tweets={this.state.found} withMoments={this.state.month === "moments"} />
-        </div>
+        </>
       );
     }
     else {
       return this.state.loaded ? 
-      (<div>
+      (<>
         {this.showActiveMonth()}
         <TweetViewer tweets={this.state.loaded} withMoments={this.state.month === "moments"} />
-      </div>) :
+      </>) :
       this.noMonthSelected();
     }
   }
@@ -332,7 +364,10 @@ export default class Explore extends React.Component<{}, ExploreState> {
           <Divider />
           {this.listOfYears()}
         </div>}
-        content={this.content()}
+        content={<div>
+          {this.content()}
+          <StatisticsSpeedDial month={this.state.month} hidden={!this.can_show_speeddial} loaded={this.state.loaded} />
+        </div>}
       />
     );
   }
@@ -436,5 +471,159 @@ export function SearchOptions<T>(props: {
         ))}
       </Menu>
     </>
+  );
+}
+
+//// -----
+//// STATS
+//// -----
+const useStylesStats = makeStyles((theme: Theme) =>
+  createStyles({
+    speedDial: {
+      position: 'fixed',
+      bottom: 56 + theme.spacing(2),
+      right: theme.spacing(2),
+    },
+  }),
+);
+
+interface SDAction {
+  icon: JSX.Element;
+  name: React.ReactNode;
+  action: string;
+  validate?: (month: string, loaded: PartialTweet[]) => boolean;
+}
+
+function StatsModal(props: React.PropsWithChildren<{ 
+  onClose?: () => void, 
+  title: React.ReactNode, 
+  fullWidth?: boolean,
+}>) {
+  return (
+    <Dialog open fullWidth={props.fullWidth} onClose={props.onClose} maxWidth="xl">
+      <DialogTitle>{props.title}</DialogTitle>
+      <DialogContent>
+        {props.children}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onClose} color="primary" autoFocus>
+          {LANG.close}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: PartialTweet[] }) {
+  const classes = useStylesStats(props);
+  const [open, setOpen] = React.useState(false);
+  const [action, setAction] = React.useState("");
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleAction = (action: SDAction) => {
+    handleClose();
+    setAction(action.action);
+  };
+
+  const handleModalClose = () => {
+    setAction("");
+  };
+
+  function renderModal() {
+    if (!action) {
+      return "";
+    }
+    if (!props.loaded || !props.month) {
+      return "";
+    }
+
+    // if (action === 'wordcloud') {
+    //   return (
+    //     <StatsModal 
+    //       onClose={handleModalClose}
+    //       title={LANG.wordcloud_modal_title}
+    //     >
+    //       <WordCloud tweets={props.loaded} /> 
+    //     </StatsModal>
+    //   );
+    // }
+    if (action === 'tweet') {
+      const month_year = props.month.split('-', 2);
+      const dayView = month_year.length > 1 ? { year: month_year[0], month: month_year[1] } : undefined;
+
+      return (
+        <StatsModal
+          onClose={handleModalClose}
+          title={LANG.tweet_count_modal_title}
+          fullWidth
+        >
+          <TweetNumberChart dayView={dayView} trimAt={dayView ? 0 : 5} />
+        </StatsModal>
+      );
+    }
+    else if (action === 'mention') {
+      return (
+        <StatsModal
+          onClose={handleModalClose}
+          title={LANG.most_mentionned_modal_title}
+        >
+          <MostMentionned tweets={props.loaded} />
+        </StatsModal>
+      );
+    }
+
+    return "";
+  }
+
+  function wrapTitle(title: string) {
+    return <Typography component="span" style={{ fontSize: 16 }}>
+      {title}
+    </Typography>;
+  }
+
+  const actions: SDAction[] = [{
+    icon: <TweetCountChartIcon />,
+    name: wrapTitle(LANG.tweet_count_chart),
+    action: "tweet",
+    validate: month => {
+      return month && (month.split('-').length > 1 || month === "*");
+    },
+  }, {
+    icon: <MostMentionnedIcon />,
+    name: wrapTitle(LANG.most_mentionned),
+    action: "mention",
+  }];
+
+  return (
+    <Hidden smDown>
+      {renderModal()}
+      <SpeedDial
+        ariaLabel="SpeedDial openIcon example"
+        className={classes.speedDial}
+        hidden={props.hidden}
+        icon={<InsertChartIcon />}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        open={open}
+      >
+        {actions
+          .filter(a => a.validate ? a.validate(props.month, props.loaded) : true)
+          .map((action, index) => (
+            <SpeedDialAction
+              key={index}
+              icon={action.icon}
+              tooltipTitle={action.name}
+              onClick={() => handleAction(action)}
+            />
+          ))}
+      </SpeedDial>
+    </Hidden>
   );
 }

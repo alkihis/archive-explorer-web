@@ -13,7 +13,7 @@ export const CenterComponent = (props: any) => {
   );
 };
 
-export const BigPreloader: React.FC = (props) => {
+export const BigPreloader: React.FC<any> = (props: any) => {
   return (
     <CenterComponent {...props}>
       <CircularProgress style={{width: '70px', height: '70px'}} thickness={2} />

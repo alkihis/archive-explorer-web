@@ -5,6 +5,8 @@
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 10px;
   align-items: center;
+  // Pour le speeddial
+  padding-bottom: 12px; 
 
   // TODO CHECK IF OK
   max-width: 1200px;

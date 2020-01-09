@@ -12,7 +12,7 @@ export class Cache<T> {
 
   constructor(protected url: string, protected id_field = "id_str") { }
 
-  async bulk(ids: string[], events: EventTarget = document.createElement('div')) {
+  async bulk(ids: string[], events: EventTarget = document.createElement('div'), id_parameter = "ids") {
     const ids_to_get = ids.filter(u => !this.has(u) && !this.asked_by_empty.has(u));
     const ids_to_get_from_cache = ids.filter(u => this.has(u));
 
@@ -27,7 +27,7 @@ export class Cache<T> {
         const chunk = ids_to_get.slice(i, i + this.CHUNK_LENGTH);
 
         promises.push(
-          this.tinyBulk(chunk)
+          this.tinyBulk(chunk, id_parameter)
             .then(data => {
               for (const [id, v] of Object.entries(data)) {
                 getted[id] = v;
@@ -63,10 +63,10 @@ export class Cache<T> {
     await this.bulk(ids);
   }
 
-  protected async tinyBulk(ids: string[]) {
+  protected async tinyBulk(ids: string[], id_parameter = "ids") {
     const api_res: T[] = await APIHELPER.request(this.url, {
       method: 'POST',
-      parameters: { ids },
+      parameters: { [id_parameter]: ids },
       body_mode: "json",
       auth: true
     });

@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 import styles from './Archive.module.scss';
 import { setPageTitle, dateFormatter } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider, Dialog } from '@material-ui/core';
-import { CenterComponent } from '../../../tools/PlacingComponents';
+import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, FormControlLabel, Checkbox } from '@material-ui/core';
+import { CenterComponent, Marger } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState, parseTwitterDate } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
@@ -15,12 +15,19 @@ import FileUploadIcon from '@material-ui/icons/CloudUpload';
 import Timer from 'timerize';
 import JSZip from 'jszip';
 import LANG from '../../../classes/Lang/Language';
+import SAVED_ARCHIVES, { SavedArchiveInfo } from '../../../tools/SavedArchives/SavedArchives';
+import FolderIcon from '@material-ui/icons/Folder';
+import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteAllIcon from '@material-ui/icons/DeleteSweep';
+import clsx from 'clsx';
+import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 
 type ArchiveState = {
   loaded: string;
   is_error: boolean | string;
   in_load: string;
-  loading_state: ArchiveReadState | "prefetch" | "converting";
+  loading_state: ArchiveReadState | "prefetch" | "read_save";
   quick_delete_open: boolean;
   in_drag: boolean;
 };
@@ -52,9 +59,40 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
     // Subscribe to archive readyness when in load
     if (this.state.in_load) {
-      this.state.loading_state = SETTINGS.archive.state;
-      this.checkOnReadyArchive();
+      if (SETTINGS.archive) {
+        this.state.loading_state = SETTINGS.archive.state;
+        this.checkOnReadyArchive();
+      }
+      else {
+        this.state.loading_state = "read_save";
+      }
     }
+
+    this.checkOnReadySavedArchive();
+  }
+
+  checkOnReadySavedArchive() {
+    SAVED_ARCHIVES.onload = async ({ detail }) => {
+      const name = this.state.in_load;
+
+      SETTINGS.archive_name = name;
+      SETTINGS.archive = detail;
+      SETTINGS.archive_in_load = "";
+
+      await this.doArchiveInit();
+    };
+
+    SAVED_ARCHIVES.onerror = (err: CustomEvent) => {
+      if (this.active)
+        this.setState({
+          is_error: true,
+          in_load: ""
+        });
+      
+      console.error(err);
+      SETTINGS.archive = undefined;
+      SETTINGS.archive_in_load = "";
+    };
   }
 
   // Subscribe to archive readyness
@@ -67,54 +105,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       SETTINGS.archive_name = name;
       SETTINGS.archive_in_load = "";
 
-      // Reset le statut "utilisateurs impossibles à trouver"
-      UserCache.clearFailCache();
-
-      // Récupère les personnes qui apparaissent plus de 
-      // THRESHOLD_PREFETCH fois dans l'archive pour les précharger
-      // (permet de voir leur PP sans DL les tweets)
-      const users_in_archive: { [userId: string]: number } = {
-        [SETTINGS.archive.owner]: THRESHOLD_PREFETCH
-      };
-
-      for (const t of SETTINGS.archive.all) {
-        const rt = t.retweeted_status ? t.retweeted_status : t;
-
-        if (rt.user.id_str in users_in_archive) {
-          users_in_archive[rt.user.id_str]++;
-        }
-        else {
-          users_in_archive[rt.user.id_str] = 1;
-        }
-      }
-
-      // Récupère les utilisateurs apparaissant plus de THRESHOLD_PREFETCH fois
-      const most_actives = Object.entries(users_in_archive)
-        .filter(([_, c]) => c >= THRESHOLD_PREFETCH)
-        .map(([id, ]) => id);
-
-      const cache_dl = UserCache.prefetch(most_actives);
-
-      // Préfetch si actif
-      if (this.active) {
-        this.setState({
-          loading_state: "prefetch"
-        });
-
-        // Lance le DL
-        try {
-          await cache_dl;
-        } catch (e) { }
-
-        console.log("Archive loaded in " + this.timer.elapsed + "s");
-         
-        // Terminé, composant prêt !
-        if (this.active)
-          this.setState({
-            loaded: name,
-            in_load: ""
-          });
-      }
+      await this.doArchiveInit();
     };
 
     SETTINGS.archive.onerror = (err: CustomEvent) => {
@@ -157,6 +148,75 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           loading_state: "extended_read"
         });
     };
+  }
+
+  async doArchiveInit() {
+    // Reset le statut "utilisateurs impossibles à trouver"
+    UserCache.clearFailCache();
+
+    // Récupère les personnes qui apparaissent plus de 
+    // THRESHOLD_PREFETCH fois dans l'archive pour les précharger
+    // (permet de voir leur PP sans DL les tweets)
+    const users_in_archive: { [userId: string]: number } = {
+      [SETTINGS.archive.owner]: THRESHOLD_PREFETCH
+    };
+
+    for (const t of SETTINGS.archive.all) {
+      const rt = t.retweeted_status ? t.retweeted_status : t;
+
+      if (rt.user.id_str in users_in_archive) {
+        users_in_archive[rt.user.id_str]++;
+      }
+      else {
+        users_in_archive[rt.user.id_str] = 1;
+      }
+    }
+
+    // Récupère les utilisateurs apparaissant plus de THRESHOLD_PREFETCH fois
+    const most_actives = Object.entries(users_in_archive)
+      .filter(([_, c]) => c >= THRESHOLD_PREFETCH)
+      .map(([id, ]) => id);
+
+    const cache_dl = UserCache.prefetch(most_actives);
+
+    // Préfetch si actif
+    if (this.active) {
+      this.setState({
+        loading_state: "prefetch"
+      });
+
+      // Lance le DL
+      try {
+        await cache_dl;
+      } catch (e) { }
+
+      if (this.timer)
+        console.log("Archive loaded in " + this.timer.elapsed + "s");
+        
+      // Terminé, composant prêt !
+      if (this.active)
+        this.setState({
+          loaded: SETTINGS.archive_name,
+          in_load: ""
+        });
+    }
+  }
+
+  onSavedArchiveSelect = async (info: SavedArchiveInfo) => {
+    this.setState({
+      loaded: "",
+      in_load: info.name,
+      is_error: false,
+      loading_state: "read_save"
+    });
+
+    SETTINGS.archive = undefined;
+    SETTINGS.archive_name = "";
+    SETTINGS.archive_in_load = info.name;
+
+    // Failure and success will be treated automatically via events
+    SAVED_ARCHIVES.getArchive(info.uuid);
+    this.timer = new Timer();
   }
 
   componentDidMount() {
@@ -211,7 +271,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         loaded: "",
         in_load: filename,
         is_error: false,
-        loading_state: f instanceof Promise ? "converting" : "reading"
+        loading_state: "reading"
       });
       SETTINGS.archive_name = "";
       SETTINGS.archive_in_load = filename;
@@ -236,8 +296,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         return LANG.reading_user_infos;
       case "prefetch":
         return LANG.gathering_user_data;
-      case "converting":
-        return LANG.lightening_archive;
+      case "read_save":
+        return LANG.reading_saved_archive;
     }
   }
 
@@ -345,10 +405,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return (
       <div>
         <Typography variant="h5" component="h2" className={styles.title}>
-          {this.state.loading_state === "converting" ? 
-            LANG.please_wait : 
-            LANG.loading
-          }
+          {LANG.loading}
         </Typography>
         <Typography className={styles.subtitle}>
           {msg}
@@ -480,13 +537,39 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       }
     }
   };
+
+  get is_available_for_loading() {
+    if (this.state.in_drag) {
+      return false;
+    }
+    else if (this.state.loaded) {
+      // Chargée
+      return true
+    }
+    else if (this.state.in_load) {
+      // En charge
+      return false
+    }
+    else if (this.state.is_error) {
+      // Si erreur
+      return true;
+    }
+    else {
+      // Aucune chargée
+      return true;
+    }
+  }
+
+  get has_archive_loaded() {
+    return !!this.state.loaded;
+  }
   
   render() {
     const actions = this.loadRightActions();
 
     return (
       <div className={styles.root}>
-        <AppBar position="static">
+        <AppBar position="relative">
           <Toolbar>
             <Typography variant="h6" color="inherit">
               Archive
@@ -496,17 +579,23 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
         {this.modalQuickDelete()}
   
-        <Container maxWidth="sm" className={styles.center}>
-          <CenterComponent>
-            <Card innerRef={this.card_ref} className={styles.card}>
-              <CardContent>
-                {this.loadRightContent()}
-              </CardContent>
-              {actions && <CardActions>
-                {actions}
-              </CardActions>}
-            </Card>
-          </CenterComponent>
+        <Container maxWidth="sm" className={styles.container}>
+          <Card innerRef={this.card_ref} className={styles.card}>
+            <CardContent>
+              {this.loadRightContent()}
+            </CardContent>
+            {actions && <CardActions>
+              {actions}
+            </CardActions>}
+          </Card>
+
+          <Marger size=".5rem" />
+          
+          <AvailableSavedArchives 
+            canSave={this.has_archive_loaded && SETTINGS.archive.owner === SETTINGS.user.twitter_id} 
+            block={!this.is_available_for_loading} 
+            onLoad={this.onSavedArchiveSelect} 
+          />
         </Container>
       </div>
     );
@@ -516,3 +605,410 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     return ReactDOM.findDOMNode(this) as Element;
   }
 }
+
+
+/// -------------------
+/// *  ARCHIVE SAVER  *
+/// -------------------
+
+type AvailableSavedArchivesProps = {
+  onLoad: (archive: SavedArchiveInfo) => void;
+  canSave?: boolean;
+  block?: boolean;
+  theme: Theme;
+};
+type AvailableSavedArchivesState = {
+  available: SavedArchiveInfo[] | null | undefined;
+  save_modal: boolean;
+  delete_modal: boolean | string;
+};
+
+class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesProps, AvailableSavedArchivesState> {
+  state: AvailableSavedArchivesState = {
+    available: null,
+    save_modal: false,
+    delete_modal: false,
+  };
+
+  componentDidMount() {
+    this.refreshSavedArchivesList();
+  }
+
+  onArchiveSelect = (info: SavedArchiveInfo) => {
+    this.props.onLoad(info);
+  };
+
+  onArchiveDelete = (info: SavedArchiveInfo) => {
+    this.setState({
+      delete_modal: info.uuid
+    });
+  };
+
+  onArchiveSave = () => {
+    this.setState({ 
+      save_modal: true 
+    });
+  };
+
+  onArchiveSaveSuccess = () => {
+    this.setState({
+      save_modal: false
+    });
+    this.refreshSavedArchivesList();
+  };
+
+  onDeleteAll = () => {
+    this.setState({
+      delete_modal: true
+    });
+  };
+
+  onDeleteSuccess = () => {
+    this.setState({
+      delete_modal: false
+    });
+    this.refreshSavedArchivesList();
+  }
+
+  refreshSavedArchivesList() {
+    if (!SAVED_ARCHIVES.can_work) {
+      this.setState({
+        available: undefined
+      });
+      return;
+    }
+
+    this.setState({
+      available: null
+    });
+    // Load the archive save list pour current user
+    SAVED_ARCHIVES.getRegistredArchives()
+      .then(list => this.setState({
+        available: list
+      }));
+  }
+
+  renderArchiveList() {
+    return (
+      <List>
+        <ListSubheader className={styles.list_archive_header}>
+          <span>
+            {LANG.available_saved_archives}
+          </span>
+          
+          <span className={styles.list_archive_header_buttons}>
+            {/* The save and delete button */}
+            {this.props.canSave && <CustomTooltip title={LANG.save_current_archive} placement="top">
+              <IconButton style={{ marginRight: 5 }} edge="end" aria-label="save" onClick={this.onArchiveSave}>
+                <SaveIcon style={{
+                  color: this.props.theme.palette.primary.main
+                }} />
+              </IconButton>
+            </CustomTooltip>}
+            
+            <CustomTooltip title={LANG.delete_all_archives} placement="top">
+              <IconButton edge="end" aria-label="delete-all" onClick={this.onDeleteAll}>
+                <DeleteAllIcon style={{
+                  color: this.props.theme.palette.secondary.main
+                }} />
+              </IconButton>
+            </CustomTooltip>
+          </span>
+        </ListSubheader>
+        {this.state.available.map(a => this.renderArchiveItem(a))}
+
+        {this.state.available.length === 0 && <Typography 
+          variant="body1" 
+          align="center" 
+          color="textSecondary"
+          style={{ marginBottom: 12 }}
+        >
+          {LANG.no_archive_saved}
+
+          {this.props.canSave && <Typography variant="body2" component="span">
+            <br />
+            <MUILink href="#" onClick={() => this.setState({ save_modal: true })}>
+              {LANG.save_current_archive} ?
+            </MUILink>
+          </Typography>}
+        </Typography>}
+      </List>
+    );
+  }
+
+  renderArchiveItem(info: SavedArchiveInfo) {
+    const saved_at_date = dateFormatter(
+      SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", 
+      new Date(info.save_date)
+    );
+
+    return (
+      <ListItem key={info.uuid} button onClick={() => this.onArchiveSelect(info)}>
+        <ListItemAvatar>
+          <Avatar>
+            <FolderIcon />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={this.renderSaveText(info)}
+          secondary={`${LANG.saved_on} ${saved_at_date}`}
+        />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="delete" onClick={() => this.onArchiveDelete(info)}>
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    );
+  }
+
+  renderSaveText(info: SavedArchiveInfo) {    
+    const last_tweet_date = dateFormatter(
+      SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", 
+      new Date(info.last_tweet_date)
+    );
+
+    return (
+      <Typography variant="body1" component="span">
+        <strong>{info.tweets}</strong> tweets
+        {info.dms > 0 && <span>
+          , <strong>{info.dms}</strong> {LANG.dms}
+        </span>} 
+        <br />
+        {LANG.last_tweet_on} {last_tweet_date}
+      </Typography>
+    );
+  }
+
+  render() {
+    return (
+      <Paper variant="outlined" style={{ width: '100%' }}>
+        {this.props.canSave && this.state.save_modal && <ArchiveSaver 
+          onClose={() => this.setState({ save_modal: false })}
+          onSave={this.onArchiveSaveSuccess} 
+        />}
+
+        {this.state.delete_modal && <ArchiveDeleter 
+          archive={typeof this.state.delete_modal === 'string' ? this.state.delete_modal : false}
+          onClose={() => this.setState({ delete_modal: false })}
+          onDelete={this.onDeleteSuccess}
+        />}
+
+        <div style={{ width: '100%' }} className={clsx(this.props.block ? styles.blocked : "", styles.smooth_opacity)}>
+          {this.state.available && this.renderArchiveList()}
+
+          {this.state.available === null && <CenterComponent style={{
+            marginBottom: 15,
+            marginTop: 15,
+          }}>
+            <CircularProgress style={{width: '48px', height: '48px'}} thickness={2} />
+          </CenterComponent>}
+
+          {this.state.available === undefined && <CenterComponent style={{
+            marginBottom: 15,
+            marginTop: 15,
+            padding: 10,
+            textAlign: 'center'
+          }}>
+            <Typography variant="h6" color="textSecondary">
+              {LANG.cant_save_archive_on_this_device}
+            </Typography>
+          </CenterComponent>}
+        </div>
+      </Paper>
+    );
+  }
+}
+
+const AvailableSavedArchives = withTheme(AvailableSavedArchivesRaw);
+
+const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
+  const [onSave, setOnSave] = React.useState<boolean | undefined>(false);
+
+  async function handleSave() {
+    setOnSave(true);
+
+    try {
+      await SAVED_ARCHIVES.registerArchive(SETTINGS.archive, SETTINGS.archive_name);
+  
+      if (props.onSave) {
+        props.onSave();
+      }
+      else if (props.onClose) {
+        props.onClose();
+      }
+    } catch (e) {
+      setOnSave(undefined);
+    }
+  }
+
+  function onError() {
+    return (
+      <>
+        <DialogTitle>{LANG.error}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {LANG.unable_to_save_archive}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={props.onClose} color="primary">
+            {LANG.close}
+          </Button>
+        </DialogActions>
+      </>
+    );
+  }
+
+  function onAsk() {
+    return (
+      <>
+        <DialogTitle>{LANG.save_current_archive} ?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {LANG.save_current_archive_explaination}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={props.onClose} color="secondary">
+            {LANG.cancel}
+          </Button>
+          <Button onClick={handleSave} color="primary" autoFocus>
+            {LANG.save}
+          </Button>
+        </DialogActions>
+      </>
+    );
+  }
+  
+  function whenSave() {
+    return (
+      <>
+        <DialogTitle>{LANG.saving}...</DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ marginTop: -10 }}>
+            {LANG.it_may_take_a_while}.
+          </DialogContentText>
+
+          <CenterComponent style={{ marginTop: 5, marginBottom: 20 }}>
+            <CircularProgress size="56px" thickness={2} />
+          </CenterComponent>
+        </DialogContent>
+      </>
+    );
+  }
+
+  return (
+    <Dialog open fullWidth onClose={onSave ? undefined : props.onClose}>
+      {onSave ? whenSave() : onSave === undefined ? onError() : onAsk()}
+    </Dialog>
+  );
+};
+
+const ArchiveDeleter = (props: { onClose?: () => void, onDelete?: () => void, archive: string | false }) => {
+  const [onDelete, setOnDelete] = React.useState<boolean | undefined>(false);
+  const [removeAll, setRemoveAll] = React.useState(false);
+
+  async function handleDelete() {
+    setOnDelete(true);
+
+    try {
+      if (props.archive) {
+        await SAVED_ARCHIVES.removeArchive(props.archive);
+      }
+      else if (removeAll) {
+        // Delete all
+        await SAVED_ARCHIVES.removeAllArchives();
+      }
+      else {
+        // All archives of current user
+        await SAVED_ARCHIVES.removeCurrentUser();
+      }
+
+      if (props.onDelete) {
+        props.onDelete();
+      }
+      else if (props.onClose) {
+        props.onClose();
+      }
+    } catch (e) {
+      setOnDelete(undefined);
+    }
+  }
+
+  function onError() {
+    return (
+      <>
+        <DialogTitle>{LANG.error}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {LANG.unable_to_delete_archive}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={props.onClose} color="primary">
+            {LANG.close}
+          </Button>
+        </DialogActions>
+      </>
+    );
+  }
+
+  function onAsk() {
+    return (
+      <>
+        <DialogTitle>{props.archive ? LANG.remove_one_archive : LANG.remove_all_archives} ?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {LANG.remove_archives_explaination}
+            {!props.archive && <>
+              <br /><br />
+              {LANG.remove_all_archives_explaination}
+            </>}
+          </DialogContentText>
+          
+          {!props.archive && <FormControlLabel
+            control={<Checkbox
+              checked={removeAll} 
+              onChange={(_, checked) => setRemoveAll(checked)} 
+              value="remove-all" 
+            />}
+            label={LANG.remove_all_checkbox}
+          />}
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={props.onClose} color="primary" autoFocus>
+            {LANG.cancel}
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            {LANG.remove}
+          </Button>
+        </DialogActions>
+      </>
+    );
+  }
+  
+  function whenSave() {
+    return (
+      <>
+        <DialogTitle>{LANG.removing}...</DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ marginTop: -10 }}>
+            {LANG.it_may_take_a_while}.
+          </DialogContentText>
+
+          <CenterComponent style={{ marginTop: 5, marginBottom: 20 }}>
+            <CircularProgress size="56px" thickness={2} />
+          </CenterComponent>
+        </DialogContent>
+      </>
+    );
+  }
+
+  return (
+    <Dialog open fullWidth onClose={onDelete ? undefined : props.onClose}>
+      {onDelete ? whenSave() : onDelete === undefined ? onError() : onAsk()}
+    </Dialog>
+  );
+};

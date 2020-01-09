@@ -100,7 +100,7 @@ export default {
   explore_archive: "Explore your archive",
   whats_a_archive: "What's a Twitter Archive",
   whats_a_archive_p1: `An archive is a compilation of all your actions inside the social network. It contains all your tweets,
-  direct messages, moments, favorites, blocks and many more.`,
+  direct messages, moments, mutes, blocks and many more.`,
   how_to_download: "Learn how to download your archive",
   powerful_search: "Powerful search",
   powerful_search_p1: `Archive Explorer let you find in seconds tweets and direct messages. 
@@ -155,7 +155,7 @@ export default {
 
   /** BEGIN ARCHIVE CMPT */
   reading_dms: "Reading direct messages",
-  reading_fav_moments_other: "Reading favorites, moments, and other information",
+  reading_fav_moments_other: "Reading blocks, mutes, and other information",
   indexing_tweets: "Indexing tweets",
   unzipping: "Unzipping",
   reading_tweets: "Reading tweets",
@@ -164,7 +164,7 @@ export default {
   lightening_archive: "Archive is quite heavy, lightening a bit...",
   load_an_archive: "Load an archive",
   no_archive_loaded: "You don't have any archive loaded.",
-  load_or_drag_drop: `Load an archive using the button below, 
+  load_or_drag_drop: `Load an archive using the button below, click on a available save,
   or drag-and-drop your archive here.`,
   archive_bad_format: "Archive couldn't be loaded. Please load a new archive with the required format.",
   archive_created: "Archive created",
@@ -173,7 +173,7 @@ export default {
   account: "Account",
   created_at: "created at",
   direct_messages_in: "direct messages in",
-  dont_own_archive: "You don't own this archive, you aren't able to delete tweets from it.",
+  dont_own_archive: "You don't own this archive, you aren't able to save it or delete tweets from it.",
   credentials_expired_cant_deleted: "Twitter credentials have expired, you aren't able to delete tweets.",
   logout_and_in_in: "Log out and in again in",
   load: 'Load',
@@ -183,6 +183,29 @@ export default {
   loading: "Loading...",
   please_wait: "Please wait",
   is_loaded: "is loaded",
+  cant_save_archive_on_this_device: "Archive save isn't available on this device.",
+  last_tweet_on: "Last tweet on",
+  dms: "DMs",
+  saved_on: "Saved on",
+  available_saved_archives: "Saved archives",
+  no_archive_saved: "No save available",
+  save_current_archive: "Save loaded archive",
+  delete_all_archives: "Delete all saves",
+  save_current_archive_explaination: `Currently loaded archive will be saved in your browser.
+  You will find it in the saved archives list, if you logged in with the same Twitter account, on this device.`,
+  save: "Save",
+  saving: "Saving",
+  it_may_take_a_while: "It may take a while",
+  unable_to_save_archive: "Unable to save the current archive.",
+  remove_one_archive: "Remove this archive",
+  remove_all_archives: "Remove all archives",
+  remove_archives_explaination: `Removed archives can't be restored.`,
+  remove_all_archives_explaination: `By default, only saves associated with your Twitter account are removed.
+  If you want to wipe the entirety of archive saves on this device, check the box below.`,
+  remove: "Remove",
+  removing: "Removing",
+  remove_all_checkbox: "Remove all saves of this device",
+  reading_saved_archive: "Reading saved archive",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */
@@ -228,6 +251,19 @@ export default {
   multiline_regex_dot: "[Regex] Dot matches new line",
   search_match_tweet_name: "Search matches TN/screen name",
   search_options: "Search options",
+  tweet_count_modal_title: "Posted tweet count evolution",
+  posted_tweets_per: "Posted tweets per",
+  day_of: "day of",
+  month: "month",
+  tweet_count_chart: "Chart of tweet post rate",
+  most_mentionned: "Most mentionned people",
+  no_mentionned_users: "No user mentionned",
+  other_mentionned_users: "Other users",
+  load_more: "Load more",
+  mentionned_directly: "Directly mentionned",
+  inside_a_conversation: "mentionned in a conversation",
+  times: "times",
+  most_mentionned_modal_title: "Mentions",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
@@ -292,9 +328,9 @@ export default {
 
   /** BEGIN Task CMPT */
   tweet_deletion: "Tweet deletion",
-  favorite_deletion: "Favorites deletion",
   block_deletion: "Blocks deletion",
   mute_deletion: "Mutes deletion",
+  unknown_deletion: "Unknown task type",
   completed: "completed",
   deleted: "deleted",
   failed: "failed",
@@ -328,16 +364,16 @@ export default {
   keywords_upper: "Keywords",
   keywords_p1: "You can enhance all your queries made in tweet / direct message explorer by adding",
   keywords: "keywords",
-  delete_tweets_more: "Delete tweets, favorites and more",
+  delete_tweets_more: "Delete tweets, blocks and more",
   delete_tweets_more_p1: "Archive Explorer let you delete a batch of tweets, or other information linked to your account.",
   delete_tweets_more_p2: "Please note that",
   delete_tweets_more_p3: "every deletion is made on your Twitter account, and is irremediable.",
-  delete_tweets_more_p4: "You will not be able to get your tweets, favorites or anything else back",
+  delete_tweets_more_p4: "You will not be able to get your tweets, blocks or anything else back",
   tweets_more_p1: `For tweets, you can select tweets individually via Tweet Explorer (Explore tab), or choose from multiple months
   and years with Quick Delete, available in the Archive tab.`,
-  favs_mutes_blocks: "Favorites, mutes and blocks",
-  favs_mutes_blocks_p1: `Favorites, mutes and blocks can be deleted in this tab. This kind of removal is "all or nothing", you can't 
-  individually select which favorite or block you will remove.`,
+  favs_mutes_blocks: "Mutes and blocks",
+  favs_mutes_blocks_p1: `Mutes and blocks can be deleted in this tab. This kind of removal is "all or nothing", you can't 
+  individually select which mute or block you will remove.`,
   limitations: "Limitations",
   retweet_data: "Retweet data",
   retweet_data_p1: `When you browse your tweets, you may see strange retweet information: 
@@ -368,17 +404,14 @@ export default {
   classic_not_supported: `Classic archive is not supported.
   You should have a GDPR archive to access many options here.
   Learn how to download a GDPR archive with the help below.`,
-  archive_not_loaded_p1: `Here, you will have access to many options, like removing your blocks, cleaning your favorites and more.
+  archive_not_loaded_p1: `Here, you will have access to many options, like removing your blocks, cleaning your mutes and more.
   To start, learn how to download a archive with the help below.`,
   more: "More",
   delete_all_your: "Delete all your",
   permanently_remove_your: "This action will permanently remove all your",
   from_twitter_account: "from your Twitter account",
   are_you_sure_you_want: "Are you sure you want to do this",
-  favorites: "Favorites",
   you_have: "You have",
-  tweets_in_your_favorites: "tweets into your favorites. Warning: Due to a Twitter API bug, deletion of favorites could not be complete",
-  delete_all_favorites: "Delete all my favorited tweets",
   blocks: "Blocks",
   you_have_blocked: "You have blocked",
   users: "users",
@@ -400,7 +433,6 @@ export default {
   find_tweets_since: "Find tweets/DMs made since a specified date.",
   find_tweets_until: "Find tweets/DMs made before a specified date.",
   find_tweets_from: "Find tweets/DMs sent by specified user.",
-  favorites_modal: "favorites",
   blocked_modal: "blocked accounts",
   muted_modal: "muted accounts",
   /** END More CMPT */

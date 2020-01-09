@@ -445,5 +445,10 @@ export function truncateInteractionCount(count: number) {
   return String(count);
 }
 
-// DEBUG
-window.DEBUG.dark_mode = toggleDarkMode;
+export function daysInMonth(month: number, year: number) {
+  return new Date(year, month, 0).getDate();
+}
+
+export function randomIntFromInterval(min: number, max: number) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}

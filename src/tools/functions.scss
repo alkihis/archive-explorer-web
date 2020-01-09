@@ -1,3 +1,5 @@
+$bottom_bar_height: 56px;
+
 @mixin mobile {
   @media screen and (max-width: 900px) {
     @content;
