@@ -124,17 +124,17 @@ export default {
   travel_through_time: "Voyagez à travers le temps",
   travel_through_time_p1: `Explorez vos tweets ou conversations privées directement par mois ou année,
   revivez chaque moment passé sur Twitter, sans aucune barrière temporelle.`,
-  fav_deletion: "Suppression de blocks",
-  fav_deletion_p1: `Vous avez blocké des dizaines de milliers d'utilisateurs avec une block-list,
-  et vous avez envie de faire table rase du passé ?
-  Deux clics, et c'est fini.`,
+  most_mentionned_per_month: "Meilleurs compagnons",
+  most_mentionned_per_month_p1: `Twitter Archive Explorer vous permet de voir rapidement, par mois ou sur
+  la totalité de votre archive, avec qui vous avez le plus interagi sur Twitter. 
+  Qui étaient vos meilleurs amis d'il y a 5 ans ?`,
   background_tasks: "Tâches en arrière-plan",
   background_tasks_p1: `Avec un nombre considérable de tweets, favoris ou mutes, leur suppression peut être longue.
   Sans installer aucun programme, ou laisser un ordinateur allumé, supprimez avec des tâches lancées en
   arrière-plan. Vous pouvez les annuler à tout moment.`,
   tweets_of_the_day: "Tweets du jour",
   tweets_of_the_day_p1: `Juste pour le fun, ou par nostalgie, trouvez vos tweets postés le même jour,
-  les années précédentes. Vous pourrez être surpris•e !`,
+  les années précédentes. Vous pourrez être surpris !`,
   twitter_at_history: "Historique de vos @ Twitter ",
   twitter_at_history_p1: `En tant qu'utilisateur chevronné de Twitter, vous êtes vous déjà demandé
   quand vous avez changé votre @ Twitter pour la dernière fois ?
@@ -206,6 +206,10 @@ export default {
   removing: "Suppression",
   remove_all_checkbox: "Supprimer toutes les sauvegardes de l'appareil",
   reading_saved_archive: "Lecture de l'archive sauvegardée",
+  quota_warning: "Votre quota de stockage est presque atteint. La sauvegarde de nouvelles archives peut échouer. (Utilisation ",
+  quota_used: "",
+  megabytes_used: "Mo utilisé",
+  used_with_s: "s",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */
@@ -255,8 +259,10 @@ export default {
   posted_tweets_per: "Tweets publiés par",
   day_of: "jour de",
   month: "mois",
-  tweet_count_chart: "Graphique du nombre de tweets postés",
+  tweet_count_chart: "Nombre de tweets publiés",
   most_mentionned: "Personnes les plus mentionnées",
+  in_all_archive: "dans l'archive",
+  during: "en",
   no_mentionned_users: "Aucun utilisateur mentionné",
   other_mentionned_users: "Autres utilisateurs",
   load_more: "Charger plus",
@@ -264,6 +270,7 @@ export default {
   inside_a_conversation: "mentionné dans une conversation",
   times: "fois",
   most_mentionned_modal_title: "Mentions",
+  statistics: "Statistiques",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
@@ -406,6 +413,11 @@ export default {
   archive_not_loaded_p1: `Ici, vous avez accès à de nombreuses options supplémentaires, comme la suppression
   des blocks, des favoris et encore plus.
   Pour commencer, apprenez à télécharger une archive Twitter avec l'aide ci-dessous.`,
+  archive_saving: "Sauvegarde d'archives",
+  archive_saving_p1: `Pour éviter que vous ayez à recharger votre archive depuis un fichier à chaque fois
+  que vous vous rendez sur Archive Explorer, nous vous proposons de l'enregistrer dans votre navigateur. 
+  Une sauvegarde locale est possible lorsque l'archive chargée appartient à l'utilisateur actuellement connecté.`,
+  archive_saving_p2: `Toute sauvegarde est locale à l'appareil, elle n'est pas envoyée sur les serveurs d'Archive Explorer.`,
   more: "Plus",
   delete_all_your: "Supprimer tous vos",
   permanently_remove_your: "Cette action va supprimer définitivement tous vos",
@@ -446,7 +458,7 @@ export default {
   tasks_stopped: "Toutes les tâches ont été arrêtées.",
   task_started: "La tâche a été lancée.",
   task_rate_limit: "Vous avez atteint le nombre maximum de tâches en cours. Attendez qu'une tâche se termine avant d'en lancer une nouvelle.",
-  task: "Tâche",
+  task: "La tâche",
   has_ended: "s'est terminée",
   /** END Tasks file */
 

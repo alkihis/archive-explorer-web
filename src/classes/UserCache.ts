@@ -70,6 +70,12 @@ class __UserCache extends Cache<FullUser> {
 
     return matched;
   }
+
+  clear() {
+    this.user_cache = {};
+    this.cache = {};
+    this.asked_by_empty = new Set;
+  }
 }
 
 export const UserCache = new __UserCache('batch/users');

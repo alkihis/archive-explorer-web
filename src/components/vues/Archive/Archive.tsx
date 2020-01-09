@@ -620,6 +620,7 @@ type AvailableSavedArchivesProps = {
 type AvailableSavedArchivesState = {
   available: SavedArchiveInfo[] | null | undefined;
   save_modal: boolean;
+  quota: { used: number; available: number; quota: number; };
   delete_modal: boolean | string;
 };
 
@@ -628,6 +629,7 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
     available: null,
     save_modal: false,
     delete_modal: false,
+    quota: { used: 0, available: 1, quota: 0 },
   };
 
   componentDidMount() {
@@ -685,19 +687,27 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
     SAVED_ARCHIVES.getRegistredArchives()
       .then(list => this.setState({
         available: list
-      }));
+      }))
+      .then(() => SAVED_ARCHIVES.usedQuota())
+      .then(used => this.setState({
+        quota: used
+      }))
+      .catch(e => console.error("Unable to get list of archives stored", e));
   }
 
   renderArchiveList() {
+    const used_quota = Math.trunc(this.state.quota.used / 1024 / 1024);
+
     return (
       <List>
+        {/* Title and buttons */}
         <ListSubheader className={styles.list_archive_header}>
           <span>
             {LANG.available_saved_archives}
           </span>
           
+          {/* The save and delete button */}
           <span className={styles.list_archive_header_buttons}>
-            {/* The save and delete button */}
             {this.props.canSave && <CustomTooltip title={LANG.save_current_archive} placement="top">
               <IconButton style={{ marginRight: 5 }} edge="end" aria-label="save" onClick={this.onArchiveSave}>
                 <SaveIcon style={{
@@ -715,13 +725,39 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
             </CustomTooltip>
           </span>
         </ListSubheader>
+
+        {/* Available MB */}
+        {this.state.quota.available !== 1 && this.state.available.length > 0 && <Typography 
+          color="textSecondary"
+          component="li"
+          style={{ fontSize: '.8rem', paddingLeft: 16, paddingRight: 16, marginTop: -15 }}
+          gutterBottom
+        >
+          {used_quota} {LANG.megabytes_used}{used_quota > 1 ? LANG.used_with_s : ""}
+        </Typography>}
+
+        {/* Quota warning */}
+        {this.state.quota.quota > 0.7 && <Typography 
+          color="error" 
+          component="li" 
+          style={{ paddingLeft: 16, paddingRight: 16 }}
+          gutterBottom
+        >
+          <strong>
+            {LANG.quota_warning}{Math.trunc(this.state.quota.quota * 100)}%{LANG.quota_used})
+          </strong>
+        </Typography>}
+        
+        {/* All the saved archives */}
         {this.state.available.map(a => this.renderArchiveItem(a))}
 
+        {/* Invitation to save archives */}
         {this.state.available.length === 0 && <Typography 
           variant="body1" 
           align="center" 
           color="textSecondary"
           style={{ marginBottom: 12 }}
+          component="li"
         >
           {LANG.no_archive_saved}
 

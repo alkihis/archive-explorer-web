@@ -125,6 +125,21 @@ export default class More extends React.Component {
 
         <Marger size={8} />
 
+        {/* ARCHIVE SAVE */}
+        <Typography variant="h5" className={classes.second_title}>
+          {LANG.archive_saving}
+        </Typography>
+
+        <Typography className={classes.help_p}>
+          {LANG.archive_saving_p1}
+
+          <br />
+
+          <strong>{LANG.archive_saving_p2}</strong>
+        </Typography>
+
+        <Marger size={8} />
+
         {/* LIMITATIONS */}
         <Typography variant="h5" className={classes.second_title}>
           {LANG.limitations}

@@ -21,6 +21,7 @@ import TweetCountChartIcon from '@material-ui/icons/ShowChart';
 import MostMentionnedIcon from '@material-ui/icons/Forum';
 import TweetNumberChart from '../../charts/TweetNumberChart/TweetNumberChart';
 import MostMentionned from '../../charts/MostMentionned/MostMentionned';
+import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 
 
 const ExpansionPanel = withStyles({
@@ -76,7 +77,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   };
   
   get can_show_speeddial() {
-    return !!this.state.month && (!this.is_special_month || this.is_all);
+    return !!this.state.month && (!this.is_special_month || this.is_all) && !this.state.found;
   }
 
   get is_special_month() {
@@ -574,7 +575,7 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
           onClose={handleModalClose}
           title={LANG.most_mentionned_modal_title}
         >
-          <MostMentionned tweets={props.loaded} />
+          <MostMentionned tweets={props.loaded} month={props.month === "*" ? undefined : props.month} />
         </StatsModal>
       );
     }
@@ -604,26 +605,28 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
   return (
     <Hidden smDown>
       {renderModal()}
-      <SpeedDial
-        ariaLabel="SpeedDial openIcon example"
-        className={classes.speedDial}
-        hidden={props.hidden}
-        icon={<InsertChartIcon />}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        open={open}
-      >
-        {actions
-          .filter(a => a.validate ? a.validate(props.month, props.loaded) : true)
-          .map((action, index) => (
-            <SpeedDialAction
-              key={index}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={() => handleAction(action)}
-            />
-          ))}
-      </SpeedDial>
+      <CustomTooltip title={LANG.statistics}>
+        <SpeedDial
+          ariaLabel="SpeedDial openIcon example"
+          className={classes.speedDial}
+          hidden={props.hidden}
+          icon={<InsertChartIcon />}
+          onClose={handleClose}
+          onOpen={handleOpen}
+          open={open}
+        >
+          {actions
+            .filter(a => a.validate ? a.validate(props.month, props.loaded) : true)
+            .map((action, index) => (
+              <SpeedDialAction
+                key={index}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                onClick={() => handleAction(action)}
+              />
+            ))}
+        </SpeedDial>
+      </CustomTooltip>
     </Hidden>
   );
 }

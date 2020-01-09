@@ -4,6 +4,7 @@ import { Typography, ListItem, ListItemAvatar, Avatar, ListItemText, useTheme, L
 import LANG from '../../../classes/Lang/Language';
 import { FullUser } from 'twitter-d';
 import UserCache from '../../../classes/UserCache';
+import { getMonthText } from '../../../helpers';
 
 type MentionsSorted = {
   count: {
@@ -17,7 +18,7 @@ const DEFAULT_SHOWED_USERS = 8;
 const MAX_SHOWED_USERS = DEFAULT_SHOWED_USERS * 4;
 const TWITTER_LINK = "https://twitter.com/";
 
-export default function MostMentionned(props: { tweets: PartialTweet[] }) {
+export default function MostMentionned(props: { tweets: PartialTweet[], month?: string }) {
   const [users, setUsers] = React.useState<{ [screenName: string]: FullUser }>({});
   const [showedUsers, setShowedUsers] = React.useState(DEFAULT_SHOWED_USERS); 
   const [mentions, setMentions] = React.useState<MentionsSorted[]>([]);
@@ -84,6 +85,12 @@ export default function MostMentionned(props: { tweets: PartialTweet[] }) {
 
   const canShowMore = showedUsers < MAX_SHOWED_USERS && showedUsers < mentions.length;
 
+  let current_month = LANG.in_all_archive;
+  if (props.month) {
+    const [year, month] = props.month.split('-', 2);
+    current_month = LANG.during + " " + getMonthText(month).toLowerCase() + " " + year;
+  }
+
   return (
     <>
       {mentions.length === 0 && <Typography color="textSecondary" align="center">
@@ -92,7 +99,7 @@ export default function MostMentionned(props: { tweets: PartialTweet[] }) {
 
       {mentions.length > 0 && <div>
         <Typography variant="h6">
-          {LANG.most_mentionned}
+          {LANG.most_mentionned} {current_month}
         </Typography>
 
         <List>

@@ -114,9 +114,9 @@ const StaticPresentation: React.FC = () => {
                 </div>
 
                 <div>
-                  <h5>{LANG.fav_deletion}</h5>
+                  <h5>{LANG.most_mentionned_per_month}</h5>
                   <p>
-                    {LANG.fav_deletion_p1}
+                    {LANG.most_mentionned_per_month_p1}
                   </p>
                 </div>
 

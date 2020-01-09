@@ -44,7 +44,50 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
 
   protected store_by_user_id: { [userId: string]: LocalForage } = {};
 
-  
+  constructor() {
+    super();
+
+    if (this.can_work && window.navigator && navigator.storage && navigator.storage.persisted) {
+      // Ask for persistency
+      navigator.storage.persisted()
+        .then(is_persistent => {
+          if (!is_persistent) {
+            console.log("Storage for archive saves is not persistent, trying to be persistent.");
+            return navigator.storage.persist();
+          }
+          return undefined;
+        })
+        .then(has_succeeded => {
+          if (has_succeeded === undefined) {
+            return;
+          }
+          if (!has_succeeded) {
+            console.log("Persistence demand failed. Storage may be wiped in the future.");
+          }
+        })
+        .catch(e => console.error("Unable to ask for persistency", e));
+    }
+  }
+
+  /**
+   * Percentage usage of storage quota. Warning: this does **not** work in Safari !
+   */
+  async usedQuota() {
+    if (window.navigator && navigator.storage && navigator.storage.estimate) {
+      const estimated = await navigator.storage.estimate();
+      return {
+        available: estimated.quota,
+        used: estimated.usage,
+        quota: estimated.usage / estimated.quota
+      };
+    }
+    return {
+      available: 1,
+      used: 0,
+      quota: 0
+    };
+  }
+
   // -------------------------
   // USER MANAGEMENT FUNCTIONS
   // -------------------------

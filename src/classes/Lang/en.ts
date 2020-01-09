@@ -107,27 +107,26 @@ export default {
   With a simple text field, search by word, phrase or even using regular expressions.
   All that you want is within easy reach.`,
   clean_your_account: "Clean your account",
-  clean_your_account_p1: `The 13 years old you did post embarrassing tweets you don't even remember ?
-  You've used an overkill block list and you want to reverse it ?
+  clean_your_account_p1: `The 13 years old you did post embarrassing tweets you don't even remember?
+  You've used an overkill block list and you want to reverse it?
   Archive Explorer is a tool made for clear your old tweets, by month, year or even
-  with a text query. You'll also be able to delete muted and blocked users !
+  with a text query. You'll also be able to delete muted and blocked users!
   This tool already helps to delete`,
   tweets: "tweets",
   sort_and_filter_tweets: "Sort and filter tweets",
-  specific_wishes: "Specific wishes ? Specific filters.",
-  explore_sort_p1: `Want to explore your shared videos ?
-  See your most popular posts of all times ?
-  Browse through your content without seeing the retweets ?`,
+  specific_wishes: "Specific wishes? Specific filters.",
+  explore_sort_p1: `Want to explore your shared videos?
+  See your most popular posts of all times?
+  Browse through your content without seeing the retweets?`,
   explore_sort_p2: `Explore more precisly your archive by choosing a content filter : 
-  Find your favorites retweets, selfies and top tweets from years ago !`,
+  Find your favorites retweets, selfies and top tweets from years ago!`,
   even_more: 'And even more',
   travel_through_time: "Travel through time",
   travel_through_time_p1: `Explore tweets or DMs conversations directly by year or month,
   relive every moment spent on Twitter, no matter of how far it is.`,
-  fav_deletion: "Blocks deletion",
-  fav_deletion_p1: `You've blocked dozens of thousands of users, through a block-list, and you
-  want to make a clean sweep of your Twitter account past ?
-  Two clicks and it's done.`,
+  most_mentionned_per_month: "Find your best buddies",
+  most_mentionned_per_month_p1: `Twitter Archive Explorer easily shows to you, per month or in the full archive, 
+  with whom you have the most interacted on Twitter. Who were your best friends 5 years ago?`,
   background_tasks: "Background tasks",
   background_tasks_p1: `With a very large number of tweets, blocks or mutes, deletion may be long.
   Without installing any program, or keeping any computer on,
@@ -135,22 +134,23 @@ export default {
   You can cancel them at any time.`,
   tweets_of_the_day: "Tweets of the day",
   tweets_of_the_day_p1: `For fun or for nostalgia, find your posted tweets in the same day, the previous years.
-  You could be surprised !`,
+  You could be surprised!`,
   twitter_at_history: "Twitter @ history",
-  twitter_at_history_p1: `As a old Twitter user, did you ever asked when you've changed your Twitter @ for the last time ?
+  twitter_at_history_p1: `As a old Twitter user, did you ever asked when you've changed your Twitter @ for the last time?
   Archive Explorer let you know every name you've used, and when you've modified it.`,
   open_and_private: "Open and private",
   open_and_private_p1: `Archive Explorer makes your privacy a priority. 
   Not a single of your direct messages are stored in our database.
   Twitter archive data stays in your browser.
-  Have some doubt ? Code is`,
+  Have some doubt? Code is`,
   open_source: "open-source",
   ae_made_by: "Archive Explorer is an open-source tool made by",
   server: 'Server',
   client: 'Client',
   archive_reader: 'Archive reader',
-  help_with_donate: "You find this website useful ? You can help me with your ❤️ by",
+  help_with_donate: "You find this website useful? You can help me with your ❤️ by",
   little: "donating a little",
+  statistics: "Statistics",
   /** END PRESENTATION PAGE */
 
   /** BEGIN ARCHIVE CMPT */
@@ -200,12 +200,16 @@ export default {
   remove_one_archive: "Remove this archive",
   remove_all_archives: "Remove all archives",
   remove_archives_explaination: `Removed archives can't be restored.`,
-  remove_all_archives_explaination: `By default, only saves associated with your Twitter account are removed.
+  remove_all_archives_explaination: `By default, only saves associated to your Twitter account are removed.
   If you want to wipe the entirety of archive saves on this device, check the box below.`,
   remove: "Remove",
   removing: "Removing",
   remove_all_checkbox: "Remove all saves of this device",
   reading_saved_archive: "Reading saved archive",
+  quota_warning: "Your storage quota is almost hit. Errors can occurs if you try to save new archives. (",
+  quota_used: " used",
+  megabytes_used: "MB used",
+  used_with_s: "",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */
@@ -255,8 +259,10 @@ export default {
   posted_tweets_per: "Posted tweets per",
   day_of: "day of",
   month: "month",
-  tweet_count_chart: "Chart of tweet post rate",
+  tweet_count_chart: "Tweet publish count",
   most_mentionned: "Most mentionned people",
+  in_all_archive: "in all archive",
+  during: "in",
   no_mentionned_users: "No user mentionned",
   other_mentionned_users: "Other users",
   load_more: "Load more",
@@ -406,6 +412,11 @@ export default {
   Learn how to download a GDPR archive with the help below.`,
   archive_not_loaded_p1: `Here, you will have access to many options, like removing your blocks, cleaning your mutes and more.
   To start, learn how to download a archive with the help below.`,
+  archive_saving: "Archive save",
+  archive_saving_p1: `To avoid a file import each time we see you on Archive Explorer,
+  you can register an archive inside your web browser.
+  A local save can be made when loaded archive belongs to logged user.`,
+  archive_saving_p2: `Every save is local to one device, it is not sent to the Archive Explorer's server.`,
   more: "More",
   delete_all_your: "Delete all your",
   permanently_remove_your: "This action will permanently remove all your",
