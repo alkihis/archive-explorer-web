@@ -74,7 +74,7 @@ class __UserCache extends Cache<FullUser> {
   clear() {
     this.user_cache = {};
     this.cache = {};
-    this.asked_by_empty = new Set;
+    this.asked_by_empty = new Set();
   }
 }
 

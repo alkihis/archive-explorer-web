@@ -64,6 +64,10 @@ export class Cache<T> {
   }
 
   protected async tinyBulk(ids: string[], id_parameter = "ids") {
+    if (!ids.length) {
+      return {};
+    }
+
     const api_res: T[] = await APIHELPER.request(this.url, {
       method: 'POST',
       parameters: { [id_parameter]: ids },
