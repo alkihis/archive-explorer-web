@@ -271,6 +271,10 @@ export default {
   times: "fois",
   most_mentionned_modal_title: "Mentions",
   statistics: "Statistiques",
+  clear_input: "Vider l'entrée",
+  clear_history: "Effacer l'historique de recherche",
+  search_history: "Historique de recherche",
+  history_cleared: "Historique de recherche effacé.",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
@@ -339,9 +343,9 @@ export default {
   mute_deletion: "Suppression de mutes",
   unknown_deletion: "Tâche de type inconnue",
   completed: "terminé",
-  deleted: "supprimés",
-  failed: "échoués",
-  remaining: "restants",
+  deleted: "supprimé",
+  failed: "échoué",
+  remaining: "restant",
   subscribe: "S'abonner",
   unsubscribe: "Se désabonner",
   /** END Task CMPT */

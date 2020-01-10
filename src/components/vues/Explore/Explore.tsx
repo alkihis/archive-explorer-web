@@ -13,7 +13,9 @@ import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import LANG from '../../../classes/Lang/Language';
 import { DEBUG_MODE } from '../../../const';
+import { TweetSearchHistory, DMSearchHistory } from '../../../tools/SearchHistory';
 
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
@@ -22,6 +24,7 @@ import MostMentionnedIcon from '@material-ui/icons/Forum';
 import TweetNumberChart from '../../charts/TweetNumberChart/TweetNumberChart';
 import MostMentionned from '../../charts/MostMentionned/MostMentionned';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
+import { toast } from '../../shared/Toaster/Toaster';
 
 
 const ExpansionPanel = withStyles({
@@ -378,7 +381,8 @@ export function SearchOptions<T>(props: {
   onClick?: (modes: (keyof T)[], text: string) => void;
   options: T,
   default?: (keyof T)[],
-  fieldLabel?: string
+  fieldLabel?: string,
+  isDM?: boolean,
 }) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [position, setPosition] = React.useState({ left: 0, top: 0 });
@@ -409,6 +413,11 @@ export function SearchOptions<T>(props: {
   }
 
   function handleClick() {
+    if (props.isDM)
+      DMSearchHistory.push(searchInput);
+    else
+      TweetSearchHistory.push(searchInput);
+    
     if (props.onClick)
       props.onClick(options as (keyof T)[], searchInput);
   }
@@ -419,9 +428,21 @@ export function SearchOptions<T>(props: {
     handleClick();
   }
 
-  function handleSearchInputChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setSearchInput(event.target.value);
+  function handleAutocompleteInputChange(value: string) {
+    setSearchInput(value || "");
   }
+
+  function clearHistory() {
+    if (props.isDM)
+      DMSearchHistory.clear();
+    else
+      TweetSearchHistory.clear();
+
+    setAnchorEl(null);
+    toast(LANG.history_cleared, "info")
+  }
+
+  const auto_complete_options = (props.isDM ? DMSearchHistory : TweetSearchHistory).get().reverse();
 
   return (
     <>
@@ -429,11 +450,20 @@ export function SearchOptions<T>(props: {
         className={classes.search_input}
       >
         <form onSubmit={handleSubmit} className={classes.full_w}>
-          <TextField
-            label={props.fieldLabel}
-            className={classes.textField}
-            onChange={handleSearchInputChange}
-            margin="normal"
+          <Autocomplete
+            freeSolo
+            options={auto_complete_options}
+            onInputChange={(_, v) => handleAutocompleteInputChange(v)}
+            closeText={LANG.close}
+            clearText={LANG.clear_input}
+            renderInput={params => (
+              <TextField 
+                {...params} 
+                label={props.fieldLabel} 
+                className={classes.textField}
+                margin="normal"
+              />
+            )}
           />
         </form>
       </ListItem>
@@ -470,6 +500,14 @@ export function SearchOptions<T>(props: {
             {text}
           </MenuItem>
         ))}
+
+        <MenuItem disabled dense>
+          {LANG.search_history}
+        </MenuItem>
+
+        <MenuItem onClick={clearHistory}>
+          {LANG.clear_history}
+        </MenuItem>
       </Menu>
     </>
   );

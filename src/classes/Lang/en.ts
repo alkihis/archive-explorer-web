@@ -270,6 +270,10 @@ export default {
   inside_a_conversation: "mentionned in a conversation",
   times: "times",
   most_mentionned_modal_title: "Mentions",
+  clear_input: "Clear input",
+  clear_history: "Clear search history",
+  search_history: "Search history",
+  history_cleared: "Search history cleared.",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

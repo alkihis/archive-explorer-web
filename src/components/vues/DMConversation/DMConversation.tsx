@@ -247,6 +247,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           fieldLabel={LANG.find_dms}
           options={ALLOWED_SEARCH_TYPES}
           onClick={(modes, content) => this.findMsgs(content, modes)}
+          isDM
         />
       </div>
     );

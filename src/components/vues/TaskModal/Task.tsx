@@ -79,9 +79,9 @@ export default class Task extends React.Component<TaskP> {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
           <Typography className={classes.counts}>
-            <span className="bold">{this.props.data.done}</span> {LANG.deleted},
-            <span className="bold"> {this.props.data.failed}</span> {LANG.failed},
-            <span className="bold"> {this.props.data.remaining}</span> {LANG.remaining}.
+            <span className="bold">{this.props.data.done}</span> {LANG.deleted}{this.props.data.done > 1 ? LANG.past_s : ""},
+            <span className="bold"> {this.props.data.failed}</span> {LANG.failed}{this.props.data.failed > 1 ? LANG.past_s : ""},
+            <span className="bold"> {this.props.data.remaining}</span> {LANG.remaining}{this.props.data.remaining > 1 ? LANG.past_s : ""}.
           </Typography>
 
           <LinearProgress variant="determinate" className={this.is_over ? classes.bar_over : classes.bar} value={this.props.data.percentage} />

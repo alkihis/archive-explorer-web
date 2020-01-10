@@ -73,6 +73,8 @@ code {
 
 .break-word {
   overflow-wrap: break-word;
+  // Deprecated but needed, overflow-wrap does not work properly
+  word-break: break-word;
 }
 
 .divider-big-margin {
