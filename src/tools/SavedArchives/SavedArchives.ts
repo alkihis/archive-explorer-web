@@ -49,6 +49,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
   protected readonly AVAILABLE_ARCHIVES_KEY = "available";
 
   protected store_by_user_id: { [userId: string]: LocalForage } = {};
+  protected ask_persistence = false;
 
   constructor() {
     super();
@@ -58,20 +59,10 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
       navigator.storage.persisted()
         .then(is_persistent => {
           if (!is_persistent) {
-            console.log("Storage for archive saves is not persistent, trying to be persistent.");
-            return navigator.storage.persist();
+            console.log("Storage for archive saves is not persistent, trying to be persistent on the next archive save.");
+            this.ask_persistence = true;
           }
-          return undefined;
-        })
-        .then(has_succeeded => {
-          if (has_succeeded === undefined) {
-            return;
-          }
-          if (!has_succeeded) {
-            console.log("Persistence demand failed. Storage may be wiped in the future.");
-          }
-        })
-        .catch(e => console.error("Unable to ask for persistency", e));
+        });
     }
   }
 
@@ -308,9 +299,15 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
       return existant;
     }
 
+    if (this.ask_persistence) {
+      // Ask for storage to be persistent. We do not await this.
+      this.askForPersistence();
+    }
+
+    // Create the save
     const save = await archive.exportSave();
 
-    // Save the archive
+    // Create the save info from save + current archive data
     const info: SavedArchiveInfo = {
       uuid: uuidv4(),
       tweets: save.info.tweet_count,
@@ -387,6 +384,23 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     }
 
     return logged_user.user_id;
+  }
+
+  /**
+   * Ask for storage persistency. Must be called at archive saving if `this.ask_persistance === true`.
+   */
+  protected async askForPersistence() {
+    this.ask_persistence = false;
+
+    if (navigator.storage) {
+      return navigator.storage.persist()
+        .then(has_succeeded => {
+          if (!has_succeeded) {
+            console.warn("Persistence demand failed or rejected. Storage may be wiped in the future.");
+          }
+        })
+        .catch(e => console.error("Unable to ask for persistency", e));
+    }
   }
 }
 defineEventAttribute(SavedArchives.prototype, "load");
