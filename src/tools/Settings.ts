@@ -42,6 +42,7 @@ class AESettings {
   protected _allow_rts: boolean = true;
   protected _allow_self: boolean = true;
   protected _allow_mentions: boolean = true;
+  protected _has_server_errors: boolean = false;
 
   // Globals
   protected current_user: IUser | null = null;
@@ -71,6 +72,9 @@ class AESettings {
     }
     if (localStorage.getItem('auto_tweet_download')) {
       this.tweet_dl = localStorage.getItem('auto_tweet_download') === "true";
+    }
+    if (localStorage.getItem('has_server_errors')) {
+      this.has_server_errors = localStorage.getItem('has_server_errors') === "true";
     }
     if (localStorage.getItem('auto_rt_download')) {
       this.rt_dl = localStorage.getItem('auto_rt_download') === "true";
@@ -142,6 +146,15 @@ class AESettings {
         localStorage.removeItem('twitter_user');
       }
     }
+  }
+
+  get has_server_errors() {
+    return this._has_server_errors;
+  }
+  
+  set has_server_errors(v: boolean) {
+    localStorage.setItem('has_server_errors', String(v));
+    this._has_server_errors = v;
   }
 
   get lang() : AuthorizedLangs {

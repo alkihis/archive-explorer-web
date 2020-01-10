@@ -225,22 +225,23 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
     setTimeout(() => {
       const card = this.card_ref.current;
-
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        card.addEventListener(eventName, this.handleEventPropagation, true);
-      });
-
-      ['dragenter', 'dragover'].forEach(eventName => {
-        card.addEventListener(eventName, this.handleDragEnter, true);
-      });
-      
-      ['dragleave', 'drop'].forEach(eventName => {
-        card.addEventListener(eventName, this.handleDragEnd, true);
-      });
-
-      ['drop'].forEach(eventName => {
-        card.addEventListener(eventName, this.handleDrop, true);
-      });
+      if (card) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          card.addEventListener(eventName, this.handleEventPropagation, true);
+        });
+  
+        ['dragenter', 'dragover'].forEach(eventName => {
+          card.addEventListener(eventName, this.handleDragEnter, true);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+          card.addEventListener(eventName, this.handleDragEnd, true);
+        });
+  
+        ['drop'].forEach(eventName => {
+          card.addEventListener(eventName, this.handleDrop, true);
+        });
+      }
     }, 200);
   }
 
@@ -632,8 +633,15 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
     quota: { used: 0, available: 1, quota: 0 },
   };
 
+  mounted = false;
+
   componentDidMount() {
+    this.mounted = true;
     this.refreshSavedArchivesList();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   onArchiveSelect = (info: SavedArchiveInfo) => {
@@ -685,11 +693,11 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
     });
     // Load the archive save list pour current user
     SAVED_ARCHIVES.getRegistredArchives()
-      .then(list => this.setState({
+      .then(list => this.mounted && this.setState({
         available: list
       }))
       .then(() => SAVED_ARCHIVES.usedQuota())
-      .then(used => this.setState({
+      .then(used => this.mounted && this.setState({
         quota: used
       }))
       .catch(e => console.error("Unable to get list of archives stored", e));

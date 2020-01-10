@@ -38,12 +38,14 @@ class TaskManager extends EventTarget {
 
   protected socket: SocketIOClient.Socket;
   protected __ready: Promise<void>;
+  protected on_login = false;
+  protected reconnect_attemps = 0;
 
   socket_io_fail: boolean = false;
 
   constructor() {
     super();
-    this.socket = io(SERVER_URL, { reconnectionAttempts: 10, autoConnect: false });
+    this.socket = io(SERVER_URL, { reconnectionAttempts: 5, autoConnect: false });
     this.resetSocketIo();
   }
 
@@ -91,6 +93,10 @@ class TaskManager extends EventTarget {
     // console.log("Subscribing", id);
     this.socket.emit('task', id, SETTINGS.token);
     this.makeEvent('subscribe', { id });
+
+    if (!this.socket.connected) {
+      toast(LANG.connection_lost_subscribe, "warning");
+    }
   }
 
   unsubscribe(id: string) {
@@ -161,8 +167,8 @@ class TaskManager extends EventTarget {
   }
 
   protected resetSocketIo(auto_reconnect = true) {
+    this.socket.removeAllListeners(); // Do not fire disconnect
     this.socket.disconnect();
-    this.socket.removeAllListeners();
     this.socket_io_fail = false;
 
     if (auto_reconnect) {
@@ -175,11 +181,41 @@ class TaskManager extends EventTarget {
 
   protected initSocketIo() {
     return this.__ready = new Promise((resolve, reject) => {
+      this.on_login = true;
       this.socket.connect();
-      this.socket.on('connect', resolve);
+
+      // When connection is OK
+      this.socket.on('connect', () => {
+        this.reconnect_attemps = 0;
+        if (!this.on_login && SETTINGS.has_server_errors) {
+          toast(LANG.connection_reopened, "info");
+        }
+
+        resolve(); 
+        this.on_login = false;
+      });
+
+      // On initial connection fail (after all attempts)
       this.socket.on('connect_error', () => { 
         reject(); 
         this.socket_io_fail = true; 
+        this.on_login = false;
+      });
+
+      // On lost connection (listeners are removed before disconnect, in case of a reset)
+      this.socket.on('disconnect', () => {
+        if (SETTINGS.has_server_errors) {
+          toast(LANG.connection_lost, "warning");
+        }
+      });
+
+      // After all reconnecting attemps
+      this.socket.on('reconnect_failed', () => {
+        this.reconnect_attemps++;
+
+        setTimeout(() => {
+          this.socket.connect();
+        }, 1000 * 10 * this.reconnect_attemps);
       });
     }).then(() => {
       // Apply all the listeners needed

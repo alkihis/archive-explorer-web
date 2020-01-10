@@ -459,6 +459,9 @@ export default {
   task_rate_limit: "You hit the task number limit. Wait for a task completion before starting a new one.",
   task: "Task",
   has_ended: "has ended",
+  connection_lost_subscribe: "Connection with server is lost. You may need to unsubscribe then subscribe again.",
+  connection_lost: "Lost connection to server",
+  connection_reopened: "Reconnected to server",
   /** END Tasks file */
 
   past_s: "",

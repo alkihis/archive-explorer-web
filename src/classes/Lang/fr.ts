@@ -460,6 +460,9 @@ export default {
   task_rate_limit: "Vous avez atteint le nombre maximum de tâches en cours. Attendez qu'une tâche se termine avant d'en lancer une nouvelle.",
   task: "La tâche",
   has_ended: "s'est terminée",
+  connection_lost_subscribe: "Pas de connexion au serveur. Vous devrez peut-être vous désabonner puis vous réabonner à cette tâche.",
+  connection_lost: "Connexion avec le serveur perdue",
+  connection_reopened: "Reconnecté au serveur",
   /** END Tasks file */
 
   past_s: "s",
