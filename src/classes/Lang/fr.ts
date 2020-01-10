@@ -172,7 +172,8 @@ export default {
   account: "Compte",
   created_at: "créé le",
   direct_messages_in: "messages privés dans",
-  dont_own_archive: "Vous n'êtes pas le créateur de cette archive, vous ne pourrez pas la sauvegarder ou en supprimer les tweets.",
+  dont_own_archive: "Vous n'êtes pas le créateur de cette archive, vous ne pourrez pas en supprimer les tweets.",
+  cant_show_dm_images: "Les images des tweets ou DMs de cette archive peuvent ne pas s'afficher.",
   credentials_expired_cant_deleted: "Les clés d'accès Twitter ont expiré, vous ne pourrez pas supprimer de tweets.",
   logout_and_in_in: "Déconnectez-vous puis connectez-vous à nouveau",
   load: 'Charger',
@@ -210,6 +211,8 @@ export default {
   quota_used: "",
   megabytes_used: "Mo utilisé",
   used_with_s: "s",
+  user_archive_save_mismatch: `L'utilisateur connecté n'est pas le propriétaire de l'archive actuellement chargée. 
+  Si vous la rechargez via sa sauvegarde, les images des tweets et des messages privés peuvent ne pas s'afficher correctement.`,
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */

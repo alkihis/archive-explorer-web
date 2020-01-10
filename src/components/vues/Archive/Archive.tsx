@@ -30,6 +30,7 @@ type ArchiveState = {
   loading_state: ArchiveReadState | "prefetch" | "read_save";
   quick_delete_open: boolean;
   in_drag: boolean;
+  is_a_saved_archive: boolean;
 };
 
 Timer.default_format = "s";
@@ -54,7 +55,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       is_error: false,
       in_load: SETTINGS.archive_in_load,
       quick_delete_open: false,
-      in_drag: false
+      in_drag: false,
+      is_a_saved_archive: SETTINGS.is_saved_archive,
     };
 
     // Subscribe to archive readyness when in load
@@ -72,12 +74,17 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   }
 
   checkOnReadySavedArchive() {
+    SETTINGS.is_saved_archive = true;
     SAVED_ARCHIVES.onload = async ({ detail }) => {
       const name = this.state.in_load;
 
       SETTINGS.archive_name = name;
       SETTINGS.archive = detail;
       SETTINGS.archive_in_load = "";
+
+      this.setState({
+        is_a_saved_archive: true
+      });
 
       await this.doArchiveInit();
     };
@@ -97,6 +104,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   // Subscribe to archive readyness
   checkOnReadyArchive() {
+    SETTINGS.is_saved_archive = false;
     this.timer = new Timer();
 
     SETTINGS.archive.onready = async () => {
@@ -104,6 +112,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
       SETTINGS.archive_name = name;
       SETTINGS.archive_in_load = "";
+
+      this.setState({
+        is_a_saved_archive: false
+      });
 
       await this.doArchiveInit();
     };
@@ -386,6 +398,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           <Typography className={styles.cannot_delete}>
             {LANG.dont_own_archive}
           </Typography>
+
+          {this.state.is_a_saved_archive && <Typography color="error">
+            {LANG.cant_show_dm_images}
+          </Typography>}
         </div>}
 
         {SETTINGS.is_owner && SETTINGS.expired && <div>
@@ -567,6 +583,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   
   render() {
     const actions = this.loadRightActions();
+    const can_save_archive = this.has_archive_loaded && (
+      SETTINGS.archive.owner === SETTINGS.user.twitter_id ||
+      SETTINGS.can_save_other_users_archives
+    );
 
     return (
       <div className={styles.root}>
@@ -593,7 +613,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           <Marger size=".5rem" />
           
           <AvailableSavedArchives 
-            canSave={this.has_archive_loaded && SETTINGS.archive.owner === SETTINGS.user.twitter_id} 
+            canSave={can_save_archive} 
             block={!this.is_available_for_loading} 
             onLoad={this.onSavedArchiveSelect} 
           />
@@ -706,6 +726,45 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
   renderArchiveList() {
     const used_quota = Math.trunc(this.state.quota.used / 1024 / 1024);
 
+    // We organize the saves
+    let sorted_available = this.state.available;
+    if (this.state.available.length) {
+      // Split by owner: Associate screen_name => list of saves
+      const sn_to_info: {[screenName: string]: SavedArchiveInfo[]} = {};
+      for (const archive of this.state.available) {
+        const info = SAVED_ARCHIVES.getUserInfoOf(archive);
+
+        const lo_sn = info.screen_name.toLowerCase();
+        if (lo_sn in sn_to_info) {
+          sn_to_info[lo_sn].push(archive);
+        }
+        else {
+          sn_to_info[lo_sn] = [archive];
+        }
+      }
+
+      // Register logged user archive's in a special slot
+      const logged_sn = SETTINGS.user.twitter_screen_name.toLowerCase();
+      const archives_of_logged: [string, SavedArchiveInfo[]] = [logged_sn, []];
+      if (logged_sn in sn_to_info) {
+        archives_of_logged[1] = sn_to_info[logged_sn];
+        delete sn_to_info[logged_sn];
+      }
+
+      // Sort the rest of users alphabetically
+      const archives_owners_ordrerd = Object.entries(sn_to_info).sort((a, b) => a[0].localeCompare(b[0]));
+      // Merge logged user archives and the rest, with logged user on first position
+      const final_array = [archives_of_logged, ...archives_owners_ordrerd];
+
+      // Sort each archive of each array with most recent tweet date on top
+      for (const sn_archives of final_array) {
+        sn_archives[1] = sn_archives[1].sort((a, b) => new Date(b.last_tweet_date).getTime() - new Date(a.last_tweet_date).getTime());
+      }
+
+      // Concat all the archives array: It is sorted !
+      sorted_available = [].concat(...final_array.map(e => e[1]));
+    }
+
     return (
       <List>
         {/* Title and buttons */}
@@ -757,7 +816,7 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
         </Typography>}
         
         {/* All the saved archives */}
-        {this.state.available.map(a => this.renderArchiveItem(a))}
+        {sorted_available.map(a => this.renderArchiveItem(a))}
 
         {/* Invitation to save archives */}
         {this.state.available.length === 0 && <Typography 
@@ -781,10 +840,9 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
   }
 
   renderArchiveItem(info: SavedArchiveInfo) {
-    const saved_at_date = dateFormatter(
-      SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", 
-      new Date(info.save_date)
-    );
+    const user_info = SAVED_ARCHIVES.getUserInfoOf(info);
+    let register_screen_name = `@${user_info.screen_name}`;
+    let register_name = user_info.name;
 
     return (
       <ListItem key={info.uuid} button onClick={() => this.onArchiveSelect(info)}>
@@ -795,7 +853,9 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
         </ListItemAvatar>
         <ListItemText
           primary={this.renderSaveText(info)}
-          secondary={`${LANG.saved_on} ${saved_at_date}`}
+          secondary={<Typography color="textSecondary" variant="body2">
+            <strong>{register_screen_name}</strong> — {register_name}
+          </Typography>}
         />
         <ListItemSecondaryAction>
           <IconButton edge="end" aria-label="delete" onClick={() => this.onArchiveDelete(info)}>
@@ -886,6 +946,14 @@ const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
     }
   }
 
+  function ifUserMismatch() {
+    return (
+      <Typography color="error">
+        {LANG.user_archive_save_mismatch}
+      </Typography>
+    );
+  }
+
   function onError() {
     return (
       <>
@@ -912,6 +980,7 @@ const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
           <DialogContentText>
             {LANG.save_current_archive_explaination}
           </DialogContentText>
+          {SETTINGS.user.twitter_id !== SETTINGS.archive.owner && ifUserMismatch()}
         </DialogContent>
         <DialogActions>
           <Button onClick={props.onClose} color="secondary">

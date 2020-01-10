@@ -20,6 +20,12 @@ export interface SavedArchiveInfo {
   hash: string;
   /** The archive name */
   name: string;
+  /** User who own the archive */
+  user?: {
+    screen_name: string;
+    name: string;
+    id_str: string;
+  };
 }
 
 type AvailableArchives = SavedArchiveInfo[];
@@ -85,6 +91,21 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
       available: 1,
       used: 0,
       quota: 0
+    };
+  }
+
+  /**
+   * Get user info of a save, even if its doesn't have `.user` property.
+   * @param info 
+   */
+  getUserInfoOf(info: SavedArchiveInfo) {
+    if (info.user)
+      return info.user;
+
+    return {
+      screen_name: SETTINGS.user.twitter_screen_name,
+      id_str: SETTINGS.user.twitter_id,
+      name: SETTINGS.user.twitter_name
     };
   }
 
@@ -298,6 +319,11 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
       save_date: new Date().toString(),
       hash: save.info.hash,
       name,
+      user: {
+        screen_name: archive.owner_screen_name,
+        name: archive.index.info.full_name,
+        id_str: archive.owner,
+      },
     };
 
     // Save the archive

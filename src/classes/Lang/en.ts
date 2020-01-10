@@ -173,7 +173,8 @@ export default {
   account: "Account",
   created_at: "created at",
   direct_messages_in: "direct messages in",
-  dont_own_archive: "You don't own this archive, you aren't able to save it or delete tweets from it.",
+  dont_own_archive: "You don't own this archive, you aren't able delete tweets from it.",
+  cant_show_dm_images: "Tweets or DMs medias from this archive may not be displayed properly.",
   credentials_expired_cant_deleted: "Twitter credentials have expired, you aren't able to delete tweets.",
   logout_and_in_in: "Log out and in again in",
   load: 'Load',
@@ -210,6 +211,8 @@ export default {
   quota_used: " used",
   megabytes_used: "MB used",
   used_with_s: "",
+  user_archive_save_mismatch: `Logged user isn't the current loaded archive owner.
+  If you load this archive back through a save, medias from tweets or direct messages may not display properly.`,
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */

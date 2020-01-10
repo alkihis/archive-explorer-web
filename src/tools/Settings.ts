@@ -43,6 +43,7 @@ class AESettings {
   protected _allow_self: boolean = true;
   protected _allow_mentions: boolean = true;
   protected _has_server_errors: boolean = false;
+  protected _can_save_other_users_archives: boolean = true;
 
   // Globals
   protected current_user: IUser | null = null;
@@ -54,6 +55,7 @@ class AESettings {
   archive_name: string = "";
   archive_in_load = "";
   expired = false;
+  is_saved_archive = false;
 
   constructor() {
     // Refresh html lang attribute
@@ -72,6 +74,9 @@ class AESettings {
     }
     if (localStorage.getItem('auto_tweet_download')) {
       this.tweet_dl = localStorage.getItem('auto_tweet_download') === "true";
+    }
+    if (localStorage.getItem('can_save_other_users_archives')) {
+      this.can_save_other_users_archives = localStorage.getItem('can_save_other_users_archives') === "true";
     }
     if (localStorage.getItem('has_server_errors')) {
       this.has_server_errors = localStorage.getItem('has_server_errors') === "true";
@@ -146,6 +151,16 @@ class AESettings {
         localStorage.removeItem('twitter_user');
       }
     }
+  }
+
+  
+  get can_save_other_users_archives() {
+    return this._can_save_other_users_archives;
+  }
+  
+  set can_save_other_users_archives(v: boolean) {
+    localStorage.setItem('can_save_other_users_archives', String(v));
+    this._can_save_other_users_archives = v;
   }
 
   get has_server_errors() {
