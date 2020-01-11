@@ -6,7 +6,7 @@ import { setPageTitle, dateFormatter } from '../../../helpers';
 import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, FormControlLabel, Checkbox } from '@material-ui/core';
 import { CenterComponent, Marger } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
-import TwitterArchive, { ArchiveReadState, parseTwitterDate } from 'twitter-archive-reader';
+import TwitterArchive, { ArchiveReadState, TweetArchive } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
 import { THRESHOLD_PREFETCH } from '../../../const';
 import { Link } from 'react-router-dom';
@@ -76,9 +76,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   checkOnReadySavedArchive() {
     SETTINGS.is_saved_archive = true;
     SAVED_ARCHIVES.onload = async ({ detail }) => {
-      const name = this.state.in_load;
-
-      SETTINGS.archive_name = name;
+      SETTINGS.archive_name = this.state.in_load;
       SETTINGS.archive = detail;
       SETTINGS.archive_in_load = "";
 
@@ -108,9 +106,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     this.timer = new Timer();
 
     SETTINGS.archive.onready = async () => {
-      const name = this.state.in_load;
-
-      SETTINGS.archive_name = name;
+      SETTINGS.archive_name = this.state.in_load;
       SETTINGS.archive_in_load = "";
 
       this.setState({
@@ -128,7 +124,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         });
 
       try {
-        console.error("Files in archive: ", Object.keys(SETTINGS.archive.raw.ls(false)));
+        console.error("Files in archive: ", Object.keys(SETTINGS.archive.raw[0].ls(false)));
       } catch (e) { }
 
       SETTINGS.archive = undefined;
@@ -173,7 +169,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       [SETTINGS.archive.owner]: THRESHOLD_PREFETCH
     };
 
-    for (const t of SETTINGS.archive.all) {
+    for (const t of SETTINGS.archive.tweets) {
       const rt = t.retweeted_status ? t.retweeted_status : t;
 
       if (rt.user.id_str in users_in_archive) {
@@ -366,17 +362,17 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           {LANG.archive_created} {!SETTINGS.archive.is_gdpr && // Hide date if gdpr (not accurate)
           <span>
             {LANG.on_date} {dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", SETTINGS.archive.generation_date)}
-          </span>} {LANG.by_date} {SETTINGS.archive.index.info.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
+          </span>} {LANG.by_date} {SETTINGS.archive.info.user.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
         </Typography>
 
         <Typography>
-          {LANG.account} #<span className={styles.bold}>{SETTINGS.archive.index.info.id}</span> {LANG.created_at} {
-            dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y H:i" : "Y-m-d H:i", parseTwitterDate(SETTINGS.archive.index.info.created_at))
+          {LANG.account} #<span className={styles.bold}>{SETTINGS.archive.info.user.id}</span> {LANG.created_at} {
+            dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y H:i" : "Y-m-d H:i", TweetArchive.parseTwitterDate(SETTINGS.archive.info.user.created_at))
           }.
         </Typography>
 
         <Typography variant="h6" style={{marginTop: '.5rem'}}>
-          <span className={styles.bold}>{SETTINGS.archive.length}</span> tweets
+          <span className={styles.bold}>{SETTINGS.archive.tweets.length}</span> tweets
         </Typography>
 
         { SETTINGS.archive.is_gdpr &&
@@ -389,7 +385,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         <Divider className="divider-margin" />
 
         <Typography>
-          <span className={styles.bio}>{SETTINGS.archive.index.info.bio}</span>
+          <span className={styles.bio}>{SETTINGS.archive.info.user.bio}</span>
         </Typography>
 
         {!SETTINGS.is_owner && <div>
@@ -521,7 +517,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     e.preventDefault();
   };
 
-  handleDragEnter = (e: Event) => {
+  handleDragEnter = () => {
     if (this.last_refresh + 200 > Date.now()) {
       return;
     }

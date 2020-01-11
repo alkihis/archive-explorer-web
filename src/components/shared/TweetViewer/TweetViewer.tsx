@@ -1,5 +1,5 @@
 import React from 'react';
-import { PartialTweet, dateFromTweet } from 'twitter-archive-reader';
+import { PartialTweet, TweetArchive } from 'twitter-archive-reader';
 import InfiniteScroll from 'react-infinite-scroller';
 import SETTINGS, { TweetSortType, TweetSortWay, TweetMediaFilters } from '../../../tools/Settings';
 import Tweet from '../Tweets/Tweet';
@@ -598,7 +598,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
       // Render tweets with "year headers" when year changes
       tweet_rendered_data = this.state.current_page.map((tweet, i) => {
-        const current_tweet_date = dateFromTweet(tweet).getFullYear();
+        const current_tweet_date = TweetArchive.dateFromTweet(tweet).getFullYear();
         const t = this.renderTweet(tweet, i);
         
         if (current_tweet_date !== current_year) {

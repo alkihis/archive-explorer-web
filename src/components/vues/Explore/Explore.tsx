@@ -121,7 +121,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     }
 
     // Test si on doit chercher dans le mois en cours ou pas
-    let tweets: PartialTweet[] = [];
+    let tweets: PartialTweet[];
     if (content.startsWith(':current ') && this.state.loaded) {
       content = content.replace(/^:current /, '').trim();
       tweets = TweetSearcher.search(this.state.loaded, content, flags, undefined, search_in);
@@ -129,7 +129,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       selected_loaded = this.state.loaded;
     }
     else {
-      tweets = TweetSearcher.search(SETTINGS.archive.all, content.trim(), flags, undefined, search_in);
+      tweets = TweetSearcher.search(SETTINGS.archive.tweets, content.trim(), flags, undefined, search_in);
     }
 
     // Change selected
@@ -142,7 +142,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   };
 
   listOfYears() {
-    const a = SETTINGS.archive.index.years;
+    const a = SETTINGS.archive.tweets.index;
 
     const years_sorted = Object.keys(a).sort((a, b) => Number(b) - Number(a));
 
@@ -167,7 +167,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
           onClick={() => this.monthClicker("*", "")}
         >
           <ListItemText className={classes.drawer_month}>
-            {LANG.all} ({SETTINGS.archive.length})
+            {LANG.all} ({SETTINGS.archive.tweets.length})
           </ListItemText>
         </ListItem>
 
@@ -242,7 +242,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   monthClicker(year: string, month: string) {
     if (year === "*" || year === "moments") {
       this.setState({
-        loaded: SETTINGS.archive.all,
+        loaded: SETTINGS.archive.tweets.all,
         month: year,
         mobileOpen: false,
         found: null
@@ -251,7 +251,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     else if (year === "day") {
       // Find tweets of the day
       this.setState({
-        loaded: SETTINGS.archive.fromThatDay(),
+        loaded: SETTINGS.archive.tweets.fromThatDay(),
         month: year,
         mobileOpen: false,
         found: null
@@ -259,7 +259,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     }
     else {
       this.setState({
-        loaded: SETTINGS.archive.month(month, year),
+        loaded: SETTINGS.archive.tweets.month(month, year),
         month: year + "-" + month,
         mobileOpen: false,
         found: null
@@ -268,7 +268,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   listOfMonths(year: string) {
-    const current_year = SETTINGS.archive.index.years[year];
+    const current_year = SETTINGS.archive.tweets.index[year];
 
     return (
       <List className={classes.list_month}>
@@ -317,7 +317,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
   showActiveSearch() {
     const tweets_number = this.state.found.length;
-    const tweets_percentage = (tweets_number / SETTINGS.archive.all.length) * 100;
+    const tweets_percentage = (tweets_number / SETTINGS.archive.tweets.length) * 100;
 
     const percentage_str = tweets_percentage < 0.1 ? tweets_percentage.toFixed(3) : tweets_percentage.toFixed(1);
 

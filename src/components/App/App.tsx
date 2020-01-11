@@ -68,9 +68,7 @@ class App extends React.Component<{}, { theme: any }> {
   };
   
   handleLangChange = () => {
-    const lang = SETTINGS.lang;
-    
-    document.documentElement.lang = lang;
+    document.documentElement.lang = SETTINGS.lang;
     this.forceUpdate();
   };
 

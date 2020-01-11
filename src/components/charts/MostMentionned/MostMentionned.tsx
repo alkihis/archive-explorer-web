@@ -77,8 +77,7 @@ export default function MostMentionned(props: { tweets: PartialTweet[], month?: 
   }, [props]);
 
   function loadMore() {
-    const actual = showedUsers;
-    const theorical_new = actual + DEFAULT_SHOWED_USERS;
+    const theorical_new = showedUsers + DEFAULT_SHOWED_USERS;
 
     setShowedUsers(theorical_new > MAX_SHOWED_USERS ? MAX_SHOWED_USERS : theorical_new);
   }
@@ -142,7 +141,7 @@ function TwitterMention({ mention, users }: {
 }) {
   const lc_sn = mention.original.toLowerCase();
   const user = lc_sn in users ? users[lc_sn] : undefined;
-  let avatar: React.ReactNode = "";
+  let avatar: React.ReactNode;
   let name = mention.original;
   let screen_name = mention.original;
 

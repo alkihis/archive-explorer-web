@@ -8,7 +8,7 @@ import Tasks from '../../../tools/Tasks';
 import { toast } from '../../shared/Toaster/Toaster';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 import { DEBUG_MODE } from '../../../const';
-import { parseTwitterDate } from 'twitter-archive-reader';
+import { TweetArchive } from 'twitter-archive-reader';
 import LANG from '../../../classes/Lang/Language';
 
 export default class More extends React.Component {
@@ -405,7 +405,7 @@ function Mutes() {
 function ScreenNameHistory() {
   const rows = SETTINGS.archive.extended_gdpr.screen_name_history.map(e => {
     return {
-      date: parseTwitterDate(e.screenNameChange.changedAt),
+      date: TweetArchive.parseTwitterDate(e.screenNameChange.changedAt),
       sn: e.screenNameChange.changedFrom
     }
   });

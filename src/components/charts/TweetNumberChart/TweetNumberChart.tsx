@@ -3,8 +3,8 @@ import { useTheme, Typography } from '@material-ui/core';
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Line, Tooltip } from 'recharts';
 import SETTINGS from '../../../tools/Settings';
 import { daysInMonth, getMonthText } from '../../../helpers';
-import { dateFromTweet } from 'twitter-archive-reader';
 import LANG from '../../../classes/Lang/Language';
+import { TweetArchive } from 'twitter-archive-reader';
 
 type TweetNumberProps = {
   dayView?: { month: string, year: string };
@@ -12,13 +12,13 @@ type TweetNumberProps = {
 };
 
 function getTweetCountByDay(month: string, year: string) {
-  const tweets = SETTINGS.archive.month(month, year);
+  const tweets = SETTINGS.archive.tweets.month(month, year);
 
   const day_count: { [day: string]: number } = {};
   const selected_length = daysInMonth(Number(month), Number(year));
 
   for (const tweet of tweets) {
-    const date = dateFromTweet(tweet).getDate();
+    const date = TweetArchive.dateFromTweet(tweet).getDate();
     if (date in day_count) {
       day_count[date]++;
     }
@@ -37,7 +37,7 @@ function getTweetCountByDay(month: string, year: string) {
 }
 
 function getTweetCountByMonth() {
-  const index = SETTINGS.archive.index.years;
+  const index = SETTINGS.archive.tweets.index;
 
   const year_month: { [month: string]: number } = {};
   for (const year in index) {
@@ -99,7 +99,7 @@ const CustomTooltip: React.FC<{
   label: string, 
   month?: string, 
   monthPos: "left" | "right"
-}> = ({ active, payload, label, month, monthPos }) => {
+}> = ({ active, payload, month, monthPos }) => {
   if (active) {
     const has_s = payload[0].payload.amount > 1;
 

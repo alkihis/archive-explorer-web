@@ -25,7 +25,7 @@ class SearchHistory {
     search = search.trim();
 
     const history = this.get();
-    let new_array: string[] = [];
+    let new_array: string[];
     
     if (history.length >= SearchHistory.MAX_ELEMENTS) {
       const begin = (history.length + 1) - SearchHistory.MAX_ELEMENTS;

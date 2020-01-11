@@ -43,8 +43,8 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
   componentDidMount() {
     if (isArchiveLoaded() && SETTINGS.archive.is_gdpr) {
        // Chargement des médias de l'archive si nécessaire
-      if (SETTINGS.archive.requiresDmImageZipLoad()) {
-        SETTINGS.archive.loadCurrentDmImageZip()
+      if (SETTINGS.archive.requires_dm_image_load) {
+        SETTINGS.archive.loadArchivePart({ current_dm_images: true })
           .then(() => {
             this.setState({
               ready: false

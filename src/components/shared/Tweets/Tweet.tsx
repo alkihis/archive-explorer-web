@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './Tweet.module.scss';
 import { Status } from 'twitter-d';
-import { PartialTweet, PartialTweetUser, dateFromTweet } from 'twitter-archive-reader';
+import { PartialTweet, PartialTweetUser, TweetArchive } from 'twitter-archive-reader';
 import { Card, CardHeader, Avatar, CardContent, CardActions, Checkbox } from '@material-ui/core';
 import RetweetIcon from '@material-ui/icons/Repeat';
 import FavoriteIcon from '@material-ui/icons/Star';
@@ -53,11 +53,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
       }
     }
 
-    if (this.props.data.entities && this.props.data.entities.media && this.props.data.entities.media.length) {
-      return true;
-    }
-
-    return false;
+    return !!(this.props.data.entities && this.props.data.entities.media && this.props.data.entities.media.length);
   }
 
   check() {
@@ -166,7 +162,7 @@ function TweetActions() {
 
 function TweetDate() {
   const context = getOriginal(React.useContext(TweetContext));
-  const date = dateFromTweet(context as PartialTweet);
+  const date = TweetArchive.dateFromTweet(context as PartialTweet);
 
   return (
     <div className={classes.date}>

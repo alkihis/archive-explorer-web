@@ -21,7 +21,7 @@ interface RouterWrapperState {
   task_opens: boolean,
   tasks_running: number,
   shown: boolean,
-};
+}
 
 class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
   state: RouterWrapperState = {
@@ -118,9 +118,7 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
     const { pathname } = props.location;
     const { pathMap } = this.state;
 
-    const value = pathMap.indexOf(pathname);
-
-    return value;
+    return pathMap.indexOf(pathname);
   }
 
   handleChange = (_: ChangeEvent, value: any) => {

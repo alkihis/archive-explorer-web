@@ -99,7 +99,7 @@ export default class FinalizeLogin extends React.Component {
   }
 
   render() {
-    let content: string | JSX.Element = "";
+    let content: string | JSX.Element;
 
     if (this.state.has_token) {
       if (this.state.in_load) {

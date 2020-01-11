@@ -1,9 +1,10 @@
 import LocalForage from 'localforage';
 import uuidv4 from 'uuid/v4';
 import { DEBUG_MODE } from '../../const';
-import TwitterArchive, { ArchiveSave } from 'twitter-archive-reader';
+import TwitterArchive, { ArchiveSave, createFromSave } from 'twitter-archive-reader';
 import SETTINGS from '../Settings';
 import EventTarget, { defineEventAttribute } from 'event-target-shim';
+import createSaveFrom from 'twitter-archive-reader/js/ArchiveSaver';
 
 export interface SavedArchiveInfo {
   /** Unique identifier of the archive */
@@ -228,7 +229,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     const serialized = await storage.getItem(uuid) as ArchiveSave;
 
     if (serialized) {
-      return TwitterArchive.importSave(serialized).then(archive => {
+      return createFromSave(serialized).then(archive => {
         this.dispatchEvent({ type: "load", detail: archive });
         return archive;
       }).catch(error => {
@@ -290,7 +291,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     const storage = this.getStorageOf(owner);
     const archives = await this.getRegistredArchivesOf(owner);
 
-    const current_hash = archive.hash();
+    const current_hash = archive.hash;
 
     // Check if archive already exists
     const existant = archives.find(a => a.hash === current_hash);
@@ -305,7 +306,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     }
 
     // Create the save
-    const save = await archive.exportSave();
+    const save = await createSaveFrom(archive);
 
     // Create the save info from save + current archive data
     const info: SavedArchiveInfo = {

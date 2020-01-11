@@ -259,7 +259,7 @@ class TaskManager extends EventTarget {
   protected makeEvent(name: string, data: any) {
     this.dispatchEvent(new CustomEvent(name, { detail: data }));
   }
-};
+}
 
 defineEventAttribute(TaskManager.prototype, 'subscribe');
 defineEventAttribute(TaskManager.prototype, 'unsubscribe');

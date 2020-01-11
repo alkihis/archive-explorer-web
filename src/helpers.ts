@@ -1,7 +1,7 @@
 import APIHELPER from "./tools/ApiHelper";
 import { IUser } from "./tools/interfaces";
 import SETTINGS, { TweetSortType, TweetSortWay } from "./tools/Settings";
-import { PartialTweet, dateFromTweet } from "twitter-archive-reader";
+import { PartialTweet, TweetArchive } from "twitter-archive-reader";
 import UserCache from "./classes/UserCache";
 import TwitterArchive from "twitter-archive-reader";
 import { toast } from "./components/shared/Toaster/Toaster";
@@ -302,8 +302,6 @@ export function sortAndFilterTweetsFromSettings(tweets: PartialTweet[], settings
 
 /**
  * Filter and sort tweets
- * 
- * @param tweets 
  */
 export function filterTweets(tweets: PartialTweet[], with_moments?: boolean) {
   if (with_moments) {
@@ -370,7 +368,7 @@ export function findMomentsOfYears(tweets: PartialTweet[], years: Iterable<numbe
       continue;
     }
 
-    const year = dateFromTweet(tweet).getFullYear();
+    const year = TweetArchive.dateFromTweet(tweet).getFullYear();
 
     if (ys.has(year)) {
       if (year in years_to_tweets) {

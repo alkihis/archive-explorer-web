@@ -29,9 +29,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
     super(props);
 
     // Build index from archive
-    const archive_index = SETTINGS.archive.index;
-
-    for (const [year, months] of Object.entries(archive_index.years)) {
+    for (const [year, months] of Object.entries(SETTINGS.archive.tweets.index)) {
       if (!(year in this.index)) {
         this.index[year] = {};
       }
@@ -127,7 +125,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
 
     if (this.props.onClose)
       this.props.onClose();
-  }
+  };
 
   taskStarter() {
     const c = this.selected_count;
