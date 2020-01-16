@@ -349,7 +349,7 @@ class AESettings {
   }
 
   get is_owner() {
-    return !!this.archive && this.archive.owner === this.user.twitter_id;
+    return !!this.archive && this.archive.user.id === this.user.twitter_id;
   }
 
   get can_delete() {
@@ -359,7 +359,7 @@ class AESettings {
     if (DEBUG_MODE)
       return true;
 
-    return !!this.archive && this.archive.owner === this.user.twitter_id && !this.expired;
+    return !!this.archive && this.archive.user.id === this.user.twitter_id && !this.expired;
   }
 
   get is_logged() {

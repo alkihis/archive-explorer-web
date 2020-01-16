@@ -220,7 +220,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
   year(year: string) {
     let i = 0;
-    const months = SETTINGS.archive.index.years[year];
+    const months = SETTINGS.archive.tweets.index[year];
     for (const m in months) {
       i += Object.keys(months[m]).length;
     }

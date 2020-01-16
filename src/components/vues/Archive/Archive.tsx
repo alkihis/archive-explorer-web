@@ -166,7 +166,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     // THRESHOLD_PREFETCH fois dans l'archive pour les précharger
     // (permet de voir leur PP sans DL les tweets)
     const users_in_archive: { [userId: string]: number } = {
-      [SETTINGS.archive.owner]: THRESHOLD_PREFETCH
+      [SETTINGS.archive.user.id]: THRESHOLD_PREFETCH
     };
 
     for (const t of SETTINGS.archive.tweets) {
@@ -272,7 +272,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     if (f && f instanceof File) {
       const filename = f.name;
 
-      SETTINGS.archive = new TwitterArchive(f, true, true, false);
+      SETTINGS.archive = new TwitterArchive(f, { load_images_in_zip: false });
 
       console.log("Loading a new archive: ", filename);
 
@@ -362,7 +362,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           {LANG.archive_created} {!SETTINGS.archive.is_gdpr && // Hide date if gdpr (not accurate)
           <span>
             {LANG.on_date} {dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", SETTINGS.archive.generation_date)}
-          </span>} {LANG.by_date} {SETTINGS.archive.info.user.full_name} • <span className={styles.bio}>@{SETTINGS.archive.owner_screen_name}</span>.
+          </span>} {LANG.by_date} {SETTINGS.archive.info.user.full_name} • <span className={styles.bio}>@{SETTINGS.archive.user.screen_name}</span>.
         </Typography>
 
         <Typography>
@@ -580,7 +580,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   render() {
     const actions = this.loadRightActions();
     const can_save_archive = this.has_archive_loaded && (
-      SETTINGS.archive.owner === SETTINGS.user.twitter_id ||
+      SETTINGS.archive.user.id === SETTINGS.user.twitter_id ||
       SETTINGS.can_save_other_users_archives
     );
 
@@ -976,7 +976,7 @@ const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
           <DialogContentText>
             {LANG.save_current_archive_explaination}
           </DialogContentText>
-          {SETTINGS.user.twitter_id !== SETTINGS.archive.owner && ifUserMismatch()}
+          {SETTINGS.user.twitter_id !== SETTINGS.archive.user.id && ifUserMismatch()}
         </DialogContent>
         <DialogActions>
           <Button onClick={props.onClose} color="secondary">

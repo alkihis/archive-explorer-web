@@ -321,7 +321,7 @@ function Blocks() {
     setOpen(false);
 
     // Starting the task
-    const blocks: string[] = DEBUG_MODE ? Array(10000).fill("1") : [...SETTINGS.archive.extended_gdpr.blocks];
+    const blocks: string[] = DEBUG_MODE ? Array(10000).fill("1") : [...SETTINGS.archive.blocks];
 
     Tasks.start(blocks, "block")
       .catch(() => {
@@ -336,7 +336,7 @@ function Blocks() {
       </Typography>
 
       <Typography>
-        {LANG.you_have_blocked} <span className={classes.number}>{SETTINGS.archive.extended_gdpr.blocks.size}</span> {LANG.users}.
+        {LANG.you_have_blocked} <span className={classes.number}>{SETTINGS.archive.blocks.size}</span> {LANG.users}.
       </Typography>
 
       <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
@@ -369,7 +369,7 @@ function Mutes() {
     setOpen(false);
 
     // Starting the task
-    const mutes: string[] = DEBUG_MODE ? Array(10000).fill("1") : [...SETTINGS.archive.extended_gdpr.mutes];
+    const mutes: string[] = DEBUG_MODE ? Array(10000).fill("1") : [...SETTINGS.archive.mutes];
 
     Tasks.start(mutes, "mute")
       .catch(() => {
@@ -384,7 +384,7 @@ function Mutes() {
       </Typography>
 
       <Typography>
-        {LANG.you_have_muted} <span className={classes.number}>{SETTINGS.archive.extended_gdpr.mutes.size}</span> {LANG.users}.
+        {LANG.you_have_muted} <span className={classes.number}>{SETTINGS.archive.mutes.size}</span> {LANG.users}.
       </Typography>
 
       <Button disabled={!SETTINGS.can_delete} variant="outlined" color="primary" onClick={handleClickOpen} className={classes.delete_btn}>
@@ -403,15 +403,15 @@ function Mutes() {
 }
 
 function ScreenNameHistory() {
-  const rows = SETTINGS.archive.extended_gdpr.screen_name_history.map(e => {
+  const rows = SETTINGS.archive.user.screen_name_history.map(e => {
     return {
-      date: TweetArchive.parseTwitterDate(e.screenNameChange.changedAt),
-      sn: e.screenNameChange.changedFrom
+      date: TweetArchive.parseTwitterDate(e.changedAt),
+      sn: e.changedFrom
     }
   });
   rows.push({
     date: undefined,
-    sn: SETTINGS.archive.owner_screen_name
+    sn: SETTINGS.archive.user.screen_name
   });
 
   return (

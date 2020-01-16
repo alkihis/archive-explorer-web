@@ -1,10 +1,9 @@
 import LocalForage from 'localforage';
 import uuidv4 from 'uuid/v4';
 import { DEBUG_MODE } from '../../const';
-import TwitterArchive, { ArchiveSave, createFromSave } from 'twitter-archive-reader';
+import TwitterArchive, { ArchiveSave, ArchiveSaver } from 'twitter-archive-reader';
 import SETTINGS from '../Settings';
 import EventTarget, { defineEventAttribute } from 'event-target-shim';
-import createSaveFrom from 'twitter-archive-reader/js/ArchiveSaver';
 
 export interface SavedArchiveInfo {
   /** Unique identifier of the archive */
@@ -229,7 +228,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     const serialized = await storage.getItem(uuid) as ArchiveSave;
 
     if (serialized) {
-      return createFromSave(serialized).then(archive => {
+      return ArchiveSaver.restore(serialized).then(archive => {
         this.dispatchEvent({ type: "load", detail: archive });
         return archive;
       }).catch(error => {
@@ -306,7 +305,19 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     }
 
     // Create the save
-    const save = await createSaveFrom(archive);
+    const save = await ArchiveSaver.create(archive, {
+      tweets: true,
+      dms: true,
+      mutes: true,
+      favorites: true,
+      blocks: true,
+      user: {
+        phone_number: true,
+        verified: true,
+        age_info: true,
+        email_address_changes: true,
+      },
+    });
 
     // Create the save info from save + current archive data
     const info: SavedArchiveInfo = {
@@ -318,9 +329,9 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
       hash: save.info.hash,
       name,
       user: {
-        screen_name: archive.owner_screen_name,
-        name: archive.index.info.full_name,
-        id_str: archive.owner,
+        screen_name: archive.user.screen_name,
+        name: archive.user.name,
+        id_str: archive.user.id,
       },
     };
 

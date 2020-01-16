@@ -47,7 +47,7 @@ export default class DM extends React.Component<DMProp, DMState> {
   }
 
   get is_you() {
-    return this.props.msg.senderId === SETTINGS.archive.owner;
+    return this.props.msg.senderId === SETTINGS.archive.user.id;
   }
 
   get dm() {
@@ -118,7 +118,7 @@ export default class DM extends React.Component<DMProp, DMState> {
         })
         .catch(() => {
           // Image does not exists, try to go through proxy if the logged user is valid
-          if (SETTINGS.archive.owner === SETTINGS.user.twitter_id) {
+          if (SETTINGS.archive.user.id === SETTINGS.user.twitter_id) {
             this.setState({
               img: BASE_API_URL + "batch/dm_proxy?url=" + encodeURIComponent(media)
             });
