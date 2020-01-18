@@ -102,6 +102,10 @@ class FollowBase extends React.Component<FProps, FState> {
           {LANG.you_have} <strong>{this.props.users.length} {this.props.subtitle.toLocaleLowerCase()}</strong>.
         </Typography>
 
+        <Typography color="textSecondary" variant="body2" gutterBottom>
+          {LANG.explaination_difference_follows}
+        </Typography>
+
         <InfiniteScroll
           pageStart={0}
           loadMore={p => this.loadItems(p)}

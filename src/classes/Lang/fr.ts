@@ -454,6 +454,38 @@ export default {
   find_tweets_from: "Cherche les tweets/messages postés par un utilisateur.",
   blocked_modal: "comptes bloqués",
   muted_modal: "comptes mis en sourdine",
+  ads_and_user_data: "Pubs & données utilisateur",
+  email_address_history: "Historique des adresses e-mails",
+  email_address: "Adresses e-mail",
+  age_by_twitter: "Âge renseigné sur Twitter",
+  you_are: "Vous avez",
+  years_old: "ans",
+  you_are_born_on: "Vous êtes né•e le",
+  for_twitter: "Pour Twitter",
+  between: "entre",
+  language_spoken: "Langues parlées",
+  on_twitter_you_usually_spoke: "Sur Twitter, vous parlez habituellement",
+  gender: "Genre",
+  to_twitter_you_are_a: "Selon Twitter, vous êtes",
+  male: "un garçon",
+  female: "une fille",
+  undefined_gender: "d'un genre indéterminé",
+  shows_and_interests: "Entitées et séries d'intérêt",
+  things_that_interest_you: "Centres d'intérêt",
+  names_interests_title: "L'ensemble des choses, d'après Twitter, susceptibles de vous intéresser. Celles-ci sont déterminées d'après vos interactions.",
+  shows_that_interest_you: "Séries/Films vous intéressant",
+  shows_interests_title: "L'ensemble des films, séries et programmes audio-visuels susceptibles de vous intéresser.",
+  most_seen_advertisers: "Annonceurs les plus vus",
+  impressions_per_date: "Impressions par date",
+  impression_explaination: `Une impression est enregistrée lorsque vous "voyez" une publicité sur Twitter. Celle-ci peut être
+  un tweet sponsorisé, une publicité pré-vidéo, une vidéo publicitaire, un sondage sponsorisé ou d'autres. 
+  Plus le nombre d'impressions est élevé, plus vous avez été soumis à de la publicité ce jour-là.
+  Dans une archive, l'historique des impressions s'étend sur les 90 jours précédant la date de la création de celle-ci.`,
+  followers: "Followers",
+  followings: "Followings",
+  untranslated: "non traduit",
+  explaination_difference_follows: `Le nombre affiché peut ne pas refléter le chiffre disponible Twitter en raison de la
+  présence des comptes suspendus et désactivés dans cette liste.`,
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

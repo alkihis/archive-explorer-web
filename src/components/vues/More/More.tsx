@@ -19,6 +19,10 @@ export default class More extends React.Component<{}, MoreState> {
     active_tab: 0
   };
 
+  componentDidMount() {
+    window.scroll(0, 0);
+  }
+
   get components_for_tabs() : React.ComponentType[] {
     return [
       Help,

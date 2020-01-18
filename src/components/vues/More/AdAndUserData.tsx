@@ -1,14 +1,13 @@
 import React from 'react';
 import classes from './More.module.scss';
 import LANG from '../../../classes/Lang/Language';
-import { Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, ListItemText, useTheme, ListItemAvatar, Avatar } from '@material-ui/core';
+import { Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, ListItemText, useTheme, ListItemAvatar, Avatar, Link, DialogContent, DialogContentText, Dialog, DialogTitle, DialogActions, Button } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import { parseTwitterDate, AdImpression, AdArchive } from 'twitter-archive-reader';
 import { dateFormatter, specialJoin, getMonthText } from '../../../helpers';
 import { Marger } from '../../../tools/PlacingComponents';
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Line, Tooltip } from 'recharts';
 
-// TODO modal for interests and names
 export default function AdAndUserData() {
   const has_email = !!SETTINGS.archive.user.email_address;
   const has_age = !!SETTINGS.archive.user.age;
@@ -156,7 +155,7 @@ function AgeInfo() {
       </Typography>}
 
       {age.inferred && <Typography>
-        {LANG.for_twitter}, {LANG.you_are} {
+        {LANG.for_twitter}, {LANG.you_are.toLocaleLowerCase()} {
           Array.isArray(inferred.age) ? 
           <>{LANG.between} <strong>{inferred.age[0]} {LANG.and} {inferred.age[1]}</strong></> : 
           <strong>{age.age}</strong>
@@ -167,50 +166,59 @@ function AgeInfo() {
 }
 
 function Personalization() {
-  function randomInt(min: number, max: number) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
+  const [shows, setShows] = React.useState([] as string[]);
+  const [names, setNames] = React.useState([] as string[]);
 
-  function getRandomNumbersFrom(max: number, count: number) {
-    if (max === 1) {
-      return [0];
+  React.useEffect(() => {
+    function randomInt(min: number, max: number) { // min and max included 
+      return Math.floor(Math.random() * (max - min + 1) + min);
     }
-
-    if (max === 2) {
-      return [0, 1];
-    }
-
-    const numbers = new Set<number>();
-    if (max < count) {
-      count = max;
-    }
-
-    let i = 0;
-    let max_tries = count + 15;
-    while (max_tries && i < count) {
-      max_tries--;
-      const rand = randomInt(0, max);
-      if (numbers.has(rand)) {
-        continue;
+  
+    function getRandomNumbersFrom(max: number, count: number) {
+      if (max === 1) {
+        return [0];
       }
-      numbers.add(rand);
-      i++;
+  
+      if (max === 2) {
+        return [0, 1];
+      }
+  
+      const numbers = new Set<number>();
+      if (max < count) {
+        count = max;
+      }
+  
+      let i = 0;
+      let max_tries = count + 15;
+      while (max_tries && i < count) {
+        max_tries--;
+        const rand = randomInt(0, max);
+        if (numbers.has(rand)) {
+          continue;
+        }
+        numbers.add(rand);
+        i++;
+      }
+  
+      return [...numbers];
     }
+  
+    const interests = SETTINGS.archive.user.personalization.interests;
+  
+    let shows: string[];
+    if (interests.shows.length) {
+      shows = getRandomNumbersFrom(interests.shows.length - 1, 5).map(index => interests.shows[index]);
+    } 
+    let names: string[];
+    if (interests.names.length) {
+      names = getRandomNumbersFrom(interests.names.length - 1, 5).map(index => interests.names[index]);
+    } 
+    setShows(shows);
+    setNames(names);
+  }, []);
 
-    return [...numbers];
-  }
-
-  const interests = SETTINGS.archive.user.personalization.interests;
   const demograph = SETTINGS.archive.user.personalization.demographics;
-
-  let shows: string[];
-  if (interests.shows.length) {
-    shows = getRandomNumbersFrom(interests.shows.length - 1, 5).map(index => interests.shows[index]);
-  } 
-  let names: string[];
-  if (interests.names.length) {
-    names = getRandomNumbersFrom(interests.names.length - 1, 5).map(index => interests.names[index]);
-  } 
+  const interests = SETTINGS.archive.user.personalization.interests;
 
   return (
     <React.Fragment>
@@ -218,7 +226,7 @@ function Personalization() {
         {LANG.language_spoken}
       </Typography>
 
-      {LANG.on_twitter_you_usually_spoke} {demograph.languages[0]}.
+      {LANG.on_twitter_you_usually_spoke} "{demograph.languages[0]}" ({LANG.untranslated}).
 
       <Marger size={8} />
 
@@ -238,12 +246,22 @@ function Personalization() {
         {LANG.shows_and_interests}
       </Typography>}
 
-      {!!names.length && <Typography>
-        {LANG.things_that_interest_you}: {specialJoin(names)}.
+      {!!names.length && <Typography component="div">
+        <InterestsModal 
+          linkTitle={LANG.things_that_interest_you} 
+          things={interests.names}
+          title={LANG.things_that_interest_you} 
+          explaination={LANG.names_interests_title}
+        />: {specialJoin(names)}.
       </Typography>}
 
-      {!!shows.length && <Typography>
-        {LANG.shows_that_interest_you}: {specialJoin(shows)}.
+      {!!shows.length && <Typography component="div">
+        <InterestsModal 
+          linkTitle={LANG.shows_that_interest_you} 
+          things={interests.shows}
+          title={LANG.shows_that_interest_you} 
+          explaination={LANG.shows_interests_title}
+        />: {specialJoin(shows)}.
       </Typography>}
     </React.Fragment>
   );
@@ -380,3 +398,38 @@ const CustomTooltip: React.FC<{
 
   return null;
 };
+
+function InterestsModal(props: { things: string[], linkTitle: string, title: string, explaination: string }) {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <Link href="#!" color="primary" onClick={() => setOpen(true)} title={props.linkTitle}>
+        {props.linkTitle}
+      </Link>
+
+      <Dialog onClose={() => setOpen(false)} open={open} scroll="body">
+        <DialogTitle>{props.title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {props.explaination}
+          </DialogContentText>
+
+          <List>
+            {props.things.map(thing => (
+              <ListItem key={thing}>
+                <ListItemText primary={thing} />
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">
+            {LANG.close}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}
