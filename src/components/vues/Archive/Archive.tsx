@@ -22,6 +22,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteAllIcon from '@material-ui/icons/DeleteSweep';
 import clsx from 'clsx';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
+import Logger from '../../../tools/ErrorLogger';
 
 type ArchiveState = {
   loaded: string;
@@ -125,6 +126,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
       try {
         console.error("Files in archive: ", Object.keys(SETTINGS.archive.raw[0].ls(false)));
+        Logger.push("Error when loading archive; files:", Object.keys(SETTINGS.archive.raw[0].ls(false)));
       } catch (e) { }
 
       SETTINGS.archive = undefined;
@@ -272,7 +274,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     if (f && f instanceof File) {
       const filename = f.name;
 
-      SETTINGS.archive = new TwitterArchive(f, { load_images_in_zip: false });
+      SETTINGS.archive = new TwitterArchive(f, { load_images_in_zip: false, build_ad_archive: true });
 
       console.log("Loading a new archive: ", filename);
 

@@ -89,6 +89,10 @@ class TaskManager extends EventTarget {
     }
   }
 
+  emitError(things: any[]) {
+    this.socket.emit('error log', things);
+  }
+
   subscribe(id: string) {
     // console.log("Subscribing", id);
     this.socket.emit('task', id, SETTINGS.token);

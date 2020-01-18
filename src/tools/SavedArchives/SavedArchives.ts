@@ -310,13 +310,17 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
       dms: true,
       mutes: true,
       favorites: true,
+      followers: true,
+      followings: true,
       blocks: true,
       user: {
         phone_number: true,
         verified: true,
         age_info: true,
         email_address_changes: true,
+        personalization: true,
       },
+      ad_archive: true,
     });
 
     // Create the save info from save + current archive data

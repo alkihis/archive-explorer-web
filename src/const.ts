@@ -20,5 +20,7 @@ export const REGEX_URL = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[
 declare global {
   interface Window {
     DEBUG: any;
+    ARCHIVE?: any;
+    USER?: any;
   }
 }

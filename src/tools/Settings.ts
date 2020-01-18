@@ -342,6 +342,17 @@ class AESettings {
 
   set archive(v: TwitterArchive | null) {
     this.current_archive = v;
+
+    if (DEBUG_MODE) {
+      if (v) {
+        window.ARCHIVE = v;
+        window.USER = v.user;
+      }
+      else {
+        delete window.ARCHIVE;
+        delete window.USER;
+      }
+    }
   }
 
   get archive() {

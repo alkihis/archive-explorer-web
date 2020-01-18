@@ -103,7 +103,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       allow_self: SETTINGS.allow_self
     };
 
-    // Needed because REACT is shit
     this.onTweetCheckChange = this.onTweetCheckChange.bind(this);
     this.renderTweet = this.renderTweet.bind(this);
   }
@@ -318,6 +317,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         current_page,
         has_more: false
       });
+      return;
     }
 
     if (SETTINGS.tweet_dl && !SETTINGS.expired) {

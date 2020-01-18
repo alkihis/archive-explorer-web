@@ -3,6 +3,24 @@
   margin-top: 1rem !important;
 }
 
+.inputInput {
+  width: 100%;
+}
+
+.favorite {
+  margin-top: 8px;
+}
+
+.tabs {
+  background-color: unset !important;
+  background: linear-gradient(#036fc8, #005da9);
+
+  :global .dark :local & {
+    background: linear-gradient(#7dbcef, #073f6d);
+    color: #fff !important;
+  }
+}
+
 .number {
   font-weight: bold !important;
   font-size: 1.15rem !important;
