@@ -766,10 +766,22 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
     return (
       <List>
         {/* Title and buttons */}
-        <ListSubheader className={styles.list_archive_header}>
-          <span>
+        <ListSubheader 
+          className={styles.list_archive_header} 
+          style={{ backgroundColor: this.props.theme.palette.background.paper }}
+        >
+          <div>
             {LANG.available_saved_archives}
-          </span>
+
+            {/* Available MB */}
+            {this.state.quota.available !== 1 && this.state.available.length > 0 && <Typography 
+              color="textSecondary"
+              style={{ fontSize: '.8rem', marginTop: -15 }}
+              gutterBottom
+            >
+              {used_quota} {LANG.megabytes_used}{used_quota > 1 ? LANG.used_with_s : ""}
+            </Typography>}
+          </div>
           
           {/* The save and delete button */}
           <span className={styles.list_archive_header_buttons}>
@@ -790,16 +802,6 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
             </CustomTooltip>
           </span>
         </ListSubheader>
-
-        {/* Available MB */}
-        {this.state.quota.available !== 1 && this.state.available.length > 0 && <Typography 
-          color="textSecondary"
-          component="li"
-          style={{ fontSize: '.8rem', paddingLeft: 16, paddingRight: 16, marginTop: -15 }}
-          gutterBottom
-        >
-          {used_quota} {LANG.megabytes_used}{used_quota > 1 ? LANG.used_with_s : ""}
-        </Typography>}
 
         {/* Quota warning */}
         {this.state.quota.quota > 0.7 && <Typography 

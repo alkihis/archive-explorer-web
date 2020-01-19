@@ -141,6 +141,10 @@ function AgeInfo() {
   const age = SETTINGS.archive.user.age;
   const inferred = age.inferred;
 
+  if (!age.age && !inferred) {
+    return <React.Fragment></React.Fragment>;
+  }
+
   return (
     <React.Fragment>
       <Typography variant="h5" className={classes.second_title}>

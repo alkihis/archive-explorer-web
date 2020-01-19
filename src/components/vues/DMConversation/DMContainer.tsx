@@ -8,6 +8,7 @@ import { Divider, Fab, Tooltip } from '@material-ui/core';
 import { uppercaseFirst, getMonthText } from '../../../helpers';
 import JumpToIcon from '@material-ui/icons/LowPriority';
 import LANG from '../../../classes/Lang/Language';
+import SETTINGS from '../../../tools/Settings';
 
 const LOADED_PER_CHUNK = 100;
 
@@ -148,6 +149,25 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     }
   }
 
+  formatDividerDate(e: LinkedDirectMessage) {
+    if (SETTINGS.lang === "fr") {
+      return (
+        <> 
+          {e.createdAtDate.getDate()} {" "}
+          {uppercaseFirst(getMonthText(String(e.createdAtDate.getMonth() + 1)))} {" "}
+          {e.createdAtDate.getFullYear()}
+        </>
+      );
+    }
+
+    return (
+      <> 
+        {uppercaseFirst(getMonthText(String(e.createdAtDate.getMonth() + 1)))} {" "}
+        {e.createdAtDate.getDate()}, {e.createdAtDate.getFullYear()}
+      </>
+    );
+  }
+
   render() {
     const showed = this.state.page;
 
@@ -164,19 +184,17 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
         const previous = showed[i - 1];
         let divider: JSX.Element = undefined;
         let show_date = false;
-        // Si ça fait plus de 1 jour depuis le message précédent
+        // If more than one day since previous message
         if (previous && previous.createdAtDate.getTime() < e.createdAtDate.getTime() - (1000 * 60 * 60 * 24)) {
           divider = <div className={classes.divider}>
             <Divider className="divider-big-margin" />
             <div className={classes.divider_text}>
-              {
-                uppercaseFirst(getMonthText(String(e.createdAtDate.getMonth() + 1)))
-              } {e.createdAtDate.getDate()}, {e.createdAtDate.getFullYear()}
+              {this.formatDividerDate(e)}
             </div>
           </div>;
         }
 
-        // Cache uniquement les messages techniquement non visibles
+        // For invisible messages, no need to recalc if dm should have date or dividers.
         if (i > 30 && (i - 30) < showed.length && e.id in this.dm_cache) {
           return (divider ? 
             <div key={"divider" + e.id}>
@@ -186,7 +204,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
           );
         }
 
-        // Si ça fait plus de 5 minutes ou si on change de pertsonne
+        // If more than 5 minutes since last msg or if sender ID is different 
         if (!future || e.senderId !== future.senderId || future.createdAtDate.getTime() > e.createdAtDate.getTime() + (1000 * 60 * 5)) {
           show_date = true;
         }
