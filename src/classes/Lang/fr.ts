@@ -82,7 +82,10 @@ export default {
   try_another_login_info: "Vous pouvez aussi essayer de vous connecter avec un autre compte Twitter.",
   settings: 'Paramètres',
   select_all: 'Tout sélectionner',
-  unselect_all: 'Tout desélectionner',
+  unselect_all: 'Tout désélectionner',
+  select_tweets_choices: 'Sélection...',
+  revert_selection: "Inverser la sélection",
+  tweet_selection: 'Sélection de tweets',
   selected_without_s: 'sélectionné',
   selected: 'sélectionnés',
   yes: 'Oui',
@@ -278,6 +281,13 @@ export default {
   clear_history: "Effacer l'historique de recherche",
   search_history: "Historique de recherche",
   history_cleared: "Historique de recherche effacé.",
+  select_tweets: "Sélection de tweets",
+  select_tweets_until: "Jusqu'à ce tweet",
+  select_tweets_below: "Après ce tweet",
+  select_tweets_until_first: "Jusqu'au premier tweet sélectionné",
+  select_tweets_below_last: "Jusqu'au dernier tweet sélectionné",
+  invalid_query: "Le critère suivant le mot-clé \"{}\" dans la recherche est invalide.",
+  search_cannot_be_made: "La recherche n'a pas pu s'effectuer. Quelque chose s'est mal passé.",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

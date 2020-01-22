@@ -83,6 +83,9 @@ export default {
   settings: 'Settings',
   select_all: 'Select all',
   unselect_all: 'Unselect all',
+  select_tweets_choices: 'Select...',
+  revert_selection: "Revert selection",
+  tweet_selection: 'Tweet selection',
   selected: 'selected',
   selected_without_s: 'selected',
   yes: 'Yes',
@@ -277,6 +280,13 @@ export default {
   clear_history: "Clear search history",
   search_history: "Search history",
   history_cleared: "Search history cleared.",
+  select_tweets: "Select tweets",
+  select_tweets_until: "Until this tweet",
+  select_tweets_below: "After this tweet",
+  select_tweets_until_first: "Until ",
+  select_tweets_below_last: "Jusqu'au dernier tweet sélectionné",
+  invalid_query: "Criteria after keyword \"{}\" in query is invalid.",
+  search_cannot_be_made: "Search failed. Something bad happened.",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

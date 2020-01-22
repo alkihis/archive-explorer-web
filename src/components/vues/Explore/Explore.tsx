@@ -1,13 +1,13 @@
 import React from 'react';
 import classes from './Explore.module.scss';
-import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst, escapeRegExp } from '../../../helpers';
+import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst, escapeRegExp, scoreOfTweet } from '../../../helpers';
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles, TextField, Menu, MenuItem, makeStyles, createStyles, Theme, Dialog, DialogContent, DialogActions, DialogTitle, Button, Hidden } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import TweetViewer from '../../shared/TweetViewer/TweetViewer';
-import { PartialTweet, TweetSearcher } from 'twitter-archive-reader';
+import { PartialTweet, TweetSearcher, TweetArchive } from 'twitter-archive-reader';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
@@ -122,14 +122,28 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
     // Test si on doit chercher dans le mois en cours ou pas
     let tweets: PartialTweet[];
-    if (content.startsWith(':current ') && this.state.loaded) {
-      content = content.replace(/^:current /, '').trim();
-      tweets = TweetSearcher.search(this.state.loaded, content, flags, undefined, search_in);
-      selected_month = this.state.month;
-      selected_loaded = this.state.loaded;
-    }
-    else {
-      tweets = TweetSearcher.search(SETTINGS.archive.tweets, content.trim(), flags, undefined, search_in);
+    try {
+      if (content.startsWith(':current ') && this.state.loaded) {
+        content = content.replace(/^:current /, '').trim();
+        tweets = TweetSearcher.search(this.state.loaded, content, flags, undefined, search_in);
+        selected_month = this.state.month;
+        selected_loaded = this.state.loaded;
+      }
+      else {
+        tweets = TweetSearcher.search(SETTINGS.archive.tweets, content.trim(), flags, undefined, search_in);
+      }
+    } catch (e) {
+      const msg = (e as Error).message;
+      if (msg.match(/\S+: Invalid query/)) {
+        const keyword = msg.split(':')[0];
+        toast(LANG.format("invalid_query", keyword), "error");
+      }
+      else {
+        console.error("Unexpected error during search:", e);
+        toast(LANG.search_cannot_be_made, "error");
+      }
+
+      return;
     }
 
     // Change selected
@@ -459,8 +473,13 @@ export function SearchOptions<T>(props: {
             renderInput={params => (
               <TextField 
                 {...params} 
+                InputProps={{
+                  style: { paddingRight: 24 },
+                  ...(params.InputProps ? params.InputProps : {})
+                }}
                 label={props.fieldLabel} 
                 className={classes.textField}
+        
                 margin="normal"
               />
             )}
@@ -668,3 +687,148 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
     </Hidden>
   );
 }
+
+/**
+ * Define new TweetSearcher keywords
+ */
+
+TweetSearcher.validators.push({
+  keyword: 'year',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator: (query, sep) => {
+    const year = parseInt(query, 10);
+
+    if (isNaN(year)) {
+      return;
+    }
+
+    switch (sep) {
+      case ">":
+        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() > year;
+      case ">=":
+        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() >= year;
+      case "<":
+        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() < year;
+      case "<=":
+        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() <= year;
+      case ":":
+        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() === year;
+    }
+  }
+}, {
+  keyword: 'month',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator: (query, sep) => {
+    // in Date objects, month starts at 0
+    const month = parseInt(query, 10) - 1;
+
+    if (isNaN(month)) {
+      return;
+    }
+
+    switch (sep) {
+      case ">":
+        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() > month;
+      case ">=":
+        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() >= month;
+      case "<":
+        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() < month;
+      case "<=":
+        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() <= month;
+      case ":":
+        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() === month;
+    }
+  }
+}, {
+  keyword: 'day',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator: (query, sep) => {
+    const day = parseInt(query, 10);
+
+    if (isNaN(day)) {
+      return;
+    }
+
+    switch (sep) {
+      case ">":
+        return tweet => TweetArchive.dateFromTweet(tweet).getDate() > day;
+      case ">=":
+        return tweet => TweetArchive.dateFromTweet(tweet).getDate() >= day;
+      case "<":
+        return tweet => TweetArchive.dateFromTweet(tweet).getDate() < day;
+      case "<=":
+        return tweet => TweetArchive.dateFromTweet(tweet).getDate() <= day;
+      case ":":
+        return tweet => TweetArchive.dateFromTweet(tweet).getDate() === day;
+    }
+  }
+}, {
+  keyword: 'popularity',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator: (query, sep) => {
+    const pop = parseInt(query, 10);
+
+    if (isNaN(pop)) {
+      return;
+    }
+
+    switch (sep) {
+      case ">":
+        return tweet => scoreOfTweet(tweet) > pop;
+      case ">=":
+        return tweet => scoreOfTweet(tweet) >= pop;
+      case "<":
+        return tweet => scoreOfTweet(tweet) < pop;
+      case "<=":
+        return tweet => scoreOfTweet(tweet) <= pop;
+      case ":":
+        return tweet => scoreOfTweet(tweet) === pop;
+    }
+  }
+}, {
+  keyword: 'retweets',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator: (query, sep) => {
+    const rts = parseInt(query, 10);
+
+    if (isNaN(rts)) {
+      return;
+    }
+
+    switch (sep) {
+      case ">":
+        return tweet => tweet.retweet_count > rts;
+      case ">=":
+        return tweet => tweet.retweet_count >= rts;
+      case "<":
+        return tweet => tweet.retweet_count < rts;
+      case "<=":
+        return tweet => tweet.retweet_count <= rts;
+      case ":":
+        return tweet => tweet.retweet_count === rts;
+    }
+  }
+}, {
+  keyword: 'favorites',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator: (query, sep) => {
+    const rts = parseInt(query, 10);
+
+    if (isNaN(rts)) {
+      return;
+    }
+
+    switch (sep) {
+      case ">":
+        return tweet => tweet.favorite_count > rts;
+      case ">=":
+        return tweet => tweet.favorite_count >= rts;
+      case "<":
+        return tweet => tweet.favorite_count < rts;
+      case "<=":
+        return tweet => tweet.favorite_count <= rts;
+      case ":":
+        return tweet => tweet.favorite_count === rts;
+    }
+  }
+});

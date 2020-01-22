@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import classes from './DMContainer.module.scss';
 import { LinkedDirectMessage } from 'twitter-archive-reader';
 import DM from './DM';
@@ -139,7 +138,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     const dm_top = this.dm_refs[id];
 
     if (dm_top) {
-      const el = ReactDOM.findDOMNode(dm_top.current);
+      const el = dm_top.current.inner_ref.current;
 
       setTimeout(() => {
         if (el) {

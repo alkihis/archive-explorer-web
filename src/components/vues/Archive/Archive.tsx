@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Button from '@material-ui/core/Button';
 import styles from './Archive.module.scss';
 import { setPageTitle, dateFormatter } from '../../../helpers';
@@ -44,6 +43,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   active = true;
 
   card_ref = React.createRef<HTMLDivElement>();
+  root_ref = React.createRef<HTMLDivElement>();
   last_refresh: number = 0;
 
   constructor(props: any) {
@@ -436,7 +436,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   loadButton() {
     return (
       <div className="center-space-between">
-        <Button color="primary" onClick={() => (this.element.querySelector('[data-archive-input]') as HTMLElement).click()}>
+        <Button color="primary" onClick={() => (this.root_ref.current.querySelector('[data-archive-input]') as HTMLElement).click()}>
           {LANG.load}{this.state.loaded || this.state.is_error ? " " + LANG.another_f : ""} archive
         </Button>
         <input type="file" data-archive-input="" onChange={(e) => this.loadArchive(e)} hidden />
@@ -587,7 +587,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     );
 
     return (
-      <div className={styles.root}>
+      <div ref={this.root_ref} className={styles.root}>
         <AppBar position="relative">
           <Toolbar>
             <Typography variant="h6" color="inherit">
@@ -618,10 +618,6 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         </Container>
       </div>
     );
-  }
-
-  get element() {
-    return ReactDOM.findDOMNode(this) as Element;
   }
 }
 

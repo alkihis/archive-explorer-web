@@ -1,4 +1,5 @@
 $drawer_width:240px;
+@import '../../../tools/functions.scss';
 
 .root {
   display: flex;
@@ -143,5 +144,20 @@ $drawer_width:240px;
 
   :global .dark :local & {
     color: lighten($color: #000000, $amount: 85);
+  }
+}
+
+.form_control {
+  margin: 4px;
+  min-width: 120px;
+}
+
+.advanced_search_choices_grid {
+  display: grid;
+  grid-template-columns: auto min-content min-content min-content;
+  gap: 10px;
+
+  @include min_mobile {
+    grid-template-columns: auto;
   }
 }

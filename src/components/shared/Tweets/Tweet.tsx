@@ -13,6 +13,7 @@ import { CheckboxProps } from '@material-ui/core/Checkbox';
 import SETTINGS from '../../../tools/Settings';
 import UserCache from '../../../classes/UserCache';
 import { TweetContext } from './TweetContext';
+import { SelectedCheckboxDetails } from '../TweetViewer/TweetViewer';
 
 type TweetProp = {
   data: PartialTweet | Status,
@@ -31,16 +32,39 @@ const TweetCheckbox = withStyles({
     },
   },
   checked: {},
-})((props: CheckboxProps) => <Checkbox color="default" {...props} />);
+})(
+  React.forwardRef<HTMLButtonElement, CheckboxProps>((props, ref) => (
+    <Checkbox color="default" ref={ref} {...props} />
+  ))
+);
 
 export default class Tweet extends React.Component<TweetProp, TweetState> {
   state: TweetState;
+  checkbox: React.RefObject<HTMLButtonElement> = React.createRef();
 
   constructor(props: TweetProp) {
     super(props);
 
     this.state = { checked: this.props.checked };
   }
+
+  handleTweetContextMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const ev = new CustomEvent<SelectedCheckboxDetails>('tweet.check-one', {
+      detail: {
+        id: this.props.data.id_str,
+        element: this.checkbox.current,
+        position: {
+          left: e.clientX + 1,
+          top: e.clientY
+        }
+      }
+    });
+
+    window.dispatchEvent(ev);
+  };
 
   get original() {
     return (this.props.data.retweeted_status ? this.props.data.retweeted_status : this.props.data) as Status;
@@ -118,6 +142,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
 
           <CardActions disableSpacing className={classes.card_action}>
             <TweetCheckbox 
+              ref={this.checkbox}
               onChange={(_, checked) => { 
                 this.setState({ checked });
                 const oc = this.props.onCheckChange;
@@ -127,6 +152,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
               }} 
               checked={this.state.checked}
               disabled={!SETTINGS.can_delete}
+              onContextMenu={this.handleTweetContextMenu}
             />
 
             <TweetActions />

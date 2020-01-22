@@ -26,6 +26,7 @@ type DMState = {
 
 export default class DM extends React.Component<DMProp, DMState> {
   registered_urls: {[url: string]: string} = {};
+  inner_ref = React.createRef<HTMLDivElement>()
 
   state: DMState = {
     img: null,
@@ -150,7 +151,7 @@ export default class DM extends React.Component<DMProp, DMState> {
     const user = UserCache.getFromCache(this.props.msg.senderId);
 
     return (
-      <div className={classes.position + " " + (this.is_you ? classes.you : "")}>
+      <div ref={this.inner_ref} className={classes.position + " " + (this.is_you ? classes.you : "")}>
         <div className={classes.root + 
           " " + (this.is_you ? classes.root_you : classes.root_other) +
           " " + (this.props.showPp ? classes.marginT : "")}>

@@ -119,16 +119,13 @@
 
 .modal_grid_root {
   display: grid;
-  grid-template-columns: auto max-content max-content max-content;
+  grid-template-columns: auto max-content max-content;
   grid-gap: 15px;
   align-items: center;
 
-  @include threshold_bar {
-    grid-template-columns: max-content max-content;
-    justify-content: center;
-  }
-
   @include min_mobile {
+    justify-content: center;
+
     &:lang(fr) {
       grid-template-columns: max-content;
     }
@@ -149,4 +146,8 @@
   @include threshold_bar {
     text-align: center;
   }
+}
+
+.menu_tiny_icon {
+  min-width: 42px !important;
 }

@@ -1,22 +1,23 @@
-import { BrowserRouter as Router, Route, Redirect, Switch, RouteComponentProps } from "react-router-dom";
-import React from 'react';
-import Explore from "../vues/Explore/Explore";
-import RouterWrapper from "./RouterWrapper";
-import Archive from "../vues/Archive/Archive";
-import SETTINGS from "../../tools/Settings";
-import Login from "../vues/Login/Login";
-import FinalizeLogin from "../FinalizeLogin/FinalizeLogin";
-import NotFound from "../shared/NotFound/NotFound";
-import { checkCredentials } from "../../helpers";
+import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
+import React, { Suspense } from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
-import { BigPreloader } from "../../tools/PlacingComponents";
-import Settings from "../vues/Settings/Settings";
-import DirectMessages from "../vues/DirectMessages/DirectMessages";
-import More from "../vues/More/More";
-import { StaticContext } from "react-router";
-import StaticPresentation from "../StaticPresentation/StaticPresentation";
+import SETTINGS from "../../tools/Settings";
+import RouterWrapper from "./RouterWrapper";
+import { checkCredentials } from "../../helpers";
+import { BigPreloader, CenterComponent } from "../../tools/PlacingComponents";
 import LANG, { AvailableLanguages } from "../../classes/Lang/Language";
-import LanguageChanger from "../LanguageChanger/LanguageChanger";
+
+/** Routes: Lazy loading every route. */
+const HomePage = React.lazy(() => import("../StaticPresentation/StaticPresentation"));
+const Explore = React.lazy(() => import("../vues/Explore/Explore"));
+const Archive = React.lazy(() => import("../vues/Archive/Archive"));
+const Login = React.lazy(() => import("../vues/Login/Login"));
+const FinalizeLogin = React.lazy(() => import("../FinalizeLogin/FinalizeLogin"));
+const NotFound = React.lazy(() => import("../shared/NotFound/NotFound"));
+const LanguageChanger = React.lazy(() => import("../LanguageChanger/LanguageChanger"));
+const DirectMessages = React.lazy(() => import("../vues/DirectMessages/DirectMessages"));
+const More = React.lazy(() => import("../vues/More/More"));
+const Settings = React.lazy(() => import("../vues/Settings/Settings"));
 
 type RouterState = { 
   /** True if login modal should be shown.
@@ -169,14 +170,14 @@ class AppRouter extends React.Component<{}, RouterState> {
   routerLogged() {
     return (
       <Router>
-        <div className="Router">
+        <Suspense fallback={<SuspenseWaiting />}>
           <Switch>
             <Route path="/archive/" component={Archive} />  
             <Route path="/explore/" component={Explore} />
             <Route path="/settings/" component={Settings} />  
             <Route path="/dms/" component={DirectMessages} />  
             <Route path="/more/" component={More} />  
-            <Route path="/" exact component={StaticPresentation} />
+            <Route path="/" exact component={HomePage} />
 
             {/* Langs autochange */}
             {Object.keys(AvailableLanguages)
@@ -186,37 +187,24 @@ class AppRouter extends React.Component<{}, RouterState> {
             {/* Not found page */}
             <Route component={NotFound} />
           </Switch>
-          <RouterWrapper />
-        </div>
+        </Suspense>
+        <RouterWrapper />
       </Router>
     );
   }
 
   unloggedRouter() {
-    const renderUnloggedRoute = (props: RouteComponentProps<any, StaticContext, any>) => {
-      if (props.location.pathname.startsWith('/login')) {
-        return <Login />;
-      }
-      else if (props.location.pathname.startsWith('/finalize')) {
-        return <FinalizeLogin {...props} />;
-      }
-      else if (props.location.pathname === "/") {
-        // Homepage (static)
-        return <StaticPresentation />;
-      }
-      else {
-        return <Redirect
-          to={{
-            pathname: "/",
-            state: { from: props.location }
-          }}
-        />;
-      }
-    };
-
     return (
-      <Router>
-        <Route render={renderUnloggedRoute} />
+      <Router> 
+        <Suspense fallback={<SuspenseWaiting />}>
+          <Switch>
+            <Route path="/" exact component={HomePage} />
+            <Route path="/finalize" component={FinalizeLogin} />
+            <Route path="/login" component={Login} />
+
+            <Route render={props => <Redirect to={{ pathname: "/", state: { from: props.location }}} />} />
+          </Switch>
+        </Suspense>
       </Router>
     );
   }
@@ -230,16 +218,23 @@ class AppRouter extends React.Component<{}, RouterState> {
     return (
       <div>
         {this.state.modal_shown && this.renderDialogLogin()}
-        {!this.state.modal_shown ?
+        {!this.state.modal_shown &&
           (this.logged ? 
             this.routerLogged() : 
             this.unloggedRouter()
-          ) :
-          ""
+          )
         }
       </div>
     );
   }
+}
+
+function SuspenseWaiting() {
+  return (
+    <CenterComponent style={{height: '100vh'}}>
+      <BigPreloader />
+    </CenterComponent>
+  );
 }
   
 export default AppRouter;
