@@ -75,7 +75,7 @@
     text-align: right;
     position: relative;
   
-    :global .dark :local & {
+    .dark & {
       color: lighten($color: #000000, $amount: 75);
     }
   }
