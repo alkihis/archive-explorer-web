@@ -21,10 +21,12 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
 import TweetCountChartIcon from '@material-ui/icons/ShowChart';
 import MostMentionnedIcon from '@material-ui/icons/Forum';
+import AdvancedSearchIcon from '@material-ui/icons/Create';
 import TweetNumberChart from '../../charts/TweetNumberChart/TweetNumberChart';
 import MostMentionned from '../../charts/MostMentionned/MostMentionned';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import { toast } from '../../shared/Toaster/Toaster';
+import ComposeSearchModal from './SearchComposer';
 
 
 const ExpansionPanel = withStyles({
@@ -402,6 +404,7 @@ export function SearchOptions<T>(props: {
   const [position, setPosition] = React.useState({ left: 0, top: 0 });
   const [options, setOptions] = React.useState(props.default ? props.default as string[] : []);
   const [searchInput, setSearchInput] = React.useState("");
+  const [modalAdvanced, setModalAdvanced] = React.useState(false);
 
   function handleClose() {
     setAnchorEl(null);
@@ -426,14 +429,14 @@ export function SearchOptions<T>(props: {
     }
   }
 
-  function handleClick() {
+  function handleClick(_?: any, data = searchInput) {
     if (props.isDM)
-      DMSearchHistory.push(searchInput);
+      DMSearchHistory.push(data);
     else
-      TweetSearchHistory.push(searchInput);
+      TweetSearchHistory.push(data);
     
     if (props.onClick)
-      props.onClick(options as (keyof T)[], searchInput);
+      props.onClick(options as (keyof T)[], data);
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -456,6 +459,12 @@ export function SearchOptions<T>(props: {
     toast(LANG.history_cleared, "info")
   }
 
+  function onAdvancedSearch(text: string) {
+    setSearchInput(text);
+    setModalAdvanced(false);
+    handleClick(undefined, text);
+  }
+
   const auto_complete_options = (props.isDM ? DMSearchHistory : TweetSearchHistory).get().reverse();
 
   return (
@@ -463,11 +472,14 @@ export function SearchOptions<T>(props: {
       <ListItem 
         className={classes.search_input}
       >
+        {modalAdvanced && <ComposeSearchModal onSearchMake={onAdvancedSearch} onClose={() => setModalAdvanced(false)} />}
+
         <form onSubmit={handleSubmit} className={classes.full_w}>
           <Autocomplete
             freeSolo
             options={auto_complete_options}
             onInputChange={(_, v) => handleAutocompleteInputChange(v)}
+            value={searchInput}
             closeText={LANG.close}
             clearText={LANG.clear_input}
             renderInput={params => (
@@ -479,7 +491,6 @@ export function SearchOptions<T>(props: {
                 }}
                 label={props.fieldLabel} 
                 className={classes.textField}
-        
                 margin="normal"
               />
             )}
@@ -497,6 +508,18 @@ export function SearchOptions<T>(props: {
           <SearchIcon className={classes.get_back_icon} /> <span>{LANG.search_now}</span>
         </ListItemText>
       </ListItem>
+
+      {!props.isDM && <Hidden xsDown>
+        <ListItem 
+          button 
+          className={classes.advanced_search_btn} 
+          onClick={() => setModalAdvanced(true)}
+        >
+          <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
+            <AdvancedSearchIcon className={classes.get_back_icon} /> <span>{LANG.advanced_search}</span>
+          </ListItemText>
+        </ListItem>
+      </Hidden>}
 
       <Menu
         anchorEl={anchorEl}

@@ -287,6 +287,27 @@ export default {
   select_tweets_below_last: "Jusqu'au dernier tweet sélectionné",
   invalid_query: "Criteria after keyword \"{}\" in query is invalid.",
   search_cannot_be_made: "Search failed. Something bad happened.",
+  advanced_search: "Advanced search",
+  advanced_search_explaination: `This tool allows you to create a search with a bunch of critieria. 
+  After you made your choices, you can enter free text to finalize your request.`,
+  free_text: "Free text",
+  since_date: "Since date",
+  until_date: "Until date",
+  day: "day",
+  retweet_count: "Retweet count",
+  favorite_count: "Favorite count",
+  popularity: "Popularity",
+  make_search: "Make search",
+  operator: "Operator",
+  value: "Value",
+  adv_search_result: "Built search",
+  empty_adv_search: "You haven't choose any criteria.",
+  add_a_criteria: "Add a criteria",
+  higher_than: "Higher than (>)",
+  starting_at: "Starting at (>=)",
+  lower_than: "Lower than (<)",
+  equal_to: "Equal to (=)",
+  until_operator: "Until (<=)",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
