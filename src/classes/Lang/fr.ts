@@ -305,10 +305,13 @@ export default {
   empty_adv_search: "Vous n'avez saisi aucun critère",
   add_a_criteria: "Ajouter un critère",
   higher_than: "Plus de (>)",
-  starting_at: "Au moins (>=)",
+  starting_at: "Au moins (≥)",
   lower_than: "Moins de (<)",
   equal_to: "Égal à (=)",
-  until_operator: "Jusqu'à (<=)",
+  until_operator: "Jusqu'à (≤)",
+  invalid_value: "Valeur erronée",
+  confirm: "Confirmer",
+  sort_by_random: "Tri aléatoire",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

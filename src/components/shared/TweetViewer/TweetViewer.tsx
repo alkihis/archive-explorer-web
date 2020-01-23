@@ -22,6 +22,7 @@ import Time from '@material-ui/icons/Schedule';
 import TweetUser from '@material-ui/icons/Person';
 import All from '@material-ui/icons/AllInclusive';
 import Videos from '@material-ui/icons/Videocam';
+import Shuffle from '@material-ui/icons/Shuffle';
 import MentionIcon from '@material-ui/icons/Reply';
 import Pictures from '@material-ui/icons/Collections';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
@@ -278,6 +279,12 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           >
             <CustomTooltip title={LANG.sort_by_fav_count}>
               <Favorite />
+            </CustomTooltip>
+          </ToggleButton>
+
+          <ToggleButton value="random">
+            <CustomTooltip title={LANG.sort_by_random}>
+              <Shuffle />
             </CustomTooltip>
           </ToggleButton>
         </ToggleButtonGroup>

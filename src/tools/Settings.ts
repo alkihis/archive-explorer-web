@@ -6,7 +6,7 @@ import APIHELPER from "./ApiHelper";
 import { AuthorizedLangs, isAuthorizedLang } from "../classes/Lang/Language";
 import Cookies from 'js-cookie';
 
-export type TweetSortType = "time" | "popular" | "retweets" | "favorites";
+export type TweetSortType = "time" | "popular" | "retweets" | "favorites" | "random";
 export type TweetSortWay = "asc" | "desc";
 export type TweetMediaFilters = "none" | "pic" | "video";
 

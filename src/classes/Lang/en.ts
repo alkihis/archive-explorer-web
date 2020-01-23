@@ -304,10 +304,13 @@ export default {
   empty_adv_search: "You haven't choose any criteria.",
   add_a_criteria: "Add a criteria",
   higher_than: "Higher than (>)",
-  starting_at: "Starting at (>=)",
+  starting_at: "Starting at (≥)",
   lower_than: "Lower than (<)",
   equal_to: "Equal to (=)",
-  until_operator: "Until (<=)",
+  until_operator: "Until (≤)",
+  invalid_value: "Invalid value",
+  confirm: "Confirm",
+  sort_by_random: "Random sort",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

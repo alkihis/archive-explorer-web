@@ -243,7 +243,7 @@ export function sortAndFilterTweetsFromSettings(tweets: PartialTweet[], settings
       return 0;
     };
   }
-  else {
+  else if (settings.sort_type === "favorites") {
     // favorites
     sort_fn = (a: PartialTweet, b: PartialTweet) => {
       if (a.favorite_count !== undefined && b.favorite_count !== undefined) {
@@ -259,39 +259,45 @@ export function sortAndFilterTweetsFromSettings(tweets: PartialTweet[], settings
     };
   }
 
-  const res = tweets.filter(t => {
-    if (!settings.allow_rts && t.retweeted_status) {
-      return false;
-    }
-
-    if (!settings.allow_self && !t.retweeted_status) {
-      return false;
-    }
-
-    if (!settings.allow_mentions && t.text.startsWith('@')) {
-      return false;
-    }
-
-    if (settings.only_medias && (!t.entities || !t.entities.media || !t.entities.media.length)) {
-      return false;
-    }
-
-    if (settings.only_videos) {
-      if (
-        !t.extended_entities || 
-        !t.extended_entities.media || 
-        !t.extended_entities.media.length
-      ) {
+  let res = tweets;
+  if (sort_fn) {
+    res = tweets.filter(t => {
+      if (!settings.allow_rts && t.retweeted_status) {
         return false;
       }
-
-      if (t.extended_entities.media[0].type === "photo") {
+  
+      if (!settings.allow_self && !t.retweeted_status) {
         return false;
       }
-    }
-
-    return true;
-  }).sort(sort_fn);
+  
+      if (!settings.allow_mentions && t.text.startsWith('@')) {
+        return false;
+      }
+  
+      if (settings.only_medias && (!t.entities || !t.entities.media || !t.entities.media.length)) {
+        return false;
+      }
+  
+      if (settings.only_videos) {
+        if (
+          !t.extended_entities || 
+          !t.extended_entities.media || 
+          !t.extended_entities.media.length
+        ) {
+          return false;
+        }
+  
+        if (t.extended_entities.media[0].type === "photo") {
+          return false;
+        }
+      }
+  
+      return true;
+    }).sort(sort_fn);
+  }
+  else if (settings.sort_type === "random") {
+    res = arrayShuffle(tweets, false);
+  }
 
   if (settings.sort_way === "desc") {
     res.reverse();
@@ -449,4 +455,26 @@ export function daysInMonth(month: number, year: number) {
 
 export function randomIntFromInterval(min: number, max: number) { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+/**
+ * Shuffle an array using the Durstenfeld shuffle. 
+ * 
+ * See: https://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm
+ * 
+ * @param array The array to shuffle
+ * @param use_source `true` if shuffle use the original array, `false` to create a copy.
+ */
+export function arrayShuffle<T>(array: T[], use_source = true) {
+  const copy = use_source ? array : [...array];
+
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = copy[i];
+
+    copy[i] = copy[j];
+    copy[j] = temp;
+  }
+
+  return copy;
 }

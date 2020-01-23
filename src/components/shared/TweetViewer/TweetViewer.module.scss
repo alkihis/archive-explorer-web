@@ -39,7 +39,7 @@
   justify-content: center;
   gap: 10px 25px;
 
-  @include mobile {
+  @include min_w_1000 {
     grid-template-columns: auto auto;
   }
 

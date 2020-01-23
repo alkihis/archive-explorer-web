@@ -1,5 +1,11 @@
 $bottom_bar_height: 56px;
 
+@mixin min_w_1000 {
+  @media screen and (max-width: 1000px) {
+    @content;
+  }
+}
+
 @mixin mobile {
   @media screen and (max-width: 900px) {
     @content;
