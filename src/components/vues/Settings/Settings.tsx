@@ -1,13 +1,12 @@
 import React from 'react';
 import classes from './Settings.module.scss';
 import { setPageTitle, dateFormatter, toggleDarkMode } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar, InputLabel, Select, MenuItem, Divider } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
 import ExtendedActionsMenu from './ExtendedActionsMenu';
-import { VERSION } from '../../../const';
 import LANG, { AvailableLanguages, AuthorizedLangs } from '../../../classes/Lang/Language';
-import FindUseful from '../../StaticPresentation/FindUseful';
+import { Copyright } from '../../../tools/PlacingComponents';
 
 type SettingsState = {
   download: boolean;
@@ -296,8 +295,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
         </AppBar>
 
         <Container maxWidth="lg" className={classes.root}>
-          <FindUseful />
-
           <Typography variant="h4" className={classes.account_title}>
             {LANG.account}
           </Typography>
@@ -319,9 +316,9 @@ export default class Settings extends React.Component<{}, SettingsState> {
             {this.displaySettings()}
           </Container>
 
-          <Container className={classes.version}>
-            <div className={classes.version_pos}>Archive Explorer version {VERSION}</div>
-          </Container>
+          <Divider className="divider-big-margin" />
+
+          <Copyright version />
         </Container>
       </div>
     );

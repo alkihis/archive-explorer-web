@@ -311,6 +311,7 @@ export default {
   invalid_value: "Invalid value",
   confirm: "Confirm",
   sort_by_random: "Random sort",
+  search_in_current_month: "Search in selected month/view",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
@@ -404,12 +405,17 @@ export default {
   learn_how_to_download: `Learn how to download a Twitter archive with a simple tutorial.
   It will just take minutes.`,
   search: "Search",
+  about_direct_messages: "About direct messages",
   search_p1: "For both tweets and direct messages, search is case-insensitive, and supports regular expressions.",
+  search_p2: `If you right-click (long click on mobile) on search button, you will have access to advanced search options,
+  like case sensitivity or flags for regular expressions.`,
   tweets_p1: "Search for the tweets you want directly in your archive. Search is made instantly, in all your tweets.",
   direct_messages_p1: `When a conversation is selected, you can find messages by their text. Once you've found the
   message you want, just click on it to see the following and preceding DMs of the conversation.`,
   keywords_upper: "Keywords",
   keywords_p1: "You can enhance all your queries made in tweet / direct message explorer by adding",
+  keywords_p2: `Tweet search via Explore tab can be extended with more selectors. On desktop, a graphical tool which helps you
+  to compose an advanced search is available to discover them.`,
   keywords: "keywords",
   delete_tweets_more: "Delete tweets, blocks and more",
   delete_tweets_more_p1: "Archive Explorer let you delete a batch of tweets, or other information linked to your account.",
@@ -419,7 +425,8 @@ export default {
   tweets_more_p1: `For tweets, you can select tweets individually via Tweet Explorer (Explore tab), or choose from multiple months
   and years with Quick Delete, available in the Archive tab.`,
   favs_mutes_blocks: "Mutes and blocks",
-  favs_mutes_blocks_p1: `Mutes and blocks can be deleted in this tab. This kind of removal is "all or nothing", you can't 
+  favs_mutes_blocks_p1: `Mutes and blocks can be deleted in their respective tab, which you can select
+  on top of this page. This kind of removal is "all or nothing", you can't 
   individually select which mute or block you will remove.`,
   limitations: "Limitations",
   retweet_data: "Retweet data",
@@ -443,11 +450,6 @@ export default {
   tasks_limit_p3: `in parallel.`,
   tasks_limit_p4: `If you want to start another task, please wait for
   other tasks to complete or cancel an existing task.`,
-  archive_size: "Archive size",
-  archive_size_p1: `Due to a technical limitation, archive is fully loaded into your navigator's memory.
-  This could be very inefficient for mobiles devices or small computers.`,
-  archive_size_p2: `In very specific cases, if you have too many medias in your direct messages, load can fail. You can delete the folder`,
-  archive_size_p3: "in your archive to lighten it.",
   classic_not_supported: `Classic archive is not supported.
   You should have a GDPR archive to access many options here.
   Learn how to download a GDPR archive with the help below.`,
@@ -455,8 +457,7 @@ export default {
   To start, learn how to download a archive with the help below.`,
   archive_saving: "Archive save",
   archive_saving_p1: `To avoid a file import each time we see you on Archive Explorer,
-  you can register an archive inside your web browser.
-  A local save can be made when loaded archive belongs to logged user.`,
+  you can register an archive inside your web browser. Save will be available when log back on the service with the same account.`,
   archive_saving_p2: `Every save is local to one device, it is not sent to the Archive Explorer's server.`,
   more: "More",
   delete_all_your: "Delete all your",
@@ -518,6 +519,28 @@ export default {
   untranslated: "untranslated",
   explaination_difference_follows: `Showed number may not reflect available count on Twitter due to
   presence of suspended and deactivated accounts in this list.`,
+  legal_mentions_and_limitations: "Legal notice and limitations",
+  legal_mentions: "Legal notice",
+  about_archive_explorer: "About Twitter Archive Explorer",
+  about_archive_explorer_p1: `Twitter Archive Explorer is a software suite made by Alkihis. 
+  It is used in accordance to CC-BY-NC-SA-4.0 license, and give free usage without any counterpart.
+  Client, server and archive reader are available on `,
+  about_archive_explorer_p2: `In case of code reuse of a part of this suite by other people, it must respect the
+  license conditions affected to this tool.`,
+  about_archive_explorer_p3: `Archive Explorer doesn't belong to Twitter and is not affilated to it in any way. 
+  Twitter is a trademark belonging to Twitter Inc..`,
+  tweet_deletion_p1: `When you delete tweets, mutes and other data using Twitter Archive Explorer,
+  this data is wiped permanently. However, Archive Explorer does not provide any guarantee, 
+  either for the effectiveness or the accuracy of this deletion.
+  If any other information is wiped from your account by error, Archive Explorer doesn't provide any way of restoring it.`,
+  personal_data: "Personal data",
+  personal_data_p1: `Twitter Archive Explorer respect your privacy and store the minimum necessary to ensure good operation of the service.
+  Stored information is about your last login date, a short summary of your Twitter data (username, profile picture, identifier and access keys),
+  and date of your account creation. `,
+  used_software: "Used software",
+  used_software_p1: `Archive Explorer suite mainly use the following tools:`,
+  web_service: "Web service",
+
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

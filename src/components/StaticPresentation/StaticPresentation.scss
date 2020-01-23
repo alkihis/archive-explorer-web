@@ -237,54 +237,5 @@
       margin-top: 3rem !important;
       margin-bottom: 0 !important;
     }
-
-    .copyright {
-      padding: 24px;
-      padding-bottom: 4rem;
-      box-sizing: border-box;
-    }
-
-    .twitter-link {
-      color: rgb(53, 53, 53) !important;
-
-      .dark & {
-        color: rgb(223, 223, 223) !important;
-      }
-    }
   }
-  
-  .github-links {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    row-gap: 10px;
-    align-items: center;
-    justify-content: center;
-    gap: 3rem;
-    margin-top: 1rem;
-  
-    @include min_mobile {
-      grid-template-columns: auto;
-      gap: 1rem;
-    }
-  }
-  
-  .github-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .github-img {
-    display: block;
-    height: 24px;
-    
-    .dark & {
-      filter: invert(1);
-    }
-  }
-  
-  .github-text {
-    font-weight: bold;
-    margin-left: 7px;
-  }
-  
 }

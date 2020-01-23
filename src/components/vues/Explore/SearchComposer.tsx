@@ -1,7 +1,7 @@
 import React from 'react';
 import LANG from '../../../classes/Lang/Language';
 import classes from './Explore.module.scss';
-import { Dialog, DialogContent, DialogTitle, DialogContentText, IconButton, TextField, DialogActions, Button, Select, FormControl, MenuItem, InputLabel, Divider } from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle, DialogContentText, IconButton, TextField, DialogActions, Button, Select, FormControl, MenuItem, InputLabel, Divider, FormControlLabel, Checkbox, Hidden } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { fr, enUS } from "date-fns/locale";
 import {
@@ -11,7 +11,7 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddButton from '@material-ui/icons/Add';
 import SETTINGS from '../../../tools/Settings';
-import { dateFormatter, uppercaseFirst } from '../../../helpers';
+import { dateFormatter, uppercaseFirst, getMonthText, range } from '../../../helpers';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import { Marger } from '../../../tools/PlacingComponents';
 
@@ -69,10 +69,12 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
 export default function ComposeSearchModal(props: {
   onSearchMake?: (search: string) => void,
   onClose?: () => void,
+  canSetCurrent?: boolean,
 }) {
   const [search, setSearch] = React.useState("");
   const [inputs, setInputs] = React.useState([] as { id: number, value: string, operator: string, input: AdvancedInputProperties }[]);
   const [freeText, setFreeText] = React.useState("");
+  const [currentMonth, setCurrentMonth] = React.useState(false);
 
   function deleteInput(id: number) {
     setInputs(inputs.filter(i => i.id !== id));
@@ -99,7 +101,8 @@ export default function ComposeSearchModal(props: {
   }
 
   function refreshSearchString() {
-    return (inputs.map(v => v.input.keyword + v.operator + v.value).join(' ') + " " + freeText).trim();
+    return (currentMonth ? ":current " : "") + 
+      (inputs.map(v => v.input.keyword + v.operator + v.value).join(' ') + " " + freeText).trim();
   }
 
   function getSearchString() {
@@ -152,6 +155,24 @@ export default function ComposeSearchModal(props: {
             </IconButton>
           </CustomTooltip>
         </div>
+        
+        <Hidden xsUp={!props.canSetCurrent}>
+          <Marger size={4} />
+          
+          <FormControlLabel
+            value="ok"
+            control={
+              <Checkbox 
+                color="primary" 
+                checked={currentMonth}
+                onChange={(_, c) => setCurrentMonth(c)}
+              />
+            }
+            label={LANG.search_in_current_month}
+            labelPlacement="end"
+          />
+        </Hidden>
+
         
         <Marger size={4} />
         <Divider />
@@ -208,8 +229,18 @@ function AdvancedSearchInput(props: {
 
   function changeInput(value: string) {
     setInput(value);
+    formatAndTriggerChange(data.keyword, value, operator);
+  }
+
+  function formatAndTriggerChange(keyword: string, value: string, operator: string) {
     if (props.onChange) {
-      props.onChange(data.keyword, value.trim(), operator);
+      value = value.trim();
+      const data = SEARCH_KEYWORDS.find(e => e.keyword === keyword);
+
+      if (data.type === "day" || data.type === "month" || data.type.includes("number"))
+        value = String(Number(value))
+
+      props.onChange(data.keyword, value, operator);
     }
   }
 
@@ -279,44 +310,42 @@ function AdvancedSearchInput(props: {
     }
     else if (data.type === "day") {
       return (
-        <TextField
-          error={isError}
-          label={LANG.value}
-          type="number"
-          value={input}
-          onChange={e => {
-            const val = e.target.value;
-            if (Number(val) > 0 && Number(val) <= 31) {
+        <>
+          <InputLabel id={String(props.id) + "day-select"}>{uppercaseFirst(LANG.day)}</InputLabel>
+          <Select
+            labelId={String(props.id) + "day-select"}
+            value={input}
+            onChange={e => {
+              const val = String(e.target.value as any || "");
               setIsError(false);
-            }
-            else {
-              setIsError(true);
-            }
-            changeInput(val)
-          }}
-          helperText={isError ? LANG.invalid_value : ""}
-        />
+              changeInput(val || "")
+            }}
+          >
+            {range(1, 32).map(day => <MenuItem value={day} key={day}>
+              {day}
+            </MenuItem>)}
+          </Select>
+        </>
       );
     }
     else if (data.type === "month") {
       return (
-        <TextField
-          error={isError}
-          label={LANG.value}
-          type="number"
-          value={input}
-          onChange={e => {
-            const val = e.target.value;
-            if (Number(val) > 0 && Number(val) <= 12) {
+        <>
+          <InputLabel id={String(props.id) + "month-select"}>{uppercaseFirst(LANG.month)}</InputLabel>
+          <Select
+            labelId={String(props.id) + "month-select"}
+            value={input}
+            onChange={e => {
+              const val = String(e.target.value as any || "");
               setIsError(false);
-            }
-            else {
-              setIsError(true);
-            }
-            changeInput(val)
-          }}
-          helperText={isError ? LANG.invalid_value : ""}
-        />
+              changeInput(val || "")
+            }}
+          >
+            {range(1, 13).map(month => <MenuItem value={month} key={month}>
+              {uppercaseFirst(getMonthText(String(month)))}
+            </MenuItem>)}
+          </Select>
+        </>
       );
     }
     else if (data.type === "date") {
@@ -342,9 +371,7 @@ function AdvancedSearchInput(props: {
 
   const handleOperatorChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setOperator(event.target.value as any);
-    if (props.onChange) {
-      props.onChange(data.keyword, input, event.target.value as any);
-    }
+    formatAndTriggerChange(data.keyword, input, event.target.value as any);
   };
 
   const handleKeywordChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -353,16 +380,12 @@ function AdvancedSearchInput(props: {
     const new_input = new_kw.type === "date" ? dateFormatter("Y-m-d") : '';
     setInput(new_input);
     setData(new_kw);
-    if (props.onChange) {
-      props.onChange(kw, new_input, operator);
-    }
+    formatAndTriggerChange(kw, new_input, operator);
   };
 
   React.useEffect(() => {
     // Init change
-    if (props.onChange) {
-      props.onChange(data.keyword, input, operator);
-    }
+    formatAndTriggerChange(data.keyword, input, operator);
     // eslint-disable-next-line
   }, []);
 
@@ -398,9 +421,9 @@ function AdvancedSearchInput(props: {
       </FormControl> : <div />}
 
       {/* Value form control */}
-      <div className={classes.form_control}>
+      <FormControl className={classes.form_control}>
         {getRightInput()}
-      </div>
+      </FormControl>
 
       <div className={classes.adv_search_delete_btn}>
         <IconButton onClick={props.onDelete}>

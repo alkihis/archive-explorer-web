@@ -1,6 +1,7 @@
 import SETTINGS from "../../tools/Settings";
 import FRENCH from './fr';
 import ENGLISH from './en';
+import { DEBUG_MODE } from "../../const";
 
 const LanguageDatabase = {
   fr: FRENCH,
@@ -18,9 +19,9 @@ export const AvailableLanguages = {
 };
 
 interface Locale {
-  //@ts-ignore
+  // @ts-ignore
   format: (item: string, ...replacements: any[]) => string;
-  [message: string]: string | undefined; 
+  [message: string]: string; 
 }
 
 function formatLang(item: string, ...replacements: any[]) : string {
@@ -74,3 +75,7 @@ const LANG: Locale = new Proxy(LanguageDatabase, {
 }) as any;
 
 export default LANG;
+
+if (DEBUG_MODE) {
+  window.DEBUG.langs = LanguageDatabase;
+}

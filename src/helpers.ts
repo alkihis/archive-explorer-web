@@ -259,44 +259,45 @@ export function sortAndFilterTweetsFromSettings(tweets: PartialTweet[], settings
     };
   }
 
-  let res = tweets;
+  let res = tweets.filter(t => {
+    if (!settings.allow_rts && t.retweeted_status) {
+      return false;
+    }
+
+    if (!settings.allow_self && !t.retweeted_status) {
+      return false;
+    }
+
+    if (!settings.allow_mentions && t.text.startsWith('@')) {
+      return false;
+    }
+
+    if (settings.only_medias && (!t.entities || !t.entities.media || !t.entities.media.length)) {
+      return false;
+    }
+
+    if (settings.only_videos) {
+      if (
+        !t.extended_entities || 
+        !t.extended_entities.media || 
+        !t.extended_entities.media.length
+      ) {
+        return false;
+      }
+
+      if (t.extended_entities.media[0].type === "photo") {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
   if (sort_fn) {
-    res = tweets.filter(t => {
-      if (!settings.allow_rts && t.retweeted_status) {
-        return false;
-      }
-  
-      if (!settings.allow_self && !t.retweeted_status) {
-        return false;
-      }
-  
-      if (!settings.allow_mentions && t.text.startsWith('@')) {
-        return false;
-      }
-  
-      if (settings.only_medias && (!t.entities || !t.entities.media || !t.entities.media.length)) {
-        return false;
-      }
-  
-      if (settings.only_videos) {
-        if (
-          !t.extended_entities || 
-          !t.extended_entities.media || 
-          !t.extended_entities.media.length
-        ) {
-          return false;
-        }
-  
-        if (t.extended_entities.media[0].type === "photo") {
-          return false;
-        }
-      }
-  
-      return true;
-    }).sort(sort_fn);
+    res = res.sort(sort_fn);
   }
   else if (settings.sort_type === "random") {
-    res = arrayShuffle(tweets, false);
+    res = arrayShuffle(res);
   }
 
   if (settings.sort_way === "desc") {
@@ -455,6 +456,23 @@ export function daysInMonth(month: number, year: number) {
 
 export function randomIntFromInterval(min: number, max: number) { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function range(start: number, end?: number, step: number = 1) {
+  if (end === undefined) {
+    end = start;
+    start = 0;
+  }
+
+  if (end < start) {
+    return [];
+  }
+
+  const elements = [] as number[];
+  for (let i = start; i < end; i += step) {
+    elements.push(i);
+  }
+  return elements;
 }
 
 /**

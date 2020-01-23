@@ -1,14 +1,14 @@
 import React from 'react';
 import './StaticPresentation.scss';
 import { Link } from 'react-router-dom';
-import { Avatar, Container, Typography, Divider } from '@material-ui/core';
+import { Avatar, Container, Divider } from '@material-ui/core';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import { DownloadGDPRModal } from '../shared/NoGDPR/NoGDPR';
 import SETTINGS from '../../tools/Settings';
 import { setPageTitle } from '../../helpers';
 import APIHELPER from '../../tools/ApiHelper';
 import LANG from '../../classes/Lang/Language';
-import FindUseful from './FindUseful';
+import { Copyright } from '../../tools/PlacingComponents';
 
 const StaticPresentation: React.FC = () => {
   const [open, setOpen] = React.useState(false);
@@ -79,7 +79,7 @@ const StaticPresentation: React.FC = () => {
             <div>
               <h3>{LANG.clean_your_account}</h3>
               <p>
-                {LANG.clean_your_account_p1} <DeletedCounter /> {LANG.tweets} !
+                {LANG.clean_your_account_p1} <strong><DeletedCounter /></strong> {LANG.tweets} !
               </p>
             </div>
 
@@ -170,49 +170,6 @@ const StaticPresentation: React.FC = () => {
 }
 
 export default StaticPresentation;
-
-function Copyright() {
-  return (
-    <div className="copyright">
-      <Typography variant="body2" color="textSecondary" align="center">
-        {LANG.ae_made_by} <a 
-          href="https://alkihis.fr/" 
-          rel="noopener noreferrer" 
-          target="_blank"
-        >
-          Alkihis
-        </a> • <a 
-          href="https://twitter.com/alkihis/" 
-          rel="noopener noreferrer" 
-          target="_blank"
-          className="twitter-link"
-        >
-          @Alkihis
-        </a>.
-      </Typography>
-
-      <FindUseful />
-
-      <div className="github-links">
-        <GithubLogo url="https://github.com/alkihis/archive-explorer-node" text={LANG.server} />
-
-        <GithubLogo url="https://github.com/alkihis/archive-explorer-web" text={LANG.client} />
-
-        <GithubLogo url="https://github.com/alkihis/twitter-archive-reader" text={LANG.archive_reader} />
-      </div>
-    </div>
-  );
-}
-
-
-function GithubLogo(props: { url: string, text: string }) {
-  return (
-    <a rel="noopener noreferrer" target="_blank" className="github-container" href={props.url}>
-      <img src="/assets/github_logo.png" alt="" className="github-img" />
-      <span className="github-text">{props.text}</span>
-    </a>
-  );
-}
 
 type DCProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
 

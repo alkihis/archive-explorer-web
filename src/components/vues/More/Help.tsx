@@ -72,21 +72,14 @@ export default function Help() {
         {LANG.search_p1}
       </Typography>
 
-      <Marger size={8} />
-
-      <Typography variant="h6" className={classes.third_title}>
-        Tweets
-      </Typography>
-
       <Typography className={classes.help_p}>
-        {LANG.tweets_p1}
-        <br />
+        {LANG.search_p2}
       </Typography>
-    
+
       <Marger size={8} />
 
       <Typography variant="h6" className={classes.third_title}>
-        {LANG.direct_messages}
+        {LANG.about_direct_messages}
       </Typography>
 
       <Typography className={classes.help_p}>
@@ -106,6 +99,12 @@ export default function Help() {
       </Typography>
       <Keywords />
 
+      <Marger size={4} />
+
+      <Typography className={classes.help_p}>
+        {LANG.keywords_p2}
+      </Typography>
+
       <Marger size={8} />
 
       {/* DELETION */}
@@ -114,6 +113,7 @@ export default function Help() {
       </Typography>
 
       <Typography className={classes.help_p}>
+        {/* TODO */}
         {LANG.delete_tweets_more_p1}
         <br />
         {LANG.delete_tweets_more_p2} <span className="bold">
@@ -150,58 +150,6 @@ export default function Help() {
         <br />
 
         <strong>{LANG.archive_saving_p2}</strong>
-      </Typography>
-
-      <Marger size={8} />
-
-      {/* LIMITATIONS */}
-      <Typography variant="h5" className={classes.second_title}>
-        {LANG.limitations}
-      </Typography>
-
-      <Typography variant="h6" className={classes.third_title}>
-        {LANG.retweet_data}
-      </Typography>
-
-      <Typography className={classes.help_p}>
-        {LANG.retweet_data_p1}
-        <br />
-        {LANG.retweet_data_p2}
-      </Typography>
-
-      <Typography variant="h6" className={classes.third_title}>
-        {LANG.truncated_tweets}
-      </Typography>
-
-      <Typography className={classes.help_p}>
-        {LANG.truncated_tweets_p1} <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/Alkihis/status/1173857093880864768">{LANG.this_tweet}</a>){" "}
-        {LANG.truncated_tweets_p2}
-
-        <br />
-
-        {LANG.truncated_tweets_p3}
-      </Typography>
-
-      <Typography variant="h6" className={classes.third_title}>
-        {LANG.tasks_limit}
-      </Typography>
-
-      <Typography className={classes.help_p}>
-        {LANG.tasks_limit_p1} <span className="bold">{LANG.tasks_limit_p2}</span> {LANG.tasks_limit_p3} 
-        <br />
-        {LANG.tasks_limit_p4}
-      </Typography>
-
-      <Typography variant="h6" className={classes.third_title}>
-        {LANG.archive_size}
-      </Typography>
-
-      <Typography className={classes.help_p}>
-        {LANG.archive_size_p1}
-        <br />
-
-        {LANG.archive_size_p2}
-        <span className="bold"> direct_message_media</span> {LANG.archive_size_p3}
       </Typography>
 
       <Marger size="3rem" />

@@ -9,6 +9,7 @@ import Mutes from './Mutes';
 import Blocks from './Blocks';
 import Followers, { Followings } from './Followers';
 import AdAndUserData from './AdAndUserData';
+import LegalMentions from './LegalMentions';
 
 type MoreState = {  
   active_tab: number;
@@ -32,6 +33,7 @@ export default class More extends React.Component<{}, MoreState> {
       Followings,
       Mutes,
       Blocks,
+      LegalMentions,
     ];
   }
 
@@ -72,6 +74,7 @@ export default class More extends React.Component<{}, MoreState> {
           <Tab label={LANG.followings} disabled={!enabled.followings} />
           <Tab label={LANG.mutes} disabled={!enabled.mutes} />
           <Tab label={LANG.blocks} disabled={!enabled.blocks} />
+          <Tab label={LANG.legal_mentions} />
         </Tabs>
       </AppBar>
     );

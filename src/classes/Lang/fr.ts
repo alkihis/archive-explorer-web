@@ -298,7 +298,7 @@ export default {
   retweet_count: "Nombre de retweets",
   favorite_count: "Nombre de favoris",
   popularity: "Popularité",
-  make_search: "Construire la recherche",
+  make_search: "Faire la recherche",
   operator: "Opérateur",
   value: "Valeur",
   adv_search_result: "Recherche construite",
@@ -312,6 +312,7 @@ export default {
   invalid_value: "Valeur erronée",
   confirm: "Confirmer",
   sort_by_random: "Tri aléatoire",
+  search_in_current_month: "Chercher dans le mois ou la vue courante",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
@@ -404,22 +405,27 @@ export default {
   download_twitter_archive: "Télécharger votre archive Twitter",
   learn_how_to_download: `Apprenez à télécharger votre archive Twitter avec ce simple tutoriel. Vous en aurez pour quelques minutes.`,
   search: "Recherche",
+  about_direct_messages: "Concernant les messages privés",
   search_p1: "Les recherches pour les tweets et messages privés s'effectent sans sensibilité à la casse, et celles-ci supportent les expressions régulières.",
+  search_p2: `Si vous effectuez un clic droit (appui long sur mobile) sur le bouton rechercher, 
+  vous aurez accès à des options avancées de recherche, comme la sensibilité à la casse ou des drapeaux pour les expressions régulières.`,
   tweets_p1: "Cherchez les tweets que vous souhaitez directement via votre archive. La recherche se fait instantanément, dans tous vos tweets.",
   direct_messages_p1: `Quand une conversation est sélectionnée, vous pouvez trouver des messages via leur contenu. Lorsque vous avez
   trouvé celui que vous souhaitez, un simple clic sur celui-ci vous montre les messages suivant et précédant dans la conversation.`,
   keywords_upper: "Mots clés",
   keywords_p1: "Chaque recherche dans les tweets / messages privés peut être améliorée en ajoutant des",
+  keywords_p2: `La recherche de tweets dans l'onglet Explorer peut être agrémentée de plus de sélecteurs encore. Sur ordinateur, un outil
+  vous permettant de composer une recherche avancée visuellement est disponible pour vous aider à les découvrir.`,
   keywords: "mots clés",
-  delete_tweets_more: "Supprimer des tweets, des favoris et plus encore",
+  delete_tweets_more: "Supprimer des tweets, des mutes et plus encore",
   delete_tweets_more_p1: "Archive Explorer vous aide à supprimer des tweets, ou d'autres informations liées à votre compte.",
   delete_tweets_more_p2: "Veuillez noter que",
   delete_tweets_more_p3: "chaque suppression est réalisée sur votre compte Twitter, et est irréversible.",
-  delete_tweets_more_p4: "Vous ne serez pas capable de récupérer vos tweets, favoris ou autres informations supprimées",
+  delete_tweets_more_p4: "Vous ne serez pas capable de récupérer vos tweets, mutes ou autres informations supprimées",
   tweets_more_p1: `Pour les tweets, vous pouvez les sélectionner individuellement dans l'explorateur de tweets (onglet Explorer), 
   ou choisir depuis plusieurs mois ou années dans la Suppression rapide, accessible dans l'onglet Archive.`,
-  favs_mutes_blocks: "Favoris, mutes et blocks",
-  favs_mutes_blocks_p1: `Les favoris, mutes et blocks peuvent être supprimés dans cet onglet. Ce type de suppression est "tout ou rien", vous ne pouvez pas
+  favs_mutes_blocks: "Mutes et blocks",
+  favs_mutes_blocks_p1: `Les mutes et blocks peuvent être supprimés dans leur onglet respectif, en haut de cette page. Ce type de suppression est "tout ou rien", vous ne pouvez pas
   sélectionner individuellement quel favori ou block vous allez supprimer.`,
   limitations: "Limitations",
   retweet_data: "Données des retweets",
@@ -443,11 +449,6 @@ export default {
   tasks_limit_p2: `3 tâches`,
   tasks_limit_p3: `en simultané.`,
   tasks_limit_p4: `Si vous souhaitez lancer une autre tâche, merci d'attendre la fin de vos suppressions ou en annulez en une.`,
-  archive_size: "Taille de l'archive",
-  archive_size_p1: `En raison d'une limitation technique, l'archive est entièrement chargée dans
-  la mémoire vive de notre navigateur web. Ceci peut être très peu optimisé pour les appareils mobiles ou les petites configurations.`,
-  archive_size_p2: `Dans certains cas précis, si vous avez trop de photos dans vos messages privés, le chargement de l'archive peut échouer. Vous pouvez supprimer le dossier`,
-  archive_size_p3: "dans votre archive pour l'alléger.",
   classic_not_supported: `L'archive classique n'est pas supportée.
   Vous devez avoir une archive RGPD afin d'accéder aux options disponibles ici.
   Apprenez à télécharger une archive RGPD avec l'aide ci-dessous.`,
@@ -456,8 +457,8 @@ export default {
   Pour commencer, apprenez à télécharger une archive Twitter avec l'aide ci-dessous.`,
   archive_saving: "Sauvegarde d'archives",
   archive_saving_p1: `Pour éviter que vous ayez à recharger votre archive depuis un fichier à chaque fois
-  que vous vous rendez sur Archive Explorer, nous vous proposons de l'enregistrer dans votre navigateur. 
-  Une sauvegarde locale est possible lorsque l'archive chargée appartient à l'utilisateur actuellement connecté.`,
+  que vous vous rendez sur Archive Explorer, nous vous proposons de l'enregistrer dans votre navigateur. Cette
+  sauvegarde sera uniquement visible par l'utilisateur l'ayant créée.`,
   archive_saving_p2: `Toute sauvegarde est locale à l'appareil, elle n'est pas envoyée sur les serveurs d'Archive Explorer.`,
   more: "Plus",
   delete_all_your: "Supprimer tous vos",
@@ -520,6 +521,28 @@ export default {
   untranslated: "non traduit",
   explaination_difference_follows: `Le nombre affiché peut ne pas refléter le chiffre disponible Twitter en raison de la
   présence des comptes suspendus et désactivés dans cette liste.`,
+  legal_mentions_and_limitations: "Mentions légales et limitations",
+  legal_mentions: "Mentions légales",
+  about_archive_explorer: "À propos de Twitter Archive Explorer",
+  about_archive_explorer_p1: `Twitter Archive Explorer est une suite logiciel créée par Alkihis. 
+  Celle-ci est utilisée conformément à sa licence CC-BY-NC-SA-4.0 et fournit une utilisation à titre gratuit sans contrepartie.
+  L'ensemble de la suite, client, serveur et lecteur d'archive sont mis à disposition sur `,
+  about_archive_explorer_p2: `En cas de réutilisation d'une partie de cette suite par d'autres personnes, elle doit respecter
+  les conditions des licences affectées à chaque outil.`,
+  about_archive_explorer_p3: `Archive Explorer n'appartient pas à Twitter et n'y est affilié d'aucune manière.
+  Twitter est une marque déposée appartenant à Twitter Inc..`,
+  tweet_deletion_p1: `Lorsque vous supprimez des tweets, mutes, ou d'autres données en utilisant Twitter Archive Explorer,
+  ces informations sont supposément effacées de manière permanente. Archive Explorer ne fournit aucune garantie, tant à l'effectivité
+  de la suppression de ces données que la précision de cette suppression. Si d'autres données de votre compte sont supprimées par
+  erreur, Archive Explorer ne fournit aucun moyen de recours pour récupérer ces données.`,
+  personal_data: "Données personnelles",
+  personal_data_p1: `Twitter Archive Explorer respecte votre vie privée et stocke le minimum nécessaire au fonctionnement
+  du service. Sont stockées à propos de vous la date de votre dernière connexion, une courte description de vos informations Twitter
+  (nom d'utilisateur, photo de profil, identifiant et clés d'accès à votre compte) ainsi que la date et l'emplacement de création de votre compte.`,
+  used_software: "Logiciels et composants utilisés",
+  used_software_p1: `La suite Archive Explorer utilise principalement les outils suivants :`,
+  web_service: "Service web",
+
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

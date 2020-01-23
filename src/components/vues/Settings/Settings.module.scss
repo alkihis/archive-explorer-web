@@ -22,7 +22,7 @@
 }
 .display_container {
   margin-top: 1rem;
-  margin-bottom: 100px;
+  margin-bottom: 2rem;
 }
 
 .root {
@@ -64,8 +64,7 @@ $avatar_size: 60px;
 }
 
 .version {
-  margin-top: 2rem;
-  margin-bottom: 64px;
+  margin-top: .5rem;
   color: lighten($color: #000000, $amount: 25);
   font-style: italic;
   text-align: right;
@@ -74,12 +73,6 @@ $avatar_size: 60px;
   :global .dark :local & {
     color: lighten($color: #000000, $amount: 75);
   }
-}
-
-.version_pos {
-  position: absolute;
-  bottom: 72px;
-  right: 1rem;
 }
 
 .sn {

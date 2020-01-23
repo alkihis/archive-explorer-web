@@ -89,6 +89,10 @@ export default class Explore extends React.Component<{}, ExploreState> {
     return this.state.month.split('-').length === 1;
   }
 
+  get can_use_current_in_search() {
+    return !this.is_special_month || this.state.month === "day";
+  } 
+
   get is_all() {
     return this.state.month === "*";
   }
@@ -214,6 +218,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
           options={ALLOWED_SEARCH_TYPES}
           default={["match-tn"]}
           fieldLabel={LANG.find_tweets}
+          explorerInstance={this}
         />
       </div>
     );
@@ -399,6 +404,7 @@ export function SearchOptions<T>(props: {
   default?: (keyof T)[],
   fieldLabel?: string,
   isDM?: boolean,
+  explorerInstance?: Explore,
 }) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const [position, setPosition] = React.useState({ left: 0, top: 0 });
@@ -469,11 +475,17 @@ export function SearchOptions<T>(props: {
 
   return (
     <>
+      {/* Modal composer + search input form */}
       <ListItem 
         className={classes.search_input}
       >
-        {modalAdvanced && <ComposeSearchModal onSearchMake={onAdvancedSearch} onClose={() => setModalAdvanced(false)} />}
+        {modalAdvanced && <ComposeSearchModal 
+          onSearchMake={onAdvancedSearch} 
+          onClose={() => setModalAdvanced(false)} 
+          canSetCurrent={props.explorerInstance.can_use_current_in_search}
+        />}
 
+        {/* Search input */}
         <form onSubmit={handleSubmit} className={classes.full_w}>
           <Autocomplete
             freeSolo
