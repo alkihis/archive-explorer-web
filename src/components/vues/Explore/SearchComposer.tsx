@@ -1,7 +1,7 @@
 import React from 'react';
 import LANG from '../../../classes/Lang/Language';
 import classes from './Explore.module.scss';
-import { Dialog, DialogContent, DialogTitle, DialogContentText, IconButton, TextField, DialogActions, Button, Select, FormControl, MenuItem, InputLabel, Divider, FormControlLabel, Checkbox, Hidden } from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle, DialogContentText, IconButton, TextField, DialogActions, Button, Select, FormControl, MenuItem, InputLabel, Divider, FormControlLabel, Checkbox, Hidden, Fab } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { fr, enUS } from "date-fns/locale";
 import {
@@ -65,7 +65,9 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   text: () => LANG.popularity,
 }];
 
-
+/**
+ * Modal used to create an advanced search
+ */
 export default function ComposeSearchModal(props: {
   onSearchMake?: (search: string) => void,
   onClose?: () => void,
@@ -150,9 +152,9 @@ export default function ComposeSearchModal(props: {
         {/* Add a criteria button */}
         <div className={classes.add_criteria_btn_container}>
           <CustomTooltip title={LANG.add_a_criteria}>
-            <IconButton onClick={addInput}>
+            <Fab size="medium" color="primary" onClick={addInput} style={{ margin: '1rem 0' }}>
               <AddButton />
-            </IconButton>
+            </Fab>
           </CustomTooltip>
         </div>
         
@@ -216,6 +218,9 @@ function operatorToText(op: string) {
   return LANG.invalid_operator;
 }
 
+/**
+ * Single criteria for advanced search
+ */
 function AdvancedSearchInput(props: {
   onChange?: (keyword: string, value: string, operator: string) => void,
   onDelete?: () => void,
