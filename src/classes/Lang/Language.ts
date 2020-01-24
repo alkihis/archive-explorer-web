@@ -30,14 +30,10 @@ function formatLang(item: string, ...replacements: any[]) : string {
   let current_part = 0;
 
   for (let i = 0; i < item.length; i++) {
-    const char = item[i];
-
     let can_seek_closing_bracket = false;
-    if (char === "{") {
-      if (i !== 0 && item[i-1] !== "\\") {
-        can_seek_closing_bracket = true;
-      }
-      else if (i === 0) {
+
+    if (item[i] === "{") {
+      if (i === 0 || item[i-1] !== "\\") {
         can_seek_closing_bracket = true;
       }
     }
