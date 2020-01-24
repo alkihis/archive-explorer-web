@@ -26,7 +26,33 @@ interface Locale {
 
 function formatLang(item: string, ...replacements: any[]) : string {
   item = LANG[item];
-  const parts = item.split(/{}/);
+  const parts: string[] = [];
+  let current_part = 0;
+
+  for (let i = 0; i < item.length; i++) {
+    const char = item[i];
+
+    let can_seek_closing_bracket = false;
+    if (char === "{") {
+      if (i !== 0 && item[i-1] !== "\\") {
+        can_seek_closing_bracket = true;
+      }
+      else if (i === 0) {
+        can_seek_closing_bracket = true;
+      }
+    }
+
+    if (can_seek_closing_bracket && i + 1 < item.length && item[i+1] === "}") {
+      // Take [current_part, i[, with item[i] === {
+      parts.push(item.slice(current_part, i));
+
+      // On the next match, will take AFTER the closing bracket
+      current_part = i + 2;
+    }
+  }
+  // Push the rest
+  parts.push(item.slice(current_part));
+
   let final = "";
 
   for (let i = 0; i < parts.length - 1; i++) {
