@@ -26,7 +26,7 @@ interface Locale {
 
 function formatLang(item: string, ...replacements: any[]) : string {
   item = LANG[item];
-  const parts = item.split(/(?<!\\){}/);
+  const parts = item.split(/{}/);
   let final = "";
 
   for (let i = 0; i < parts.length - 1; i++) {
