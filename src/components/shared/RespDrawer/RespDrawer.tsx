@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
+    // @ts-ignore
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
       width: drawerWidth,
@@ -77,12 +78,10 @@ interface ResponsiveDrawerProps {
 
 export default function ResponsiveDrawer(props: ResponsiveDrawerProps) {
   const { drawer, title, content, handleDrawerToggle, mobileOpen, noPadding } = props;
-  // @ts-ignore
-  const classes = useStyles();
+  const classes: any = useStyles();
 
   return (
     <div className={classes.root}>
-      {/* <CssBaseline /> */}
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton

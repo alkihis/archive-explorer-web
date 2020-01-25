@@ -228,6 +228,12 @@ export default {
 
   /** BEGIN DM CMPT */
   full_image: "Full image",
+  changes_conversation_name_to: "changed the conversation name to",
+  invited: "invited",
+  to_this_conversation: "in this conversation",
+  left: "left",
+  left_plural: "left",
+  added_you: "added you",
   /** END DM CMPT */
 
   /** BEGIN DMContainer CMPT */

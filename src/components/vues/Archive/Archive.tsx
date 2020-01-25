@@ -106,7 +106,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     SETTINGS.is_saved_archive = false;
     this.timer = new Timer();
 
-    SETTINGS.archive.onready = async () => {
+    SETTINGS.archive.events.on('ready', async () => {
       SETTINGS.archive_name = this.state.in_load;
       SETTINGS.archive_in_load = "";
 
@@ -115,9 +115,9 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       });
 
       await this.doArchiveInit();
-    };
+    });
 
-    SETTINGS.archive.onerror = (err: CustomEvent) => {
+    SETTINGS.archive.events.on('error', (err: CustomEvent) => {
       if (this.active)
         this.setState({
           is_error: err.detail instanceof DOMException ? "fail" : true,
@@ -131,33 +131,33 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
       SETTINGS.archive = undefined;
       SETTINGS.archive_in_load = "";
-    };
+    });
 
     // Subscribe for archive loading states
-    SETTINGS.archive.onzipready = () => {
+    SETTINGS.archive.events.on('zipready', () => {
       if (this.active)
         this.setState({ // Skip user load (very fast)
           loading_state: "tweet_read"
         });
-    };
-    SETTINGS.archive.ontweetsread = () => {
+    });
+    SETTINGS.archive.events.on('tweetsread', () => {
       if (this.active)
         this.setState({
           loading_state: "indexing"
         });
-    };
-    SETTINGS.archive.onwillreaddm = () => {
+    });
+    SETTINGS.archive.events.on('willreaddm', () => {
       if (this.active)
         this.setState({
           loading_state: "dm_read"
         });
-    };
-    SETTINGS.archive.onwillreadextended = () => {
+    });
+    SETTINGS.archive.events.on('willreadextended', () => {
       if (this.active)
         this.setState({
           loading_state: "extended_read"
         });
-    };
+    });
   }
 
   async doArchiveInit() {
@@ -257,6 +257,9 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   componentWillUnmount() {
     this.active = false;
+    if (SETTINGS.archive) {
+      SETTINGS.archive.events.removeAllListeners();
+    }
     delete window.DEBUG.Archive;
   }
 

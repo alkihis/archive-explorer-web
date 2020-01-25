@@ -71,7 +71,7 @@ export function specialJoinJSX(array: string[], options: {
   options = Object.assign({ sep: ", ", final_joiner: " " + LANG.and + " ", class_joiner: "no-bold" }, options);
 
   if (array.length < 2) {
-    return <span>{array[0]}</span>;
+    return <span className={options.class_element}>{array[0]}</span>;
   }
 
   const e: JSX.Element[] = [];

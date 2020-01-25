@@ -1,3 +1,5 @@
+import { DirectMessageEventContainer, LinkedDirectMessage } from "twitter-archive-reader";
+
 export interface RequestTokenRequest {
   oauth_token: string;
   oauth_token_secret: string;
@@ -23,3 +25,8 @@ export interface IToken {
   date: string,
   last_use: string
 } 
+
+export interface DMEvent extends DirectMessageEventContainer {
+  messageCreate?: LinkedDirectMessage;
+  welcomeMessageCreate?: LinkedDirectMessage;
+}

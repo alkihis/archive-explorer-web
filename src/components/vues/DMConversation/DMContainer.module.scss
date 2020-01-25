@@ -6,17 +6,23 @@
   // ENDOF TODO
 }
 
-.divider_text {
-  margin-top: -.7rem;
+.event {
+  margin: .5rem 0;
+}
+
+.event_text, .divider_text {
+  color: #797979;
   text-align: center;
   font-weight: 200;
-  color: #797979;
+  font-size: .95rem;
 
   :global .dark :local & {
     color: lighten($color: #000000, $amount: 85);
   }
+}
 
-  font-size: .95rem;
+.divider_text {
+  margin-top: -.7rem;
   margin-bottom: .3rem;
 }
 

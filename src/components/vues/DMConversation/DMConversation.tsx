@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './DMConversation.module.scss';
-import { Conversation, LinkedDirectMessage, SubConversation } from 'twitter-archive-reader';
+import { Conversation, SubConversation } from 'twitter-archive-reader';
 import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
@@ -16,6 +16,7 @@ import { FullUser } from 'twitter-d';
 import { toast } from '../../shared/Toaster/Toaster';
 import LANG from '../../../classes/Lang/Language';
 import { SearchOptions } from '../Explore/Explore';
+import { DMEvent } from '../../../tools/interfaces';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -42,11 +43,11 @@ type DMProps = {
 };
 
 type DMState = {
-  selected: LinkedDirectMessage[] | null;
+  selected: DMEvent[] | null;
   month: string;
   key: string;
   mobileOpen: boolean;
-  found: LinkedDirectMessage[] | null;
+  found: DMEvent[] | null;
   from: string | null;
 };
 
@@ -150,8 +151,10 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       }
 
       // Create a subconversation from actual DMs
-      search_results = new SubConversation(this.state.selected, this.conv.infos.me)
-        .find(new RegExp(content, flags));
+      search_results = new SubConversation(
+        this.state.selected.map(e => e.messageCreate || e.welcomeMessageCreate).filter(e => e), 
+        this.conv.infos.me
+      ).find(new RegExp(content, flags));
     }
     else if (!content) {
       search_results = this.conv;
@@ -183,8 +186,9 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     window.scrollTo(0, 0);
 
     // Change selected
+    // @ts-ignore Bad typing from events: we except LDM, we get DM. This is expected.
     this.setState({
-      found: search_results.all,
+      found: [...search_results.events(true)],
       key: String(Math.random()),
       from: null,
       month: choosen_month,
@@ -320,8 +324,9 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     window.scrollTo(0, 0);
 
     if (year === "day") {
+      // @ts-ignore
       this.setState({
-        selected: this.conv.fromThatDay().all,
+        selected: [...this.conv.fromThatDay().events(true)],
         month: year,
         key: String(Math.random()),
         mobileOpen: false,
@@ -331,8 +336,9 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       return;
     }
 
+    // @ts-ignore
     this.setState({
-      selected: year === "*" ? this.conv.all : this.conv.month(month, year).all,
+      selected: year === "*" ? [...this.conv.events(true)] : [...this.conv.month(month, year).events(true)],
       month: year === "*" ? "*" : year + "-" + month,
       key: String(Math.random()),
       mobileOpen: false,
@@ -387,7 +393,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       year = _year;
       month_text = uppercaseFirst(getMonthText(month));
     }
-    const msg_number = this.state.selected.length;
+    const msg_number = this.state.selected.filter(e => e.messageCreate || e.welcomeMessageCreate).length;
 
     return (
       <div className={classes.month_header}>
@@ -431,7 +437,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
             {this.state.found && this.state.found.length ? 
               (<div>
                 {this.showActiveSearch()}
-                <DMContainer key={this.state.key} messages={this.state.found} onDmClick={this.handleDmClick} />
+                <DMContainer key={this.state.key} messages={this.state.found} onDmClick={this.handleDmClick} hideEvents />
               </div>) :
               this.noSearchResults()
             }
@@ -474,7 +480,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       <ResponsiveDrawer
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
-        title={LANG.conversation_with + " " + this.participants}
+        title={this.props.conversation.name ? this.props.conversation.name : LANG.conversation_with + " " + this.participants}
         noPadding
         drawer={this.drawer()}
         content={this.content()}

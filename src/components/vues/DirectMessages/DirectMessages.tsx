@@ -162,13 +162,28 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
     }
 
     const s_n = specialJoinJSX(participants.map(e => typeof e === 'string' ? "#" + e : '@' + e.screen_name), { class_element: "bold" });
-    const names = specialJoinJSX(participants.map(e => typeof e === 'string' ? "#" + e : e.name));
+    
+    let conversation_name: React.ReactNode;
+
+    if (conv.name) {
+      conversation_name = conv.name;
+    }
+    else {
+      const names = specialJoinJSX(participants.map(e => typeof e === 'string' ? "#" + e : e.name));
+      conversation_name = (
+        <React.Fragment>
+          <span className="no-bold">{LANG.conversation_with}</span> {names}
+        </React.Fragment>
+      );
+    }
 
     return (
       <Card key={conv.id} className={classes.card_root} onClick={oncardclick}>
         <CardContent>
           <div className={classes.group_conv_container}>
-            <div className={classes.group_conv}><span className="no-bold">{LANG.conversation_with}</span> {names}</div>
+            <div className={classes.group_conv}>
+              {conversation_name}
+            </div>
             <div className={classes.group_conv_screen_name}>{s_n}</div>
           </div>
 
