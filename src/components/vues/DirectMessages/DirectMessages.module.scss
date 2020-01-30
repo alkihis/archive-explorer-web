@@ -93,4 +93,8 @@
   color: rgb(65, 65, 65);
   font-size: .9rem;
   align-self: baseline;
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 85);
+  }
 }

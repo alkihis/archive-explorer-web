@@ -4,7 +4,7 @@ import { ResponsiveContainer, LineChart, XAxis, YAxis, Line, Tooltip } from 'rec
 import SETTINGS from '../../../tools/Settings';
 import { daysInMonth, getMonthText } from '../../../helpers';
 import LANG from '../../../classes/Lang/Language';
-import { TweetArchive } from 'twitter-archive-reader';
+import { TwitterHelpers } from 'twitter-archive-reader';
 
 type TweetNumberProps = {
   dayView?: { month: string, year: string };
@@ -18,7 +18,7 @@ function getTweetCountByDay(month: string, year: string) {
   const selected_length = daysInMonth(Number(month), Number(year));
 
   for (const tweet of tweets) {
-    const date = TweetArchive.dateFromTweet(tweet).getDate();
+    const date = TwitterHelpers.dateFromTweet(tweet).getDate();
     if (date in day_count) {
       day_count[date]++;
     }

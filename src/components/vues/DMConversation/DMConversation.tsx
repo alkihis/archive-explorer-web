@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './DMConversation.module.scss';
-import { Conversation, SubConversation } from 'twitter-archive-reader';
+import { Conversation, SubConversation, LinkedDirectMessage } from 'twitter-archive-reader';
 import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
@@ -16,7 +16,6 @@ import { FullUser } from 'twitter-d';
 import { toast } from '../../shared/Toaster/Toaster';
 import LANG from '../../../classes/Lang/Language';
 import { SearchOptions } from '../Explore/Explore';
-import { DMEvent } from '../../../tools/interfaces';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -43,11 +42,11 @@ type DMProps = {
 };
 
 type DMState = {
-  selected: DMEvent[] | null;
+  selected: LinkedDirectMessage[] | null;
   month: string;
   key: string;
   mobileOpen: boolean;
-  found: DMEvent[] | null;
+  found: LinkedDirectMessage[] | null;
   from: string | null;
 };
 
@@ -152,7 +151,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
       // Create a subconversation from actual DMs
       search_results = new SubConversation(
-        this.state.selected.map(e => e.messageCreate || e.welcomeMessageCreate).filter(e => e), 
+        this.state.selected, 
         this.conv.infos.me
       ).find(new RegExp(content, flags));
     }
@@ -186,9 +185,8 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     window.scrollTo(0, 0);
 
     // Change selected
-    // @ts-ignore Bad typing from events: we except LDM, we get DM. This is expected.
     this.setState({
-      found: [...search_results.events(true)],
+      found: search_results.all,
       key: String(Math.random()),
       from: null,
       month: choosen_month,
@@ -324,9 +322,8 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     window.scrollTo(0, 0);
 
     if (year === "day") {
-      // @ts-ignore
       this.setState({
-        selected: [...this.conv.fromThatDay().events(true)],
+        selected: this.conv.fromThatDay().all,
         month: year,
         key: String(Math.random()),
         mobileOpen: false,
@@ -336,9 +333,8 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       return;
     }
 
-    // @ts-ignore
     this.setState({
-      selected: year === "*" ? [...this.conv.events(true)] : [...this.conv.month(month, year).events(true)],
+      selected: year === "*" ? this.conv.all : this.conv.month(month, year).all,
       month: year === "*" ? "*" : year + "-" + month,
       key: String(Math.random()),
       mobileOpen: false,
@@ -393,7 +389,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
       year = _year;
       month_text = uppercaseFirst(getMonthText(month));
     }
-    const msg_number = this.state.selected.filter(e => e.messageCreate || e.welcomeMessageCreate).length;
+    const msg_number = this.state.selected.length;
 
     return (
       <div className={classes.month_header}>

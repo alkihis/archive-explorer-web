@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './DMContainer.module.scss';
-import { LinkedDirectMessage, ConversationNameUpdate, ParticipantJoin, ParticipantLeave, JoinConversation } from 'twitter-archive-reader';
+import { LinkedDirectMessage, ConversationNameUpdate, ParticipantJoin, ParticipantLeave, JoinConversation, DirectMessageEventsContainer } from 'twitter-archive-reader';
 import DM from './DM';
 import Sentinel from '../../shared/Sentinel/Sentinel';
 import { Divider, Fab, Tooltip } from '@material-ui/core';
@@ -8,21 +8,20 @@ import { uppercaseFirst, getMonthText } from '../../../helpers';
 import JumpToIcon from '@material-ui/icons/LowPriority';
 import LANG from '../../../classes/Lang/Language';
 import SETTINGS from '../../../tools/Settings';
-import { DMEvent } from '../../../tools/interfaces';
 import UserCache from '../../../classes/UserCache';
 import { specialJoinJSX } from '../../../tools/PlacingComponents';
 
 const LOADED_PER_CHUNK = 100;
 
 type DMProps = {
-  messages: DMEvent[];
+  messages: LinkedDirectMessage[];
   from?: string;
   onDmClick?: (id: string) => void;
   hideEvents?: boolean;
 };
 
 type DMState = {
-  page: DMEvent[];
+  page: LinkedDirectMessage[];
 };
 
 export default class DMContainer extends React.Component<DMProps, DMState> {
@@ -43,7 +42,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
       let page = 0;
 
       // Découpage des pages
-      const pages: DMEvent[][] = [];
+      const pages: LinkedDirectMessage[][] = [];
       let current = this.getPage(page);
       pages.push(current);
 
@@ -53,11 +52,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
       }
 
       // Search for page
-      const index = pages.findIndex(msgs => msgs.findIndex(msg => {
-        if (msg.messageCreate || msg.welcomeMessageCreate)
-          return (msg.messageCreate || msg.welcomeMessageCreate).id === this.props.from;
-        return false;
-      }) !== -1);
+      const index = pages.findIndex(msgs => msgs.findIndex(msg => msg.id === this.props.from) !== -1);
 
       if (index !== -1) {
         this.current_page_bottom = this.current_page_top = index;
@@ -112,9 +107,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
 
   backPage = () => {
     // Get the current top message
-    const event_top = this.state.page.find(event => event.messageCreate || event.welcomeMessageCreate);
-
-    const dm_top_id = (event_top.messageCreate || event_top.welcomeMessageCreate).id;
+    const dm_top_id = this.state.page[0].id;
     
     this.current_page_top--;
 
@@ -148,13 +141,17 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     const dm_top = this.dm_refs[id];
 
     if (dm_top) {
-      const el = dm_top.current.inner_ref.current;
-
-      setTimeout(() => {
+      const scroller = () => {
+        let el = dm_top.current.inner_ref.current;
         if (el) {
           (el as HTMLElement).scrollIntoView({ block: position, inline: "nearest" });
         }
-      }, wait_time);
+        else {
+          setTimeout(scroller, wait_time + 100);
+        }
+      };
+
+      setTimeout(scroller, wait_time);
     }
   }
 
@@ -177,28 +174,44 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     );
   }
 
-  protected getPreviousOfPageFrom(i: number) {
-    const showed = this.state.page;
+  protected getEventContent(e: DirectMessageEventsContainer) {
+    let items: React.ReactNode[] = [];
+    let count = 0;
 
-    for (let j = i-1; j >= 0; j--) {
-      const actual = showed[j];
-      if (actual.messageCreate || actual.welcomeMessageCreate)
-        return actual.messageCreate || actual.welcomeMessageCreate;
+    if (e.conversationNameUpdate) {
+      for (const value of e.conversationNameUpdate) {
+        items.push(<React.Fragment key={count}>
+          {this.formatNewConversationName(value)}
+        </React.Fragment>);
+        count++
+      }
+    }
+    else if (e.joinConversation) {
+      for (const value of e.joinConversation) {
+        items.push(<React.Fragment key={count}>
+          {this.formatConversationJoin(value)}
+        </React.Fragment>);
+        count++;
+      }
+    }
+    else if (e.participantsJoin) {
+      for (const value of e.participantsJoin) {
+        items.push(<React.Fragment key={count}>
+          {this.formatParticipantJoin(value)}
+        </React.Fragment>);
+        count++
+      }
+    }
+    else if (e.participantsLeave) {
+      for (const value of e.participantsLeave) {
+        items.push(<React.Fragment key={count}>
+          {this.formatParticipantLeave(value)}
+        </React.Fragment>);
+        count++;
+      }
     }
 
-    return undefined;
-  }
-
-  protected getFutureOfPageFrom(i: number) {
-    const showed = this.state.page;
-
-    for (let j = i+1; j < showed.length; j++) {
-      const actual = showed[j];
-      if (actual.messageCreate || actual.welcomeMessageCreate)
-        return actual.messageCreate || actual.welcomeMessageCreate;
-    }
-
-    return undefined;
+    return items;
   }
 
   protected formatNewConversationName(event: ConversationNameUpdate) {
@@ -280,84 +293,87 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     const showed = this.state.page;
 
     let last_owner = "";
+    let first = true;
 
     return <div className={classes.root}>
       <Sentinel onVisible={this.backPage} triggerMore={this.has_top} />
 
-      {showed.map((e, i) => {      
-        if (!e.messageCreate && !e.welcomeMessageCreate) {
-          if (this.props.hideEvents) {
-            return "";
-          }
-
-          let content: any = "";
-          if (e.conversationNameUpdate) {
-            content = this.formatNewConversationName(e.conversationNameUpdate);
-          }
-          else if (e.joinConversation) {
-            content = this.formatConversationJoin(e.joinConversation);
-          }
-          else if (e.participantsJoin) {
-            content = this.formatParticipantJoin(e.participantsJoin);
-          }
-          else if (e.participantsLeave) {
-            content = this.formatParticipantLeave(e.participantsLeave);
-          }
-          return (
-            <React.Fragment key={i}>
-              {content}
-            </React.Fragment>
-          );
-        }
-        
-        const msg = (e.messageCreate || e.welcomeMessageCreate) as LinkedDirectMessage;
+      {showed.map((e, i) => {   
         const actual = last_owner;
-        last_owner = msg.senderId;
+        last_owner = e.senderId;
 
-        const future = this.getFutureOfPageFrom(i);
-        const previous = this.getPreviousOfPageFrom(i);
+        // For invisible messages, no need to recalc. Serve cache.
+        if (i > 25 && (i - 25) < showed.length && e.id in this.dm_cache) {
+          return this.dm_cache[e.id];
+        }
+
+        const future = showed[i-1];
+        const previous = showed[i+1];
         let divider: JSX.Element = undefined;
         let show_date = false;
         // If more than one day since previous message
-        if (previous && previous.createdAtDate.getTime() < msg.createdAtDate.getTime() - (1000 * 60 * 60 * 24)) {
+        if (previous && previous.createdAtDate.getTime() < e.createdAtDate.getTime() - (1000 * 60 * 60 * 24)) {
           divider = <div className={classes.divider}>
             <Divider className="divider-big-margin" />
             <div className={classes.divider_text}>
-              {this.formatDividerDate(msg)}
+              {this.formatDividerDate(e)}
             </div>
           </div>;
         }
 
-        // For invisible messages, no need to recalc if dm should have date or dividers.
-        if (i > 30 && (i - 30) < showed.length && msg.id in this.dm_cache) {
-          return (divider ? 
-            <div key={"divider" + msg.id}>
-              {divider} {this.dm_cache[msg.id]}
-            </div> : 
-            this.dm_cache[msg.id]
-          );
-        }
+        let dm_content: any = undefined;
 
         // If more than 5 minutes since last msg or if sender ID is different 
-        if (!future || msg.senderId !== future.senderId || future.createdAtDate.getTime() > msg.createdAtDate.getTime() + (1000 * 60 * 5)) {
+        if (!future || e.senderId !== future.senderId || future.createdAtDate.getTime() > e.createdAtDate.getTime() + (1000 * 60 * 5)) {
           show_date = true;
         }
 
-        this.dm_cache[msg.id] = <DM 
-          key={msg.id} 
-          msg={msg} 
+        const dm = <DM 
+          key={e.id} 
+          msg={e} 
           showPp={last_owner !== actual} 
           showDate={show_date} 
           onClick={this.props.onDmClick} 
-          selected={this.props.from === msg.id}
-          ref={this.dm_refs[msg.id] = React.createRef<DM>()}
+          selected={this.props.from === e.id}
+          ref={this.dm_refs[e.id] = React.createRef<DM>()}
         />;
 
-        return (divider ? 
-          <div key={"divider" + msg.id}>
-            {divider} {this.dm_cache[msg.id]}
+        dm_content = (divider ? 
+          <div key={"divider" + e.id}>
+            {divider} {dm}
           </div> : 
-          this.dm_cache[msg.id]
+          dm
+        );
+
+        let additionnal_content_begin: any = undefined;
+        let additionnal_content_end: any = undefined;
+        // If first message, check for previous events
+        if (first) {
+          first = false;
+          if (!this.props.hideEvents && e.events && e.events.before) {
+            additionnal_content_begin = (
+              <React.Fragment>
+                {this.getEventContent(e.events.before)}
+              </React.Fragment>
+            );
+          }
+        }
+        
+        // For all messages, check for events after message
+        if (!this.props.hideEvents && e.events && e.events.after) {
+          additionnal_content_end = (
+            <React.Fragment>
+              {this.getEventContent(e.events.after)}
+            </React.Fragment>
+          );
+        }
+
+        return this.dm_cache[e.id] = (
+          <React.Fragment key={e.id}>
+            {additionnal_content_begin}
+            {dm_content}
+            {additionnal_content_end}
+          </React.Fragment>
         );
       })}
 

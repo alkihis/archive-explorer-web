@@ -111,7 +111,7 @@ export default class DM extends React.Component<DMProp, DMState> {
     const media = this.dm.mediaUrls[0];
 
     if (media && media.startsWith('https://ton.twitter.com/')) {
-      SETTINGS.archive.dmImageFromUrl(media, this.is_group)
+      SETTINGS.archive.medias.fromDmMediaUrl(media, this.is_group, false)
         .then(blob => {
           this.setState({
             img: this.registered_urls[media] = URL.createObjectURL(blob)

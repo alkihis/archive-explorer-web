@@ -3,7 +3,7 @@ import classes from './More.module.scss';
 import LANG from '../../../classes/Lang/Language';
 import { Typography, Paper, Table, TableHead, TableRow, TableCell, TableBody, List, ListItem, ListItemText, useTheme, ListItemAvatar, Avatar, Link, DialogContent, DialogContentText, Dialog, DialogTitle, DialogActions, Button } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
-import { parseTwitterDate, AdImpression, AdArchive } from 'twitter-archive-reader';
+import { TwitterHelpers, AdImpression } from 'twitter-archive-reader';
 import { dateFormatter, specialJoin, getMonthText } from '../../../helpers';
 import { Marger } from '../../../tools/PlacingComponents';
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Line, Tooltip } from 'recharts';
@@ -55,7 +55,7 @@ export default function AdAndUserData() {
 function ScreenNameHistory() {
   const rows = SETTINGS.archive.user.screen_name_history.map(e => {
     return {
-      date: parseTwitterDate(e.changedAt),
+      date: TwitterHelpers.parseTwitterDate(e.changedAt),
       sn: e.changedFrom
     }
   });
@@ -302,7 +302,7 @@ function ImpressionGraph() {
 
   // Compute impressions
   for (const impression of all_impressions) {
-    const date = AdArchive.parseAdDate(impression.impressionTime);
+    const date = TwitterHelpers.parseAdDate(impression.impressionTime);
     const trimmed_date = String(date.getFullYear()) + "-" + 
       String(date.getMonth() + 1).padStart(2, "0") + "-" +
       String(date.getDate()).padStart(2, "0");

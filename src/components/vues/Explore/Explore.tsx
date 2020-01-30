@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles, TextField, Menu, MenuItem, makeStyles, createStyles, Theme, Dialog, DialogContent, DialogActions, DialogTitle, Button, Hidden } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import TweetViewer from '../../shared/TweetViewer/TweetViewer';
-import { PartialTweet, TweetSearcher, TweetArchive } from 'twitter-archive-reader';
+import { PartialTweet, TweetSearcher, TwitterHelpers } from 'twitter-archive-reader';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
@@ -739,15 +739,15 @@ TweetSearcher.validators.push({
 
     switch (sep) {
       case ">":
-        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() > year;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getFullYear() > year;
       case ">=":
-        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() >= year;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getFullYear() >= year;
       case "<":
-        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() < year;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getFullYear() < year;
       case "<=":
-        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() <= year;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getFullYear() <= year;
       case ":":
-        return tweet => TweetArchive.dateFromTweet(tweet).getFullYear() === year;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getFullYear() === year;
     }
   }
 }, {
@@ -763,15 +763,15 @@ TweetSearcher.validators.push({
 
     switch (sep) {
       case ">":
-        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() > month;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getMonth() > month;
       case ">=":
-        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() >= month;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getMonth() >= month;
       case "<":
-        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() < month;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getMonth() < month;
       case "<=":
-        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() <= month;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getMonth() <= month;
       case ":":
-        return tweet => TweetArchive.dateFromTweet(tweet).getMonth() === month;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getMonth() === month;
     }
   }
 }, {
@@ -786,15 +786,15 @@ TweetSearcher.validators.push({
 
     switch (sep) {
       case ">":
-        return tweet => TweetArchive.dateFromTweet(tweet).getDate() > day;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getDate() > day;
       case ">=":
-        return tweet => TweetArchive.dateFromTweet(tweet).getDate() >= day;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getDate() >= day;
       case "<":
-        return tweet => TweetArchive.dateFromTweet(tweet).getDate() < day;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getDate() < day;
       case "<=":
-        return tweet => TweetArchive.dateFromTweet(tweet).getDate() <= day;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getDate() <= day;
       case ":":
-        return tweet => TweetArchive.dateFromTweet(tweet).getDate() === day;
+        return tweet => TwitterHelpers.dateFromTweet(tweet).getDate() === day;
     }
   }
 }, {

@@ -5,7 +5,7 @@ import { setPageTitle, dateFormatter } from '../../../helpers';
 import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, FormControlLabel, Checkbox } from '@material-ui/core';
 import { CenterComponent, Marger } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
-import TwitterArchive, { ArchiveReadState, TweetArchive } from 'twitter-archive-reader';
+import TwitterArchive, { ArchiveReadState, TwitterHelpers } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
 import { THRESHOLD_PREFETCH } from '../../../const';
 import { Link } from 'react-router-dom';
@@ -75,6 +75,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   }
 
   checkOnReadySavedArchive() {
+    if (SETTINGS.archive) {
+      SETTINGS.archive.events.removeAllListeners();
+    }
+
     SETTINGS.is_saved_archive = true;
     SAVED_ARCHIVES.onload = async ({ detail }) => {
       SETTINGS.archive_name = this.state.in_load;
@@ -103,6 +107,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   // Subscribe to archive readyness
   checkOnReadyArchive() {
+    if (SETTINGS.archive) {
+      SETTINGS.archive.events.removeAllListeners();
+    }
+
     SETTINGS.is_saved_archive = false;
     this.timer = new Timer();
 
@@ -124,9 +132,12 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           in_load: ""
         });
 
+      console.error(err);
+
       try {
-        console.error("Files in archive: ", Object.keys(SETTINGS.archive.raw[0].ls(false)));
-        Logger.push("Error when loading archive; files:", Object.keys(SETTINGS.archive.raw[0].ls(false)));
+        // Todo show an error message
+        console.error("Files in archive: ", Object.keys(SETTINGS.archive.raw.ls(false)));
+        Logger.push("Error when loading archive; files:", Object.keys(SETTINGS.archive.raw.ls(false)));
       } catch (e) { }
 
       SETTINGS.archive = undefined;
@@ -277,7 +288,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     if (f && f instanceof File) {
       const filename = f.name;
 
-      SETTINGS.archive = new TwitterArchive(f, { load_images_in_zip: false, build_ad_archive: true });
+      SETTINGS.archive = new TwitterArchive(f, { build_ad_archive: true });
 
       console.log("Loading a new archive: ", filename);
 
@@ -372,7 +383,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
         <Typography>
           {LANG.account} #<span className={styles.bold}>{SETTINGS.archive.info.user.id}</span> {LANG.created_at} {
-            dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y H:i" : "Y-m-d H:i", TweetArchive.parseTwitterDate(SETTINGS.archive.info.user.created_at))
+            dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y H:i" : "Y-m-d H:i", TwitterHelpers.parseTwitterDate(SETTINGS.archive.info.user.created_at))
           }.
         </Typography>
 
