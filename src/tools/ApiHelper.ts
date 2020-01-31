@@ -112,21 +112,27 @@ export class APIHelper {
       body: (fd ? fd : undefined),
       headers: settings.headers
     })
-      .then(rq => {
+      .then(res => {
+        // If the token is due to renewal
+        if (res.headers.has('X-Upgrade-Token')) {
+          console.log("Token upgrade: A new JWT has been set.");
+          SETTINGS.token = res.headers.get('X-Upgrade-Token');
+        }
+
         if (!settings.mode || settings.mode === "json") {
-          if (rq.headers.get('Content-Length') === "0") {
+          if (res.headers.get('Content-Length') === "0") {
             return {};
           }
 
-          return (rq.ok ? 
-            rq.json() : 
-            rq.json()
-              .catch(e => Promise.reject([rq, e]))
-              .then(d => Array.isArray(d) ? Promise.reject(d) : Promise.reject([rq, d]))
+          return (res.ok ? 
+            res.json() : 
+            res.json()
+              .catch(e => Promise.reject([res, e]))
+              .then(d => Array.isArray(d) ? Promise.reject(d) : Promise.reject([res, d]))
           );
         }
         else {
-          return rq.ok ? rq.text() : rq.text().then(d => Promise.reject([rq, d]));
+          return res.ok ? res.text() : res.text().then(d => Promise.reject([res, d]));
         }
       });
   }
