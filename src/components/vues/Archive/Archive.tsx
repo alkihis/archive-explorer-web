@@ -267,9 +267,13 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
   componentWillUnmount() {
     this.active = false;
+
     if (SETTINGS.archive) {
-      SETTINGS.archive.events.removeAllListeners();
+      SETTINGS.archive.events.removeAllListeners('error');
+      SETTINGS.archive.events.removeAllListeners('read');
+      // Do not cancel ready, because it will properly init archive.
     }
+
     delete window.DEBUG.Archive;
   }
 
