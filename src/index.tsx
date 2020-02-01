@@ -17,4 +17,4 @@ ReactDOM.render(<App />, document.getElementById('root'));
 serviceWorker.unregister();
 
 /// REGISTER DEBUG
-window.DEBUG.helpers = helpers;
+window.DEBUG.Helpers = helpers;

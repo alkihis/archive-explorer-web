@@ -325,6 +325,7 @@ class AESettings {
   set user(v: IUser) {
     this.current_user = v;
     localStorage.setItem('current_user', JSON.stringify(v));
+    window.DEBUG.LoggedUser = v;
   }
 
   get user() {
@@ -334,6 +335,7 @@ class AESettings {
   set twitter_user(v: FullUser) {
     this._twitter_user = v;
     localStorage.setItem('twitter_user', JSON.stringify(v));
+    window.DEBUG.TwitterLoggedUser = v;
   }
 
   get twitter_user() {
@@ -342,17 +344,7 @@ class AESettings {
 
   set archive(v: TwitterArchive | null) {
     this.current_archive = v;
-
-    if (DEBUG_MODE) {
-      if (v) {
-        window.ARCHIVE = v;
-        window.USER = v.user;
-      }
-      else {
-        delete window.ARCHIVE;
-        delete window.USER;
-      }
-    }
+    window.DEBUG.Archive = v;
   }
 
   get archive() {
@@ -364,7 +356,7 @@ class AESettings {
   }
 
   get can_delete() {
-    if (DEBUG_MODE && window.DEBUG.force_no_delete)
+    if (DEBUG_MODE && window.DEBUG.globals.force_no_delete)
       return false;
 
     if (DEBUG_MODE)
@@ -417,4 +409,4 @@ const SETTINGS = new AESettings();
 export default SETTINGS;
 
 //// DEBUG
-window.DEBUG.settings = SETTINGS;
+window.DEBUG.Settings = SETTINGS;

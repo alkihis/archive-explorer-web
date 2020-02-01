@@ -2,7 +2,6 @@ import { FullUser } from 'twitter-d';
 import { Conversation } from 'twitter-archive-reader';
 import Cache from './Cache';
 import { escapeRegExp } from '../helpers';
-import { DEBUG_MODE } from '../const';
 import { API_URLS } from '../tools/ApiHelper';
 
 class __UserCache extends Cache<FullUser> {
@@ -82,6 +81,4 @@ class __UserCache extends Cache<FullUser> {
 export const UserCache = new __UserCache(API_URLS.batch_users);
 export default UserCache;
 
-if (DEBUG_MODE) {
-  window.DEBUG.UserCache = UserCache;
-}
+window.DEBUG.UserCache = UserCache;

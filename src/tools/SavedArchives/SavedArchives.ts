@@ -1,6 +1,5 @@
 import LocalForage from 'localforage';
 import uuidv4 from 'uuid/v4';
-import { DEBUG_MODE } from '../../const';
 import TwitterArchive, { ArchiveSave, ArchiveSaver } from 'twitter-archive-reader';
 import SETTINGS from '../Settings';
 import EventTarget, { defineEventAttribute } from 'event-target-shim';
@@ -468,11 +467,11 @@ export function deleteArchive(uuid: string) {
 }
 
 
-if (DEBUG_MODE) {
-  window.DEBUG.localforage = LocalForage;
-  window.DEBUG.SavedArchives = SAVED_ARCHIVES;
-  window.DEBUG.archive_loader = loadFirstSavedArchiveInSettings;
-  window.DEBUG.archive_saver = saveCurrentArchive;
-  window.DEBUG.archive_remover = deleteArchive;
-}
+// -- DEBUG --
+window.localforage = LocalForage;
+window.DEBUG.SavedArchives = SAVED_ARCHIVES;
+window.DEBUG.SavedArchiveTester!.loader = loadFirstSavedArchiveInSettings;
+window.DEBUG.SavedArchiveTester!.creator = saveCurrentArchive;
+window.DEBUG.SavedArchiveTester!.remover = deleteArchive;
+// -- DEBUG --
 ///***** END TEST */

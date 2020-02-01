@@ -17,10 +17,53 @@ export const IMG_LIST: string[] = [
 
 export const REGEX_URL = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g;
 
+
+// --------------------
+// Useful for debugging
+// --------------------
+
+/**
+ * In this, everything is intentionnaly `any`-typed, in order to avoid imports.
+ */
+interface DebugContainer {
+  SavedArchives: any;
+  SavedArchiveTester: Partial<{
+    creator: any;
+    loader: any;
+    remover: any;
+  }>;
+  SearchHistories: Partial<{
+    DMSearchHistory: any;
+    TweetSearchHistory: any;
+  }>;
+  TaskManager: any;
+  RootComponent: any;
+  Helpers: any;
+  Archive: any;
+  LoggedUser: any;
+  TwitterLoggedUser: any;
+  TweetCache: any;
+  UserCache: any;
+  Settings: any;
+  LanguageDatabase: any;
+  Language: any;
+  globals: {
+    force_no_delete?: boolean;
+  };
+  last_archive_error: any;
+}
+
 declare global {
   interface Window {
-    DEBUG: any;
-    ARCHIVE?: any;
-    USER?: any;
+    DEBUG: Partial<DebugContainer>;
+    debug: Partial<DebugContainer>;
+    localforage: any;
   }
 }
+
+window.DEBUG = {
+  SavedArchiveTester: {},
+  SearchHistories: {},
+  globals: {}
+};
+window.debug = window.DEBUG;

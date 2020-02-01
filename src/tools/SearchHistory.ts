@@ -1,5 +1,3 @@
-import { DEBUG_MODE } from "../const";
-
 class SearchHistory {
   protected static readonly MAX_ELEMENTS = 5;
 
@@ -59,9 +57,9 @@ class SearchHistory {
 export const TweetSearchHistory = new SearchHistory("tweets");
 export const DMSearchHistory = new SearchHistory("dms");
 
-if (DEBUG_MODE) {
-  window.DEBUG.SearchHistories = {
-    TweetSearchHistory,
-    DMSearchHistory
-  };
-}
+// --- DEBUG ---
+window.DEBUG.SearchHistories = {
+  TweetSearchHistory,
+  DMSearchHistory
+};
+// --- DEBUG ---

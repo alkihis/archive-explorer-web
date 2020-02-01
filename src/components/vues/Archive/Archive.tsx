@@ -21,11 +21,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteAllIcon from '@material-ui/icons/DeleteSweep';
 import clsx from 'clsx';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
-import Logger from '../../../tools/ErrorLogger';
 
 type ArchiveState = {
   loaded: string;
-  is_error: boolean | string;
+  is_error: boolean | {
+    error: any,
+    files: string[],
+    saved: boolean,
+  };
   in_load: string;
   loading_state: ArchiveReadState | "prefetch" | "read_save";
   quick_delete_open: boolean;
@@ -92,11 +95,16 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     SAVED_ARCHIVES.onerror = (err: CustomEvent) => {
       if (this.active)
         this.setState({
-          is_error: true,
+          is_error: {
+            error: err.detail ? err.detail : err,
+            files: [],
+            saved: false
+          },
           in_load: ""
         });
       
       console.error(err);
+      window.DEBUG.last_archive_error = err;
       SETTINGS.archive = undefined;
       SETTINGS.archive_in_load = "";
     };
@@ -123,19 +131,25 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     });
 
     SETTINGS.archive.events.on('error', (err: CustomEvent) => {
-      if (this.active)
-        this.setState({
-          is_error: err.detail instanceof DOMException ? "fail" : true,
-          in_load: ""
-        });
-
       console.error(err);
-
+      window.DEBUG.last_archive_error = err;
+      let files: string[] = [];
+      
       try {
         // Todo show an error message
-        console.error("Files in archive: ", Object.keys(SETTINGS.archive.raw.ls(false)));
-        Logger.push("Error when loading archive; files:", Object.keys(SETTINGS.archive.raw.ls(false)));
+        files = Object.keys(SETTINGS.archive.raw.ls(false));
+        console.error("Files in archive: ", files);
       } catch (e) { }
+
+      if (this.active)
+        this.setState({
+          is_error: {
+            error: err.detail ? err.detail : err,
+            files,
+            saved: false
+          },
+          in_load: ""
+        });
 
       SETTINGS.archive = undefined;
       SETTINGS.archive_in_load = "";

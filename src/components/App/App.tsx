@@ -46,7 +46,10 @@ class App extends React.Component<{}, { theme: any }> {
     // @ts-ignore
     window.addEventListener('darkmodechange', this.handleToggle); 
     window.addEventListener('root.refresh', this.handleLangChange);
-    window.DEBUG.root = this;
+
+    // -- DEBUG --
+    window.DEBUG.RootComponent = this;
+    // -- DEBUG --
   }
 
   componentWillUnmount() {

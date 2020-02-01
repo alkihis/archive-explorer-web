@@ -1,7 +1,6 @@
 import SETTINGS from "../../tools/Settings";
 import FRENCH from './fr';
 import ENGLISH from './en';
-import { DEBUG_MODE } from "../../const";
 
 const LanguageDatabase = {
   fr: FRENCH,
@@ -98,6 +97,8 @@ const LANG: Locale = new Proxy(LanguageDatabase, {
 
 export default LANG;
 
-if (DEBUG_MODE) {
-  window.DEBUG.langs = LanguageDatabase;
-}
+
+// -- DEBUG --
+window.DEBUG.LanguageDatabase = LanguageDatabase;
+window.DEBUG.Language = LANG;
+// -- DEBUG --

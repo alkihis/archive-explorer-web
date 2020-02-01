@@ -12,7 +12,6 @@ import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import LANG from '../../../classes/Lang/Language';
-import { DEBUG_MODE } from '../../../const';
 import { TweetSearchHistory, DMSearchHistory } from '../../../tools/SearchHistory';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -67,12 +66,6 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
   componentDidMount() {
     setPageTitle(LANG.explore);
-  }
-
-  componentWillUnmount() {
-    if (DEBUG_MODE && window.DEBUG.loadedMonth) {
-      delete window.DEBUG.loadedMonth;
-    }
   }
 
   handleDrawerToggle = () => {
@@ -352,10 +345,6 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 
   content() {
-    if (DEBUG_MODE) {
-      window.DEBUG.loadedMonth = this.state.loaded;
-    }
-
     if (this.state.found) {
       return (
         <>

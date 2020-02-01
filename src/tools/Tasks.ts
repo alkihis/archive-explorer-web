@@ -264,7 +264,12 @@ class TaskManager extends EventTarget {
           
           if (task.errors && Object.keys(task.errors).length) {
             data.twitter_errors = task.errors;
-            console.log("Twitter errors encountered in task", task.id, task.errors);
+            console.warn(
+              `Twitter errors encountered in task #${task.id}:\n`, 
+              Object.entries(task.errors)
+                .map(([code, val]) => `[${val[0]} times]: Code ${code} (${val[1]})`)
+                .join(',\n')
+            );
           }
           this.refresh(task.id, data);
         }
@@ -291,4 +296,4 @@ defineEventAttribute(TaskManager.prototype, 'progression');
 const Tasks = new TaskManager();
 export default Tasks;
 
-window.DEBUG.tasks = Tasks;
+window.DEBUG.TaskManager = Tasks;
