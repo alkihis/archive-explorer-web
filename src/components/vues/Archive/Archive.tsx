@@ -85,9 +85,10 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       SETTINGS.archive = detail;
       SETTINGS.archive_in_load = "";
 
-      this.setState({
-        is_a_saved_archive: true
-      });
+      if (this.active)
+        this.setState({
+          is_a_saved_archive: true
+        });
 
       await this.doArchiveInit();
     };
@@ -200,27 +201,26 @@ export default class Archive extends React.Component<{}, ArchiveState> {
 
     const cache_dl = UserCache.prefetch(most_actives);
 
-    // Préfetch si actif
     if (this.active) {
       this.setState({
         loading_state: "prefetch"
       });
-
-      // Lance le DL
-      try {
-        await cache_dl;
-      } catch (e) { }
-
-      if (this.timer)
-        console.log("Archive loaded in " + this.timer.elapsed + "s");
-        
-      // Terminé, composant prêt !
-      if (this.active)
-        this.setState({
-          loaded: SETTINGS.archive_name,
-          in_load: ""
-        });
     }
+
+    // Lance le DL
+    try {
+      await cache_dl;
+    } catch (e) { }
+
+    if (this.timer)
+      console.log("Archive loaded in " + this.timer.elapsed + "s");
+      
+    // Terminé, composant prêt !
+    if (this.active)
+      this.setState({
+        loaded: SETTINGS.archive_name,
+        in_load: ""
+      });
   }
 
   onSavedArchiveSelect = async (info: SavedArchiveInfo) => {
