@@ -247,7 +247,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     }
 
     return (
-      <ExpansionPanel key={"year" + year}>
+      <ExpansionPanel key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
         >

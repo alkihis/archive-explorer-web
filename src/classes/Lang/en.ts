@@ -391,6 +391,13 @@ export default {
   remaining: "remaining",
   subscribe: "Subscribe",
   unsubscribe: "Unsubscribe",
+  errors_encountered: "Errors encountered",
+  twitter_error__inexistant_user: "Tweet owner doesn't exist.",
+  twitter_error__suspended_user: "Tweet owner has been suspended.",
+  twitter_error__user_disconnected: "Your access tokens are invalid or has been revoked.",
+  twitter_error__inexistant_tweet: "Tweet does not exists.",
+  twitter_error__protected_user: "Tweet owner has protected his tweets.",
+  twitter_error__unknown_error: "Unknown error (code {}).",
   /** END Task CMPT */
 
   /** BEGIN TaskModal CMPT */

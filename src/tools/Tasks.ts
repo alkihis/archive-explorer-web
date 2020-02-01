@@ -14,11 +14,18 @@ export interface TaskInformation extends TaskBaseMessage {
   total: number;
   error?: string;
   type: TaskType;
+  /** Twitter errors encountered. */
+  twitter_errors?: { [code: string]: [number, string] };
+  end_message?: boolean;
 }
 
 export interface TaskBaseMessage {
   id: string;
   type?: TaskType;
+}
+
+export interface TaskEnd extends TaskBaseMessage {
+  errors?: { [code: string]: [number, string] };
 }
 
 export type TaskType = "tweet" | "mute" | "block";
@@ -154,11 +161,15 @@ class TaskManager extends EventTarget {
 
   protected refresh(id: string, data: TaskInformation) {
     // launch events...
+    if (this.subscriptions[id]) {
+      data = { ...this.subscriptions[id], ...data };
+    }
     this.subscriptions[id] = data;
     this.makeEvent('progression', data);
 
-    if (data.percentage >= 100) {
+    if (data.percentage >= 100 && !data.end_message) {
       toast(`${LANG.task} #${id} ${LANG.has_ended}.`, "success");
+      data.end_message = true;
     }
   }
 
@@ -244,11 +255,18 @@ class TaskManager extends EventTarget {
         console.log("Error unknown", e);
       });
 
-      this.socket.on('task end', (task: TaskBaseMessage) => {
+      this.socket.on('task end', (task: TaskEnd) => {
         // console.log("Task end", task);
 
         if (this.has(task.id)) {
-          this.info(task.id).percentage = 100;
+          const data = this.info(task.id);
+          data.percentage = 100;
+          
+          if (task.errors && Object.keys(task.errors).length) {
+            data.twitter_errors = task.errors;
+            console.log("Twitter errors encountered in task", task.id, task.errors);
+          }
+          this.refresh(task.id, data);
         }
       });
 

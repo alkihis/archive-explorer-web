@@ -7,6 +7,14 @@
   flex: 1;
 }
 
+.paper_base {
+  background-color: #fcfcfc !important;
+
+  :global .dark :local & {
+    background-color: #302f2f !important;
+  }
+}
+
 .title {
   margin-top: 2rem !important;
   margin-bottom: 1.2rem !important;

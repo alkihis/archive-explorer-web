@@ -133,7 +133,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
     return (
       <div className={classes.starter_container}>
         <Typography variant="h6">
-          {LANG.delete_selected_tweet}{c > 1 ? "s" : ""} ?
+          {LANG.delete_selected_tweets} ?
         </Typography>
 
         <Typography className={classes.starter_details}>

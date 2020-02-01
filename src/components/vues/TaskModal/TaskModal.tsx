@@ -206,7 +206,7 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
     return over.map(t => <Task 
       data={t} 
       key={"oversub" + t.id}
-      is_subscribed={true} 
+      subscribed
       onSubChange={this.onSubChange} 
       onCancel={this.onCancel}
     />);
@@ -228,7 +228,7 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
     return not_over.map(t => <Task 
       data={t} 
       key={"sub" + t.id}
-      is_subscribed={true} 
+      subscribed
       onSubChange={this.onSubChange} 
       onCancel={this.onCancel}
     />);
@@ -239,7 +239,6 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
       return this.state.unsub.map(t => <Task 
         data={t} 
         key={"unsub" + t.id}
-        is_subscribed={false} 
         onSubChange={this.onSubChange} 
         onCancel={this.onCancel}
       />);
@@ -318,7 +317,15 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
 
   render() {
     return (
-      <Dialog fullScreen open={this.state.open} onClose={this.handleClose} TransitionComponent={Transition}>
+      <Dialog 
+        fullScreen 
+        open={this.state.open} 
+        onClose={this.handleClose} 
+        TransitionComponent={Transition}
+        classes={{
+          paper: classes.paper_base
+        }}
+      >
         <AppBar className={classes.app_bar}>
           <Toolbar>
             <Typography variant="h6" className={classes.nav_title}>
@@ -339,3 +346,4 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
     return this.state.subscribed.filter(t => t.percentage >= 100)
   }
 }
+

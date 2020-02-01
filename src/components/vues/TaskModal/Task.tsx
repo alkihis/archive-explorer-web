@@ -1,7 +1,7 @@
 import classes from './Task.module.scss';
 import React from 'react';
 import { TaskInformation } from '../../../tools/Tasks';
-import { ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, LinearProgress, ExpansionPanelActions, Button } from '@material-ui/core';
+import { ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, LinearProgress, ExpansionPanelActions, Button, Paper, makeStyles, createStyles, Theme } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RoundIcon from '@material-ui/icons/Lens';
 
@@ -9,11 +9,12 @@ import TweetIcon from '@material-ui/icons/Message';
 import BlockIcon from '@material-ui/icons/Block';
 import MuteIcon from '@material-ui/icons/VolumeOff';
 import UnknownIcon from '@material-ui/icons/HighlightOff';
+import ErrorIcon from '@material-ui/icons/ErrorOutline';
 import LANG from '../../../classes/Lang/Language';
 
 type TaskP = {
   data: TaskInformation;
-  is_subscribed?: boolean;
+  subscribed?: boolean;
   onSubChange?: Function;
   onCancel?: Function;
 }
@@ -54,11 +55,12 @@ export default class Task extends React.Component<TaskP> {
   }
 
   render() {
-    const base_panel = this.is_over ? classes.panel_over : (this.props.is_subscribed ? classes.panel_sub : classes.panel_unsub);
-    const color_icon = this.is_over ? classes.icon_green : (this.props.is_subscribed ? classes.icon_orange : classes.icon_purple);
+    const base_panel = this.is_over ? classes.panel_over : (this.props.subscribed ? classes.panel_sub : classes.panel_unsub);
+    const color_icon = this.is_over ? classes.icon_green : (this.props.subscribed ? classes.icon_orange : classes.icon_purple);
 
     const completed = this.props.data.done + this.props.data.failed;
     const total = this.props.data.total;
+    const errors = this.props.data.twitter_errors;
 
     const IconType = this.iconForTask();
 
@@ -78,6 +80,8 @@ export default class Task extends React.Component<TaskP> {
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.details}>
+          {errors && <TwitterErrors errors={errors} />}
+
           <Typography className={classes.counts}>
             <span className="bold">{this.props.data.done}</span> {LANG.deleted}{this.props.data.done > 1 ? LANG.past_s : ""},
             <span className="bold"> {this.props.data.failed}</span> {LANG.failed}{this.props.data.failed > 1 ? LANG.past_s : ""},
@@ -92,11 +96,11 @@ export default class Task extends React.Component<TaskP> {
             {LANG.cancel}
           </Button>}
           
-          {!this.props.is_subscribed && <Button size="small" color="primary" onClick={() => this.props.onSubChange(true, this.id)}>
+          {!this.props.subscribed && <Button size="small" color="primary" onClick={() => this.props.onSubChange(true, this.id)}>
             {LANG.subscribe}
           </Button>}
 
-          {this.props.is_subscribed && <Button size="small" color="primary" onClick={() => this.props.onSubChange(false, this.id)}>
+          {this.props.subscribed && <Button size="small" color="primary" onClick={() => this.props.onSubChange(false, this.id)}>
             {LANG.unsubscribe}
           </Button>}
           
@@ -104,4 +108,62 @@ export default class Task extends React.Component<TaskP> {
       </ExpansionPanel>
     );
   }
+}
+
+const withTwitterErrorsStyles = makeStyles((theme: Theme) => 
+  createStyles({
+    paper: {
+      backgroundColor: theme.palette.type === "dark" ? '#654a4d' : '#f8d7da',
+      color: theme.palette.type === "dark" ? 'white' : '#721c24',
+      padding: 14,
+      marginBottom: '1.7rem',
+    },
+    header: {
+      marginTop: '-.2rem',
+      marginBottom: '.3rem',
+    },
+    icon: {
+      marginRight: '.2rem',
+      marginBottom: '-.4rem',
+    },
+    times: {
+      fontSize: 'small',
+    }
+  })  
+);
+
+function TwitterErrors({ errors }: { errors: { [code: string]: [number, string] } }) {
+  const classes = withTwitterErrorsStyles({ errors });
+  const es = Object.entries(errors);
+
+  return (
+    <Paper variant="outlined" className={classes.paper}>
+      <Typography variant="h6" className={classes.header}>
+        {LANG.errors_encountered}
+      </Typography>
+
+      {es.map(e => <Typography key={e[0]}>
+        <ErrorIcon className={classes.icon} /> #<strong>{e[0]}</strong> 
+        <span className={classes.times}> ({e[1][0]} {LANG.times})</span> : {" "} 
+
+        {getTwitterErrorMessageFromCode(e[0])}  
+      </Typography>)}
+    </Paper>
+  );
+}
+
+function getTwitterErrorMessageFromCode(code: number | string) {
+  switch (Number(code)) {
+    case 34:
+      return LANG.twitter_error__inexistant_user;
+    case 63:
+      return LANG.twitter_error__suspended_user;
+    case 89:
+      return LANG.twitter_error__user_disconnected;
+    case 144:
+      return LANG.twitter_error__inexistant_tweet;
+    case 179:
+      return LANG.twitter_error__protected_user;
+  }
+  return LANG.format("twitter_error__unknown_error", code);
 }

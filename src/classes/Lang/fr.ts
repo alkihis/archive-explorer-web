@@ -336,7 +336,7 @@ export default {
   /** BEGIN QuickDelete CMPT */
   start_task: "Lancer la tâche",
   select_months: "Sélection de mois",
-  delete_selected_tweet: "Supprimer les tweets sélectionnés",
+  delete_selected_tweet: "Supprimer le{} tweets sélectionné",
   will_be: "vont être",
   permanently: "définitivement",
   deleted_from_twitter: "supprimés de Twitter",
@@ -392,6 +392,13 @@ export default {
   remaining: "restant",
   subscribe: "S'abonner",
   unsubscribe: "Se désabonner",
+  errors_encountered: "Erreurs survenues",
+  twitter_error__inexistant_user: "L'utilisateur détenant le tweet n'existe pas.",
+  twitter_error__suspended_user: "L'utilisateur détenant le tweet a été suspendu.",
+  twitter_error__user_disconnected: "Vos clés d'accès à Twitter sont invalides ou ont été révoquées.",
+  twitter_error__inexistant_tweet: "Le tweet n'existe pas.",
+  twitter_error__protected_user: "L'utilisateur auquel appartient le tweet est protégé.",
+  twitter_error__unknown_error: "Erreur inconnue (code {}).",
   /** END Task CMPT */
 
   /** BEGIN TaskModal CMPT */

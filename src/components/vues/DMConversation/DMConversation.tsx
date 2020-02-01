@@ -302,7 +302,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
   year(year: string) {
     return (
-      <ExpansionPanel key={"year" + year}>
+      <ExpansionPanel key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
         >
