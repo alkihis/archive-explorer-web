@@ -70,16 +70,12 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         this.state.loading_state = "read_save";
       }
     }
-
-    this.checkOnReadySavedArchive();
+    
+    // Subscribe to saved archives events
+    this.subscribeToSavedArchiveEvents();
   }
 
-  checkOnReadySavedArchive() {
-    if (SETTINGS.archive) {
-      SETTINGS.archive.events.removeAllListeners();
-    }
-
-    SETTINGS.is_saved_archive = true;
+  subscribeToSavedArchiveEvents() {
     SAVED_ARCHIVES.onload = async ({ detail }) => {
       SETTINGS.archive_name = this.state.in_load;
       SETTINGS.archive = detail;
@@ -146,29 +142,31 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     });
 
     // Subscribe for archive loading states
-    SETTINGS.archive.events.on('zipready', () => {
-      if (this.active)
-        this.setState({ // Skip user load (very fast)
-          loading_state: "tweet_read"
-        });
-    });
-    SETTINGS.archive.events.on('tweetsread', () => {
-      if (this.active)
+    SETTINGS.archive.events.on('read', ({ step }: { step: string }) => {
+      if (this.active) {
+        let loading_state: ArchiveReadState | "prefetch" | "read_save";
+
+        switch (step) {
+          case "zipready":
+            loading_state = "tweet_read";
+            break;
+          case "tweetsread":
+            loading_state = "indexing";
+            break;
+          case "willreaddm":
+            loading_state = "dm_read";
+            break;
+          case "willreadextended":
+            loading_state = "extended_read";
+            break;
+          default:
+            return;
+        }
+
         this.setState({
-          loading_state: "indexing"
+          loading_state
         });
-    });
-    SETTINGS.archive.events.on('willreaddm', () => {
-      if (this.active)
-        this.setState({
-          loading_state: "dm_read"
-        });
-    });
-    SETTINGS.archive.events.on('willreadextended', () => {
-      if (this.active)
-        this.setState({
-          loading_state: "extended_read"
-        });
+      }
     });
   }
 
@@ -234,6 +232,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     SETTINGS.archive = undefined;
     SETTINGS.archive_name = "";
     SETTINGS.archive_in_load = info.name;
+    SETTINGS.is_saved_archive = true;
 
     // Failure and success will be treated automatically via events
     SAVED_ARCHIVES.getArchive(info.uuid);
