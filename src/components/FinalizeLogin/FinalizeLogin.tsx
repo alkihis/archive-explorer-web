@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router';
 import { BigPreloader, CenterComponent, internalError } from '../../tools/PlacingComponents';
 import { setPageTitle } from '../../helpers';
 import { Typography } from '@material-ui/core';
-import APIHELPER from '../../tools/ApiHelper';
+import APIHELPER, { API_URLS } from '../../tools/ApiHelper';
 import SETTINGS from '../../tools/Settings';
 import LANG from '../../classes/Lang/Language';
 
@@ -54,7 +54,7 @@ export default class FinalizeLogin extends React.Component {
 
     if (this.state.has_token) {
       // Validating...
-      const req = APIHELPER.request('users/access', {
+      const req = APIHELPER.request(API_URLS.twitter_access_token, {
         parameters: {
           oauth_token: this.oauth_token,
           oauth_verifier: this.oauth_verifier,

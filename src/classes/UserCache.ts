@@ -3,6 +3,7 @@ import { Conversation } from 'twitter-archive-reader';
 import Cache from './Cache';
 import { escapeRegExp } from '../helpers';
 import { DEBUG_MODE } from '../const';
+import { API_URLS } from '../tools/ApiHelper';
 
 class __UserCache extends Cache<FullUser> {
   protected user_cache: {
@@ -78,7 +79,7 @@ class __UserCache extends Cache<FullUser> {
   }
 }
 
-export const UserCache = new __UserCache('batch/users');
+export const UserCache = new __UserCache(API_URLS.batch_users);
 export default UserCache;
 
 if (DEBUG_MODE) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails } from '@material-ui/core';
 import { IToken } from '../../../tools/interfaces';
 import { CenterComponent, BigPreloader } from '../../../tools/PlacingComponents';
-import APIHELPER from '../../../tools/ApiHelper';
+import APIHELPER, { API_URLS } from '../../../tools/ApiHelper';
 import SETTINGS from '../../../tools/Settings';
 import { toast } from '../../shared/Toaster/Toaster';
 import classes from './ExtendedActions.module.scss';
@@ -48,7 +48,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
       tokens: null
     });
 
-    APIHELPER.request('users/tokens/show')
+    APIHELPER.request(API_URLS.user_get_tokens)
       .then(t => {
         this.setState({
           tokens: t
@@ -101,7 +101,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
     });
 
     // Delete account
-    APIHELPER.request('users/destroy', { method: 'POST' })
+    APIHELPER.request(API_URLS.user_delete, { method: 'POST' })
       .then(() => {
         localStorage.clear();
         SETTINGS.reload();
@@ -119,7 +119,7 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
       tokens: this.state.tokens.filter(t => t.token !== id)
     });
 
-    APIHELPER.request('users/tokens/revoke', { method: 'POST', parameters: { token: id } })
+    APIHELPER.request(API_URLS.user_token_revoke, { method: 'POST', parameters: { token: id } })
       .catch(() => {
         toast(LANG.unable_revoke_token, "error");
       });

@@ -1,4 +1,4 @@
-import APIHELPER from "./tools/ApiHelper";
+import APIHELPER, { API_URLS } from "./tools/ApiHelper";
 import { IUser } from "./tools/interfaces";
 import SETTINGS, { TweetSortType, TweetSortWay } from "./tools/Settings";
 import { PartialTweet, TwitterHelpers } from "twitter-archive-reader";
@@ -21,11 +21,11 @@ export function setPageTitle(title?: string, absolute = false) {
  */
 export async function checkCredentials(auto_user_dl = true, check_twitter_account = AUTO_TWITTER_CHECK) {
   try {
-    const reso: IUser = await APIHELPER.request('users/credentials');
+    const reso: IUser = await APIHELPER.request(API_URLS.user_credentials_check);
     SETTINGS.user = reso;
 
     if (check_twitter_account) {
-      const twitter_check = APIHELPER.request('users/twitter');
+      const twitter_check = APIHELPER.request(API_URLS.user_twitter_informations);
 
       twitter_check
         .then((d: { user: IUser, twitter: FullUser }) => {

@@ -2,7 +2,7 @@ import { IUser } from "./interfaces";
 import { TwitterArchive } from "twitter-archive-reader";
 import { FullUser } from "twitter-d";
 import { DEBUG_MODE } from "../const";
-import APIHELPER from "./ApiHelper";
+import APIHELPER, { API_URLS } from "./ApiHelper";
 import { AuthorizedLangs, isAuthorizedLang } from "../classes/Lang/Language";
 import Cookies from 'js-cookie';
 
@@ -383,7 +383,7 @@ class AESettings {
 
     if (revoke && is_logged) {
       // Revoke without specifing token: revoking current
-      return APIHELPER.request('users/tokens/revoke', { method: 'POST' })
+      return APIHELPER.request(API_URLS.user_token_revoke, { method: 'POST' })
         .finally(() => {
           this.token = "";
 

@@ -143,3 +143,20 @@ export const BASE_API_URL = SERVER_URL + "/api/";
 const APIHELPER = new APIHelper();
 
 export default APIHELPER;
+
+export const API_URLS = {
+  task_all: 'tasks/details/all',
+  task_destroy_all: 'tasks/destroy/all',
+  task_destroy: 'tasks/destroy/',
+  task_create: 'tasks/create',
+  user_token_revoke: 'users/tokens/revoke',
+  user_twitter_informations: 'users/twitter',
+  user_credentials_check: 'users/credentials',
+  user_delete: 'users/destroy',
+  user_get_tokens: 'users/tokens/show',
+  twitter_request_token: 'users/request',
+  twitter_access_token: 'users/access',
+  deleted_count: 'deleted_count',
+  batch_tweets: 'batch/tweets',
+  batch_users: 'batch/users',
+};

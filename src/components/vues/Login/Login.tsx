@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Fab, CircularProgress } from '@material-ui/core';
 import { blue, red } from '@material-ui/core/colors';
 import sign_in_twitter from '../../../assets/sign-in-with-twitter-link.png';
-import APIHELPER from '../../../tools/ApiHelper';
+import APIHELPER, { API_URLS } from '../../../tools/ApiHelper';
 import { RequestTokenRequest } from '../../../tools/interfaces';
 import { setPageTitle } from '../../../helpers';
 import classes from './Login.module.scss';
@@ -140,7 +140,7 @@ const LoginButton: React.FC<{classes: any}> = (props: { classes: any }) => {
   }
 
   function runGetter() {
-    APIHELPER.request('users/request', { method: 'POST', auth: false })
+    APIHELPER.request(API_URLS.twitter_request_token, { method: 'POST', auth: false })
       .then((data: RequestTokenRequest) => {
         setLoading(false);
 

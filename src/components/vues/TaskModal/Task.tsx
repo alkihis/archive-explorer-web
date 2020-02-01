@@ -4,13 +4,13 @@ import { TaskInformation } from '../../../tools/Tasks';
 import { ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, LinearProgress, ExpansionPanelActions, Button, Paper, makeStyles, createStyles, Theme } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RoundIcon from '@material-ui/icons/Lens';
+import LANG from '../../../classes/Lang/Language';
 
 import TweetIcon from '@material-ui/icons/Message';
 import BlockIcon from '@material-ui/icons/Block';
 import MuteIcon from '@material-ui/icons/VolumeOff';
 import UnknownIcon from '@material-ui/icons/HighlightOff';
 import ErrorIcon from '@material-ui/icons/ErrorOutline';
-import LANG from '../../../classes/Lang/Language';
 
 type TaskP = {
   data: TaskInformation;

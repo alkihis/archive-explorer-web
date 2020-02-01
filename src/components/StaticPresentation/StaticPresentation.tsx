@@ -6,7 +6,7 @@ import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import { DownloadGDPRModal } from '../shared/NoGDPR/NoGDPR';
 import SETTINGS from '../../tools/Settings';
 import { setPageTitle } from '../../helpers';
-import APIHELPER from '../../tools/ApiHelper';
+import APIHELPER, { API_URLS } from '../../tools/ApiHelper';
 import LANG from '../../classes/Lang/Language';
 import { Copyright } from '../../tools/PlacingComponents';
 
@@ -177,7 +177,7 @@ const DeletedCounter: React.FC<DCProps> = (props: DCProps) => {
   const [deleted, setDeleted] = React.useState<number>(undefined);
 
   if (deleted === undefined) {
-    APIHELPER.request('deleted_count', { auth: false, method: 'GET' })
+    APIHELPER.request(API_URLS.deleted_count, { auth: false, method: 'GET' })
       .then((resp: { count: number }) => {
         setDeleted(resp.count);
       });

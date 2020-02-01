@@ -1,6 +1,7 @@
 import { Status } from 'twitter-d';
 import Cache from './Cache';
 import { PartialTweet } from 'twitter-archive-reader';
+import { API_URLS } from '../tools/ApiHelper';
 
 class TCache extends Cache<Status> {
   async bulkRts(tweets: PartialTweet[]) {
@@ -40,7 +41,7 @@ class TCache extends Cache<Status> {
   }
 }
 
-export const TweetCache = new TCache('batch/tweets');
+export const TweetCache = new TCache(API_URLS.batch_tweets);
 window.DEBUG.TweetCache = TweetCache;
 
 export default TweetCache;

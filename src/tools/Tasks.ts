@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import { SERVER_URL } from '../const';
 import SETTINGS from './Settings';
 import EventTarget, { defineEventAttribute } from 'event-target-shim';
-import APIHELPER from './ApiHelper';
+import APIHELPER, { API_URLS } from './ApiHelper';
 import { toast } from '../components/shared/Toaster/Toaster';
 import LANG from '../classes/Lang/Language';
 
@@ -61,7 +61,7 @@ class TaskManager extends EventTarget {
       return;
 
     try {
-      const { status, task } = await APIHELPER.request('tasks/create.json', {
+      const { status, task } = await APIHELPER.request(API_URLS.task_create, {
         method: 'POST',
         body_mode: 'json',
         parameters: { ids: ids.join(','), type }
@@ -137,7 +137,7 @@ class TaskManager extends EventTarget {
       this.remove(id);
     }
 
-    await APIHELPER.request(`tasks/destroy/${id}.json`, { method: 'POST' });
+    await APIHELPER.request(API_URLS.task_destroy + `${id}`, { method: 'POST' });
 
     toast(LANG.task_cancelled, "info");
   }
@@ -149,14 +149,14 @@ class TaskManager extends EventTarget {
       this.remove(id);
     }
 
-    await APIHELPER.request('tasks/destroy/all.json', { method: 'POST' });
+    await APIHELPER.request(API_URLS.task_destroy_all, { method: 'POST' });
 
     toast(LANG.tasks_stopped, "info");
   }
 
   /** All tasks running (even non subcribed). Fires APIErrors when failing to get tasks. */
   get all() : Promise<TaskInformation[]> {
-    return APIHELPER.request('tasks/details/all');
+    return APIHELPER.request(API_URLS.task_all);
   }
 
   protected refresh(id: string, data: TaskInformation) {
