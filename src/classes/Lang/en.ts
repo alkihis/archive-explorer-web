@@ -96,6 +96,7 @@ export default {
   deletion_modal_text: `A deletion task will be started. 
   You can't restore tweets after they're been removed from Twitter.
   Are you sure you want to do this ?`,
+  fatal_error: "Fatal error",
 
   /** BEGIN PRESENTATION PAGE */
   catch_phrase: "Explore through time, browse your old direct messages and quickly delete embarrassing tweets.",
@@ -216,6 +217,29 @@ export default {
   used_with_s: "",
   user_archive_save_mismatch: `Logged user isn't the current loaded archive owner.
   If you load this archive back through a save, medias from tweets or direct messages may not display properly.`,
+  omg_what_happend: "Oops ! What happened ?",
+  why_my_archive_didnt_load: "Why my archive didn't load ?",
+  an_error_occured_with_archive_loading: "An error occurred during archive loading.",
+  unknown_read_archive_error_without_msg: "Unknown error. Unable to get more informations.",
+  unknown_read_archive_error: "An unknown error has occurred: ",
+  the_file: 'File',
+  cannot_be_found_in_archive: "cannot be found in this archive",
+  file_might_be_too_big: "Archive or file inside it may be too big.",
+  file_with_an_incorrect_format: "Format of a file inside archive is invalid or unsupported.",
+  incorrect_file_in_archive: "A file in archive has an incorrect syntax.",
+  file_is_not_a_zip_archive: `Specified file is not a ZIP archive. You should load the  
+  file downloaded from Twitter.`,
+  files_in_this_archive: "Files in this archive",
+  tweet_file_is_incorrect: "Tweet file is unwell-formatted.",
+  profile_informations_file_is_incorrect: "Profile information file is unwell-formatted.",
+  dm_file_is_incorrect: "Direct Messages file is unwell-formatted.",
+  files_in_archive_explaination: `In order to archive to work, files tweet.js, profile.js and account.js must be
+  at archive root directory.`,
+  download_error_dump: "Download error dump",
+  you_can_put_the_content_of_log_file_to: "You can paste the content of the error dump into",
+  and_send_this_error_dump_to: "and send it to",
+  you_can_also: "You can also",
+  open_an_issue_and_attach_file: "open an issue on GitHub and attach error log file",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */

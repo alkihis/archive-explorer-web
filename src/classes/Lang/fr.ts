@@ -158,7 +158,7 @@ export default {
 
   /** BEGIN ARCHIVE CMPT */
   reading_dms: "Lecture des messages privés",
-  reading_fav_moments_other: "Lecture des favoris, moments et autres informations",
+  reading_fav_moments_other: "Lecture des blocks, moments et autres informations",
   indexing_tweets: "Indexation des tweets",
   unzipping: "Dézippage",
   reading_tweets: "Lecture des tweets",
@@ -216,6 +216,29 @@ export default {
   used_with_s: "s",
   user_archive_save_mismatch: `L'utilisateur connecté n'est pas le propriétaire de l'archive actuellement chargée. 
   Si vous la rechargez via sa sauvegarde, les images des tweets et des messages privés peuvent ne pas s'afficher correctement.`,
+  omg_what_happend: "Oups ! Que s'est t-il passé ?",
+  why_my_archive_didnt_load: "Pourquoi mon archive ne s'est pas chargée ?",
+  an_error_occured_with_archive_loading: "Une erreur est survenue lors de la lecture de votre archive.",
+  unknown_read_archive_error_without_msg: "Erreur inconnue. Impossible d'obtenir plus d'informations.",
+  unknown_read_archive_error: "Une erreur inconnue est survenue : ",
+  the_file: 'Le fichier',
+  cannot_be_found_in_archive: "n'a pas pu être trouvé dans l'archive",
+  file_might_be_too_big: "L'archive ou un fichier à l'intérieur est peut être trop gros.",
+  file_with_an_incorrect_format: "Le format d'un fichier à l'intérieur de l'archive est incorrect ou non supporté.",
+  incorrect_file_in_archive: "Un fichier de l'archive présente une syntaxe incorrecte.",
+  file_is_not_a_zip_archive: `Le fichier spécifié n'est pas une archive ZIP. 
+  Vous devez charger le fichier mis à disposition par Twitter, non décompressé.`,
+  files_in_this_archive: "Fichiers dans cette archive",
+  tweet_file_is_incorrect: "Le fichier contenant les tweets est mal formaté.",
+  profile_informations_file_is_incorrect: "Le fichier contenant les informations sur votre profil est mal formaté.",
+  dm_file_is_incorrect: "Le fichier contenant les messages privés est mal formaté.",
+  files_in_archive_explaination: `Pour que l'archive fonctionne, les fichiers tweet.js, profile.js et account.js doivent se
+  trouver à la racine de l'archive.`,
+  download_error_dump: "Télécharger le rapport d'erreur",
+  you_can_put_the_content_of_log_file_to: "Vous pouvez copier le contenu du rapport sur ",
+  and_send_this_error_dump_to: "et l'envoyer à",
+  you_can_also: "Vous pouvez également ",
+  open_an_issue_and_attach_file: "ouvrir une issue sur GitHub et y attacher le rapport",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */

@@ -5,6 +5,7 @@ import Toaster from '../shared/Toaster/Toaster';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core';
 import SETTINGS from '../../tools/Settings';
+import AppError from './AppError';
 
 const theme = createMuiTheme({
   palette: {
@@ -27,9 +28,10 @@ const dark_theme = createMuiTheme({
   
 });
 
-class App extends React.Component<{}, { theme: any }> {
+class App extends React.Component<{}, { theme: any, error: any }> {
   state = {
-    theme: SETTINGS.dark_mode ? dark_theme : theme
+    theme: SETTINGS.dark_mode ? dark_theme : theme,
+    error: false,
   };
 
   constructor(props: {}) {
@@ -40,6 +42,10 @@ class App extends React.Component<{}, { theme: any }> {
     if (SETTINGS.dark_mode) {
       document.body.classList.add('dark');
     }
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { error };
   }
 
   componentDidMount() {
@@ -56,6 +62,15 @@ class App extends React.Component<{}, { theme: any }> {
     // @ts-ignore
     window.removeEventListener('darkmodechange', this.handleToggle);
     window.removeEventListener('root.refresh', this.handleLangChange);
+  }
+
+  componentDidCatch(err: any, info: any) {
+    // Exemple de `componentStack` :
+    //   in ComponentThatThrows (created by App)
+    //   in ErrorBoundary (created by App)
+    //   in div (created by App)
+    //   in App
+    console.warn("App crashed with error", err, info.componentStack);
   }
 
   handleToggle = (event: CustomEvent<boolean>) => {
@@ -78,8 +93,11 @@ class App extends React.Component<{}, { theme: any }> {
   render() {  
     return (
       <ThemeProvider theme={this.state.theme}>
-        <Router />
-        <Toaster />
+        {this.state.error && <AppError error={this.state.error} />}
+        {!this.state.error && <>
+          <Router />
+          <Toaster />
+        </>}
       </ThemeProvider>
     );
   }

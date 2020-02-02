@@ -21,6 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteAllIcon from '@material-ui/icons/DeleteSweep';
 import clsx from 'clsx';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
+import ArchiveLoadErrorDialog from './ArchiveLoadErrorDialog';
 
 type ArchiveState = {
   loaded: string;
@@ -28,6 +29,7 @@ type ArchiveState = {
     error: any,
     files: string[],
     saved: boolean,
+    archive?: TwitterArchive,
   };
   in_load: string;
   loading_state: ArchiveReadState | "prefetch" | "read_save";
@@ -138,7 +140,6 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       try {
         // Todo show an error message
         files = Object.keys(SETTINGS.archive.raw.ls(false));
-        console.error("Files in archive: ", files);
       } catch (e) { }
 
       if (this.active)
@@ -146,7 +147,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
           is_error: {
             error: err.detail ? err.detail : err,
             files,
-            saved: false
+            saved: false,
+            archive: SETTINGS.archive
           },
           in_load: ""
         });
@@ -380,6 +382,14 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         <Typography>
           {LANG.archive_bad_format}
         </Typography>
+
+        {typeof this.state.is_error !== 'boolean' && <ArchiveLoadErrorDialog 
+          detail={this.state.is_error}
+        >
+          <MUILink href="#">
+            {LANG.omg_what_happend}
+          </MUILink>
+        </ArchiveLoadErrorDialog>}
       </div>
     );
   }

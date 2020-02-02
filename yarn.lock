@@ -11334,9 +11334,9 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
 
 twitter-archive-reader@^5.0.1:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/twitter-archive-reader/-/twitter-archive-reader-5.0.2.tgz#50dd107bf3ac93c35b2dec07a8168535c5b5bf13"
-  integrity sha512-OYGqaR/Jta1qWFJQAhIywrzc+BdcYqXEwpiUusN1cWd92iQainmVMdA8tcqxFArZZ906pUJI54QJLAeZwHxjGQ==
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/twitter-archive-reader/-/twitter-archive-reader-5.0.5.tgz#463300dbef3ae5178193b01d316e70e0aa022504"
+  integrity sha512-vDFw1IWaF0yU3P0p/DQCxexNlJYBn2HRRv0ajBAvX5altLEMO8HyIrNWYESsZfIZaKEHE77aZB25EoZFxe8vtQ==
   dependencies:
     "@types/jszip" "^3.1.7"
     big-integer "^1.6.48"
