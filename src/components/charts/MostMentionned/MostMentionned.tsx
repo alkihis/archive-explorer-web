@@ -141,7 +141,7 @@ function TwitterMention({ mention, users }: {
 }) {
   const lc_sn = mention.original.toLowerCase();
   const user = lc_sn in users ? users[lc_sn] : undefined;
-  let avatar: React.ReactNode;
+  let avatar: any;
   let name = mention.original;
   let screen_name = mention.original;
 

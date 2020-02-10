@@ -137,7 +137,7 @@ function TwitterUser({ user, users }: {
   users: { [id: string]: FullUser },
 }) {
   const full_user = user in users ? users[user] : undefined;
-  let avatar: React.ReactNode;
+  let avatar: any;
   let name = '#' + user;
   let screen_name = name;
   let link = full_user ? "https://twitter.com/" + full_user.screen_name : "";
