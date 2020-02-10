@@ -184,6 +184,15 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         });
       }
     });
+
+    // Fire a warning when a file could not be read
+    SETTINGS.archive.events.on('archive file not found error', ({ filename }: { filename: string }) => {
+      if (filename.endsWith('.js')) {
+        console.warn(
+          `File ${filename.split('/').pop()} could not be found. Are you sure that archive is complete ?`
+        );
+      }
+    });
   }
 
   async doArchiveInit() {
