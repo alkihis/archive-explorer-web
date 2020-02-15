@@ -316,7 +316,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     if (f && f instanceof File) {
       const filename = f.name;
 
-      SETTINGS.archive = new TwitterArchive(f, { build_ad_archive: true });
+      SETTINGS.archive = new TwitterArchive(f);
 
       console.log("Loading a new archive: ", filename);
 
