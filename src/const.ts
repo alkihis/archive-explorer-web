@@ -1,6 +1,8 @@
+import TwitterArchive from "twitter-archive-reader";
+
 export const DEBUG_MODE = true;
 
-export const VERSION = "1.5.3";
+export const VERSION = "1.5.4";
 export const THRESHOLD_PREFETCH = 20;
 export const SERVER_URL = DEBUG_MODE ? "http://localhost:3128" : "https://archive-explorer.com";
 export const AUTO_TWITTER_CHECK = !DEBUG_MODE;
@@ -51,12 +53,12 @@ interface DebugContainer {
     force_no_delete?: boolean;
   };
   last_archive_error: any;
+  TwitterArchive: any;
 }
 
 declare global {
   interface Window {
     DEBUG: Partial<DebugContainer>;
-    debug: Partial<DebugContainer>;
     localforage: any;
   }
 }
@@ -64,6 +66,6 @@ declare global {
 window.DEBUG = {
   SavedArchiveTester: {},
   SearchHistories: {},
-  globals: {}
+  globals: {},
+  TwitterArchive
 };
-window.debug = window.DEBUG;
