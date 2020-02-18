@@ -109,6 +109,10 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         });
       }
     }, 200);
+
+    if (this.state.loaded) {
+      this.downloadHeaderImg();
+    }
   }
 
   componentWillUnmount() {
