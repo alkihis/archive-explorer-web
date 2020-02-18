@@ -55,6 +55,7 @@ export function AvatarArchive() {
 
   const [url, setUrl] = React.useState<string>(undefined);
 
+  
   React.useEffect(() => {
     if (!url && archive.medias.has_medias) {
       // Download picture from archive
@@ -71,6 +72,7 @@ export function AvatarArchive() {
         URL.revokeObjectURL(url);
       }
     };
+  // eslint-disable-next-line 
   }, [url]);
 
   return (
