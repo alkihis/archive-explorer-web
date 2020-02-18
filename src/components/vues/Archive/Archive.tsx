@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import styles from './Archive.module.scss';
 import { setPageTitle, dateFormatter } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Card, CardContent, CardActions, Container, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Typography, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, FormControlLabel, Checkbox, withStyles, makeStyles } from '@material-ui/core';
 import { CenterComponent, Marger } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState, TwitterHelpers } from 'twitter-archive-reader';
@@ -22,6 +22,8 @@ import DeleteAllIcon from '@material-ui/icons/DeleteSweep';
 import clsx from 'clsx';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import ArchiveLoadErrorDialog from './ArchiveLoadErrorDialog';
+import { truncateText, loadingMessage } from './ArchiveHelpers';
+import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 
 type ArchiveState = {
   loaded: string;
@@ -36,11 +38,13 @@ type ArchiveState = {
   quick_delete_open: boolean;
   in_drag: boolean;
   is_a_saved_archive: boolean;
+  how_to_dl_open: boolean;
+  header_url?: string;
 };
 
 Timer.default_format = "s";
 
-export default class Archive extends React.Component<{}, ArchiveState> {
+class Archive extends React.Component<{ classes: Record<string, string> }, ArchiveState> {
   state: ArchiveState;
   timer: Timer;
 
@@ -63,6 +67,7 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       quick_delete_open: false,
       in_drag: false,
       is_a_saved_archive: SETTINGS.is_saved_archive,
+      how_to_dl_open: false,
     };
 
     // Subscribe to archive readyness when in load
@@ -79,6 +84,53 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     // Subscribe to saved archives events
     this.subscribeToSavedArchiveEvents();
   }
+
+  componentDidMount() {
+    setPageTitle();
+    window.DEBUG.Archive = this;
+
+    setTimeout(() => {
+      const card = this.card_ref.current;
+      if (card) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          card.addEventListener(eventName, this.handleEventPropagation, true);
+        });
+  
+        ['dragenter', 'dragover'].forEach(eventName => {
+          card.addEventListener(eventName, this.handleDragEnter, true);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+          card.addEventListener(eventName, this.handleDragEnd, true);
+        });
+  
+        ['drop'].forEach(eventName => {
+          card.addEventListener(eventName, this.handleDrop, true);
+        });
+      }
+    }, 200);
+  }
+
+  componentWillUnmount() {
+    this.active = false;
+
+    if (SETTINGS.archive) {
+      SETTINGS.archive.events.removeAllListeners('error');
+      SETTINGS.archive.events.removeAllListeners('read');
+      // Do not cancel ready, because it will properly init archive.
+    }
+
+    if (this.state.header_url) {
+      URL.revokeObjectURL(this.state.header_url);
+    }
+
+    delete window.DEBUG.Archive;
+  }
+
+
+  /* --------------------------------------------------------------------- */
+  /* ARCHIVE INITIALIZATION (subscribing to events, read parts of archive) */
+  /* --------------------------------------------------------------------- */
 
   subscribeToSavedArchiveEvents() {
     SAVED_ARCHIVES.onload = async ({ detail }) => {
@@ -196,6 +248,8 @@ export default class Archive extends React.Component<{}, ArchiveState> {
   }
 
   async doArchiveInit() {
+    this.downloadHeaderImg();
+
     // Reset le statut "utilisateurs impossibles à trouver"
     UserCache.clearFailCache();
 
@@ -246,6 +300,25 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       });
   }
 
+  async downloadHeaderImg() {
+    const archive = SETTINGS.archive;
+
+    if (archive.medias.has_medias) {
+      const header = await archive.medias.getProfileBannerOf(archive.user, false) as Blob;
+  
+      if (header && this.active) {
+        this.setState({
+          header_url: URL.createObjectURL(header),
+        });
+      }
+    }
+  }
+
+
+  /* ------------------------------------------- */
+  /* EVENTS TRIGGERED BY BUTTONS OR ARCHIVE LOAD */
+  /* ------------------------------------------- */
+
   onSavedArchiveSelect = async (info: SavedArchiveInfo) => {
     this.setState({
       loaded: "",
@@ -264,44 +337,6 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     this.timer = new Timer();
   }
 
-  componentDidMount() {
-    setPageTitle();
-    window.DEBUG.Archive = this;
-
-    setTimeout(() => {
-      const card = this.card_ref.current;
-      if (card) {
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-          card.addEventListener(eventName, this.handleEventPropagation, true);
-        });
-  
-        ['dragenter', 'dragover'].forEach(eventName => {
-          card.addEventListener(eventName, this.handleDragEnter, true);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-          card.addEventListener(eventName, this.handleDragEnd, true);
-        });
-  
-        ['drop'].forEach(eventName => {
-          card.addEventListener(eventName, this.handleDrop, true);
-        });
-      }
-    }, 200);
-  }
-
-  componentWillUnmount() {
-    this.active = false;
-
-    if (SETTINGS.archive) {
-      SETTINGS.archive.events.removeAllListeners('error');
-      SETTINGS.archive.events.removeAllListeners('read');
-      // Do not cancel ready, because it will properly init archive.
-    }
-
-    delete window.DEBUG.Archive;
-  }
-
   // Load archive inside SETTINGS.archive
   loadArchive(e: React.ChangeEvent<HTMLInputElement> | File) {
     let f: File | Promise<JSZip>;
@@ -316,74 +351,176 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     if (f && f instanceof File) {
       const filename = f.name;
 
-      SETTINGS.archive = new TwitterArchive(f);
+      try {
+        SETTINGS.archive = new TwitterArchive(f);
 
-      console.log("Loading a new archive: ", filename);
+        this.checkOnReadyArchive();
+        console.log(SETTINGS.archive);
+  
+        console.log("Loading a new archive: ", filename);
+  
+        this.setState({
+          loaded: "",
+          in_load: filename,
+          is_error: false,
+          loading_state: "reading"
+        });
+        SETTINGS.archive_name = "";
+        SETTINGS.archive_in_load = filename;      
+      } catch (e) {
+        console.log(e);
+        this.setState({
+          is_error: true
+        });
+      }
+    }
+  }
 
+
+  /* ---------------- */
+  /* DRAG DROP EVENTS */
+  /* ---------------- */
+
+  handleEventPropagation = (e: Event) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  handleDragEnter = () => {
+    if (this.last_refresh + 200 > Date.now()) {
+      return;
+    }
+
+    if (!this.state.in_load && !this.state.in_drag)
       this.setState({
-        loaded: "",
-        in_load: filename,
-        is_error: false,
-        loading_state: "reading"
+        in_drag: true
       });
-      SETTINGS.archive_name = "";
-      SETTINGS.archive_in_load = filename;
+  };
 
-      this.checkOnReadyArchive();
+  handleDragEnd = () => {
+    this.last_refresh = Date.now();
+
+    if (!this.state.in_load && this.state.in_drag)
+      this.setState({
+        in_drag: false
+      });
+  };
+
+  handleDrop = (e: Event) => {
+    if (!this.state.in_load) {
+      this.setState({
+        in_drag: false
+      });
+  
+      const files = (e as DragEvent).dataTransfer.files;
+      console.log(e, files[0]);
+  
+      if (files && files.length) {
+        this.loadArchive(files[0]);
+      }
     }
+  };
+
+
+  /* ------------ */
+  /* QUICK DELETE */
+  /* ------------ */
+
+  handleModalOpen = () => {
+    this.setState({ quick_delete_open: true });
   }
 
-  getLoadingMessage() {
-    switch (this.state.loading_state) {
-      case "dm_read":
-        return LANG.reading_dms;
-      case "extended_read":
-        return LANG.reading_fav_moments_other;
-      case "indexing":
-        return LANG.indexing_tweets;
-      case "reading":
-        return LANG.unzipping;
-      case "tweet_read":
-        return LANG.reading_tweets;
-      case "user_read":
-        return LANG.reading_user_infos;
-      case "prefetch":
-        return LANG.gathering_user_data;
-      case "read_save":
-        return LANG.reading_saved_archive;
-    }
+  handleModalClose = () => {
+    this.setState({ quick_delete_open: false });
   }
 
-  calcTruncated() {
-    const l = this.state.loaded.length;
-    if (l > 40) {
-      const p1 = this.state.loaded.slice(0, 13);
-      const p2 = this.state.loaded.slice(l - 10, l);
-      
-      return `${p1}...${p2}`;
-    }
-    return this.state.loaded;
-  }
-
-  emptyArchive() {
+  modalQuickDelete() {
     return (
-      <div>
-        <Typography className={styles.title} variant="h5" component="h2" color="textSecondary">
-          {LANG.load_an_archive}
-        </Typography>
+      <Dialog
+        open={this.state.quick_delete_open}
+        onClose={this.handleModalClose}
+        scroll="body"
+        classes={{
+          paper: styles.modal_paper
+        }}
+      >
+        {this.state.quick_delete_open ? <QuickDelete onClose={this.handleModalClose} /> : ""}
+      </Dialog>
+    );
+  }
 
-        <Typography>
-          {LANG.no_archive_loaded}
-          <br />
-          {LANG.load_or_drag_drop}
-        </Typography>
+
+  /* ------- */
+  /* GETTERS */
+  /* ------- */
+
+  get is_available_for_loading() {
+    if (this.state.in_drag) {
+      return false;
+    }
+    else if (this.state.loaded) {
+      // Chargée
+      return true
+    }
+    else if (this.state.in_load) {
+      // En charge
+      return false
+    }
+    else if (this.state.is_error) {
+      // Si erreur
+      return true;
+    }
+    else {
+      // Aucune chargée
+      return true;
+    }
+  }
+
+  get has_archive_loaded() {
+    return !!this.state.loaded;
+  }
+
+
+  /* -------------- */
+  /* VUES - ACTIONS */
+  /* -------------- */
+
+  clickOnInput() {
+    (this.root_ref.current.querySelector('[data-archive-input]') as HTMLElement).click();
+  }
+
+  loadRightActions() {
+    if (!this.state.in_load && !this.state.in_drag) {
+      return this.loadButton();
+    }
+  }
+
+  loadButton() {
+    return (
+      <div className="center-space-between">
+        <input type="file" data-archive-input="" onChange={(e) => this.loadArchive(e)} hidden />
+
+        {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
       </div>
     );
   }
 
+  buttonQuickDelete() {
+    return (
+      <Button color="secondary" onClick={this.handleModalOpen}>
+        {LANG.quick_delete}
+      </Button>
+    );
+  }
+
+
+  /* -------------- */
+  /* VUES - CONTENT */
+  /* -------------- */
+
   errorLoad() {
     return (
-      <div>
+      <React.Fragment>
         <Typography variant="h5" component="h2" className={styles.title} color="error">
           {LANG.error}
         </Typography>
@@ -399,15 +536,25 @@ export default class Archive extends React.Component<{}, ArchiveState> {
             {LANG.omg_what_happend}
           </MUILink>
         </ArchiveLoadErrorDialog>}
-      </div>
+      </React.Fragment>
     );
   }
 
   loaded() {
     return (
-      <div>
+      <div className={this.props.classes.loadedArchive}>
+        <div className={this.props.classes.loadedAvatar}>
+          <AvatarArchive />
+          <span style={{ gridArea: 'na', alignSelf: 'end', fontWeight: 300, fontSize: '1.6rem' }}>
+            {SETTINGS.archive.info.user.full_name}
+          </span>
+          <span style={{ gridArea: 'sn', alignSelf: 'start', fontWeight: 300, fontSize: '1.15rem' }}>
+            @{SETTINGS.archive.user.screen_name}
+          </span>
+        </div>
+
         <Typography variant="h5" component="h2" className={styles.title}>
-          <span className={styles.filename}>{this.calcTruncated()}</span> {LANG.is_loaded}.
+          <span className={styles.filename}>{truncateText(this.state.loaded)}</span> {LANG.is_loaded}.
         </Typography>
 
         <Typography>
@@ -464,12 +611,65 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     );
   }
 
-  inLoad() {
-    const msg = this.getLoadingMessage();
+  /// TEMP : OK
+
+  howToLoadMessage() {
+    if (this.state.loaded) {
+      // Chargée
+      return "";
+    }
+    else if (this.state.in_load) {
+      // En charge
+      return "";
+    }
+    else if (this.state.is_error) {
+      // Si erreur
+      return "";
+    }
 
     return (
-      <div>
-        <Typography variant="h5" component="h2" className={styles.title}>
+      <Typography color="textSecondary" className={this.props.classes.headerText}>
+        {LANG.how_to_load_p1} <MUILink 
+          href="#" 
+          onClick={() => this.setState({ how_to_dl_open: true })}
+        >
+          {" "}{LANG.follow_the_guide}
+        </MUILink>.
+      </Typography>
+    );
+  }
+
+  emptyArchive() {
+    return (
+      <React.Fragment>
+        <div className={styles.dragdrop_no_drop} onClick={() => this.clickOnInput()}>
+          <Typography className={styles.title} variant="h5" component="h2" color="textSecondary">
+            {LANG.load_an_archive}
+          </Typography>
+
+          <Typography>
+            <strong>{LANG.click_here_to_load}</strong>.
+            {/* {LANG.no_archive_loaded} */}
+            <br />
+            {/* {LANG.load_or_drag_drop} */}
+            {LANG.save_or_drag_drop}
+          </Typography>
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  inLoad() {
+    const msg = loadingMessage(this.state.loading_state);
+
+    return (
+      <div className={this.props.classes.inLoad}>
+        <Typography 
+          variant="h4" 
+          component="h2" 
+          style={{ fontWeight: 200, letterSpacing: '-.1rem' }} 
+          className={styles.title}
+        >
           {LANG.loading}
         </Typography>
         <Typography className={styles.subtitle}>
@@ -481,50 +681,6 @@ export default class Archive extends React.Component<{}, ArchiveState> {
         </CenterComponent>
       </div>
     );  
-  }
-
-  loadButton() {
-    return (
-      <div className="center-space-between">
-        <Button color="primary" onClick={() => (this.root_ref.current.querySelector('[data-archive-input]') as HTMLElement).click()}>
-          {LANG.load}{this.state.loaded || this.state.is_error ? " " + LANG.another_f : ""} archive
-        </Button>
-        <input type="file" data-archive-input="" onChange={(e) => this.loadArchive(e)} hidden />
-
-        {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
-      </div>
-    );
-  }
-
-  buttonQuickDelete() {
-    return (
-      <Button color="secondary" onClick={this.handleModalOpen}>
-        {LANG.quick_delete}
-      </Button>
-    );
-  }
-
-  handleModalOpen = () => {
-    this.setState({ quick_delete_open: true });
-  }
-
-  handleModalClose = () => {
-    this.setState({ quick_delete_open: false });
-  }
-
-  modalQuickDelete() {
-    return (
-      <Dialog
-        open={this.state.quick_delete_open}
-        onClose={this.handleModalClose}
-        scroll="body"
-        classes={{
-          paper: styles.modal_paper
-        }}
-      >
-        {this.state.quick_delete_open ? <QuickDelete onClose={this.handleModalClose} /> : ""}
-      </Dialog>
-    );
   }
 
   dragdrop() {
@@ -558,77 +714,11 @@ export default class Archive extends React.Component<{}, ArchiveState> {
     }
   }
 
-  loadRightActions() {
-    if (!this.state.in_load && !this.state.in_drag) {
-      return this.loadButton();
-    }
-  }
 
-  handleEventPropagation = (e: Event) => {
-    e.stopPropagation();
-    e.preventDefault();
-  };
+  /* ------------- */
+  /* VUES - RENDER */
+  /* ------------- */
 
-  handleDragEnter = () => {
-    if (this.last_refresh + 200 > Date.now()) {
-      return;
-    }
-
-    if (!this.state.in_load && !this.state.in_drag)
-      this.setState({
-        in_drag: true
-      });
-  };
-
-  handleDragEnd = () => {
-    this.last_refresh = Date.now();
-
-    if (!this.state.in_load && this.state.in_drag)
-      this.setState({
-        in_drag: false
-      });
-  };
-
-  handleDrop = (e: Event) => {
-    if (!this.state.in_load) {
-      this.setState({
-        in_drag: false
-      });
-  
-      const files = (e as DragEvent).dataTransfer.files;
-  
-      if (files && files.length) {
-        this.loadArchive(files[0]);
-      }
-    }
-  };
-
-  get is_available_for_loading() {
-    if (this.state.in_drag) {
-      return false;
-    }
-    else if (this.state.loaded) {
-      // Chargée
-      return true
-    }
-    else if (this.state.in_load) {
-      // En charge
-      return false
-    }
-    else if (this.state.is_error) {
-      // Si erreur
-      return true;
-    }
-    else {
-      // Aucune chargée
-      return true;
-    }
-  }
-
-  get has_archive_loaded() {
-    return !!this.state.loaded;
-  }
-  
   render() {
     const actions = this.loadRightActions();
     const can_save_archive = this.has_archive_loaded && (
@@ -636,41 +726,165 @@ export default class Archive extends React.Component<{}, ArchiveState> {
       SETTINGS.can_save_other_users_archives
     );
 
+    const styles_of_header: any = {};
+    const styles_of_header_text: any = {};
+    if (this.state.header_url) {
+      styles_of_header.backgroundImage = `url(${this.state.header_url})`;
+    }
+    else if (this.state.loaded && SETTINGS.archive.user.profile_banner_url) {
+      styles_of_header.backgroundImage = `url(${SETTINGS.archive.user.profile_banner_url})`;
+    }
+
+    if (this.state.header_url || (this.state.loaded && SETTINGS.archive.user.profile_banner_url)) {
+      styles_of_header.backgroundSize = "cover";
+      styles_of_header.minHeight = 280;
+      styles_of_header_text.textShadow = '0 0 4px #000';
+      styles_of_header_text.opacity = 0;
+    }
+
     return (
-      <div ref={this.root_ref} className={styles.root}>
-        <AppBar position="relative">
-          <Toolbar>
-            <Typography variant="h6" color="inherit">
+      <div ref={this.root_ref} className={this.props.classes.root}>
+        <div className={styles.container}>
+          <header className={this.props.classes.header} style={styles_of_header}>
+            <Typography variant="h2" className={this.props.classes.mainHeader} style={styles_of_header_text}>
               Archive
             </Typography>
-          </Toolbar>
-        </AppBar>
+          </header>
+
+          <div className={this.props.classes.main}>
+            {this.howToLoadMessage()}
+
+            <div className={this.props.classes.archiveLoader} ref={this.card_ref}>
+              {this.loadRightContent()}
+
+              {actions}
+
+            </div>
+
+            <Marger size="1rem" />
+
+            <div className={this.props.classes.savedArchives}>
+              <AvailableSavedArchives 
+                canSave={can_save_archive} 
+                block={!this.is_available_for_loading} 
+                onLoad={this.onSavedArchiveSelect} 
+              />
+            </div>
+          </div>
+        </div>
 
         {this.modalQuickDelete()}
-  
-        <Container maxWidth="sm" className={styles.container}>
-          <Card innerRef={this.card_ref} className={styles.card}>
-            <CardContent>
-              {this.loadRightContent()}
-            </CardContent>
-            {actions && <CardActions>
-              {actions}
-            </CardActions>}
-          </Card>
-
-          <Marger size=".5rem" />
-          
-          <AvailableSavedArchives 
-            canSave={can_save_archive} 
-            block={!this.is_available_for_loading} 
-            onLoad={this.onSavedArchiveSelect} 
-          />
-        </Container>
+        <DownloadGDPRModal 
+          open={this.state.how_to_dl_open} 
+          onClose={() => this.setState({ how_to_dl_open: false })} 
+        />
       </div>
     );
   }
 }
 
+export default withStyles(theme => {
+  let bg_img = "";
+  if (theme.palette.type === 'light') {
+    bg_img = `linear-gradient(144deg, rgba(0,120,215,1) 16%, rgba(8,204,195,1) 93%)`;
+  }
+  else {
+    bg_img = `linear-gradient(144deg, #344660 16%, #08ccc3a6 93%)`;
+  }
+
+  return {
+    root: {
+      flexGrow: 1,
+      width: '100%',
+    },
+    header: {
+      backgroundImage: bg_img,
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      padding: '2rem 5vw 2rem 5vw',
+      boxSizing: 'border-box',
+      minHeight: 150,
+      transition: 'min-height 1s ease',
+      transitionDelay: '150ms',
+    },
+    main: {
+      padding: '.5rem 5vw 2rem 5vw',
+      boxSizing: 'border-box',
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    mainHeader: {
+      fontWeight: 200,
+      color: 'white',
+      fontSize: '4.5rem',
+      letterSpacing: '-.2rem',
+      transition: 'opacity .5s ease',
+      transitionDelay: '200ms',
+    },
+    headerText: {
+      fontSize: '1.3rem',
+      marginTop: '1rem',
+      marginBottom: '2rem',
+    },
+    inLoad: {
+      padding: '1rem .3rem',
+    },
+    loadedArchive: {
+      marginTop: '1.2rem',
+    },
+    loadedAvatar: {
+      display: 'grid',
+      gridTemplateAreas: "\"p na\" \"p sn\"",
+      gridTemplateColumns: "min-content auto",
+      gridTemplateRows: '1fr 1fr',
+      columnGap: '.5rem',
+    },
+  };
+})(Archive);
+
+const useStylesAvatar = makeStyles(theme => ({
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+}));
+
+function AvatarArchive() {
+  const classes = useStylesAvatar();
+  const archive = SETTINGS.archive;
+
+  const [url, setUrl] = React.useState<string>(undefined);
+
+  React.useEffect(() => {
+    if (!url && archive.medias.has_medias) {
+      // Download picture from archive
+      const profile_pic = archive.medias.getProfilePictureOf(archive.user, false) as Promise<Blob>;
+  
+      profile_pic && profile_pic.then(img => {
+        if (img) {
+          setUrl(URL.createObjectURL(img));
+        }
+      }).catch(() => {});
+    }
+    return () => {
+      if (url) {
+        URL.revokeObjectURL(url);
+      }
+    };
+  }, [url]);
+
+  return (
+    <Avatar 
+      style={{ gridArea: 'p' }} 
+      alt={archive.user.screen_name} 
+      src={url ?? archive.user.profile_img_url} 
+      className={classes.large}
+    >
+      {archive.user.screen_name.slice(0, 1)}
+    </Avatar>
+  );
+}
 
 /// -------------------
 /// *  ARCHIVE SAVER  *

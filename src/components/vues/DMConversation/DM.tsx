@@ -110,7 +110,7 @@ export default class DM extends React.Component<DMProp, DMState> {
   componentDidMount() {
     const media = this.dm.mediaUrls[0];
 
-    if (media && media.startsWith('https://ton.twitter.com/')) {
+    if (media && media.startsWith('https://ton.twitter.com/') && SETTINGS.archive.medias.has_medias) {
       SETTINGS.archive.medias.fromDmMediaUrl(media, this.is_group, false)
         .then(blob => {
           this.setState({
