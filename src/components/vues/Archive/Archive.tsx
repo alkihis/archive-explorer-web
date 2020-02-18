@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import styles from './Archive.module.scss';
 import { setPageTitle, dateFormatter } from '../../../helpers';
-import { Typography, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, FormControlLabel, Checkbox, withStyles, makeStyles } from '@material-ui/core';
+import { Typography, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, FormControlLabel, Checkbox, withStyles, Container, Hidden } from '@material-ui/core';
 import { CenterComponent, Marger } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState, TwitterHelpers } from 'twitter-archive-reader';
@@ -22,7 +22,7 @@ import DeleteAllIcon from '@material-ui/icons/DeleteSweep';
 import clsx from 'clsx';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import ArchiveLoadErrorDialog from './ArchiveLoadErrorDialog';
-import { truncateText, loadingMessage } from './ArchiveHelpers';
+import { truncateText, loadingMessage, AvatarArchive } from './ArchiveHelpers';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
 
 type ArchiveState = {
@@ -485,7 +485,7 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
   /* VUES - ACTIONS */
   /* -------------- */
 
-  clickOnInput() {
+  clickOnInput = () => {
     (this.root_ref.current.querySelector('[data-archive-input]') as HTMLElement).click();
   }
 
@@ -497,18 +497,40 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
 
   loadButton() {
     return (
-      <div className="center-space-between">
+      <React.Fragment>
         <input type="file" data-archive-input="" onChange={(e) => this.loadArchive(e)} hidden />
 
-        {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
-      </div>
+        {(this.state.loaded || this.state.is_error) && 
+        <div className={clsx("center-space-between", this.props.classes.actions)}>
+          {this.buttonLoad()}
+          {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
+        </div>}
+      </React.Fragment>
     );
   }
 
   buttonQuickDelete() {
     return (
-      <Button color="secondary" onClick={this.handleModalOpen}>
+      <Button 
+        style={{ marginTop: '.5rem' }} 
+        color="secondary" 
+        variant="outlined" 
+        onClick={this.handleModalOpen}
+      >
         {LANG.quick_delete}
+      </Button>
+    );
+  }
+
+  buttonLoad() {
+    return (
+      <Button
+        style={{ marginTop: '.5rem' }} 
+        color="primary" 
+        variant="outlined" 
+        onClick={this.clickOnInput}
+      >
+        {LANG.load_another_archive}
       </Button>
     );
   }
@@ -520,29 +542,87 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
 
   errorLoad() {
     return (
-      <React.Fragment>
-        <Typography variant="h5" component="h2" className={styles.title} color="error">
+      <div className={this.props.classes.isError}>
+        <Typography 
+          variant="h4" 
+          component="h2" 
+          style={{ fontWeight: 200, letterSpacing: '-.08rem' }} 
+          className={styles.title}
+          color="error"
+        >
           {LANG.error}
         </Typography>
-
-        <Typography>
+        
+        <Typography style={{ fontWeight: 200, fontSize: '1.2rem' }}>
           {LANG.archive_bad_format}
         </Typography>
 
         {typeof this.state.is_error !== 'boolean' && <ArchiveLoadErrorDialog 
           detail={this.state.is_error}
         >
-          <MUILink href="#">
+          <MUILink href="#" style={{ fontSize: '1.2rem' }}>
             {LANG.omg_what_happend}
           </MUILink>
         </ArchiveLoadErrorDialog>}
-      </React.Fragment>
+      </div>
+    );  
+  }
+
+  tweetDmCount() {
+    const ar = SETTINGS.archive;
+    const cl = this.props.classes;
+
+    return (
+      <>
+        <Hidden smDown>
+          <Typography>
+            <span className={cl.tweetNumber}>
+              {ar.tweets.length}
+            </span>
+            <span className={cl.tweetText}>
+              {" tweets" + (ar.is_gdpr ? ", " : "")}
+            </span>
+            
+            {ar.is_gdpr && <>
+              <span className={cl.tweetNumber}>
+                {ar.messages?.count ?? 0} 
+              </span>
+              <span className={cl.tweetText}>
+                {" "}{LANG.direct_messages.toLowerCase()} 
+              </span>
+            </>}
+          </Typography>
+        </Hidden>
+        <Hidden mdUp>
+          <Typography>
+            <span className={cl.tweetNumber}>
+              {ar.tweets.length}
+            </span>
+            <span className={cl.tweetText}>
+              {" tweets"}
+            </span>
+            
+            {ar.is_gdpr && <>
+              <br />
+              <span className={cl.tweetNumber} style={{ marginTop: '-1rem', display: 'inline-block' }}>
+                {ar.messages?.count ?? 0} 
+              </span>
+              <span className={cl.tweetText}>
+                {" "}{LANG.direct_messages.toLowerCase()} 
+              </span>
+            </>}
+          </Typography>
+        </Hidden>
+      </>
     );
   }
 
   loaded() {
+    const cl = this.props.classes;
+
     return (
       <div className={this.props.classes.loadedArchive}>
+        {/* OK ! */}
         <div className={this.props.classes.loadedAvatar}>
           <AvatarArchive />
           <span style={{ gridArea: 'na', alignSelf: 'end', fontWeight: 300, fontSize: '1.6rem' }}>
@@ -553,43 +633,36 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
           </span>
         </div>
 
-        <Typography variant="h5" component="h2" className={styles.title}>
-          <span className={styles.filename}>{truncateText(this.state.loaded)}</span> {LANG.is_loaded}.
-        </Typography>
+        <Marger size=".5rem" />
 
-        <Typography>
-          {LANG.archive_created} {!SETTINGS.archive.is_gdpr && // Hide date if gdpr (not accurate)
-          <span>
-            {LANG.on_date} {dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", SETTINGS.archive.generation_date)}
-          </span>} {LANG.by_date} {SETTINGS.archive.info.user.full_name} • <span className={styles.bio}>@{SETTINGS.archive.user.screen_name}</span>.
-        </Typography>
+        {this.tweetDmCount()}
 
-        <Typography>
-          {LANG.account} #<span className={styles.bold}>{SETTINGS.archive.info.user.id}</span> {LANG.created_at} {
-            dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y H:i" : "Y-m-d H:i", TwitterHelpers.parseTwitterDate(SETTINGS.archive.info.user.created_at))
-          }.
-        </Typography>
-
-        <Typography variant="h6" style={{marginTop: '.5rem'}}>
-          <span className={styles.bold}>{SETTINGS.archive.tweets.length}</span> tweets
-        </Typography>
-
-        { SETTINGS.archive.is_gdpr &&
-          <Typography style={{marginTop: '.3rem'}} className={styles.dmsinfowrapper}>
-            <span className={styles.dmsinfo}>{SETTINGS.archive.messages.count}</span> {LANG.direct_messages_in} 
-            <span className={styles.dmsinfo}> {SETTINGS.archive.messages.length}</span> conversations
-          </Typography>
-        }
-
-        <Divider className="divider-margin" />
-
-        <Typography>
+        <Typography color="textSecondary">
           <span className={styles.bio}>{SETTINGS.archive.info.user.bio}</span>
         </Typography>
 
-        {!SETTINGS.is_owner && <div>
-          <Divider className="divider-margin" />
 
+        <Marger size=".5rem" />
+        <Divider />
+        <Marger size=".5rem" />
+
+        <Typography className={cl.accountSummary}>
+          {LANG.twitter_account} #<span className={styles.bold}>{SETTINGS.archive.info.user.id}</span> {LANG.created_at} {
+            dateFormatter(
+              SETTINGS.lang === "fr" ? "d/m/Y H:i" : "Y-m-d H:i", 
+              TwitterHelpers.parseTwitterDate(SETTINGS.archive.info.user.created_at)
+            )
+          }.
+        </Typography>
+
+        <Marger size=".15rem" />
+
+        <Typography className={cl.fileHeader} color="textSecondary">
+          {LANG.file}: <span className={cl.filename}>{truncateText(this.state.loaded)}</span>.
+        </Typography>
+
+        {!SETTINGS.is_owner && <div>
+          <Marger size=".25rem" />
           <Typography className={styles.cannot_delete}>
             {LANG.dont_own_archive}
           </Typography>
@@ -600,8 +673,7 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         </div>}
 
         {SETTINGS.is_owner && SETTINGS.expired && <div>
-          <Divider className="divider-margin" />
-
+          <Marger size=".20rem" />
           <Typography className={styles.cannot_delete}>
             {LANG.credentials_expired_cant_deleted} 
             {LANG.logout_and_in_in} <Link to="/settings/">{LANG.settings}</Link>.
@@ -610,8 +682,6 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
       </div>
     );
   }
-
-  /// TEMP : OK
 
   howToLoadMessage() {
     if (this.state.loaded) {
@@ -684,8 +754,10 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
   }
 
   dragdrop() {
+    const sty = this.state.loaded || this.state.is_error ? { marginTop: '1rem' } : {};
+
     return (
-      <div className={styles.dragdrop}>
+      <div className={styles.dragdrop} style={sty}>
         <FileUploadIcon className={styles.fu_icon} />
         <h3 className={styles.fu_text}>{LANG.drop_archive_here}</h3>
       </div>
@@ -727,7 +799,8 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
     );
 
     const styles_of_header: any = {};
-    const styles_of_header_text: any = {};
+    const has_custom_img = !!(this.state.header_url || (this.state.loaded && SETTINGS.archive.user.profile_banner_url));
+
     if (this.state.header_url) {
       styles_of_header.backgroundImage = `url(${this.state.header_url})`;
     }
@@ -735,30 +808,27 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
       styles_of_header.backgroundImage = `url(${SETTINGS.archive.user.profile_banner_url})`;
     }
 
-    if (this.state.header_url || (this.state.loaded && SETTINGS.archive.user.profile_banner_url)) {
-      styles_of_header.backgroundSize = "cover";
-      styles_of_header.minHeight = 280;
-      styles_of_header_text.textShadow = '0 0 4px #000';
-      styles_of_header_text.opacity = 0;
-    }
-
     return (
       <div ref={this.root_ref} className={this.props.classes.root}>
         <div className={styles.container}>
-          <header className={this.props.classes.header} style={styles_of_header}>
-            <Typography variant="h2" className={this.props.classes.mainHeader} style={styles_of_header_text}>
+          <header 
+            data-custom-img={has_custom_img ? "true" : undefined} 
+            data-loaded={this.state.loaded ? "true" : undefined} 
+            className={this.props.classes.header} 
+            style={styles_of_header}
+          >
+            <Typography variant="h2" className={this.props.classes.mainHeader}>
               Archive
             </Typography>
           </header>
 
-          <div className={this.props.classes.main}>
+          <Container className={this.props.classes.main}>
             {this.howToLoadMessage()}
 
             <div className={this.props.classes.archiveLoader} ref={this.card_ref}>
               {this.loadRightContent()}
 
               {actions}
-
             </div>
 
             <Marger size="1rem" />
@@ -770,7 +840,7 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
                 onLoad={this.onSavedArchiveSelect} 
               />
             </div>
-          </div>
+          </Container>
         </div>
 
         {this.modalQuickDelete()}
@@ -797,8 +867,25 @@ export default withStyles(theme => {
       flexGrow: 1,
       width: '100%',
     },
+    actions: {
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+      },
+      marginTop: '1rem',
+    },
+    accountSummary: {
+      fontSize: '1.2rem',
+    },
+    fileHeader: {
+      fontSize: '1.05rem',
+      fontWeight: 300,
+    },
+    filename: {
+      fontWeight: 'bold',
+    },
     header: {
       backgroundImage: bg_img,
+      backgroundPosition: 'bottom',
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
@@ -807,9 +894,24 @@ export default withStyles(theme => {
       minHeight: 150,
       transition: 'min-height 1s ease',
       transitionDelay: '150ms',
+      '&[data-loaded="true"] h2': {
+        opacity: 0,
+      },
+      '&[data-custom-img="true"]': {
+        backgroundSize: "cover",
+        minHeight: 280,
+        [theme.breakpoints.down('sm')]: {
+          minHeight: 200,
+        },
+        '& h2': {
+          textShadow: '0 0 4px #000',
+          opacity: 0,
+        },
+      },
     },
     main: {
-      padding: '.5rem 5vw 2rem 5vw',
+      paddingTop: '.5rem',
+      paddingBottom: '2rem',
       boxSizing: 'border-box',
       display: 'flex',
       flexDirection: 'column',
@@ -819,8 +921,7 @@ export default withStyles(theme => {
       color: 'white',
       fontSize: '4.5rem',
       letterSpacing: '-.2rem',
-      transition: 'opacity .5s ease',
-      transitionDelay: '200ms',
+      transition: 'opacity .3s ease',
     },
     headerText: {
       fontSize: '1.3rem',
@@ -828,6 +929,9 @@ export default withStyles(theme => {
       marginBottom: '2rem',
     },
     inLoad: {
+      padding: '1rem .3rem',
+    },
+    isError: {
       padding: '1rem .3rem',
     },
     loadedArchive: {
@@ -839,52 +943,19 @@ export default withStyles(theme => {
       gridTemplateColumns: "min-content auto",
       gridTemplateRows: '1fr 1fr',
       columnGap: '.5rem',
+      marginTop: '-1.2rem',
+    },
+    tweetNumber: {
+      fontWeight: 200,
+      fontSize: '2.5rem',
+    },
+    tweetText: {
+      fontWeight: 200,
+      fontSize: '1.1rem',
+      marginLeft: '-.2rem',
     },
   };
 })(Archive);
-
-const useStylesAvatar = makeStyles(theme => ({
-  large: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
-}));
-
-function AvatarArchive() {
-  const classes = useStylesAvatar();
-  const archive = SETTINGS.archive;
-
-  const [url, setUrl] = React.useState<string>(undefined);
-
-  React.useEffect(() => {
-    if (!url && archive.medias.has_medias) {
-      // Download picture from archive
-      const profile_pic = archive.medias.getProfilePictureOf(archive.user, false) as Promise<Blob>;
-  
-      profile_pic && profile_pic.then(img => {
-        if (img) {
-          setUrl(URL.createObjectURL(img));
-        }
-      }).catch(() => {});
-    }
-    return () => {
-      if (url) {
-        URL.revokeObjectURL(url);
-      }
-    };
-  }, [url]);
-
-  return (
-    <Avatar 
-      style={{ gridArea: 'p' }} 
-      alt={archive.user.screen_name} 
-      src={url ?? archive.user.profile_img_url} 
-      className={classes.large}
-    >
-      {archive.user.screen_name.slice(0, 1)}
-    </Avatar>
-  );
-}
 
 /// -------------------
 /// *  ARCHIVE SAVER  *

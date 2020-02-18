@@ -45,12 +45,8 @@
 }
 
 .bio {
-  font-size: .95rem;
-  color: lighten(#000000, 35);
-
-  :global .dark :local & {
-    color: lighten($color: #000000, $amount: 75);
-  }
+  font-size: 1.2rem;
+  font-weight: 200;
 }
 
 .filename {
