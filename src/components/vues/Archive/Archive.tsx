@@ -124,11 +124,20 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
       // Do not cancel ready, because it will properly init archive.
     }
 
-    if (this.state.header_url) {
-      URL.revokeObjectURL(this.state.header_url);
-    }
+    this.unsetHeaderUrl();
 
     delete window.DEBUG.Archive;
+  }
+
+  unsetHeaderUrl() {
+    if (this.state.header_url) {
+      URL.revokeObjectURL(this.state.header_url);
+
+      if (this.active)
+        this.setState({
+          header_url: undefined
+        });
+    }
   }
 
 
@@ -324,6 +333,8 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
   /* ------------------------------------------- */
 
   onSavedArchiveSelect = async (info: SavedArchiveInfo) => {
+    this.unsetHeaderUrl();
+
     this.setState({
       loaded: "",
       in_load: info.name,
@@ -362,6 +373,8 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         console.log(SETTINGS.archive);
   
         console.log("Loading a new archive: ", filename);
+
+        this.unsetHeaderUrl();
   
         this.setState({
           loaded: "",

@@ -95,15 +95,44 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
     });
   }
 
+  /** Get the number of selected tweets */
   get selected_count() {
     return this.selected.length;
   }
 
+  /** Get the selected tweets */
   get selected() : string[] {
     return [].concat(...[...this.state.selected].map(m => {
       const [year, month] = m.split('-', 2);
       return this.index[year][month];
     }));
+  }
+
+  /** Get the total count of selectible tweets */
+  get total() {
+    return Object.values(this.index).reduce((acc, current_year) => {
+      return acc + Object.values(current_year)
+        .reduce(
+          (second_acc, current_month) => second_acc + current_month.length, 
+        0);
+    }, 0);
+  }
+
+  isPartOfYearSelected(year: string) {
+    return [...this.state.selected].some(e => e.startsWith(year + "-"));
+  }
+
+  isAllSelected() {
+    return this.selected_count === this.total;
+  }
+
+  isAllYearSelected(year: string | number) {
+    year = Number(year);
+    const months = Object.keys(this.index[year]);
+
+    const years_label = months.map(m => String(year) + "-" + m);
+
+    return years_label.every(year => this.state.selected.has(year));
   }
 
   nextStep = () => {
@@ -160,16 +189,42 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
     });
   };
 
+  selectYear = (e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    const v = e.target.value;
+
+    if (checked) {
+      this.selectAYear(v);
+    }
+    else {
+      this.unselectAYear(v);
+    }
+  };
+
+  checkboxSelectAll = (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    if (checked) {
+      this.selectAll();
+    }
+    else {
+      this.unselectAll();
+    }
+  };
+
   generateMonthsOfYear(year: string) {
+    const part_selected = this.isPartOfYearSelected(year);
+    const all_checked = this.isAllYearSelected(year);
+
     return (
       <div>
         <div className={classes.buttons_month}>
-          <Button color="primary" onClick={() => this.selectAYear(year)}>
-            {LANG.select_all}
-          </Button>
-          <Button color="secondary" onClick={() => this.unselectAYear(year)}>
-            {LANG.unselect_all}
-          </Button>
+          <FormControlLabel
+            control={<Checkbox 
+              checked={all_checked} 
+              indeterminate={!all_checked && part_selected}
+              onChange={this.selectYear} 
+              value={year}
+            />}
+            label={LANG.select_all}
+          />
         </div>
 
         <FormGroup>
@@ -214,6 +269,7 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
 
   monthSelector() {
     const c = this.selected_count;
+    const all_checked = this.isAllSelected();
 
     return (
       <div className={classes.month_selector_root}>
@@ -221,16 +277,19 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
           <span className="bold">{c}</span> tweet{c > 1 ? "s" : ""} {LANG.selected_without_s}{c > 1 ? LANG.past_s : ""}.
         </Typography>
 
-        {this.generateYears()}
-
         <div className={classes.select_all_holder}>
-          <Button color="primary" onClick={() => this.selectAll()}>
-            {LANG.select_all}
-          </Button>
-          <Button color="secondary" onClick={() => this.unselectAll()}>
-            {LANG.unselect_all}
-          </Button>
+          <FormControlLabel
+            control={<Checkbox 
+              checked={all_checked} 
+              indeterminate={!all_checked && !!this.state.selected.size}
+              onChange={this.checkboxSelectAll} 
+              value="all"
+            />}
+            label={LANG.select_all}
+          />
         </div>
+
+        {this.generateYears()}
       </div>
     );
   }
