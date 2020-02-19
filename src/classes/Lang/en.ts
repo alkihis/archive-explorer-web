@@ -345,6 +345,7 @@ export default {
   confirm: "Confirm",
   sort_by_random: "Random sort",
   search_in_current_month: "Search in selected month/view",
+  media_count: 'Media count',
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

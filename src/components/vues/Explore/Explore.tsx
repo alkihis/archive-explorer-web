@@ -855,4 +855,39 @@ TweetSearcher.validators.push({
         return tweet => tweet.favorite_count === rts;
     }
   }
+}, {
+  keyword: 'medias',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator: (query, sep) => {
+    const medias = parseInt(query, 10);
+
+    if (isNaN(medias)) {
+      return;
+    }
+
+    function getMediaCount(tweet: PartialTweet) {
+      if (tweet.extended_entities && tweet.extended_entities.media) {
+        return tweet.extended_entities.media.length;
+      }
+
+      if (tweet.entities && tweet.entities.media) {
+        return tweet.entities.media.length;
+      }
+
+      return 0;
+    }
+
+    switch (sep) {
+      case ">":
+        return tweet => getMediaCount(tweet) > medias;
+      case ">=":
+        return tweet => getMediaCount(tweet) >= medias;
+      case "<":
+        return tweet => getMediaCount(tweet) < medias;
+      case "<=":
+        return tweet => getMediaCount(tweet) <= medias;
+      case ":":
+        return tweet => getMediaCount(tweet) === medias;
+    }
+  }
 });

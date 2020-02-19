@@ -115,7 +115,7 @@ function TweetText() {
   }
 
   return (
-    <Typography variant="body2" className="pre-wrap break-word" color="textSecondary" component="p">
+    <Typography variant="body2" className="pre-wrap break-word tweet-font tweet-text" color="textSecondary" component="p">
       {renderText()}
     </Typography>
   );

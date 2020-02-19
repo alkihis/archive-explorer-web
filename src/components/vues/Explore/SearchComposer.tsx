@@ -63,6 +63,11 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   type: 'number',
   operators: [":", ">=", ">", "<=", "<"],
   text: () => LANG.popularity,
+}, {
+  keyword: 'medias',
+  type: 'number',
+  operators: [":", ">=", ">", "<=", "<"],
+  text: () => LANG.media_count,
 }];
 
 /**

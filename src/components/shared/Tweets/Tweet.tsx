@@ -98,6 +98,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
 
     const avatar = user_pp.replace('_normal', '');
     const avatar_name = (this.original.user as PartialTweetUser).name.slice(0, 1);
+    const has_media = this.has_media;
 
     return (
       <TweetContext.Provider value={this.props.data}>
@@ -134,13 +135,13 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
             </a>}
           />
 
-          {this.has_media && <TweetImage />}
-          
-          <CardContent>
+          <CardContent style={{ paddingTop: has_media ? '0' : undefined }}>
             <TweetText />
           </CardContent>
 
-          <CardActions disableSpacing className={classes.card_action}>
+          {has_media && <TweetImage />}
+          
+          <CardActions disableSpacing className={classes.card_action + " tweet-font tweet-details"}>
             <TweetCheckbox 
               ref={this.checkbox}
               onChange={(_, checked) => { 
