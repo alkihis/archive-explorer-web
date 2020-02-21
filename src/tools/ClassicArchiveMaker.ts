@@ -33,7 +33,7 @@ export default new class ClassicArchiveMaker {
     const js_dir = created.folder("data").folder("js");
     const tweet_dir = js_dir.folder("tweets");
 
-    const tweet_index: {
+    let tweet_index: {
       "file_name": string,
       "year": number,
       "var_name": string,
@@ -45,6 +45,19 @@ export default new class ClassicArchiveMaker {
     for (const year in index) {
       for (const month in index[year]) {
         const tweets = Object.values(index[year][month]);
+
+        for (const tweet of tweets) {
+          if (tweet.entities) {
+            for (const type in tweet.entities) {
+              // Convert every indices to Number, otherwise it will cause problems.
+              // @ts-ignore
+              for (const e of tweet.entities[type]) {
+                e.indices = e.indices.map(Number);
+              }
+            }
+          }
+        }
+
         const full_month = String(month).padStart(2, "0");
         const file_name = `${year}_${full_month}.js`;
         const var_name = `tweets_${year}_${full_month}`;
@@ -53,7 +66,7 @@ export default new class ClassicArchiveMaker {
         tweet_dir.file(file_name, file);
 
         tweet_index.push({
-          file_name,
+          file_name: "data/js/tweets/" + file_name,
           year: Number(year),
           month: Number(month),
           tweet_count: tweets.length,
@@ -61,6 +74,14 @@ export default new class ClassicArchiveMaker {
         });
       }
     }
+
+    tweet_index = tweet_index.sort((a, b) => {
+      // Sort by the most recent FIRST (descending)
+      if (a.year !== b.year) {
+        return b.year - a.year;
+      }
+      return b.month - a.month;
+    });
 
     // Save the index
     js_dir.file("tweet_index.js", `var tweet_index = ` + JSON.stringify(tweet_index, null, 2));

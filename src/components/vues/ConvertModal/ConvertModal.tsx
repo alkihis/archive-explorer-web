@@ -18,6 +18,7 @@ export default function ConvertArchiveModal(props: { open?: boolean, onClose: ()
 
     setLoading(false);
     setLink("");
+    // eslint-disable-next-line
   }, [props.open]);
 
   function createArchive() {
@@ -31,7 +32,7 @@ export default function ConvertArchiveModal(props: { open?: boolean, onClose: ()
         setLink(URL.createObjectURL(blob));
       })
       .catch(e => {
-        toast(LANG.an_error_occurred);
+        toast(LANG.an_error_occurred, "error");
         console.error(e);
       })
       .finally(() => {
@@ -43,16 +44,19 @@ export default function ConvertArchiveModal(props: { open?: boolean, onClose: ()
     return (
       <React.Fragment>
         <DialogContentText>
-          Classic archive helps to read your tweets offline with a simple web viewer containing in archive files.
+          {LANG.create_archive_title}
         </DialogContentText>
 
         <DialogContentText color="error">
-          Those kind of archives does not contains anything except tweets. Do not substitute current archive with a classic archive,
-          or you will lose direct messages, medias, user informations like advertiser data, screen name history, email address and more.
+          {LANG.create_archive_p1}
+          <br />
+          <strong>
+            {LANG.create_archive_p2}
+          </strong>
         </DialogContentText>
 
         <DialogContentText color="error">
-          Classic archives are and should be only a way to view your tweets offline and are not supposed to be more.
+          {LANG.create_archive_p3}
         </DialogContentText>
       </React.Fragment>
     );
@@ -62,27 +66,40 @@ export default function ConvertArchiveModal(props: { open?: boolean, onClose: ()
     return (
       <React.Fragment>
         <DialogContentText>
-          Please wait during archive creation. This might take a while.
+          {LANG.archive_generation_wait}
         </DialogContentText>
         
         <CenterComponent style={{ marginTop: 15 }}>
-          <CircularProgress size={24} />
+          <CircularProgress size={48} />
         </CenterComponent>
       </React.Fragment>
     );
+  }
+
+  function getLinkName() {
+    const user = SETTINGS.archive.user;
+    const [year, month, day] = [
+      new Date().getFullYear(),
+      String(new Date().getMonth() + 1).padStart(2, "0"),
+      String(new Date().getDate()).padStart(2, "0"),
+    ];
+
+    return `${user.screen_name}-${year}-${month}-${day}.zip`;
   }
 
   function renderBaked() {
     return (
       <React.Fragment>
         <DialogContentText>
-          Your archive is ready.
+          {LANG.your_archive_is_ready}.
         </DialogContentText>
 
         <DialogContentText>
-          <Link href={link} download="archive.zip">
-            Download it here
-          </Link>.
+          <strong>
+            <Link href={link} download={getLinkName()}>
+              {LANG.click_here_to_download_it}
+            </Link>.
+          </strong>
         </DialogContentText>
       </React.Fragment>
     );
@@ -91,7 +108,7 @@ export default function ConvertArchiveModal(props: { open?: boolean, onClose: ()
   return (
     <Dialog open={!!props.open} onClose={loading ? undefined : props.onClose}>
       <DialogTitle>
-        Convert to classic archive
+        {LANG.create_classic_archive}
       </DialogTitle>
 
       <DialogContent>
@@ -103,13 +120,13 @@ export default function ConvertArchiveModal(props: { open?: boolean, onClose: ()
       <DialogActions>
         {!link && !loading && <React.Fragment>
           <Button color="primary" onClick={createArchive}>
-            Create offline archive
+            {LANG.create}
           </Button>  
         </React.Fragment>}
 
         {!loading && <React.Fragment>
           <Button color="secondary" onClick={props.onClose}>
-            Close
+            {LANG.close}
           </Button>  
         </React.Fragment>}
       </DialogActions>

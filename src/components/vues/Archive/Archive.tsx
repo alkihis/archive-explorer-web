@@ -372,7 +372,6 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         SETTINGS.archive = new TwitterArchive(f);
 
         this.checkOnReadyArchive();
-        console.log(SETTINGS.archive);
   
         console.log("Loading a new archive: ", filename);
 
@@ -432,7 +431,6 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
       });
   
       const files = (e as DragEvent).dataTransfer.files;
-      console.log(e, files[0]);
   
       if (files && files.length) {
         this.loadArchive(files[0]);
@@ -522,8 +520,8 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         {(this.state.loaded || this.state.is_error) && 
         <div className={clsx("center-space-between", this.props.classes.actions)}>
           {this.buttonLoad()}
-          {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
           {this.state.loaded && SETTINGS.archive && SETTINGS.archive.is_gdpr && this.buttonCreateClassicArchive()}
+          {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
         </div>}
       </React.Fragment>
     );

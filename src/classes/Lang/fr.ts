@@ -243,6 +243,17 @@ export default {
   and_send_this_error_dump_to: "et l'envoyer à",
   you_can_also: "Vous pouvez également ",
   open_an_issue_and_attach_file: "ouvrir une issue sur GitHub et y attacher le rapport",
+  create_classic_archive: "Créer une archive hors-ligne",
+  click_here_to_download_it: "Cliquez ici pour la télécharger",
+  your_archive_is_ready: "Votre archive est prête",
+  archive_generation_wait: "Veuillez patienter pendant la création de l'archive. Ceci peut prendre du temps.",
+  create_archive_title: "Créez une archive “classique” pour lire vos tweets hors-ligne avec une application web intégrée à celle-ci.",
+  create_archive_p1: "Ce type d'archive ne contient rien d'autre excepté les tweets.",
+  create_archive_p2: `Ne substituez pas votre archive actuelle par ce type d'archive,
+  ou vous perdrez les messages privés, médias, ou encore les informations utilisateur comme
+  l'historique des @, l'adresse e-mail et plus.`,
+  create_archive_p3: "Les archives classiques sont seulement un moyen de voir vos tweets hors-ligne, et ne sont pas censées offrir plus.",
+  create: "Créer",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */

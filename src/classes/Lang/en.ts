@@ -243,6 +243,17 @@ export default {
   and_send_this_error_dump_to: "and send it to",
   you_can_also: "You can also",
   open_an_issue_and_attach_file: "open an issue on GitHub and attach error log file",
+  create_classic_archive: "Create a offline archive",
+  your_archive_is_ready: "Your archive is ready",
+  click_here_to_download_it: "Click here to download it",
+  archive_generation_wait: "Please wait during archive creation. This might take a while.",
+  create_archive_title: "Create a “classic” archive to read your tweets offline with a simple web viewer contained in archive files.",
+  create_archive_p1: "Those kind of archives does not contains anything except tweets.",
+  create_archive_p2: `Do not substitute current archive with those kind of archive,
+  or you will lose direct messages, medias, user informations 
+  like advertiser data, screen name history, email address and more.`,
+  create_archive_p3: "Classic archives are and should be only a way to view your tweets offline and are not supposed to be more.",
+  create: "Create",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */
