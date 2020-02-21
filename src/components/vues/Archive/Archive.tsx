@@ -24,6 +24,7 @@ import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import ArchiveLoadErrorDialog from './ArchiveLoadErrorDialog';
 import { truncateText, loadingMessage, AvatarArchive } from './ArchiveHelpers';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
+import ConvertArchiveModal from '../ConvertModal/ConvertModal';
 
 type ArchiveState = {
   loaded: string;
@@ -40,6 +41,7 @@ type ArchiveState = {
   is_a_saved_archive: boolean;
   how_to_dl_open: boolean;
   header_url?: string;
+  create_classic_open?: boolean;
 };
 
 Timer.default_format = "s";
@@ -521,6 +523,7 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         <div className={clsx("center-space-between", this.props.classes.actions)}>
           {this.buttonLoad()}
           {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
+          {this.state.loaded && SETTINGS.archive && SETTINGS.archive.is_gdpr && this.buttonCreateClassicArchive()}
         </div>}
       </React.Fragment>
     );
@@ -548,6 +551,18 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         onClick={this.clickOnInput}
       >
         {LANG.load_another_archive}
+      </Button>
+    );
+  }
+
+  buttonCreateClassicArchive() {
+    return (
+      <Button
+        style={{ marginTop: '.5rem', color: "purple", borderColor: "purple" }} 
+        variant="outlined" 
+        onClick={() => this.setState({ create_classic_open: true })}
+      >
+        {LANG.create_classic_archive}
       </Button>
     );
   }
@@ -865,6 +880,10 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
           open={this.state.how_to_dl_open} 
           onClose={() => this.setState({ how_to_dl_open: false })} 
         />
+        {this.state.create_classic_open && <ConvertArchiveModal 
+          open
+          onClose={() => this.setState({ create_classic_open: false })}
+        />}
       </div>
     );
   }

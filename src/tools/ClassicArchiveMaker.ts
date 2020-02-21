@@ -1,5 +1,4 @@
 import APIHELPER, { API_URLS } from "./ApiHelper";
-import SETTINGS from "./Settings";
 import JSZip from 'jszip';
 import TwitterArchive from "twitter-archive-reader";
 
