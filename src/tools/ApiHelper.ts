@@ -7,7 +7,7 @@ export class APIHelper {
     settings: {
       parameters?: { [key: string]: any },
       method: "GET" | "POST",
-      mode?: 'json' | 'text',
+      mode?: 'json' | 'text' | 'arraybuffer',
       headers?: { [key: string]: string } | Headers,
       body_mode?: 'form-encoded' | 'multipart' | 'json',
       auth?: boolean
@@ -131,8 +131,11 @@ export class APIHelper {
               .then(d => Array.isArray(d) ? Promise.reject(d) : Promise.reject([res, d]))
           );
         }
-        else {
+        else if (settings.mode === "text") {
           return res.ok ? res.text() : res.text().then(d => Promise.reject([res, d]));
+        }
+        else {
+          return res.ok ? res.arrayBuffer() : res.arrayBuffer().then(d => Promise.reject([res, d]));
         }
       });
   }
@@ -159,4 +162,5 @@ export const API_URLS = {
   deleted_count: 'deleted_count',
   batch_tweets: 'batch/tweets',
   batch_users: 'batch/users',
+  classic_archive: 'tools/archive',
 };

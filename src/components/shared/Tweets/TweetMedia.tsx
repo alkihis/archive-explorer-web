@@ -111,7 +111,6 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
     }
     else {
       const image_url = used_entity[image].media_url_https;
-      const images = (used_entity as MediaGDPREntity[]).map(e => ({ src: e.media_url_https }));
       // obj = <img alt="Full" src={image_url} className={classes.full_img} />;
       
       // With modal image
