@@ -10,6 +10,7 @@ import LANG from '../../../classes/Lang/Language';
 import SETTINGS from '../../../tools/Settings';
 import UserCache from '../../../classes/UserCache';
 import { specialJoinJSX } from '../../../tools/PlacingComponents';
+import { EventEmitter } from 'events';
 
 const LOADED_PER_CHUNK = 100;
 
@@ -34,6 +35,9 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
 
   state: DMState;
   disable_scroll_for_next_load = false;
+  position_before_render: [number, number];
+
+  protected events = new EventEmitter();
 
   constructor(props: DMProps) {
     super(props);
@@ -105,10 +109,7 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     });
   };
 
-  backPage = () => {
-    // Get the current top message
-    const dm_top_id = this.state.page[0].id;
-    
+  backPage = () => {    
     this.current_page_top--;
 
     if (this.current_page_top < 0) {
@@ -126,22 +127,37 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
       this.has_top = false;
     }
 
+    
+
+    const last_added = msgs.pop();
+
+    if (last_added && !this.disable_scroll_for_next_load) {
+      const current_vals = this.position_before_render;
+      const wait_time = 5;
+      
+      const scroller = () => {
+        if (current_vals === this.position_before_render) {
+          setTimeout(scroller, wait_time + 100);
+        }
+        else {
+          this.documentScrollToOldHeight(...this.position_before_render);
+        }
+      };  
+      setTimeout(scroller, wait_time);
+    }
+
+    this.disable_scroll_for_next_load = false;
+
     this.setState({
       page: [...msgs, ...this.state.page]
     });
-
-    if (!this.disable_scroll_for_next_load)
-      this.scrollToDm(dm_top_id, 5, "start");
-
-    this.disable_scroll_for_next_load = false;
   };
 
   scrollToDm(id: string, wait_time = 5, position: ScrollLogicalPosition = "center") {
-    // Get element
-    const dm_top = this.dm_refs[id];
+    const scroller = () => {
+      const dm_top = this.dm_refs[id];
 
-    if (dm_top) {
-      const scroller = () => {
+      if (dm_top) {
         let el = dm_top.current.inner_ref.current;
         if (el) {
           (el as HTMLElement).scrollIntoView({ block: position, inline: "nearest" });
@@ -149,10 +165,13 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
         else {
           setTimeout(scroller, wait_time + 100);
         }
-      };
+      }
+      else {
+        setTimeout(scroller, wait_time + 100);
+      }
+    };
 
-      setTimeout(scroller, wait_time);
-    }
+    setTimeout(scroller, wait_time);
   }
 
   formatDividerDate(e: LinkedDirectMessage) {
@@ -289,11 +308,35 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
     );
   }
 
+  get documentHeight() {
+    return Math.max(
+      document.documentElement["clientHeight"],
+      document.body["scrollHeight"],
+      document.documentElement["scrollHeight"],
+      document.body["offsetHeight"],
+      document.documentElement["offsetHeight"]
+    );
+  }
+
+  documentScrollToOldHeight(old_scroll: number, old_height: number) {
+    const current_height = this.documentHeight;
+    window.scrollTo(0, old_scroll + current_height - old_height);
+    setTimeout(() => {
+      // workaround
+      window.scrollTo(0, old_scroll + current_height - old_height);
+    }, 0);
+  }
+
   render() {
     const showed = this.state.page;
 
     let last_owner = "";
     let first = true;
+
+    this.position_before_render = [
+      window.scrollY,
+      this.documentHeight,
+    ];
 
     return <div className={classes.root}>
       <Sentinel onVisible={this.backPage} triggerMore={this.has_top} />
@@ -307,8 +350,8 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
           return this.dm_cache[e.id];
         }
 
-        const future = showed[i-1];
-        const previous = showed[i+1];
+        const future = showed[i+1];
+        const previous = showed[i-1];
         let divider: JSX.Element = undefined;
         let show_date = false;
         // If more than one day since previous message
