@@ -243,7 +243,7 @@ export default {
   and_send_this_error_dump_to: "and send it to",
   you_can_also: "You can also",
   open_an_issue_and_attach_file: "open an issue on GitHub and attach error log file",
-  create_classic_archive: "Create a offline archive",
+  create_classic_archive: "Create offline archive",
   your_archive_is_ready: "Your archive is ready",
   click_here_to_download_it: "Click here to download it",
   archive_generation_wait: "Please wait during archive creation. This might take a while.",
