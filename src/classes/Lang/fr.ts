@@ -252,7 +252,7 @@ export default {
   create_archive_p2: `Ne substituez pas votre archive actuelle par ce type d'archive,
   ou vous perdrez les messages privés, médias, ou encore les informations utilisateur comme
   l'historique des @, l'adresse e-mail et plus.`,
-  create_archive_p3: "Les archives classiques sont seulement un moyen de voir vos tweets hors-ligne, et ne sont pas censées offrir plus.",
+  create_archive_p3: `Attention : Dans l'archive générée, les retweets seront malformés avec des mauvais @, ou photos de profil manquantes. Ce comportement est normal.`,
   create: "Créer",
   /** END ARCHIVE CMPT */
 

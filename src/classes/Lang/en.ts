@@ -252,7 +252,7 @@ export default {
   create_archive_p2: `Do not substitute current archive with those kind of archive,
   or you will lose direct messages, medias, user informations 
   like advertiser data, screen name history, email address and more.`,
-  create_archive_p3: "Classic archives are and should be only a way to view your tweets offline and are not supposed to be more.",
+  create_archive_p3: "Warning: In generated archive, retweets will be unwell-formatted with a bad @ or a bad profile picture. This behavior is expected.",
   create: "Create",
   /** END ARCHIVE CMPT */
 

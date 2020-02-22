@@ -556,7 +556,7 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
   buttonCreateClassicArchive() {
     return (
       <Button
-        style={{ marginTop: '.5rem', color: "purple", borderColor: "purple" }} 
+        className={this.props.classes.buttonClassicArchive}
         variant="outlined" 
         onClick={() => this.setState({ create_classic_open: true })}
       >
@@ -987,6 +987,11 @@ export default withStyles(theme => {
       fontWeight: 200,
       fontSize: '1.1rem',
       marginLeft: '-.2rem',
+    },
+    buttonClassicArchive: {
+      marginTop: '.5rem', 
+      color: theme.palette.type === "dark" ? "#f9aef9" : "purple", 
+      borderColor: theme.palette.type === "dark" ? "#f9aef9" : "purple",
     },
   };
 })(Archive);
