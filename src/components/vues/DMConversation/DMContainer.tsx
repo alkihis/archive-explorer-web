@@ -10,7 +10,7 @@ import LANG from '../../../classes/Lang/Language';
 import SETTINGS from '../../../tools/Settings';
 import UserCache from '../../../classes/UserCache';
 import { specialJoinJSX } from '../../../tools/PlacingComponents';
-import { EventEmitter } from 'events';
+import Time from '../../../tools/Time';
 
 const LOADED_PER_CHUNK = 100;
 
@@ -36,8 +36,6 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
   state: DMState;
   disable_scroll_for_next_load = false;
   position_before_render: [number, number];
-
-  protected events = new EventEmitter();
 
   constructor(props: DMProps) {
     super(props);
@@ -350,12 +348,13 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
           return this.dm_cache[e.id];
         }
 
-        const future = showed[i+1];
+        const next = showed[i+1];
         const previous = showed[i-1];
+        
         let divider: JSX.Element = undefined;
         let show_date = false;
         // If more than one day since previous message
-        if (previous && previous.createdAtDate.getTime() < e.createdAtDate.getTime() - (1000 * 60 * 60 * 24)) {
+        if (previous && previous.createdAtDate.getTime() < e.createdAtDate.getTime() - Time.days(1)) {
           divider = <div className={classes.divider}>
             <Divider className="divider-big-margin" />
             <div className={classes.divider_text}>
@@ -367,14 +366,14 @@ export default class DMContainer extends React.Component<DMProps, DMState> {
         let dm_content: any = undefined;
 
         // If more than 5 minutes since last msg or if sender ID is different 
-        if (!future || e.senderId !== future.senderId || future.createdAtDate.getTime() > e.createdAtDate.getTime() + (1000 * 60 * 5)) {
+        if (!next || e.senderId !== next.senderId || next.createdAtDate.getTime() > e.createdAtDate.getTime() + Time.minutes(5)) {
           show_date = true;
         }
 
         const dm = <DM 
           key={e.id} 
           msg={e} 
-          showPp={last_owner !== actual} 
+          showPp={last_owner !== actual || !!divider} 
           showDate={show_date} 
           onClick={this.props.onDmClick} 
           selected={this.props.from === e.id}
