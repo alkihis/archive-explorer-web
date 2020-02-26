@@ -42,6 +42,7 @@ interface DebugContainer {
   RootComponent: any;
   Helpers: any;
   Archive: any;
+  Loaded: any;
   LoggedUser: any;
   TwitterLoggedUser: any;
   TweetCache: any;
@@ -67,5 +68,11 @@ window.DEBUG = {
   SavedArchiveTester: {},
   SearchHistories: {},
   globals: {},
-  TwitterArchive
+  TwitterArchive,
+  get Loaded() {
+    if (this.Settings) {
+      return this.Settings.archive;
+    }
+    return null;
+  },
 };

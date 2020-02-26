@@ -343,6 +343,9 @@ class AESettings {
   }
 
   set archive(v: TwitterArchive | null) {
+    if (v === undefined) {
+      v = null;
+    }
     this.current_archive = v;
     window.DEBUG.Archive = v;
   }
