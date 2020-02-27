@@ -10,6 +10,7 @@ import Blocks from './Blocks';
 import Followers, { Followings } from './Followers';
 import AdAndUserData from './AdAndUserData';
 import LegalMentions from './LegalMentions';
+import Favorites from './Favorites';
 
 type MoreState = {  
   active_tab: number;
@@ -28,7 +29,7 @@ export default class More extends React.Component<{}, MoreState> {
     return [
       Help,
       AdAndUserData,
-      // Favorites,
+      Favorites,
       Followers,
       Followings,
       Mutes,
@@ -69,7 +70,7 @@ export default class More extends React.Component<{}, MoreState> {
         <Tabs value={this.state.active_tab} onChange={this.changeActiveTab} variant="scrollable">
           <Tab label={LANG.help} />
           <Tab label={LANG.ads_and_user_data} disabled={!enabled.ads_and_user_data} />
-          {/* <Tab label={LANG.favorites} disabled={!enabled.favorites} /> */}
+          <Tab label={LANG.favorites} disabled={!enabled.favorites} />
           <Tab label={LANG.followers} disabled={!enabled.followers} />
           <Tab label={LANG.followings} disabled={!enabled.followings} />
           <Tab label={LANG.mutes} disabled={!enabled.mutes} />

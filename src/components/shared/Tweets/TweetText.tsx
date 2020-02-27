@@ -1,5 +1,5 @@
 import React from 'react';
-import { PartialTweet } from 'twitter-archive-reader';
+import { PartialTweet, PartialFavorite } from 'twitter-archive-reader';
 import { unescapeTwi } from '../../../helpers';
 import Graphene from 'grapheme-splitter';
 import LANG from '../../../classes/Lang/Language';
@@ -11,15 +11,21 @@ const TWITTER_BASE = "https://twitter.com/";
 const TWITTER_HASH_BASE = "https://twitter.com/search?q=";
 
 function TweetText() {
-  const tweet = React.useContext(TweetContext) as PartialTweet;
+  const tweet = React.useContext(TweetContext) as PartialTweet | PartialFavorite;
 
   function renderText() {
     const parts: JSX.Element[] = [];
-    const original_t = tweet.retweeted_status ? tweet.retweeted_status : tweet;
+    const original_t = 'retweeted_status' in tweet ? tweet.retweeted_status : tweet;
     const entities_fragments = calculateTextForEntities();
+    const original_text = 'full_text' in original_t ? 
+      original_t.full_text : 
+      ('text' in original_t ?
+        original_t.text :
+        original_t.fullText
+      );
 
     // @ts-ignore Ralentit énormément le code. A utiliser avec parcimonie
-    const original_string = splitter.splitGraphemes(original_t.full_text ? original_t.full_text : original_t.text);
+    const original_string = splitter.splitGraphemes(original_text);
 
     let last_end = 0;
     let i = 1;
@@ -50,7 +56,11 @@ function TweetText() {
   function calculateTextForEntities() {
     const frags: [number, number, JSX.Element][] = [];
 
-    const t = tweet.retweeted_status ? tweet.retweeted_status : tweet;
+    if ('fullText' in tweet) {
+      return [];
+    }
+
+    const t = ('retweeted_status' in tweet ? tweet.retweeted_status : tweet) as PartialTweet;
 
     if (t.entities) {
       if (t.entities.user_mentions && t.entities.user_mentions.length) {

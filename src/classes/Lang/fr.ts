@@ -594,7 +594,13 @@ export default {
   used_software: "Logiciels et composants utilisés",
   used_software_p1: `La suite Archive Explorer utilise principalement les outils suivants :`,
   web_service: "Service web",
-
+  favorites: "Favoris",
+  favorited_tweet: "Tweet mis en favori",
+  favorited: "mis en favori",
+  search_inside_favorites: "Recherche parmi les favoris",
+  shown: "montré",
+  shown_s: "montrés",
+  over: "sur",
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

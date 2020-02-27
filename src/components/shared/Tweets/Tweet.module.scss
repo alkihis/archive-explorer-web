@@ -19,6 +19,13 @@
   grid-template-columns: min-content auto auto;
 }
 
+.card_favorite_action {
+  display: grid !important;
+  grid-template-columns: min-content auto;
+  padding-left: 1rem;
+  min-height: 40px;
+}
+
 .date {
   font-weight: 200;
   font-size: 12px;

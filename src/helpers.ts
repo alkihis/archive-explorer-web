@@ -16,6 +16,11 @@ export function setPageTitle(title?: string, absolute = false) {
     document.title = title;
 }
 
+export function nFormat(number: number) {
+  const lang = SETTINGS.lang === "fr" ? "fr-FR" : "en-US";
+  return new Intl.NumberFormat(lang).format(number);
+}
+
 /**
  * Return true if user is verified, false if token expires, null if server can't be accessed.
  */

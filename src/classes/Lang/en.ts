@@ -592,7 +592,13 @@ export default {
   used_software: "Used software",
   used_software_p1: `Archive Explorer suite mainly use the following tools:`,
   web_service: "Web service",
-
+  favorites: "Favorites",
+  favorited_tweet: "Favorited tweet",
+  favorited: "favorited",
+  search_inside_favorites: "Search inside favorites",
+  shown: "shown",
+  shown_s: "shown",
+  over: "over",
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

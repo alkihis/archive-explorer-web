@@ -161,6 +161,7 @@ export const API_URLS = {
   twitter_access_token: 'users/access',
   deleted_count: 'deleted_count',
   batch_tweets: 'batch/tweets',
+  batch_tiny_tweets: 'batch/speed_tweets',
   batch_users: 'batch/users',
   classic_archive: 'tools/archive',
 };

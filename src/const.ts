@@ -57,12 +57,66 @@ interface DebugContainer {
   TwitterArchive: any;
 }
 
+interface ArchiveExplorer {
+  archive: any;
+  tweet_cache: any;
+  user_cache: any;
+  saver: any;
+  search_history: any;
+  tasks: any;
+  helpers: any;
+  settings: any;
+  lang: any;
+  setLanguage(lang: string): void;
+  reloadComponentTree(): void;
+}
+
 declare global {
   interface Window {
     DEBUG: Partial<DebugContainer>;
     localforage: any;
+    Explorer: ArchiveExplorer;
   }
 }
+
+window.Explorer = {
+  get archive() {
+    return window.DEBUG.Loaded;
+  },
+  get tweet_cache() {
+    return window.DEBUG.TweetCache;
+  },
+  get user_cache() {
+    return window.DEBUG.UserCache;
+  },
+  get saver() {
+    return window.DEBUG.SavedArchives;
+  },
+  get search_history() {
+    return window.DEBUG.SearchHistories;
+  },
+  get tasks() {
+    return window.DEBUG.TaskManager;
+  },
+  get helpers() {
+    return window.DEBUG.Helpers;
+  },
+  get settings() {
+    return window.DEBUG.Settings;
+  },
+  get lang() {
+    return window.DEBUG.Language;
+  },
+  setLanguage(lang: string) {
+    const settings = this.settings;
+    if (settings) {
+      settings.lang = lang;
+    }
+  },
+  reloadComponentTree() {
+    window.DEBUG.RootComponent.forceUpdate();
+  },
+};
 
 window.DEBUG = {
   SavedArchiveTester: {},

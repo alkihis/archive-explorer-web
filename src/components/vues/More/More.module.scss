@@ -1,3 +1,5 @@
+@import "../../../tools/functions.scss";
+
 .root {
   margin-bottom: 64px !important;
   margin-top: 1rem !important;
@@ -70,4 +72,37 @@
 .light_btn {
   margin-top: .7rem;
   margin-bottom: .5rem;
+}
+
+
+
+.card_container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+  align-items: center;
+  // Pour le speeddial
+  padding-bottom: 12px; 
+
+  // TODO CHECK IF OK
+  max-width: 1200px;
+  margin: auto;
+  // ENDOF TODO
+
+  @include mobile_large {
+    display: block;
+  }
+}
+
+.loader {
+  flex: 0 100%;
+  width: 100%;
+  grid-column: 1 / 3;
+}
+
+.loader_real {
+  width: 56px;
+  height: 56px;
+  margin-top: 1.2rem;
+  margin-bottom: 2rem;
 }

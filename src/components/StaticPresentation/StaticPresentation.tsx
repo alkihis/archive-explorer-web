@@ -5,7 +5,7 @@ import { Avatar, Container, Divider } from '@material-ui/core';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import { DownloadGDPRModal } from '../shared/NoGDPR/NoGDPR';
 import SETTINGS from '../../tools/Settings';
-import { setPageTitle } from '../../helpers';
+import { setPageTitle, nFormat } from '../../helpers';
 import APIHELPER, { API_URLS } from '../../tools/ApiHelper';
 import LANG from '../../classes/Lang/Language';
 import { Copyright } from '../../tools/PlacingComponents';
@@ -185,7 +185,7 @@ const DeletedCounter: React.FC<DCProps> = (props: DCProps) => {
 
   return (
     <span {...props}>
-      {deleted !== undefined ? deleted : "•••"}
+      {deleted !== undefined ? nFormat(deleted) : "•••"}
     </span>
   );
 };
