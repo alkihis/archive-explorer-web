@@ -599,6 +599,7 @@ export default {
   shown: "shown",
   shown_s: "shown",
   over: "over",
+  favorited_tweets: "favorited tweet{}",
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

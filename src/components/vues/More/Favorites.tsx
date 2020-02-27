@@ -11,7 +11,7 @@ import TweetCache from '../../../classes/TweetCache';
 import { API_URLS } from '../../../tools/ApiHelper';
 import { escapeRegExp, nFormat } from '../../../helpers';
 
-const FAV_CHUNK_LEN = 50;
+const FAV_CHUNK_LEN = 20;
 type PartialTweetOrFavorite = PartialTweet | PartialFavorite;
 
 type FavoritesState = {
@@ -102,7 +102,7 @@ export default class Favorites extends React.Component<{}, FavoritesState> {
       return <Fragment>
         {" "}{shown}{" "}
         <em style={{ fontSize: '1.1rem' }}>
-          ({LANG.over} {nFormat(this.favs_original.length)} {LANG.favorited} tweet{this.favs_original.length > 1 && "s"})
+          ({LANG.over} {nFormat(this.favs_original.length)} {LANG.format("favorited_tweets", this.favs_original.length > 1 ? "s" : "")})
         </em>
       </Fragment>;
     }
@@ -117,7 +117,7 @@ export default class Favorites extends React.Component<{}, FavoritesState> {
         </Typography>
   
         <Typography variant="h5" gutterBottom style={{ marginBottom: '2.1rem' }}>
-          {nFormat(this.state.favs.length)} tweet{this.state.favs.length > 1 && "s"} {LANG.favorited}{this.shownIfQuery()}.
+          {nFormat(this.state.favs.length)} {LANG.format("favorited_tweets", this.state.favs.length > 1 ? "s" : "")}{this.shownIfQuery()}.
         </Typography>
   
         <TextField
