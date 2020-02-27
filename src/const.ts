@@ -2,7 +2,7 @@ import TwitterArchive from "twitter-archive-reader";
 
 export const DEBUG_MODE = true;
 
-export const VERSION = "1.6.1";
+export const VERSION = "1.6.2";
 export const THRESHOLD_PREFETCH = 20;
 export const SERVER_URL = DEBUG_MODE ? "http://localhost:3128" : "https://archive-explorer.com";
 export const AUTO_TWITTER_CHECK = !DEBUG_MODE;
