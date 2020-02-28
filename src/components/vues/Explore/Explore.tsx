@@ -28,7 +28,7 @@ import { toast } from '../../shared/Toaster/Toaster';
 import ComposeSearchModal from './SearchComposer';
 
 
-const ExpansionPanel = withStyles({
+export const ExplorerExpansionPanel = withStyles({
   root: {
     border: '1px solid rgba(0, 0, 0, .125)',
     borderBottomLeftRadius: '0 !important',
@@ -169,11 +169,11 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
     return (
       <div>
-        <ExpansionPanel expanded={false}>
+        <ExplorerExpansionPanel expanded={false}>
           <ExpansionPanelSummary>
             <Typography className="bold">{LANG.full_archive}</Typography>
           </ExpansionPanelSummary>
-        </ExpansionPanel>
+        </ExplorerExpansionPanel>
         <ListItem 
           button 
           className={"*" === this.state.month ? classes.selected_month : ""} 
@@ -240,7 +240,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     }
 
     return (
-      <ExpansionPanel key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
+      <ExplorerExpansionPanel key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
         >
@@ -249,7 +249,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
         <ExpansionPanelDetails style={{padding: '0'}}>
           {this.listOfMonths(year)}
         </ExpansionPanelDetails>
-      </ExpansionPanel>
+      </ExplorerExpansionPanel>
     )
   }
 

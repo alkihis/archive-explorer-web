@@ -106,3 +106,17 @@
   margin-top: 1.2rem;
   margin-bottom: 2rem;
 }
+
+.no_tweets {
+  color: lighten($color: #000000, $amount: 30);
+
+  :global .dark :local & {
+    color: lighten($color: #000000, $amount: 75);
+  }
+  margin-top: 2rem;
+}
+
+.icon {
+  color: lighten($color: #000000, $amount: 70);
+  font-size: 7rem !important; 
+}

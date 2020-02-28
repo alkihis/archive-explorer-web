@@ -6,7 +6,6 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import MailIcon from '@material-ui/icons/Mail';
 import ArchiveIcon from '@material-ui/icons/FolderShared';
 import TasksIcon from '@material-ui/icons/CheckBox';
-import SettingsIcon from '@material-ui/icons/Settings';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
 import FavoriteIcon from '@material-ui/icons/Star';
 import classes from './RouterWrapper.module.scss';

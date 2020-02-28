@@ -599,6 +599,7 @@ export default {
   explore_favorites: "Explorer les favoris",
   find_favorites: "Trouver des favoris",
   archive_no_favorites: "L'archive chargée ne contient pas les tweets mis en favori.",
+  contains_any_favorites: "Cet élément ne contient aucun tweet mis en favori",
   choose_month_favorites: `Choisissez un mois pour afficher les tweets mis en favori. Les sélecteurs de date se réfèrent à la date des tweets, pas à la date de mise en favori`,
   favorited: "mis en favori",
   search_inside_favorites: "Recherche parmi les favoris",

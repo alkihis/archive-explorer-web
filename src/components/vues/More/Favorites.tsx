@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './More.module.scss';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, Typography } from '@material-ui/core';
 import { PartialFavorite, PartialTweet } from 'twitter-archive-reader';
 import SETTINGS from '../../../tools/Settings';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -8,6 +8,8 @@ import TweetOrFavorite from '../../shared/Tweets/TweetOrFavorite';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import TweetCache from '../../../classes/TweetCache';
 import { API_URLS } from '../../../tools/ApiHelper';
+import LANG from '../../../classes/Lang/Language';
+import NoFavsIcon from '@material-ui/icons/FormatClear';
 
 const FAV_CHUNK_LEN = 20;
 type PartialTweetOrFavorite = PartialTweet | PartialFavorite;
@@ -68,6 +70,19 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
   };
 
   render() {
+    if (this.props.favorites.length === 0) {
+      return (
+        <>
+          <CenterComponent className={classes.no_tweets}>
+            <NoFavsIcon className={classes.icon} />
+            <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+              {LANG.contains_any_favorites}. :(
+            </Typography>
+          </CenterComponent>
+        </>
+      );
+    }
+
     return (
       <div>
         <InfiniteScroll

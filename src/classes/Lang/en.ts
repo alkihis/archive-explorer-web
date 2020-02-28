@@ -596,6 +596,7 @@ export default {
   explore_favorites: "Explore Favorites",
   find_favorites: "Find favorites",
   archive_no_favorites: "Loaded archive does not support favorites.",
+  contains_any_favorites: "This element does not contains any favorited tweet",
   choose_month_favorites: `Choose a month to display favorited tweets. Date selectors refer to tweet dates, not to the date when tweet has been favorited`,
   favorited_tweet: "Favorited tweet",
   favorited: "favorited",
