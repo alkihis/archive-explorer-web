@@ -42,7 +42,7 @@
     "socket.io-client": "^2.3.0",
     "stopword": "^0.3.4",
     "timerize": "^1.0.3",
-    "twitter-archive-reader": "^6.1.0",
+    "twitter-archive-reader": "^6.2.0",
     "twitter-d": "^0.4.0",
     "typescript": "^3.8.2",
     "uuid": "^3.3.3"

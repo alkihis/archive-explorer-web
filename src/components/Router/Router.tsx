@@ -17,7 +17,7 @@ const NotFound = React.lazy(() => import("../shared/NotFound/NotFound"));
 const LanguageChanger = React.lazy(() => import("../LanguageChanger/LanguageChanger"));
 const DirectMessages = React.lazy(() => import("../vues/DirectMessages/DirectMessages"));
 const More = React.lazy(() => import("../vues/More/More"));
-const Settings = React.lazy(() => import("../vues/Settings/Settings"));
+const FavoriteExplorer = React.lazy(() => import("../vues/FavoriteExplorer/FavoriteExplorer"));
 
 type RouterState = { 
   /** True if login modal should be shown.
@@ -173,8 +173,8 @@ class AppRouter extends React.Component<{}, RouterState> {
         <Suspense fallback={<SuspenseWaiting />}>
           <Switch>
             <Route path="/archive/" component={Archive} />  
-            <Route path="/explore/" component={Explore} />
-            <Route path="/settings/" component={Settings} />  
+            <Route path="/explore/" component={Explore} /> 
+            <Route path="/favorites/" component={FavoriteExplorer} />  
             <Route path="/dms/" component={DirectMessages} />  
             <Route path="/more/" component={More} />  
             <Route path="/" exact component={HomePage} />

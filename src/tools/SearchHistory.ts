@@ -56,6 +56,7 @@ class SearchHistory {
 
 export const TweetSearchHistory = new SearchHistory("tweets");
 export const DMSearchHistory = new SearchHistory("dms");
+export const FavoriteSearchHistory = new SearchHistory("favorites");
 
 // --- DEBUG ---
 window.DEBUG.SearchHistories = {

@@ -12,7 +12,7 @@ import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import LANG from '../../../classes/Lang/Language';
-import { TweetSearchHistory, DMSearchHistory } from '../../../tools/SearchHistory';
+import { TweetSearchHistory, DMSearchHistory, FavoriteSearchHistory } from '../../../tools/SearchHistory';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -393,6 +393,7 @@ export function SearchOptions<T>(props: {
   default?: (keyof T)[],
   fieldLabel?: string,
   isDM?: boolean,
+  isFavoriteExplorer?: boolean,
   explorerInstance?: Explore,
 }) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -427,6 +428,8 @@ export function SearchOptions<T>(props: {
   function handleClick(_?: any, data = searchInput) {
     if (props.isDM)
       DMSearchHistory.push(data);
+    else if (props.isFavoriteExplorer)
+      FavoriteSearchHistory.push(data);
     else
       TweetSearchHistory.push(data);
     
@@ -447,6 +450,8 @@ export function SearchOptions<T>(props: {
   function clearHistory() {
     if (props.isDM)
       DMSearchHistory.clear();
+    else if (props.isFavoriteExplorer)
+      FavoriteSearchHistory.clear();
     else
       TweetSearchHistory.clear();
 
@@ -460,7 +465,7 @@ export function SearchOptions<T>(props: {
     handleClick(undefined, text);
   }
 
-  const auto_complete_options = (props.isDM ? DMSearchHistory : TweetSearchHistory).get().reverse();
+  const auto_complete_options = (props.isDM ? DMSearchHistory : (props.isFavoriteExplorer ? FavoriteSearchHistory : TweetSearchHistory)).get().reverse();
 
   return (
     <>
@@ -510,7 +515,7 @@ export function SearchOptions<T>(props: {
         </ListItemText>
       </ListItem>
 
-      {!props.isDM && <Hidden xsDown>
+      {!props.isDM && !props.isFavoriteExplorer && <Hidden xsDown>
         <ListItem 
           button 
           className={classes.advanced_search_btn} 

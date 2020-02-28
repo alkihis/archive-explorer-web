@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './Settings.module.scss';
 import { setPageTitle, dateFormatter, toggleDarkMode } from '../../../helpers';
-import { AppBar, Toolbar, Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar, InputLabel, Select, MenuItem, Divider, TextField } from '@material-ui/core';
+import { Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar, InputLabel, Select, MenuItem, Divider, TextField } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
 import ExtendedActionsMenu from './ExtendedActionsMenu';
@@ -292,14 +292,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
         {this.modalLogout()}
 
         <GoToModal onClose={() => this.setState({ go_to_modal: false })} open={this.state.go_to_modal} />
-
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" color="inherit">
-              {LANG.settings}
-            </Typography>
-          </Toolbar>
-        </AppBar>
 
         <Container maxWidth="lg" className={classes.root}>
           {DEBUG_MODE && <Typography align="center" component="div" style={{ margin: "2rem 0" }}>

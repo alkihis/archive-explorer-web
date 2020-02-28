@@ -8,6 +8,7 @@ import ArchiveIcon from '@material-ui/icons/FolderShared';
 import TasksIcon from '@material-ui/icons/CheckBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
+import FavoriteIcon from '@material-ui/icons/Star';
 import classes from './RouterWrapper.module.scss';
 import { Badge } from '@material-ui/core';
 import TaskModal from '../vues/TaskModal/TaskModal';
@@ -30,8 +31,8 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
       '/archive/',
       '/explore/',
       '/dms/',
+      '/favorites/',
       '/more/',
-      '/settings/',
     ],
     task_opens: false,
     tasks_running: 0,
@@ -171,8 +172,8 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
           <BottomNavigationAction label={LANG.archive} icon={<ArchiveIcon />} component={Link} to={pathMap[0]} />
           <BottomNavigationAction label={LANG.explore} icon={<ExploreIcon />} component={Link} to={pathMap[1]} />
           <BottomNavigationAction label={LANG.direct_messages} icon={<MailIcon />} component={Link} to={pathMap[2]} />
-          <BottomNavigationAction label={LANG.more} icon={<MoreIcon />} component={Link} to={pathMap[3]} />
-          <BottomNavigationAction label={LANG.settings} icon={<SettingsIcon />} component={Link} to={pathMap[4]} />
+          <BottomNavigationAction label={LANG.favorites} icon={<FavoriteIcon />} component={Link} to={pathMap[3]} />
+          <BottomNavigationAction label={LANG.more} icon={<MoreIcon />} component={Link} to={pathMap[4]} />
           <BottomNavigationAction label={LANG.tasks} icon={this.renderTaskIcon()} onClick={() => this.handleModalOpen()} />
         </BottomNavigation>
       </div>

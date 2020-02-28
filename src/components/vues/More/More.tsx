@@ -10,7 +10,7 @@ import Blocks from './Blocks';
 import Followers, { Followings } from './Followers';
 import AdAndUserData from './AdAndUserData';
 import LegalMentions from './LegalMentions';
-import Favorites from './Favorites';
+import Settings from '../Settings/Settings';
 
 type MoreState = {  
   active_tab: number;
@@ -28,8 +28,8 @@ export default class More extends React.Component<{}, MoreState> {
   get components_for_tabs() : React.ComponentType[] {
     return [
       Help,
+      Settings,
       AdAndUserData,
-      Favorites,
       Followers,
       Followings,
       Mutes,
@@ -48,7 +48,6 @@ export default class More extends React.Component<{}, MoreState> {
     const enabled = {
       mutes: false,
       blocks: false,
-      favorites: false,
       followers: false,
       followings: false,
       ads_and_user_data: false,
@@ -61,7 +60,6 @@ export default class More extends React.Component<{}, MoreState> {
       enabled.blocks = !!ar.blocks.size;
       enabled.followers = !!ar.followers.size;
       enabled.followings = !!ar.followings.size;
-      enabled.favorites = ar.favorites.has_extended_favorites;
       enabled.ads_and_user_data = !!(ar.user.personalization || ar.ads.impressions.length || ar.user.screen_name_history.length);
     }
 
@@ -69,8 +67,8 @@ export default class More extends React.Component<{}, MoreState> {
       <AppBar position="static" className={classes.tabs}>
         <Tabs value={this.state.active_tab} onChange={this.changeActiveTab} variant="scrollable">
           <Tab label={LANG.help} />
+          <Tab label={LANG.settings} />
           <Tab label={LANG.ads_and_user_data} disabled={!enabled.ads_and_user_data} />
-          <Tab label={LANG.favorites} disabled={!enabled.favorites} />
           <Tab label={LANG.followers} disabled={!enabled.followers} />
           <Tab label={LANG.followings} disabled={!enabled.followings} />
           <Tab label={LANG.mutes} disabled={!enabled.mutes} />
