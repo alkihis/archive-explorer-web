@@ -7,6 +7,7 @@ import { AuthorizedLangs, isAuthorizedLang } from "../classes/Lang/Language";
 import Cookies from 'js-cookie';
 
 export type TweetSortType = "time" | "popular" | "retweets" | "favorites" | "random";
+export type FavoriteTweetSortType = "time" | "random";
 export type TweetSortWay = "asc" | "desc";
 export type TweetMediaFilters = "none" | "pic" | "video";
 
@@ -38,6 +39,7 @@ class AESettings {
 
   protected _sort_way: TweetSortWay;
   protected _sort_type: TweetSortType;
+  public favorite_sort_type: FavoriteTweetSortType = "time";
   protected _media_filter: TweetMediaFilters;
   protected _allow_rts: boolean = true;
   protected _allow_self: boolean = true;

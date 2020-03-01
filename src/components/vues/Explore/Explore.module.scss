@@ -38,6 +38,10 @@ $drawer_width:240px;
   box-sizing: border-box;
   font-size: .95rem;
 }
+.drawer_old_fav {
+  padding-left: 8px;
+  box-sizing: border-box;
+}
 .selected_month {
   background-color: #006cc5 !important;
   :global .dark :local & {

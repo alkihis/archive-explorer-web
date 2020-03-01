@@ -12,7 +12,7 @@ import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import LANG from '../../../classes/Lang/Language';
 import { toast } from '../../shared/Toaster/Toaster';
 import { SearchOptions, ExplorerExpansionPanel } from '../Explore/Explore';
-import Favorites from '../More/Favorites';
+import Favorites from './Favorites';
 import NoGDPR from '../../shared/NoGDPR/NoGDPR';
 import FavoriteIcon from '@material-ui/icons/Star';
 
@@ -68,10 +68,10 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     }
 
     try {
-      tester = new RegExp(content, flags);
+      new RegExp(content);
     } catch (e) {
       // escape
-      tester = new RegExp(escapeRegExp(content), flags);
+      content = escapeRegExp(content);
     }
 
     // Test si on doit chercher dans le mois en cours ou pas
@@ -79,11 +79,15 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     try {
       if (content.startsWith(':current ') && this.state.loaded) {
         content = content.replace(/^:current /, '').trim();
+
+        tester = new RegExp(content, flags);
+
         favorites = this.state.loaded.filter(f => tester.test(f.fullText!));
         selected_month = this.state.month;
         selected_loaded = this.state.loaded;
       }
       else {
+        tester = new RegExp(content, flags);
         favorites = SETTINGS.archive.favorites.all.filter(f => tester.test(f.fullText!));
       }
     } catch (e) {
@@ -111,6 +115,36 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
       "single-line": LANG.multiline_regex_dot,
     };
 
+    // Find if years contain "before" snowflake tweets
+    const year_2010 = years_sorted.find(e => e === "2010");
+    let before_snowflake_element: React.ReactNode = "";
+    if (year_2010) {
+      const tweets_of_2010 = SETTINGS.archive.favorites.index[2010];
+      const oct_month = Object.entries(tweets_of_2010).find(e => e[0] === "10");
+
+      // BEFORE snowflake (all tweets to 2010-10-31)
+      if (oct_month) {
+        before_snowflake_element = (
+          <ListItem 
+            button 
+            className={"2010-10" === this.state.month ? classes.selected_month : ""} 
+            onClick={() => this.monthClicker("2010", "10")}
+            style={{ border: '1px solid rgba(0, 0, 0, .125)', borderBottom: 0 }}
+          >
+            <ListItemText className={classes.drawer_old_fav}>
+              <strong>
+                {LANG.older_favorited_tweets_short}
+              </strong>
+              {" "}
+              <span className={classes.year_count}>
+                ({Object.keys(oct_month[1]).length})
+              </span>
+            </ListItemText>
+          </ListItem>
+        );
+      }
+    }
+
     return (
       <div>
         <ExplorerExpansionPanel expanded={false}>
@@ -128,7 +162,18 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
           </ListItemText>
         </ListItem>
 
+        <ListItem 
+          button 
+          className={"day" === this.state.month ? classes.selected_month : ""} 
+          onClick={() => this.monthClicker("day", "")}
+        >
+          <ListItemText className={classes.drawer_month}>
+            {LANG.favorites_of_the_day}
+          </ListItemText>
+        </ListItem>
+
         {years_sorted.map(y => this.year(y))}
+        {before_snowflake_element}
 
         <SearchOptions
           onClick={(settings, text) => this.findFavorites(text, settings)}
@@ -161,6 +206,10 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     let i = 0;
     const months = SETTINGS.archive.favorites.index[year];
     for (const m in months) {
+      // Edge case: before snowflake tweets
+      if (year === "2010" && Number(m) <= 10) {
+        continue;
+      }
       i += Object.keys(months[m]).length;
     }
 
@@ -179,9 +228,18 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
   }
 
   monthClicker(year: string, month: string) {
-    if (year === "*" || year === "moments") {
+    if (year === "*") {
       this.setState({
         loaded: SETTINGS.archive.favorites.all,
+        month: year,
+        mobileOpen: false,
+        found: null
+      });
+    }
+    else if (year === "day") {
+      // Find tweets of the day
+      this.setState({
+        loaded: SETTINGS.archive.favorites.fromThatDay(),
         month: year,
         mobileOpen: false,
         found: null
@@ -199,10 +257,16 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
 
   listOfMonths(year: string) {
     const current_year = SETTINGS.archive.favorites.index[year];
+    let months = Object.entries(current_year);
+
+    // CASE: 2010: (it can contains tweets before november 2010)
+    if (year === "2010") {
+      months = Object.entries(current_year).filter(e => Number(e[0]) > 10);
+    }
 
     return (
       <List className={classes.list_month}>
-        {Object.entries(current_year).map(([month, favorites]) => (
+        {months.map(([month, favorites]) => (
           <ListItem 
             button 
             key={year + "-" + month} 
@@ -215,13 +279,19 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
           </ListItem>
         ))}
       </List>
-    )
+    );
   }
 
   showActiveMonth() {
     let year = "", month_text = LANG.full_archive;
     
-    if (this.state.month !== "*") {
+    if (this.state.month === "day") {
+      month_text = LANG.favorites_of_the_day;
+    }
+    else if (this.state.month === "2010-10") {
+      month_text = LANG.older_favorited_tweets;
+    }
+    else if (this.state.month !== "*") {
       const [_year, month] = this.state.month.split('-');
       year = _year;
       month_text = uppercaseFirst(getMonthText(month));
@@ -232,17 +302,22 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     return (
       <div className={classes.month_header}>
         {month_text} {year} {" "}
-        {this.state.month !== 'moments' && <span className={classes.month_tweet_number}>
-          <span className="bold">{tweets_number}</span> {LANG.format("favorited_tweets", "s")}
-        </span>}
+        <span className={classes.month_tweet_number}>
+          <span className="bold">{tweets_number}</span> {LANG.format("favorited_tweets", tweets_number > 1 ? "s" : "")}
+        </span>
       </div>
     );
   }
 
   showActiveSearch() {
+    const tweets_number = this.state.found.length;
+
     return (
       <div className={classes.month_header}>
-        {LANG.search_results}
+        {LANG.search_results}{" "}
+        <span className={classes.month_tweet_number}>
+          <span className="bold">{tweets_number}</span> {LANG.format("favorited_tweets", tweets_number > 1 ? "s" : "")}
+        </span>
       </div>
     );
   }
@@ -282,7 +357,7 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
       <ResponsiveDrawer 
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
-        title={LANG.explore}
+        title={LANG.favorites}
         drawer={<div>
           <div className={classes.toolbar} />
           <Divider />

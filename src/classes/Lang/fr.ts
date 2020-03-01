@@ -607,6 +607,9 @@ export default {
   shown_s: "montrés",
   over: "sur",
   favorited_tweets: "tweet{} mis en favori",
+  favorites_of_the_day: "Favoris du jour",
+  older_favorited_tweets_short: "Favoris plus anciens",
+  older_favorited_tweets: "Favoris antérieurs à novembre 2010",
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

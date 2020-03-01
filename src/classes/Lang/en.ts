@@ -605,6 +605,9 @@ export default {
   shown_s: "shown",
   over: "over",
   favorited_tweets: "favorited tweet{}",
+  favorites_of_the_day: "Favorites of the day",
+  older_favorited_tweets_short: "Older favorites",
+  older_favorited_tweets: "Favorites before November 2010",
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

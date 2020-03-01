@@ -27,8 +27,8 @@ export default class More extends React.Component<{}, MoreState> {
 
   get components_for_tabs() : React.ComponentType[] {
     return [
-      Help,
       Settings,
+      Help,
       AdAndUserData,
       Followers,
       Followings,
@@ -66,8 +66,8 @@ export default class More extends React.Component<{}, MoreState> {
     return (
       <AppBar position="static" className={classes.tabs}>
         <Tabs value={this.state.active_tab} onChange={this.changeActiveTab} variant="scrollable">
-          <Tab label={LANG.help} />
           <Tab label={LANG.settings} />
+          <Tab label={LANG.help} />
           <Tab label={LANG.ads_and_user_data} disabled={!enabled.ads_and_user_data} />
           <Tab label={LANG.followers} disabled={!enabled.followers} />
           <Tab label={LANG.followings} disabled={!enabled.followings} />

@@ -1,14 +1,12 @@
 import React from 'react';
 import classes from './Settings.module.scss';
 import { setPageTitle, dateFormatter, toggleDarkMode } from '../../../helpers';
-import { Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar, InputLabel, Select, MenuItem, Divider, TextField } from '@material-ui/core';
+import { Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar, InputLabel, Select, MenuItem, Divider } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import IIcon from '@material-ui/icons/Info';
 import ExtendedActionsMenu from './ExtendedActionsMenu';
 import LANG, { AvailableLanguages, AuthorizedLangs } from '../../../classes/Lang/Language';
 import { Copyright } from '../../../tools/PlacingComponents';
-import { useHistory } from 'react-router-dom';
-import { DEBUG_MODE } from '../../../const';
 
 type SettingsState = {
   download: boolean;
@@ -18,7 +16,6 @@ type SettingsState = {
   auto_dark_mode: boolean;
   lang: AuthorizedLangs;
   download_rt: boolean;
-  go_to_modal: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -30,7 +27,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
     auto_dark_mode: SETTINGS.is_auto_dark_mode,
     lang: SETTINGS.lang,
     download_rt: SETTINGS.rt_dl,
-    go_to_modal: false,
   };
 
   changeDarkState(v: boolean, refresh_settings = true) {
@@ -291,15 +287,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
       <div>
         {this.modalLogout()}
 
-        <GoToModal onClose={() => this.setState({ go_to_modal: false })} open={this.state.go_to_modal} />
-
         <Container maxWidth="lg" className={classes.root}>
-          {DEBUG_MODE && <Typography align="center" component="div" style={{ margin: "2rem 0" }}>
-            <Button variant="outlined" color="primary" onClick={() => this.setState({ go_to_modal: true })}>
-              Navigate to page
-            </Button>
-          </Typography>}
-
           <Typography variant="h4" className={classes.account_title}>
             {LANG.account}
           </Typography>
@@ -328,45 +316,4 @@ export default class Settings extends React.Component<{}, SettingsState> {
       </div>
     );
   }
-}
-
-function GoToModal(props: { open: boolean, onClose?: () => void }) {
-  const [input, setInput] = React.useState("");
-  const history = useHistory();
-
-  function handleNavigation() {
-    const route = "/" + input;
-    history.push(route);
-  }
-
-  return (
-    <Dialog fullWidth open={props.open} onClose={props.onClose}>
-      <DialogTitle>
-        Go to page
-      </DialogTitle>
-
-      <DialogContent>
-        <form onSubmit={e => { e.preventDefault(); handleNavigation(); }}>
-          <TextField
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            style={{ width: '100%' }}
-            variant="outlined"
-            prefix="/"
-            label="Enter the route"
-          />
-        </form>
-      </DialogContent>
-
-      <DialogActions>
-        <Button color="secondary" onClick={handleNavigation}>
-          Navigate to page
-        </Button>
-
-        <Button color="primary" onClick={props.onClose}>
-          {LANG.close}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
 }

@@ -75,6 +75,7 @@
 }
 
 
+/* FAVORITES */
 
 .card_container {
   display: grid;
@@ -119,4 +120,25 @@
 .icon {
   color: lighten($color: #000000, $amount: 70);
   font-size: 7rem !important; 
+}
+
+.toggleContainer {
+  margin: 1rem 0;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  justify-content: center;
+  gap: 10px 25px;
+
+  @include min_w_1000 {
+    grid-template-columns: auto auto;
+  }
+
+  @include threshold_bar {
+    grid-template-columns: auto;
+  }
+}
+
+.inlineToggleButton {
+  background-color: unset !important;
+  justify-content: center;
 }
