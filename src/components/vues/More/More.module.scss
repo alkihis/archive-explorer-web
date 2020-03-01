@@ -129,10 +129,6 @@
   justify-content: center;
   gap: 10px 25px;
 
-  @include min_w_1000 {
-    grid-template-columns: auto auto;
-  }
-
   @include threshold_bar {
     grid-template-columns: auto;
   }

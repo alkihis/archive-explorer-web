@@ -4,7 +4,7 @@ import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst, escapeRegE
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanelDetails, Container } from '@material-ui/core';
+import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanelDetails, Container, Hidden } from '@material-ui/core';
 import { PartialFavorite } from 'twitter-archive-reader';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -194,8 +194,12 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
             {LANG.select_a_month}
           </Typography>
 
-          <Typography variant="h6">
-            {LANG.choose_month_favorites}.
+          <Typography variant="h6" align="center">
+            {LANG.choose_month_favorites}
+
+            <br />
+
+            {LANG.choose_month_favorites_p2}.
           </Typography>
         </CenterComponent>
       </Container>
@@ -284,12 +288,14 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
 
   showActiveMonth() {
     let year = "", month_text = LANG.full_archive;
+    let insert_br = false;
     
     if (this.state.month === "day") {
       month_text = LANG.favorites_of_the_day;
     }
     else if (this.state.month === "2010-10") {
       month_text = LANG.older_favorited_tweets;
+      insert_br = true;
     }
     else if (this.state.month !== "*") {
       const [_year, month] = this.state.month.split('-');
@@ -302,6 +308,11 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     return (
       <div className={classes.month_header}>
         {month_text} {year} {" "}
+
+        {insert_br && <Hidden mdUp>
+          <br />
+        </Hidden>}
+
         <span className={classes.month_tweet_number}>
           <span className="bold">{tweets_number}</span> {LANG.format("favorited_tweets", tweets_number > 1 ? "s" : "")}
         </span>
