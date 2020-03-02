@@ -22,7 +22,7 @@
 .card_favorite_action {
   display: grid !important;
   grid-template-columns: min-content auto;
-  padding-left: 1rem;
+  padding-left: 1rem !important;
   min-height: 40px;
 }
 
