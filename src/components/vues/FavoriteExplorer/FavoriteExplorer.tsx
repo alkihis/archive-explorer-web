@@ -15,6 +15,7 @@ import { SearchOptions, ExplorerExpansionPanel } from '../Explore/Explore';
 import Favorites from './Favorites';
 import NoGDPR from '../../shared/NoGDPR/NoGDPR';
 import FavoriteIcon from '@material-ui/icons/Star';
+import { TwitterHelpers } from 'twitter-archive-reader';
 
 type FavoriteExplorerState = {
   loaded: PartialFavorite[] | null;
@@ -49,13 +50,30 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     return this.state.month === "*";
   }
 
-  findFavorites = (content: string, settings?: string[]) => {
+  findFavorites = (content: string, settings: string[]) => {
     // Reset scroll position
     window.scrollTo(0, 0);
 
     let selected_month = "*";
     let selected_loaded: any = null;
     let tester: RegExp;
+    let since_date: Date = null;
+    let until_date: Date = null;
+
+    // Search for since or until
+    const s_results = content.match(/since:(\d{4}-\d{2}-\d{2})/);
+
+    if (s_results) {
+      content = content.replace(/ *since:(\d{4}-\d{2}-\d{2}) */, '').trim();
+      since_date = new Date(s_results[1]);
+    }
+
+    const u_results = content.match(/until:(\d{4}-\d{2}-\d{2})/);
+
+    if (u_results) {
+      content = content.replace(/ *until:(\d{4}-\d{2}-\d{2}) */, '').trim();
+      until_date = new Date(u_results[1]);
+    }
 
     // Test si regex valide 
     let flags = "i";
@@ -95,6 +113,23 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
       toast(LANG.search_cannot_be_made, "error");
 
       return;
+    }
+
+    // Filter
+    if (since_date || until_date) {
+      const since = since_date && since_date.getTime();
+      const until = until_date && until_date.getTime();
+
+      favorites = favorites.filter(f => {
+        const time = TwitterHelpers.dateFromFavorite(f).getTime();
+        if (since && time < since) {
+          return false;
+        }
+        if (until && time > until) {
+          return false;
+        }
+        return true;
+      });
     }
 
     // Change selected
