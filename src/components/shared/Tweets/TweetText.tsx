@@ -25,7 +25,7 @@ function TweetText() {
       );
 
     // @ts-ignore Ralentit énormément le code. A utiliser avec parcimonie
-    const original_string = splitter.splitGraphemes(original_text);
+    const original_string = splitter.splitGraphemes(original_text ?? LANG.undefined_text);
 
     let last_end = 0;
     let i = 1;

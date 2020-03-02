@@ -361,6 +361,7 @@ export default {
   sort_by_random: "Random sort",
   search_in_current_month: "Search in selected month/view",
   media_count: 'Media count',
+  undefined_text: "[Tweet text can't be accessed]",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

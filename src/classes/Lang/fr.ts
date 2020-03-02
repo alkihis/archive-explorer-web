@@ -362,6 +362,7 @@ export default {
   sort_by_random: "Tri aléatoire",
   search_in_current_month: "Chercher dans le mois ou la vue courante",
   media_count: 'Nombre de médias',
+  undefined_text: "[Le texte du tweet est inaccessible]",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
