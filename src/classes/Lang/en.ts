@@ -580,7 +580,7 @@ export default {
   about_archive_explorer_p2: `In case of code reuse of a part of this suite by other people, it must respect the
   license conditions affected to this tool.`,
   about_archive_explorer_p3: `Archive Explorer doesn't belong to Twitter and is not affilated to it in any way. 
-  Twitter is a trademark belonging to Twitter Inc..`,
+  Twitter, Tweet, Retweet and the Twitter logo are trademarks of Twitter, Inc. or its affiliates.`,
   tweet_deletion_p1: `When you delete tweets, mutes and other data using Twitter Archive Explorer,
   this data is wiped permanently. However, Archive Explorer does not provide any guarantee, 
   either for the effectiveness or the accuracy of this deletion.

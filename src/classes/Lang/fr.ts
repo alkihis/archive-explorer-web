@@ -582,7 +582,7 @@ export default {
   about_archive_explorer_p2: `En cas de réutilisation d'une partie de cette suite par d'autres personnes, elle doit respecter
   les conditions des licences affectées à chaque outil.`,
   about_archive_explorer_p3: `Archive Explorer n'appartient pas à Twitter et n'y est affilié d'aucune manière.
-  Twitter est une marque déposée appartenant à Twitter Inc..`,
+  Twitter, Tweet, Retweet et le logo Twitter sont des marques déposées de Twitter, Inc. ou ses affiliés.`,
   tweet_deletion_p1: `Lorsque vous supprimez des tweets, mutes, ou d'autres données en utilisant Twitter Archive Explorer,
   ces informations sont supposément effacées de manière permanente. Archive Explorer ne fournit aucune garantie, tant à l'effectivité
   de la suppression de ces données que la précision de cette suppression. Si d'autres données de votre compte sont supprimées par
