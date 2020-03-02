@@ -253,7 +253,7 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     }
 
     if (!tweet_count) {
-      return "";
+      return <React.Fragment key={"year" + year} />;
     }
 
     return (
