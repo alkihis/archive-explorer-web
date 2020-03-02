@@ -7,9 +7,9 @@
   "dependencies": {
     "@alkihis/react-d3-cloud": "^0.7.0",
     "@date-io/date-fns": "1.x",
-    "@material-ui/core": "^4.9.4",
+    "@material-ui/core": "^4.9.5",
     "@material-ui/icons": "^4.5.1",
-    "@material-ui/lab": "^4.0.0-alpha.44",
+    "@material-ui/lab": "^4.0.0-alpha.45",
     "@material-ui/pickers": "^3.2.9",
     "@types/jest": "24.9.0",
     "@types/js-cookie": "^2.2.5",
@@ -42,7 +42,7 @@
     "socket.io-client": "^2.3.0",
     "stopword": "^0.3.4",
     "timerize": "^1.0.3",
-    "twitter-archive-reader": "^6.2.1",
+    "twitter-archive-reader": "^6.2.2",
     "twitter-d": "^0.4.0",
     "typescript": "^3.8.3",
     "uuid": "^3.3.3"
