@@ -242,14 +242,18 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
   }
 
   year(year: string) {
-    let i = 0;
+    let tweet_count = 0;
     const months = SETTINGS.archive.favorites.index[year];
     for (const m in months) {
       // Edge case: before snowflake tweets
       if (year === "2010" && Number(m) <= 10) {
         continue;
       }
-      i += Object.keys(months[m]).length;
+      tweet_count += Object.keys(months[m]).length;
+    }
+
+    if (!tweet_count) {
+      return "";
     }
 
     return (
@@ -257,7 +261,9 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
         >
-          <Typography><span className="bold">{year}</span> <span className={classes.year_count}>({i})</span></Typography>
+          <Typography>
+            <span className="bold">{year}</span> <span className={classes.year_count}>({tweet_count})</span>
+          </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails style={{padding: '0'}}>
           {this.listOfMonths(year)}
