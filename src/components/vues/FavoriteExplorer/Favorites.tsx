@@ -269,7 +269,7 @@ function filterFavorites(favorites: PartialFavorite[]) {
   }
 
   let res = favorites.filter(t => {
-    if (!settings.allow_mentions && t.fullText!.startsWith('@')) {
+    if (!settings.allow_mentions && t.fullText && t.fullText.startsWith('@')) {
       return false;
     }
     // If self-favorited tweets are not showed

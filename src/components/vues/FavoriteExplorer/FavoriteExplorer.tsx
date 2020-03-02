@@ -100,13 +100,13 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
 
         tester = new RegExp(content, flags);
 
-        favorites = this.state.loaded.filter(f => tester.test(f.fullText!));
+        favorites = this.state.loaded.filter(f => tester.test(f.fullText ?? ""));
         selected_month = this.state.month;
         selected_loaded = this.state.loaded;
       }
       else {
         tester = new RegExp(content, flags);
-        favorites = SETTINGS.archive.favorites.all.filter(f => tester.test(f.fullText!));
+        favorites = SETTINGS.archive.favorites.all.filter(f => tester.test(f.fullText ?? ""));
       }
     } catch (e) {
       console.error("Unexpected error during search:", e);
