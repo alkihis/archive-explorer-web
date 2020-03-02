@@ -154,6 +154,10 @@ export default {
   archive_reader: 'Lecteur d\'archive',
   help_with_donate: "Ce site vous a été utile ? Vous pouvez l'aider avec votre ❤️ en donnant un",
   little: "petit quelque chose",
+  find_your_favorites_favorites: "Retrouvez vos favoris favoris",
+  find_favorites_p1: `Compliqué de retrouver quels tweets postés il y a des années vous avez mis en favori ? Certainement pas avec Archive Explorer !`,
+  find_favorites_p2: `Avec un simple explorateur par mois, naviguez à travers tous vos favoris n'a jamais été aussi simple !
+  Vous pouvez même utiliser des sélecteurs temporels dans le champ de recherche intégré afin d'affiner vos requêtes.`,
   /** END PRESENTATION PAGE */
 
   /** BEGIN ARCHIVE CMPT */
@@ -611,6 +615,11 @@ export default {
   favorites_of_the_day: "Favoris du jour",
   older_favorited_tweets_short: "Favoris plus anciens",
   older_favorited_tweets: "Favoris antérieurs à novembre 2010",
+  favorites_p1: `En raison d'une limite interne à l'archive, les favoris sont triés sont triés en fonction de `,
+  favorites_p2: "la date de publication des tweets mis en favoris, et non pas de la date de mise en favori",
+  favorites_p3: `Dans l'explorateur de favoris, les tweets postés avant novembre 2010 ne peuvent être triés par date. 
+  Si il en existe, une catégorie "Favoris plus anciens" est créée en conséquence.
+  De plus, si le tweet mis en favori a été supprimé, aucune autre information que le texte du tweet ne pourra être affichée dans l'explorateur.`,
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

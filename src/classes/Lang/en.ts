@@ -155,6 +155,10 @@ export default {
   help_with_donate: "You find this website useful? You can help me with your ❤️ by",
   little: "donating a little",
   statistics: "Statistics",
+  find_your_favorites_favorites: "Rediscover your favorites favorites",
+  find_favorites_p1: `It's difficult to find which tweets posted years ago you've favorited? Obviously not with Archive Explorer!`,
+  find_favorites_p2: `With a simple by-month explorer, browsing through all your favorited tweets has never been so simple! You can even
+  use time queries with the integrated search field.`,
   /** END PRESENTATION PAGE */
 
   /** BEGIN ARCHIVE CMPT */
@@ -609,6 +613,12 @@ export default {
   favorites_of_the_day: "Favorites of the day",
   older_favorited_tweets_short: "Older favorites",
   older_favorited_tweets: "Favorites before November 2010",
+  favorites_p1: `Due to an internal archive limit, favorites are sorted with `,
+  favorites_p2: "the publication date of the favorited tweet, and not with the time when tweet has been favorited",
+  favorites_p3: `In favorites explorer, posted tweets before November, 2010 can't be sorted by date. 
+  If any exists, a "Older favorites" category will be created.
+  Furthermore, if the favorited tweet has been deleted (or owner suspended/deactivated), 
+  no other information than text will be shown in explorer.`,
   /** END More CMPT */
 
   /** BEGIN PlacingComponents CMPT */

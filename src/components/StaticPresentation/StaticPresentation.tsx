@@ -101,6 +101,19 @@ const StaticPresentation: React.FC = () => {
             <img alt={LANG.sort_and_filter_tweets} title={LANG.sort_and_filter_tweets} src="/assets/start_page/sort.png" />
           </section>
 
+          <section className="feature">
+            <div>
+              <h3>{LANG.find_your_favorites_favorites}</h3>
+              <p>
+                {LANG.find_favorites_p1}
+                <br />
+                {LANG.find_favorites_p2}
+              </p>
+            </div>
+
+            <img alt={LANG.find_your_favorites_favorites} title={LANG.find_your_favorites_favorites} src="/assets/start_page/favorites.png" />
+          </section>
+
           <section className="other-feature">
             <div>
               <h2>{LANG.even_more}</h2>

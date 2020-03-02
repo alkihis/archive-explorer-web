@@ -169,7 +169,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
     return (
       <div>
-        <ExplorerExpansionPanel expanded={false}>
+        <ExplorerExpansionPanel expanded={false} style={{ border: 0 }}>
           <ExpansionPanelSummary>
             <Typography className="bold">{LANG.full_archive}</Typography>
           </ExpansionPanelSummary>

@@ -50,6 +50,16 @@ export default function LegalMentions() {
         {LANG.tasks_limit_p4}
       </Typography>
 
+      <Typography variant="h6" className={classes.third_title}>
+        {LANG.favorites}
+      </Typography>
+
+      <Typography className={classes.help_p}>
+        {LANG.favorites_p1} <strong>{LANG.favorites_p2}</strong>.
+        <br />
+        {LANG.favorites_p3}
+      </Typography>
+
       <Marger size=".5rem" />
 
       {/* LEGAL NOTICE */}
