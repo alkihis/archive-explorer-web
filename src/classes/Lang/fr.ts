@@ -156,7 +156,7 @@ export default {
   little: "petit quelque chose",
   find_your_favorites_favorites: "Retrouvez vos favoris favoris",
   find_favorites_p1: `Compliqué de retrouver quels tweets postés il y a des années vous avez mis en favori ? Certainement pas avec Archive Explorer !`,
-  find_favorites_p2: `Avec un simple explorateur par mois, naviguez à travers tous vos favoris n'a jamais été aussi simple !
+  find_favorites_p2: `Avec un simple explorateur par mois, naviguer à travers tous vos favoris n'a jamais été aussi simple !
   Vous pouvez même utiliser des sélecteurs temporels dans le champ de recherche intégré afin d'affiner vos requêtes.`,
   /** END PRESENTATION PAGE */
 
