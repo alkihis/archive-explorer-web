@@ -1,8 +1,7 @@
 import React from 'react';
 import './StaticPresentation.scss';
 import { Link } from 'react-router-dom';
-import { Avatar, Container, Divider } from '@material-ui/core';
-import FolderOpenIcon from '@material-ui/icons/FolderOpen';
+import { Container } from '@material-ui/core';
 import { DownloadGDPRModal } from '../shared/NoGDPR/NoGDPR';
 import SETTINGS from '../../tools/Settings';
 import { setPageTitle, nFormat } from '../../helpers';
@@ -27,11 +26,9 @@ const StaticPresentation: React.FC = () => {
       <header>
         <Container>
           <section>
-            <Avatar className="avatar">
-              <FolderOpenIcon />
-            </Avatar>
+            <h1 className="tweet-font">Twitter Archive Explorer</h1>
 
-            <h1>Twitter Archive Explorer</h1>
+            <div className="small-blue-divider" />
           </section>
 
           <section>
@@ -49,9 +46,9 @@ const StaticPresentation: React.FC = () => {
       </header>
 
       <main>
-        <Container>
-          <section>
-            <h2>
+        <section>
+          <Container>
+            <h2 className="tweet-font">
               {LANG.whats_a_archive} ?
             </h2>
 
@@ -62,11 +59,16 @@ const StaticPresentation: React.FC = () => {
                 {LANG.how_to_download}
               </a>.
             </p>
-          </section>
-
+          </Container>
+        </section>
+        
+        <Container>
           <section className="feature">
             <div>
               <h3>{LANG.powerful_search}</h3>
+
+              <div className="small-classic-divider" />
+
               <p>
                 {LANG.powerful_search_p1}
               </p>
@@ -78,6 +80,9 @@ const StaticPresentation: React.FC = () => {
           <section className="feature">
             <div>
               <h3>{LANG.clean_your_account}</h3>
+
+              <div className="small-classic-divider" />
+
               <p>
                 {LANG.clean_your_account_p1} <strong><DeletedCounter /></strong> {LANG.tweets} !
               </p>
@@ -89,6 +94,9 @@ const StaticPresentation: React.FC = () => {
           <section className="feature">
             <div>
               <h3>{LANG.sort_and_filter_tweets}</h3>
+
+              <div className="small-classic-divider" />
+
               <p>
                 {LANG.specific_wishes}
                 <br />
@@ -104,6 +112,9 @@ const StaticPresentation: React.FC = () => {
           <section className="feature">
             <div>
               <h3>{LANG.find_your_favorites_favorites}</h3>
+
+              <div className="small-classic-divider" />
+              
               <p>
                 {LANG.find_favorites_p1}
                 <br />
@@ -172,7 +183,6 @@ const StaticPresentation: React.FC = () => {
 
       <footer>
         <Container>
-          <Divider className="divider-big-margin" />
           <Copyright />
         </Container>
       </footer>

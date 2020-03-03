@@ -116,7 +116,7 @@ export default {
   Vous serez également capable de supprimer les utilisateurs blockés ou mis en sourdine de votre compte !
   Cet outil a déjà permis la suppression de`,
   tweets: "tweets",
-  sort_and_filter_tweets: "Trier et filtrer les tweets",
+  sort_and_filter_tweets: "Triez et filtrez vos tweets",
   specific_wishes: "Désirs spécifiques ? Filtres spécifiques.",
   explore_sort_p1: `Vous souhaitez explorer vos vidéos partagées ?
   Voir vos tweets les plus populaires de tous les temps ?

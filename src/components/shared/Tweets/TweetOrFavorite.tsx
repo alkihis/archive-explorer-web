@@ -95,7 +95,7 @@ export default class TweetOrFavorite extends React.Component<TweetProp, TweetSta
 
     return (
       <TweetContext.Provider value={this.props.data}>
-        <Card className={classes.card}>
+        <Card className={classes.card} elevation={0}>
           <CardHeader
             classes={
               { title: classes.card_title }

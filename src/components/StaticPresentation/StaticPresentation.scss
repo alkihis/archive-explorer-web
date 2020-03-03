@@ -2,13 +2,12 @@
 @import '../../tools/functions.scss';
 
 .static-page {
+  background: white;
+  .dark & {
+    background: unset;
+  }
+
   header {
-    background-image: linear-gradient(220deg, #08ccc3 0%, #0078D7 100%);
-
-    .dark & {
-      background-image: linear-gradient(220deg, #08ccc3a6 0%, #0078d791 100%);
-    }
-
     padding: 40px 30px 80px 30px;
     min-height: 290px;
     box-sizing: border-box;
@@ -17,39 +16,39 @@
 
     section:nth-child(1) {
       display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
+      flex-direction: column;
       
       h1 {
-        font-size: 2.3rem;
-        font-weight: 300;
-        margin-left: 1.3rem;
+        @extend .background-text-linear;
+        
+        margin-bottom: 3.5rem;
+        font-size: 6vw;
+        font-weight: 700 !important;
+        margin-top: 0;
+        letter-spacing: -.05rem;
+        
+        @media screen and (min-width: 1200px) {
+          font-size: 5rem;
+        }
       }
 
       @include threshold_bar {
-        flex-direction: column;
         justify-content: center;
         
         h1 {
-          margin-left: 0;
           margin-top: 1rem;
           text-align: center;
+          font-size: 50px;
         }
       }
     } 
-    
-
-    .avatar {
-      background-color: rgb(255, 255, 255);
-      color: black;
-      width: 48px;
-      height: 48px;
-    }
 
     section:nth-child(2) {
-      font-size: 1.5rem;
-      opacity: .8;
+      @extend .background-text-linear;
 
+      font-size: 1.65rem;
+      opacity: .95;
+      
       @include threshold_bar {
         text-align: justify;
       }
@@ -62,6 +61,7 @@
       background-color: rgb(255, 255, 255);
       font-size: 1.1rem;
       box-shadow: 0 10px 20px rgba(0,0,0,.2);
+      border-radius: 3px;
 
       position: absolute;
       bottom: -1.3rem;
@@ -79,7 +79,7 @@
       }
 
       .dark & {
-        background-color: #2b2e3e;
+        background-color: #31333c;
 
         &:active {
           color: rgb(220, 220, 255);
@@ -104,21 +104,39 @@
       opacity: .85;
     }
 
-    section:nth-child(1) {
-      margin-top: 3rem;
+    & > section:nth-child(1) {
+      @extend .dark-background-image-linear;
+
+      box-sizing: border-box;
+      padding: 2rem 0;
+
+      margin-bottom: 2.5rem;
+
+      @include threshold_bar {
+        margin-bottom: 1.5rem;
+      }
 
       h2 {
-        font-weight: 500;
+        font-weight: 600;
+        font-size: 1.7rem;
         text-align: center;
+        color: white;
       }
       p {
         text-align: center;
         width: 50%;
         margin: auto;
         margin-bottom: 1.5rem;
+        opacity: 1;
+        font-size: 1.1rem;
+        color: white;
 
         @include threshold_bar {
           width: 100%;
+        }
+
+        & .dl-btn {
+          color: #c6e5ff;
         }
       }
     }
@@ -134,7 +152,12 @@
       box-sizing: border-box;
 
       h3 {
-        font-size: 1.5rem;
+        @extend .tweet-font;
+
+        font-size: 2rem;
+        line-height: 2rem;
+        letter-spacing: -.025rem;
+        font-weight: 600;
         margin-top: .3rem;
       }
 
@@ -153,7 +176,7 @@
         object-fit: cover;
       }
 
-      &:nth-child(even) {
+      &:nth-child(odd) {
         flex-direction: row-reverse;
       }
 
@@ -227,10 +250,11 @@
   }
 
   footer {
-    background: linear-gradient(#f7f7f7, #f7f7f7, #c4d9ff);
+    padding-top: 1.5rem;
+    background: #f5f8fa;
 
     .dark & {
-      background: linear-gradient(#2b2c2b, #2b2c2b, #585858);
+      background: #272727;
     }
 
     .divider-big-margin {

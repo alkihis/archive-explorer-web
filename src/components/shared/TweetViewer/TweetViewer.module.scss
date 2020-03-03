@@ -8,10 +8,8 @@
   // Pour le speeddial
   padding-bottom: 12px; 
 
-  // TODO CHECK IF OK
   max-width: 1200px;
   margin: auto;
-  // ENDOF TODO
 
   @include mobile_large {
     display: block;

@@ -847,10 +847,15 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
             className={this.props.classes.header} 
             style={styles_of_header}
           >
-            <Typography variant="h2" className={this.props.classes.mainHeader}>
+            <Typography variant="h2" className={clsx(this.props.classes.mainHeader, "tweet-font", "background-tiny-text-linear")}>
               Archive
             </Typography>
           </header>
+
+          <div 
+            data-loaded={this.state.loaded ? "true" : undefined}  
+            className={clsx("background-flat-image-linear", this.props.classes.divider)}
+          />
 
           <Container className={this.props.classes.main}>
             {this.howToLoadMessage()}
@@ -888,14 +893,6 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
 }
 
 export default withStyles(theme => {
-  let bg_img = "";
-  if (theme.palette.type === 'light') {
-    bg_img = `linear-gradient(144deg, rgba(0,120,215,1) 16%, rgba(8,204,195,1) 93%)`;
-  }
-  else {
-    bg_img = `linear-gradient(144deg, #344660 16%, #08ccc3a6 93%)`;
-  }
-
   return {
     root: {
       flexGrow: 1,
@@ -918,17 +915,15 @@ export default withStyles(theme => {
       fontWeight: 'bold',
     },
     header: {
-      backgroundImage: bg_img,
       backgroundPosition: 'bottom',
-      width: '100%',
       display: 'flex',
       flexDirection: 'column',
       padding: '2rem 5vw 2rem 5vw',
       boxSizing: 'border-box',
       minHeight: 150,
-      transition: 'min-height 1s ease',
+      transition: 'min-height 1s ease, background-image .5s ease;',
       transitionDelay: '150ms',
-      '&[data-loaded="true"] h2': {
+      '&[data-loaded="true"] > *': {
         opacity: 0,
       },
       '&[data-custom-img="true"]': {
@@ -942,6 +937,12 @@ export default withStyles(theme => {
           opacity: 0,
         },
       },
+
+      // Fix a min width => min(100%, 1200)
+      width: '100%',
+      '@media screen and (min-width: 1200px)': {
+        width: 1200,
+      },
     },
     main: {
       paddingTop: '.5rem',
@@ -951,11 +952,20 @@ export default withStyles(theme => {
       flexDirection: 'column',
     },
     mainHeader: {
-      fontWeight: 200,
+      fontWeight: 600,
       color: 'white',
       fontSize: '4.5rem',
-      letterSpacing: '-.2rem',
+      letterSpacing: '-.15rem',
       transition: 'opacity .3s ease',
+    },
+    divider: {
+      transition: 'opacity .3s ease, height .5s ease',
+      marginBottom: '1rem',
+      width: '100%',
+      height: '1rem',
+      '&[data-loaded="true"]': {
+        height: 0,
+      },
     },
     headerText: {
       fontSize: '1.3rem',

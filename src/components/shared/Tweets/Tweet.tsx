@@ -102,7 +102,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
 
     return (
       <TweetContext.Provider value={this.props.data}>
-        <Card className={classes.card}>
+        <Card className={classes.card} elevation={0}>
           <CardHeader
             classes={
               { title: classes.card_title }

@@ -1,3 +1,5 @@
+@import './tools/functions.scss';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,6 +13,86 @@ body {
   &.dark {
     background-color: #2b2b2b;
     color: #fff;
+  }
+}
+
+.background-image-linear {
+  background-image: linear-gradient(220deg, #08ccc3 0%, #0078D7 100%);
+  .dark & {
+    background-image: linear-gradient(220deg, #08ccc3 0%, #6bbdff 100%);
+  }
+}
+
+.dark-background-image-linear {
+  background-image: linear-gradient(220deg, #0ac4c4 0%, #0080d5 100%);
+  .dark & {
+    background-image: linear-gradient(220deg, #0f9e99 0%, #13568e 100%);
+  }
+}
+
+.background-text-linear {
+  @extend .background-image-linear;
+
+  background-color: #fff;
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.background-tiny-image-linear {
+  background-image: linear-gradient(300deg, #08ccc3 85%, #0078D7 100%);
+  .dark & {
+    background-image: linear-gradient(300deg, #08ccc3 85%, #6bbdff 100%);
+  }
+
+  @include threshold_bar {
+    background-image: linear-gradient(300deg, #08ccc3 50vw, #0078D7 100%);
+    .dark & {
+      background-image: linear-gradient(300deg, #08ccc3 50vw, #6bbdff 100%);
+    }
+  }
+}
+
+.background-flat-image-linear {
+  background-image: linear-gradient(300deg, #08ccc3 0%, #0078D7 100%);
+  .dark & {
+    background-image: linear-gradient(300deg, #08ccc3 0%, #6bbdff 100%);
+  }
+}
+
+.background-tiny-text-linear {
+  @extend .background-tiny-image-linear;
+
+  background-color: #fff;
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.small-blue-divider {
+  display: block;
+  height: .375rem;
+  margin-bottom: 1.5rem;
+  width: 4.5rem;
+  background-color: #1da1f2;
+
+  .dark & {
+    background-color: #3391cc;
+  }
+
+  @include threshold_bar {
+    display: none;
+  }
+}
+
+.small-classic-divider {
+  @extend .small-blue-divider;
+  
+  background-color: #64c3ff;
+  .dark & {
+    background-color: #70b7e4;
   }
 }
 
