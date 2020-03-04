@@ -645,12 +645,13 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
     if (action === 'tweet') {
       const month_year = props.month.split('-', 2);
       const dayView = month_year.length > 1 ? { year: month_year[0], month: month_year[1] } : undefined;
+      const has_tweets = SETTINGS.archive.tweets.length > 0;
 
       return (
         <StatsModal
           onClose={handleModalClose}
           title={LANG.tweet_count_modal_title}
-          fullWidth
+          fullWidth={has_tweets}
         >
           <TweetNumberChart dayView={dayView} trimAt={dayView ? 0 : 5} />
         </StatsModal>

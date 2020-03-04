@@ -258,6 +258,7 @@ export default {
   like advertiser data, screen name history, email address and more.`,
   create_archive_p3: "Warning: In generated archive, retweets will be unwell-formatted with a bad @ or a bad profile picture. This behavior is expected.",
   create: "Create",
+  you_dont_have_any_tweet: "You don't have any tweet in your archive",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */

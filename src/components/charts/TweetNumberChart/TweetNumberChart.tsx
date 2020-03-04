@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme, Typography } from '@material-ui/core';
+import { useTheme, Typography, DialogContentText } from '@material-ui/core';
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Line, Tooltip } from 'recharts';
 import SETTINGS from '../../../tools/Settings';
 import { daysInMonth, getMonthText } from '../../../helpers';
@@ -146,42 +146,52 @@ export default function TweetNumberChart(props: TweetNumberProps) {
     return time.slice(2);
   }
 
-  return (
-    <>
-      <Typography variant="h6" color="textSecondary" align="center">
-        {LANG.posted_tweets_per} {
-          props.dayView ? 
-          LANG.day_of + " " + month.toLocaleLowerCase() + " " + props.dayView.year : 
-          LANG.month
-        }
-      </Typography>
-      <div style={{ height: 400, width: '100%' }}>
-        <ResponsiveContainer>
-          <LineChart
-            data={data}
-            margin={{
-              top: 16,
-              right: 5,
-              bottom: 0,
-              left: 0,
-            }}
-          >
-            <XAxis 
-              dataKey="time" 
-              stroke={theme.palette.text.secondary}
-              tickFormatter={formatYearMonth} 
-            />
-            <YAxis stroke={theme.palette.text.secondary} />
+  if (data.length > 0) {
+    return (
+      <>
+        <Typography variant="h6" color="textSecondary" align="center">
+          {LANG.posted_tweets_per} {
+            props.dayView ? 
+            LANG.day_of + " " + month.toLocaleLowerCase() + " " + props.dayView.year : 
+            LANG.month
+          }
+        </Typography>
+        <div style={{ height: 400, width: '100%' }}>
+          <ResponsiveContainer>
+            <LineChart
+              data={data}
+              margin={{
+                top: 16,
+                right: 5,
+                bottom: 0,
+                left: 0,
+              }}
+            >
+              <XAxis 
+                dataKey="time" 
+                stroke={theme.palette.text.secondary}
+                tickFormatter={formatYearMonth} 
+              />
+              <YAxis stroke={theme.palette.text.secondary} />
+  
+              <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />
+              
+              <Tooltip content={
+                // @ts-ignore
+                <CustomTooltip month={month} monthPos={month_pos} />
+              } />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </>
+    );
+  }
 
-            <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />
-            
-            <Tooltip content={
-              // @ts-ignore
-              <CustomTooltip month={month} monthPos={month_pos} />
-            } />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </>
-  );
+  return (
+    <div>
+      <DialogContentText variant="body1" align="center">
+        {LANG.you_dont_have_any_tweet}.
+      </DialogContentText>  
+    </div>
+  )
 }

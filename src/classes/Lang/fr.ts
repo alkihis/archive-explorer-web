@@ -258,6 +258,7 @@ export default {
   l'historique des @, l'adresse e-mail et plus.`,
   create_archive_p3: `Attention : Dans l'archive générée, les retweets seront malformés avec des mauvais @, ou photos de profil manquantes. Ce comportement est normal.`,
   create: "Créer",
+  you_dont_have_any_tweet: "Vous n'avez aucun tweet dans votre archive",
   /** END ARCHIVE CMPT */
 
   /** BEGIN DMS CMPT */
