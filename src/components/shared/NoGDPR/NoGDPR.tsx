@@ -36,9 +36,19 @@ export default class NoGDPR extends React.Component<{ icon: any, message?: strin
         {/* Real component, text */}
         <div className="center-absolute">
           <CenterComponent className={classes.text_lighten}>
-            <Icon className={classes.icon} />
+            <Icon className={classes.icon + " icon-error-color"} />
 
-            <Typography variant="h4" style={{marginTop: "1rem", marginBottom: ".7rem", textAlign: 'center'}}>
+            <Typography 
+              variant="h4" 
+              className="background-text-error-linear tweet-font" 
+              style={{
+                marginTop: "1rem", 
+                marginBottom: ".7rem", 
+                textAlign: 'center',
+                fontWeight: 600,
+                letterSpacing: '-0.05rem'
+              }}
+            >
               {LANG.gdpr_required}
             </Typography>
 

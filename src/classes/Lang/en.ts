@@ -276,6 +276,7 @@ export default {
   left: "left",
   left_plural: "left",
   added_you: "added you",
+  last_message_on: "Last message on",
   /** END DM CMPT */
 
   /** BEGIN DMContainer CMPT */

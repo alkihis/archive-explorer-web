@@ -259,11 +259,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     return (
       <CenterComponent className={classes.no_msg}>
         <LeftArrowIcon className={classes.icon} />
-        <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+        <Typography variant="h5" className="small-title-twitter" style={{ marginTop: "1rem", marginBottom: ".7rem" }}>
           {LANG.select_a_month}
         </Typography>
 
-        <Typography variant="h6">
+        <Typography variant="h6" align="center">
           {LANG.choose_month_messages}
         </Typography>
       </CenterComponent>
@@ -278,7 +278,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           {LANG.not_found}
         </Typography>
 
-        <Typography variant="h6">
+        <Typography variant="h6" align="center">
           {LANG.search_no_results}.
         </Typography>
       </CenterComponent>
@@ -293,7 +293,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           {LANG.no_message}
         </Typography>
 
-        <Typography variant="h6">
+        <Typography variant="h6" align="center">
           {LANG.any_message_here}.
         </Typography>
       </CenterComponent>
@@ -476,7 +476,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
         title={this.props.conversation.name ? this.props.conversation.name : LANG.conversation_with + " " + this.participants}
-        toolbarClassName="background-flat-image-linear"
+        toolbarGradient
         noPadding
         drawer={this.drawer()}
         content={this.content()}

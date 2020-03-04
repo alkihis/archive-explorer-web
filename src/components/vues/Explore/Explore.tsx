@@ -221,11 +221,11 @@ export default class Explore extends React.Component<{}, ExploreState> {
     return (
       <CenterComponent className={classes.no_tweets}>
         <LeftArrowIcon className={classes.icon} />
-        <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+        <Typography variant="h5" className="small-title-twitter" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
           {LANG.select_a_month}
         </Typography>
 
-        <Typography variant="h6">
+        <Typography variant="h6" align="center">
           {LANG.choose_month_tweets}.
         </Typography>
       </CenterComponent>
@@ -372,6 +372,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       <ResponsiveDrawer 
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
+        toolbarGradient
         title={LANG.explore}
         drawer={<div>
           <div className={classes.toolbar} />

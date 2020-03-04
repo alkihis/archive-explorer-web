@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './DirectMessages.module.scss';
-import { setPageTitle, isArchiveLoaded, specialJoin, nFormat } from '../../../helpers';
+import { setPageTitle, isArchiveLoaded, specialJoin, nFormat, localeDateFormat } from '../../../helpers';
 import MailIcon from '@material-ui/icons/Mail';
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
@@ -166,6 +166,8 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
         </div>
       );
     }
+
+    const last_message = localeDateFormat(conv.last.createdAtDate);
     
     return (
       <Card key={conv.id} elevation={0} className={classes.card_root} onClick={oncardclick}>
@@ -174,6 +176,9 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
 
           <div className={classes.messages_number}>
             <span className="bold">{nFormat(conv.length)}</span> message{conv.length > 1 ? "s" : ""}
+          </div>
+          <div className={classes.last_message}>
+            {LANG.last_message_on} <span className="bold">{last_message}</span>.
           </div>
         </CardContent>
       </Card>

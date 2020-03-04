@@ -21,6 +21,25 @@ export function nFormat(number: number) {
   return new Intl.NumberFormat(lang).format(number);
 }
 
+export function localeDateFormat(date: Date, with_time = false) {
+  const lang = SETTINGS.lang === "fr" ? "fr-FR" : "en-US";
+
+  if (with_time) {
+    return dateFormatter(
+      lang === "fr-FR" ?
+        "d/m/Y H:i:s" :
+        "Y-m-d H:i:s",
+      date
+    );
+  }
+  return dateFormatter(
+    lang === "fr-FR" ?
+      "d/m/Y" :
+      "Y-m-d",
+    date
+  );
+}
+
 /**
  * Return true if user is verified, false if token expires, null if server can't be accessed.
  */

@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: '0 !important',
     },
     no_pad: {
-      padding: 0
+      padding: 0,
     },
     full_h: {
       height: '100%'
@@ -84,7 +84,7 @@ interface ResponsiveDrawerProps {
   appBar?: React.ReactNode;
   mobileOpen?: boolean;
   noPadding?: boolean;
-  toolbarClassName?: string;
+  toolbarGradient?: boolean;
   handleDrawerToggle: () => void;
 }
 
@@ -94,7 +94,7 @@ export default function ResponsiveDrawer(props: ResponsiveDrawerProps) {
 
   const main_app_bar = (
     <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar className={props.toolbarClassName}>
+      <Toolbar className={props.toolbarGradient ? "background-flat-image-linear" : ""}>
         <IconButton
           color="inherit"
           aria-label="open drawer"

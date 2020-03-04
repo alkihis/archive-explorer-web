@@ -225,7 +225,7 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
       <Container>
         <CenterComponent className={classes.no_tweets}>
           <LeftArrowIcon className={classes.icon} />
-          <Typography variant="h5" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
+          <Typography variant="h5" className="small-title-twitter" style={{marginTop: "1rem", marginBottom: ".7rem"}}>
             {LANG.select_a_month}
           </Typography>
 
@@ -409,6 +409,7 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
       <ResponsiveDrawer 
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
+        toolbarGradient
         title={LANG.favorites}
         drawer={<div>
           <div className={classes.toolbar} />

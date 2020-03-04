@@ -16,6 +16,14 @@ body {
   }
 }
 
+.transparent-bg-text {
+  background-color: #fff;
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .background-image-linear {
   background-image: linear-gradient(220deg, #08ccc3 0%, #0078D7 100%);
   .dark & {
@@ -32,26 +40,7 @@ body {
 
 .background-text-linear {
   @extend .background-image-linear;
-
-  background-color: #fff;
-  background-size: cover;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.background-medium-image-linear {
-  background-image: linear-gradient(300deg, #08ccc3 50%, #0078D7 100%);
-  .dark & {
-    background-image: linear-gradient(300deg, #08ccc3 50%, #6bbdff 100%);
-  }
-
-  @include threshold_bar {
-    background-image: linear-gradient(300deg, #08ccc3 50vw, #0078D7 100%);
-    .dark & {
-      background-image: linear-gradient(300deg, #08ccc3 50vw, #6bbdff 100%);
-    }
-  }
+  @extend .transparent-bg-text;
 }
 
 .background-tiny-image-linear {
@@ -82,24 +71,22 @@ body {
   }
 }
 
-.background-medium-text-linear {
-  @extend .background-medium-image-linear;
-
-  background-color: #fff;
-  background-size: cover;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .background-tiny-text-linear {
   @extend .background-tiny-image-linear;
+  @extend .transparent-bg-text;
+}
 
-  background-color: #fff;
-  background-size: cover;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.background-error-linear {
+  background-image: linear-gradient(310deg, #ce2b20 0%, #ff9218 100%);
+}
+
+.background-text-error-linear {
+  @extend .background-error-linear;
+  @extend .transparent-bg-text;
+}
+
+.icon-error-color {
+  color: #f3430ddb;
 }
 
 .small-blue-divider {
@@ -139,6 +126,12 @@ body {
   &.tweet-details {
     font-weight: normal !important;
   }
+}
+
+.small-title-twitter {
+  @extend .tweet-font;
+  font-weight: 600 !important;
+  letter-spacing: .005rem !important;
 }
 
 a {

@@ -276,6 +276,7 @@ export default {
   left: "est parti",
   left_plural: "sont partis",
   added_you: "vous a ajouté",
+  last_message_on: "Dernier message le",
   /** END DM CMPT */
 
   /** BEGIN DMContainer CMPT */

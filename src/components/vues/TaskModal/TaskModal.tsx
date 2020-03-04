@@ -327,7 +327,7 @@ export default class TaskModal extends React.Component<TaskModalProps, TaskModal
         }}
       >
         <AppBar className={classes.app_bar}>
-          <Toolbar>
+          <Toolbar className="background-flat-image-linear">
             <Typography variant="h6" className={classes.nav_title}>
               {LANG.tasks}
             </Typography>
