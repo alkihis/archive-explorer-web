@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, CircularProgress, Typography, CardContent, Button, Link as MUILink, Container } from "@material-ui/core";
+import { Grid, CircularProgress, Typography, CardContent, Button, Link as MUILink, Container, Tabs, withStyles } from "@material-ui/core";
 import LoginIcon from '@material-ui/icons/Refresh';
 import SETTINGS from "./Settings";
 import { Link } from "react-router-dom";
@@ -152,3 +152,31 @@ function GithubLogo(props: { url: string, text: string }) {
     </a>
   );
 }
+
+export function ClassicHeader(props: { title: string, divider?: boolean | React.ReactNode, }) {
+  return (
+    <React.Fragment>
+      <header className="linear-header-text no-dark">
+        <Typography variant="h2" className="tweet-font">
+          {props.title}
+        </Typography>
+      </header>
+      {props.divider && <div 
+        className="linear-header-divider background-flat-image-linear no-dark"
+      >
+        {props.divider}
+      </div>}
+    </React.Fragment>
+  );
+}
+
+export const ClassicTabs = withStyles({
+  root: {
+    backgroundImage: 'linear-gradient(270deg, #08ccc3 0%, #0078D7 100%)',
+    backgroundColor: 'unset !important',
+    color: 'white !important',
+  },
+  indicator: {
+    backgroundColor: 'white',
+  },
+})(Tabs);

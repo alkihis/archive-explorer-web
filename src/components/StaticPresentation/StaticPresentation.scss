@@ -22,11 +22,11 @@
         @extend .background-text-linear;
         
         margin-bottom: 3.5rem;
-        font-size: 6vw;
         font-weight: 700 !important;
         margin-top: 0;
         letter-spacing: -.05rem;
         
+        font-size: 6vw;
         @media screen and (min-width: 1200px) {
           font-size: 5rem;
         }

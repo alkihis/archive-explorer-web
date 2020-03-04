@@ -3,8 +3,8 @@
 }
 
 .conv_title {
-  font-size: 1.8rem !important;
-  font-weight: 200 !important;
+  font-size: 2rem !important;
+  font-weight: 600 !important;
   margin: 1.2rem .2rem !important;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .preloader {
-  height: 80vh;
+  height: 60vh;
 }
 
 .preloader_msg {
@@ -24,16 +24,6 @@
 
 .card_root {
   cursor: pointer;
-}
-
-.tabs {
-  background-color: unset !important;
-  background: linear-gradient(#036fc8, #005da9);
-
-  :global .dark :local & {
-    background: linear-gradient(#7dbcef, #073f6d);
-    color: #fff !important;
-  }
 }
 
 .avatar_holder {

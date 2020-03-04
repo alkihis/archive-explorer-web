@@ -40,6 +40,20 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.background-medium-image-linear {
+  background-image: linear-gradient(300deg, #08ccc3 50%, #0078D7 100%);
+  .dark & {
+    background-image: linear-gradient(300deg, #08ccc3 50%, #6bbdff 100%);
+  }
+
+  @include threshold_bar {
+    background-image: linear-gradient(300deg, #08ccc3 50vw, #0078D7 100%);
+    .dark & {
+      background-image: linear-gradient(300deg, #08ccc3 50vw, #6bbdff 100%);
+    }
+  }
+}
+
 .background-tiny-image-linear {
   background-image: linear-gradient(300deg, #08ccc3 85%, #0078D7 100%);
   .dark & {
@@ -56,9 +70,26 @@ body {
 
 .background-flat-image-linear {
   background-image: linear-gradient(300deg, #08ccc3 0%, #0078D7 100%);
-  .dark & {
+  .dark &:not(.no-dark) {
     background-image: linear-gradient(300deg, #08ccc3 0%, #6bbdff 100%);
   }
+}
+
+.background-flat-deg-image-linear {
+  background-image: linear-gradient(270deg, #08ccc3 0%, #0078D7 100%);
+  .dark &:not(.no-dark) {
+    background-image: linear-gradient(270deg, #08ccc3 0%, #6bbdff 100%);
+  }
+}
+
+.background-medium-text-linear {
+  @extend .background-medium-image-linear;
+
+  background-color: #fff;
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .background-tiny-text-linear {
@@ -99,7 +130,7 @@ body {
 .tweet-font {
   font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    sans-serif;
+    sans-serif !important;
 
   &.tweet-text {
     font-weight: 500 !important;

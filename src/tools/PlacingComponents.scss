@@ -80,3 +80,45 @@
     }
   }
 }
+
+.linear-header-text {
+  @extend .background-flat-deg-image-linear;
+
+  display: flex;
+  width: 100%;
+  padding: 2rem 5vw 2rem 5vw;
+  box-sizing: border-box;
+  min-height: 130px;
+
+  & h2 {
+    width: 100%;
+    font-weight: 600;
+    color: white;
+    font-size: 5vw;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    
+    @media screen and (min-width: 1000px) {
+      -webkit-line-clamp: 1;
+    }
+    @media screen and (min-width: 1200px) {
+      font-size: 4rem;
+    }
+
+    letter-spacing: -.15rem;
+
+    @include threshold_bar {
+      justify-content: center;
+      font-size: 50px;
+    }
+  }
+}
+
+.linear-header-divider {
+  width: 100%;
+  min-height: 1rem;
+}

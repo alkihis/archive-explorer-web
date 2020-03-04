@@ -917,14 +917,29 @@ export default withStyles(theme => {
     header: {
       backgroundPosition: 'bottom',
       display: 'flex',
+      width: '100%',
       flexDirection: 'column',
       padding: '2rem 5vw 2rem 5vw',
       boxSizing: 'border-box',
       minHeight: 150,
       transition: 'min-height 1s ease, background-image .5s ease;',
       transitionDelay: '150ms',
+
+      '& h2': {
+        // Fix a min width => min(100%, 1200)
+        width: '100%',
+        '@media screen and (min-width: 1200px)': {
+          width: 1200,
+        },
+      },
+
       '&[data-loaded="true"] > *': {
         opacity: 0,
+      },
+      '&[data-loaded="true"]': {
+        backgroundImage: theme.palette.type === "light" ? 
+          'linear-gradient(144deg, rgba(0,120,215,1) 16%, rgba(8,204,195,1) 93%)' : 
+          'linear-gradient(144deg, #1b61b1 16%, #3ce8d2cf 93%)',
       },
       '&[data-custom-img="true"]': {
         backgroundSize: "cover",
@@ -937,19 +952,6 @@ export default withStyles(theme => {
           opacity: 0,
         },
       },
-
-      // Fix a min width => min(100%, 1200)
-      width: '100%',
-      '@media screen and (min-width: 1200px)': {
-        width: 1200,
-      },
-    },
-    main: {
-      paddingTop: '.5rem',
-      paddingBottom: '2rem',
-      boxSizing: 'border-box',
-      display: 'flex',
-      flexDirection: 'column',
     },
     mainHeader: {
       fontWeight: 600,
@@ -957,6 +959,13 @@ export default withStyles(theme => {
       fontSize: '4.5rem',
       letterSpacing: '-.15rem',
       transition: 'opacity .3s ease',
+    },
+    main: {
+      paddingTop: '.5rem',
+      paddingBottom: '2rem',
+      boxSizing: 'border-box',
+      display: 'flex',
+      flexDirection: 'column',
     },
     divider: {
       transition: 'opacity .3s ease, height .5s ease',
@@ -987,7 +996,7 @@ export default withStyles(theme => {
       gridTemplateColumns: "min-content auto",
       gridTemplateRows: '1fr 1fr',
       columnGap: '.5rem',
-      marginTop: '-1.2rem',
+      marginTop: 'calc(-1.2rem - 15px)',
     },
     tweetNumber: {
       fontWeight: 200,

@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
+      [theme.breakpoints.up('sm')]: {
+        flexDirection: 'column',
+      },
     },
     drawer: {
       [theme.breakpoints.up('sm')]: {
@@ -37,12 +40,20 @@ const useStyles = makeStyles((theme: Theme) =>
       
     },
     drawerPaperFull: {
-      position: 'fixed',
       zIndex: 4,
       [theme.breakpoints.up('sm')]: {
         marginTop: '64px',
         height: 'calc(100vh - 64px - 56px)',
         width: drawerWidth,
+        position: 'fixed',
+      },
+    },
+    drawerPaperFullAppBar: {
+      zIndex: 4,
+      [theme.breakpoints.up('sm')]: {
+        height: 'calc(100vh - 56px)',
+        width: drawerWidth,
+        position: 'fixed',
       },
     },
     content: {
@@ -54,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) =>
         marginTop: 64,
       },
     },
+    noTop: {
+      marginTop: '0 !important',
+    },
     no_pad: {
       padding: 0
     },
@@ -64,72 +78,83 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface ResponsiveDrawerProps {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   drawer?: JSX.Element;
   content?: JSX.Element;
-  title: string;
+  title?: string;
+  appBar?: React.ReactNode;
   mobileOpen?: boolean;
   noPadding?: boolean;
+  toolbarClassName?: string;
   handleDrawerToggle: () => void;
 }
 
 export default function ResponsiveDrawer(props: ResponsiveDrawerProps) {
-  const { drawer, title, content, handleDrawerToggle, mobileOpen, noPadding } = props;
+  const { drawer, title, content, appBar, handleDrawerToggle, mobileOpen, noPadding } = props;
   const classes: any = useStyles();
+
+  const main_app_bar = (
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar className={props.toolbarClassName}>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          className={classes.menuButton}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" noWrap>
+          {title}
+        </Typography>
+      </Toolbar>
+    </AppBar>
+  );
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            {title}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <nav className={classes.drawer}>
-        <Hidden smUp implementation="css">
-          <Drawer
-            variant="temporary"
-            anchor="left"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>  
-        { /* 
-        // @ts-ignore */ }
-        <Hidden xsDown implementation="css" className={classes.full_h}>
-          <Drawer className={classes.full_h}
-            classes={{
-              paper: classes.drawerPaperFull,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
-      <main className={classes.content + (noPadding ? " " + classes.no_pad : "")}>{content}</main>
+      {appBar && <Hidden smUp>
+        {main_app_bar}
+      </Hidden>}
+      {!appBar && main_app_bar}
+
+      <div style={{ display: 'flex' }}>
+        <nav className={classes.drawer}>
+          <Hidden smUp implementation="css">
+            <Drawer
+              variant="temporary"
+              anchor="left"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>  
+          { /* 
+          // @ts-ignore */ }
+          <Hidden xsDown implementation="css" className={classes.full_h}>
+            <Drawer className={classes.drawer}
+              classes={{
+                paper: appBar ? classes.drawerPaperFullAppBar : classes.drawerPaperFull,
+              }}
+              variant="permanent"
+              anchor="left"
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+        <main className={classes.content + (noPadding ? " " + classes.no_pad : "") + (appBar ? " " + classes.noTop : "")}>
+          {appBar}
+          {content}
+        </main>
+      </div>
     </div>
   );
 }

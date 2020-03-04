@@ -401,12 +401,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
   }
 
   showActiveSearch() {
-    let month_text = "Search results";
     const msg_number = this.state.found.length;
 
     return (
       <div className={classes.month_header}>
-        {month_text} <span className={classes.month_msg_number}>
+        Search results <span className={classes.month_msg_number}>
           <span className="bold">{msg_number}</span> message{msg_number > 1 ? "s" : ""}
         </span>
       </div>
@@ -477,6 +476,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
         title={this.props.conversation.name ? this.props.conversation.name : LANG.conversation_with + " " + this.participants}
+        toolbarClassName="background-flat-image-linear"
         noPadding
         drawer={this.drawer()}
         content={this.content()}

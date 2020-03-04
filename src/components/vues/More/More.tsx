@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './More.module.scss';
 import { isArchiveLoaded } from '../../../helpers';
 import SETTINGS from '../../../tools/Settings';
-import { AppBar, Toolbar, Typography, Container, Dialog, DialogTitle, DialogContent, DialogActions, Button, DialogContentText, Tabs, Tab } from '@material-ui/core';
+import { Container, Dialog, DialogTitle, DialogContent, DialogActions, Button, DialogContentText, Tab } from '@material-ui/core';
 import LANG from '../../../classes/Lang/Language';
 import Help from './Help';
 import Mutes from './Mutes';
@@ -11,6 +11,7 @@ import Followers, { Followings } from './Followers';
 import AdAndUserData from './AdAndUserData';
 import LegalMentions from './LegalMentions';
 import Settings from '../Settings/Settings';
+import { ClassicHeader, ClassicTabs } from '../../../tools/PlacingComponents';
 
 type MoreState = {  
   active_tab: number;
@@ -64,18 +65,16 @@ export default class More extends React.Component<{}, MoreState> {
     }
 
     return (
-      <AppBar position="static" className={classes.tabs}>
-        <Tabs value={this.state.active_tab} onChange={this.changeActiveTab} variant="scrollable">
-          <Tab label={LANG.settings} />
-          <Tab label={LANG.help} />
-          <Tab label={LANG.ads_and_user_data} disabled={!enabled.ads_and_user_data} />
-          <Tab label={LANG.followers} disabled={!enabled.followers} />
-          <Tab label={LANG.followings} disabled={!enabled.followings} />
-          <Tab label={LANG.mutes} disabled={!enabled.mutes} />
-          <Tab label={LANG.blocks} disabled={!enabled.blocks} />
-          <Tab label={LANG.legal_mentions} />
-        </Tabs>
-      </AppBar>
+      <ClassicTabs value={this.state.active_tab} onChange={this.changeActiveTab} variant="scrollable">
+        <Tab label={LANG.settings} />
+        <Tab label={LANG.help} />
+        <Tab label={LANG.ads_and_user_data} disabled={!enabled.ads_and_user_data} />
+        <Tab label={LANG.followers} disabled={!enabled.followers} />
+        <Tab label={LANG.followings} disabled={!enabled.followings} />
+        <Tab label={LANG.mutes} disabled={!enabled.mutes} />
+        <Tab label={LANG.blocks} disabled={!enabled.blocks} />
+        <Tab label={LANG.legal_mentions} />
+      </ClassicTabs>
     );
   }
 
@@ -94,13 +93,7 @@ export default class More extends React.Component<{}, MoreState> {
 
   render() {
     return <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" color="inherit">
-            {LANG.more}
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <ClassicHeader title={LANG.more} />
 
       {this.renderTabbar()}
 
