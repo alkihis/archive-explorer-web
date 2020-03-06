@@ -4,6 +4,7 @@
   display: grid;
   grid-gap: 5px;
   grid-template-columns: 1fr;
+  overflow: hidden;
 
   &.one {
     grid-template-areas: "img1";
@@ -34,6 +35,7 @@
   max-height: 100%;
   grid-area: img1;
   outline: none;
+  overflow: hidden;
 
   &.full {
     max-width: 100%;
@@ -59,6 +61,7 @@
     grid-area: img#{$i};
     height: 100%;
     width: 100%;
+    overflow: hidden;
     @include object_fit;
   }
 }
