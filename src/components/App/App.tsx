@@ -90,9 +90,35 @@ class App extends React.Component<{}, { theme: any, error: any }> {
     this.forceUpdate();
   };
 
+  get tweet_font_for_system() {
+    if (navigator.platform.includes('Mac')) {
+      return "'Helvetica Neue', -apple-system, BlinkMacSystemFont !important";
+    }
+    return "'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', sans-serif !important";
+  }
+
   render() {  
     return (
       <ThemeProvider theme={this.state.theme}>
+        <style>
+          {`
+            .tweet-font {
+              font-family: ${this.tweet_font_for_system};
+            }  
+            .tweet-font.tweet-text {
+              font-weight: 500 !important;
+            }
+            .tweet-font.tweet-details {
+              font-weight: normal !important;
+            }
+            .small-title-twitter {
+              font-family: ${this.tweet_font_for_system};
+              font-weight: 700 !important;
+              letter-spacing: .005rem !important;
+            }
+          `}
+        </style>
+        
         {this.state.error && <AppError error={this.state.error} />}
         {!this.state.error && <>
           <Router />

@@ -23,7 +23,7 @@ export default function EmptyMessage(props: EmptyMessageProps) {
             marginTop: "1rem", 
             marginBottom: ".7rem", 
             textAlign: 'center',
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: '-0.05rem'
           }}
         >

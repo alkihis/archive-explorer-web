@@ -114,26 +114,6 @@ body {
   }
 }
 
-.tweet-font {
-  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    sans-serif !important;
-
-  &.tweet-text {
-    font-weight: 500 !important;
-  }
-
-  &.tweet-details {
-    font-weight: normal !important;
-  }
-}
-
-.small-title-twitter {
-  @extend .tweet-font;
-  font-weight: 600 !important;
-  letter-spacing: .005rem !important;
-}
-
 a {
   text-decoration: none;
 }

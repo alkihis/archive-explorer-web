@@ -117,7 +117,7 @@
       }
 
       h2 {
-        font-weight: 600;
+        font-weight: 700;
         font-size: 1.7rem;
         text-align: center;
         color: white;
@@ -152,12 +152,10 @@
       box-sizing: border-box;
 
       h3 {
-        @extend .tweet-font;
-
         font-size: 2rem;
         line-height: 2rem;
         letter-spacing: -.025rem;
-        font-weight: 600;
+        font-weight: 700;
         margin-top: .3rem;
       }
 

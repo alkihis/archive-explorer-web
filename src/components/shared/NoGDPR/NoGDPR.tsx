@@ -45,7 +45,7 @@ export default class NoGDPR extends React.Component<{ icon: any, message?: strin
                 marginTop: "1rem", 
                 marginBottom: ".7rem", 
                 textAlign: 'center',
-                fontWeight: 600,
+                fontWeight: 700,
                 letterSpacing: '-0.05rem'
               }}
             >

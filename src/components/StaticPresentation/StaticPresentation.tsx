@@ -65,7 +65,7 @@ const StaticPresentation: React.FC = () => {
         <Container>
           <section className="feature">
             <div>
-              <h3>{LANG.powerful_search}</h3>
+              <h3 className="tweet-font">{LANG.powerful_search}</h3>
 
               <div className="small-classic-divider" />
 
@@ -79,7 +79,7 @@ const StaticPresentation: React.FC = () => {
 
           <section className="feature">
             <div>
-              <h3>{LANG.clean_your_account}</h3>
+              <h3 className="tweet-font">{LANG.clean_your_account}</h3>
 
               <div className="small-classic-divider" />
 
@@ -93,7 +93,7 @@ const StaticPresentation: React.FC = () => {
 
           <section className="feature">
             <div>
-              <h3>{LANG.sort_and_filter_tweets}</h3>
+              <h3 className="tweet-font">{LANG.sort_and_filter_tweets}</h3>
 
               <div className="small-classic-divider" />
 
@@ -111,7 +111,7 @@ const StaticPresentation: React.FC = () => {
 
           <section className="feature">
             <div>
-              <h3>{LANG.find_your_favorites_favorites}</h3>
+              <h3 className="tweet-font">{LANG.find_your_favorites_favorites}</h3>
 
               <div className="small-classic-divider" />
               

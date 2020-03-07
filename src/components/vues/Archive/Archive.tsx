@@ -954,7 +954,7 @@ export default withStyles(theme => {
       },
     },
     mainHeader: {
-      fontWeight: 600,
+      fontWeight: 700,
       color: 'white',
       fontSize: '4.5rem',
       letterSpacing: '-.15rem',
