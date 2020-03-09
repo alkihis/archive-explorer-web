@@ -97,6 +97,17 @@ export default {
   You can't restore tweets after they're been removed from Twitter.
   Are you sure you want to do this ?`,
   fatal_error: "Fatal error",
+  browser_is_obsolete: 'Browser is obsolete',
+  incompatible_navigator: 'Your navigator is incompatible with Archive Explorer.',
+  compatible_no_grid_1: 'Website will not be shown properly, please consider upgrading your browser in order display this website the correct way.',
+  compatible_no_grid_2: 'Step into your navigator settings, and check for updates.',
+  old_web_browser: 'You are using an old web browser.',
+  old_web_browser_p1: 'Website may not be displayed properly, please consider upgrading your navigator in order to have a better web experience.',
+  old_web_browser_p2: 'Usually, update process can be found in navigator settings, or through device software update.',
+  old_microsoft_edge: 'You are using an old version of Microsoft Edge.',
+  old_microsoft_edge_p1: 'Please consider upgrading to the ',
+  old_microsoft_edge_plink: 'new version of Microsoft Edge, based on Chromium',
+  old_microsoft_edge_p2: 'or change your browser to display this website properly',
 
   /** BEGIN PRESENTATION PAGE */
   catch_phrase: "Explore through time, browse your old direct messages and quickly delete embarrassing tweets.",

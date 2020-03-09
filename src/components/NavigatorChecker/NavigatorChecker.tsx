@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles, Card, CardContent, Typography, Link, CardActions, Button, Slide } from '@material-ui/core';
+import LANG from '../../classes/Lang/Language';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -43,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 export default function NavigatorChecker() {
   const [shown, setShown] = React.useState(false);
   const [buttonShown, setButtonShown] = React.useState(false);
-  const [badNav, setBadNav] = React.useState<"old" | "no-grid" | "edge">("edge");
+  const [badNav, setBadNav] = React.useState<"old" | "no-grid" | "edge">("old");
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -89,14 +90,14 @@ export default function NavigatorChecker() {
     return (
       <React.Fragment>
         <Typography variant="h6" className={"tweet-font " + classes.subHeader}>
-          You are using an old version of Microsoft Edge.
+          {LANG.old_microsoft_edge}
         </Typography>
 
         <Typography className={"tweet-font " + classes.text}>
-          Please consider upgrading to the {" "}
+          {LANG.old_microsoft_edge_p1} {" "}
           <Link target="_blank" rel="noopener noreferrer" href="https://support.microsoft.com/help/4501095/download-the-new-microsoft-edge-based-on-chromium">
-            new version of Microsoft Edge, based on Chromium
-          </Link>, or change your browser to display this website properly.
+            {LANG.old_microsoft_edge_plink}
+          </Link>, {LANG.old_microsoft_edge_p2}.
         </Typography>
       </React.Fragment>
     );
@@ -106,14 +107,14 @@ export default function NavigatorChecker() {
     return (
       <React.Fragment>
         <Typography variant="h6" className={"tweet-font " + classes.subHeader}>
-          You are using an old web browser.
+          {LANG.old_web_browser}
         </Typography>
 
         <Typography className={"tweet-font " + classes.text}>
-         Website may not be displayed properly, please consider upgrading your navigator in order to have a better web experience. 
+          {LANG.old_web_browser_p1}
         </Typography>
         <Typography className={"tweet-font " + classes.text}>
-          Usually, update process can be found in navigator settings, or through device software update.
+          {LANG.old_web_browser_p2}
         </Typography>
       </React.Fragment>
     );
@@ -123,14 +124,14 @@ export default function NavigatorChecker() {
     return (
       <React.Fragment>
         <Typography variant="h6" className={"tweet-font " + classes.subHeader}>
-          Your navigator is incompatible with Archive Explorer.
+          {LANG.incompatible_navigator}
         </Typography>
 
         <Typography className={"tweet-font " + classes.text}>
-          Website will not be shown properly, please consider upgrading your browser in order display this website the correct way.
+          {LANG.compatible_no_grid_1}
         </Typography>
         <Typography className={"tweet-font " + classes.text}>
-          Step into your navigator settings, and check for updates.
+          {LANG.compatible_no_grid_2}
         </Typography>
       </React.Fragment>
     );
@@ -142,7 +143,7 @@ export default function NavigatorChecker() {
         <Card className={classes.root} elevation={4}>
           <CardContent className={classes.content}>
             <Typography variant="h5" className={"tweet-font " + classes.header}>
-              Navigator is obsolete
+              {LANG.browser_is_obsolete}
             </Typography>
             
             {badNav === "old" && textOld()}
@@ -159,7 +160,7 @@ export default function NavigatorChecker() {
                 localStorage.setItem('badNavigatorShown', 'true');
               }}
             >
-              Close
+              {LANG.close}
             </Button>
           </CardActions>
         </Card>

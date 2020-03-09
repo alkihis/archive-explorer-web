@@ -96,6 +96,17 @@ export default {
   deletion_modal_text: `Une tâche de suppression va être lancée. 
   Vous ne pouvez pas restaurer les tweets après qu'ils soient supprimés de Twitter.
   Voulez vous vraiment faire cela ?`,
+  browser_is_obsolete: 'Navigateur obsolète',
+  incompatible_navigator: 'Votre navigateur web est incompatible avec Archive Explorer.',
+  compatible_no_grid_1: 'Le site web peut ne pas s\'afficher correctement. Merci de mettre à jour votre navigateur afin que le site puisse fonctionner normalement.',
+  compatible_no_grid_2: 'Rendez-vous dans les paramètres de votre navigateur, et recherchez les mises à jour.',
+  old_web_browser: 'Vous utilisez un vieux navigateur web.',
+  old_web_browser_p1: 'Ce site peut ne pas s\'afficher correctement. Une mise à jour du navigateur vous permettra une meilleur expérience de navigation.',
+  old_web_browser_p2: 'En général, le processus de mise à jour est situé dans les paramètres du navigateur, ou se réalise via une mise à jour système.',
+  old_microsoft_edge: 'Vous utilisez une ancienne version de Microsoft Edge.',
+  old_microsoft_edge_p1: 'Merci d\'envisager la mise à jour vers la ',
+  old_microsoft_edge_plink: 'nouvelle version de Microsoft Edge, basée sur Chromium',
+  old_microsoft_edge_p2: 'ou changez de navigateur pour afficher ce site correctement',
 
   /** BEGIN PRESENTATION PAGE */
   catch_phrase: "Explorez à travers le temps, naviguez dans vos anciens messages privés et supprimez rapidement des vieux tweets embarrassants.",
