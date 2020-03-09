@@ -66,9 +66,10 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
     if (type === "gif") {
       return <video 
         about="GIF" 
-        className={classes.video + (full ? " " + classes.full : "")} 
+        playsinline
         loop 
         autoPlay 
+        className={classes.video + (full ? " " + classes.full : "")} 
         src={better_variants.url} 
         onClick={full ? undefined : () => this.setState({ image_full: 0 })}
       />;
@@ -79,7 +80,6 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
         className={classes.video + (full ? " " + classes.full : "")} 
         controls 
         src={better_variants.url} 
-        // onClick={full ? undefined : () => this.setState({ image_full: 0 })}
       />;
     }
   }

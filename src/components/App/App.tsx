@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core';
 import SETTINGS from '../../tools/Settings';
 import AppError from './AppError';
+import NavigatorChecker from '../NavigatorChecker/NavigatorChecker';
 
 const theme = createMuiTheme({
   palette: {
@@ -91,10 +92,15 @@ class App extends React.Component<{}, { theme: any, error: any }> {
   };
 
   get tweet_font_for_system() {
-    if (navigator.platform.includes('Mac')) {
-      return "'Helvetica Neue', -apple-system, BlinkMacSystemFont !important";
+    if (
+      navigator.vendor.includes('Apple') || 
+      navigator.platform.includes('Mac') || 
+      navigator.userAgent.includes('iPhone OS')
+    ) {
+      return "font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont !important;";
     }
-    return "'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', sans-serif !important";
+    return "font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', sans-serif !important;" +
+      "line-height: normal;";
   }
 
   render() {  
@@ -103,7 +109,7 @@ class App extends React.Component<{}, { theme: any, error: any }> {
         <style>
           {`
             .tweet-font {
-              font-family: ${this.tweet_font_for_system};
+              ${this.tweet_font_for_system}
             }  
             .tweet-font.tweet-text {
               font-weight: 500 !important;
@@ -112,7 +118,7 @@ class App extends React.Component<{}, { theme: any, error: any }> {
               font-weight: normal !important;
             }
             .small-title-twitter {
-              font-family: ${this.tweet_font_for_system};
+              ${this.tweet_font_for_system}
               font-weight: 700 !important;
               letter-spacing: .005rem !important;
             }
@@ -121,6 +127,7 @@ class App extends React.Component<{}, { theme: any, error: any }> {
         
         {this.state.error && <AppError error={this.state.error} />}
         {!this.state.error && <>
+          <NavigatorChecker />
           <Router />
           <Toaster />
         </>}
