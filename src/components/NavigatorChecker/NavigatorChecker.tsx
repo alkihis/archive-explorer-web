@@ -77,7 +77,6 @@ export default function NavigatorChecker() {
       // navigator is okay
     }
 
-    bad = true;
     if (bad) {
       setTimeout(() => {
         setShown(true);
