@@ -64,15 +64,20 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
     }
 
     if (type === "gif") {
-      return <video 
-        about="GIF" 
-        playsinline
-        loop 
-        autoPlay 
-        className={classes.video + (full ? " " + classes.full : "")} 
-        src={better_variants.url} 
-        onClick={full ? undefined : () => this.setState({ image_full: 0 })}
-      />;
+      const is_ios = navigator.userAgent.includes('iPhone OS');
+
+      return (
+        <video 
+          controls={is_ios}
+          autoPlay={!is_ios}
+          about="GIF" 
+          playsinline
+          loop 
+          className={classes.video + (full ? " " + classes.full : "")} 
+          src={better_variants.url} 
+          onClick={full ? undefined : () => this.setState({ image_full: 0 })}
+        />
+      );
     }
     else {
       return <video 

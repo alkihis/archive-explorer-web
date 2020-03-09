@@ -4,7 +4,7 @@ export const DEBUG_MODE = process.env.NODE_ENV === 'development';
 
 export const VERSION = "1.7.2";
 export const THRESHOLD_PREFETCH = 20;
-export const SERVER_URL = DEBUG_MODE ? "http://localhost:3128" : "https://archive-explorer.com";
+export const SERVER_URL = DEBUG_MODE ? ("http://" + window.location.hostname + ":3128") : "https://archive-explorer.com";
 export const AUTO_TWITTER_CHECK = !DEBUG_MODE;
 export const THRESHOLD_SIZE_LIMIT = 0.75 * 1024 * 1024 * 1024;
 
