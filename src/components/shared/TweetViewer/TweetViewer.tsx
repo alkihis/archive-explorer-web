@@ -482,6 +482,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   checkBelow(tweet_id: string) {
     // Check tweets AFTER tweet_id
     const tweet_id_pos = this.state.tweets.findIndex(t => t.id_str === tweet_id);
+
     if (tweet_id_pos === -1) {
       // tweet does not exists
       console.warn("You're trying to check a tweet that does not exists. This should not happend.");
@@ -490,6 +491,31 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
     // Check after index (index is NOT included)
     const tweets = this.state.tweets.slice(tweet_id_pos + 1).map(tweet => tweet.id_str);
+    this.checkThisTweets(tweets);
+  }
+
+  checkBelowToLastSelected(tweet_id: string) {
+    const selected = this.state.selected;
+
+    const tweet_id_pos = this.state.tweets.findIndex(t => t.id_str === tweet_id);
+    if (tweet_id_pos === -1) {
+      // tweet does not exists
+      console.warn("You're trying to check a tweet that does not exists. This should not happend.");
+      return;
+    }
+
+    let last_index = tweet_id_pos;
+
+    // Find the last selected tweet in array
+    for (let i = this.state.tweets.length - 1; i >= tweet_id_pos; i--) {
+      if (selected.has(this.state.tweets[i].id_str)) {
+        last_index = i;
+        break;
+      }
+    }
+
+    // Check all tweets from tweet_id_pos (excluded) to last_index (excluded)
+    const tweets = this.state.tweets.slice(tweet_id_pos + 1, last_index).map(t => t.id_str);
     this.checkThisTweets(tweets);
   }
 
@@ -503,6 +529,30 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     }
 
     const tweets = this.state.tweets.slice(0, tweet_id_pos + 1).map(tweet => tweet.id_str);
+    this.checkThisTweets(tweets);
+  }
+  
+  checkUntilFromFirstSelected(tweet_id: string) {
+    const selected = this.state.selected;
+
+    const tweet_id_pos = this.state.tweets.findIndex(t => t.id_str === tweet_id);
+    if (tweet_id_pos === -1) {
+      // tweet does not exists
+      console.warn("You're trying to check a tweet that does not exists. This should not happend.");
+      return;
+    }
+
+    let first_index = this.state.tweets
+      .slice(0, tweet_id_pos)
+      .findIndex(t => selected.has(t.id_str));
+
+    if (first_index === -1) {
+      // No previous tweet selected, assuming 0
+      first_index = 0;
+    }
+
+    // Check all tweets from first_index to tweet_id_pos (included)
+    const tweets = this.state.tweets.slice(first_index, tweet_id_pos + 1).map(t => t.id_str);
     this.checkThisTweets(tweets);
   }
 
@@ -534,7 +584,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     }
   }
 
-  renderTweet(t: PartialTweet, i: number) {
+  renderTweet(t: PartialTweet) {
     this.references[t.id_str] = t.id_str in this.references ? this.references[t.id_str] : React.createRef();
     
     if (t.id_str in this.cache) {
@@ -543,7 +593,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
     return this.cache[t.id_str] = <Tweet 
       data={t} 
-      key={i} 
+      key={t.id_str} 
       ref={this.references[t.id_str]} 
       checked={this.state.selected.has(t.id_str)} 
       onCheckChange={this.onTweetCheckChange} 
@@ -720,7 +770,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       // Render tweets with "year headers" when year changes
       tweet_rendered_data = this.state.current_page.map((tweet, i) => {
         const current_tweet_date = TwitterHelpers.dateFromTweet(tweet).getFullYear();
-        const t = this.renderTweet(tweet, i);
+        const t = this.renderTweet(tweet);
         
         if (current_tweet_date !== current_year) {
           // must show year
@@ -768,6 +818,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           onClose={this.closeSelectedCheckbox}
           onSelectBelow={(id: string) => { this.checkBelow(id); this.closeSelectedCheckbox(); }}
           onSelectUntil={(id: string) => { this.checkUntil(id); this.closeSelectedCheckbox(); }}
+          onSelectUntilFirst={id => { this.checkUntilFromFirstSelected(id); this.closeSelectedCheckbox(); }}
+          onSelectBelowLast={id => { this.checkBelowToLastSelected(id); this.closeSelectedCheckbox(); }}
         />
 
         <TweetBulkSelectOptions 
