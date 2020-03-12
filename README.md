@@ -15,8 +15,6 @@ This project use React 16.8+, Material UI for React and fully developed with **T
 
 The available tasks are the same as Create React App project.
 
-***MORE DOCUMENTATION WILL COME LATER***
-
 Install all the dependencies for project after cloning.
 
 ```bash
