@@ -71,7 +71,7 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
           controls={is_ios}
           autoPlay={!is_ios}
           about="GIF" 
-          playsinline
+          playsInline
           loop 
           className={classes.video + (full ? " " + classes.full : "")} 
           src={better_variants.url} 

@@ -197,8 +197,8 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
 
     if (messages.length === 0) {
       return <EmptyMessage 
-        main="No conversations" 
-        second="You must have at least one conversation to explore your DMs." 
+        main={LANG.no_conversations} 
+        second={LANG.need_one_conversation} 
         icon={MailOutlineIcon}
       />;
     }

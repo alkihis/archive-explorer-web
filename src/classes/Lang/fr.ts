@@ -278,6 +278,8 @@ export default {
   archive_no_dms: "L'archive chargée ne supporte pas les messages privés.",
   downloading_users: "Chargement des données utilisateur",
   reading_dm_img: "Préparation des médias de vos messages privés",
+  no_conversations: "Aucune conversation",
+  need_one_conversation: "Vous devez avoir au moins une conversation pour explorer vos messages.",
   /** END DMS CMPT */
 
   /** BEGIN DM CMPT */

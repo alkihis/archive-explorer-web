@@ -35,6 +35,7 @@ export default function ArchiveLoadErrorDialog(props: React.PropsWithChildren<{
         !file.endsWith('.png') && 
         !file.endsWith('.gif') &&
         !file.endsWith('.mp4') &&
+        !file.endsWith('.svg') &&
         !file.startsWith('_') &&
         !file.startsWith('.')
       ));

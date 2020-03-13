@@ -497,6 +497,10 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
     return !!this.state.loaded;
   }
 
+  get can_create_classic() {
+    return this.state.loaded && SETTINGS.archive && SETTINGS.archive.is_gdpr && !SETTINGS.archive.has_viewer;
+  }
+
 
   /* -------------- */
   /* VUES - ACTIONS */
@@ -520,7 +524,7 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         {(this.state.loaded || this.state.is_error) && 
         <div className={clsx("center-space-between", this.props.classes.actions)}>
           {this.buttonLoad()}
-          {this.state.loaded && SETTINGS.archive && SETTINGS.archive.is_gdpr && this.buttonCreateClassicArchive()}
+          {this.can_create_classic && this.buttonCreateClassicArchive()}
           {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
         </div>}
       </React.Fragment>

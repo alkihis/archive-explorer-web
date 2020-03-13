@@ -278,6 +278,8 @@ export default {
   archive_no_dms: "Loaded archive does not support direct messages.",
   downloading_users: "Loading user details",
   reading_dm_img: "Building direct messages images",
+  no_conversations: "No conversations",
+  need_one_conversation: "You must have at least one conversation to explore your DMs.",
   /** END DMS CMPT */
 
   /** BEGIN DM CMPT */
