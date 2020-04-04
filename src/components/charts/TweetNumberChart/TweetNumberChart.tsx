@@ -169,10 +169,14 @@ export default function TweetNumberChart(props: TweetNumberProps) {
             >
               <XAxis 
                 dataKey="time" 
+                // @ts-ignore
                 stroke={theme.palette.text.secondary}
                 tickFormatter={formatYearMonth} 
               />
-              <YAxis stroke={theme.palette.text.secondary} />
+              <YAxis 
+                // @ts-ignore
+                stroke={theme.palette.text.secondary} 
+              />
   
               <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />
               

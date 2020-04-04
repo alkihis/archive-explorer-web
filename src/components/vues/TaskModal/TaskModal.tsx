@@ -13,6 +13,7 @@ import UnSubbedIcon from '@material-ui/icons/CloudQueue';
 import LANG from '../../../classes/Lang/Language';
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
+  // @ts-ignore
   return <Slide direction="up" ref={ref} {...props} />;
 });
 

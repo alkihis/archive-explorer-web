@@ -353,11 +353,16 @@ function ImpressionGraph() {
           >
             <XAxis
               dataKey="0" 
+              // @ts-ignore
               stroke={theme.palette.text.secondary}
               tickFormatter={formatYearMonth} 
               minTickGap={10}
             />
-            <YAxis stroke={theme.palette.text.secondary} />
+            
+            <YAxis 
+              // @ts-ignore
+              stroke={theme.palette.text.secondary} 
+            />
 
             <Line type="monotone" dataKey="1" stroke={theme.palette.primary.main} dot={false} />
             

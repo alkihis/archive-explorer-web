@@ -48,6 +48,8 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
       this.state.shown = false;
     }
 
+    this.handleChange = this.handleChange.bind(this);
+
     props.history.listen(location => {
       const value = this.calculateCurrentValue({ location });
 
@@ -121,7 +123,7 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
     return pathMap.indexOf(pathname);
   }
 
-  handleChange = (_: ChangeEvent, value: any) => {
+  handleChange = (_: ChangeEvent<{}>, value: any) => {
     // N'auth pas task
     if (value in this.state.pathMap)
       this.setState({ value });
@@ -164,7 +166,7 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
 
         <BottomNavigation
           value={value}
-          onChange={this.handleChange.bind(this)}
+          onChange={this.handleChange}
           showLabels
           className={"nav primary " + classes.stick_to_bottom + " " + classes.bottom_bar}
         >
