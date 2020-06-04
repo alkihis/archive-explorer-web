@@ -94,7 +94,7 @@ export default class TweetOrFavorite extends React.Component<TweetProp, TweetSta
     const has_media = this.has_media;
 
     return (
-      <TweetContext.Provider value={this.props.data}>
+      <TweetContext.Provider value={this.props.data as PartialTweet}>
         <Card className={classes.card} elevation={0}>
           <CardHeader
             classes={
@@ -146,6 +146,7 @@ function getOriginal(tweet: PartialTweet | PartialFavorite) {
 }
 
 function TweetActions() {
+  // @ts-ignore
   const context = getOriginal(React.useContext(TweetContext));
 
   const rt = 'retweet_count' in context && !isNaN(context.retweet_count) ? context.retweet_count : 0;
@@ -163,6 +164,7 @@ function TweetActions() {
 }
 
 function CustomTweetDate() {
+  // @ts-ignore
   const context = getOriginal(React.useContext(TweetContext)) as PartialTweet | PartialFavorite;
 
   if ('created_at' in context) {
