@@ -437,6 +437,8 @@ export default {
   really_want_to_logout: "Do you want to log out ? You can't use this application again until you're logged in again.",
   display: "Display",
   language: "Language",
+  use_local_medias: "Use archive images if supported and necessary",
+  use_local_videos: "Use archive videos if supported and necessary (can cause huge memory consumption, use this option with care)",
   /** END Settings-ExtendedActionsMenu CMPT */
 
   /** BEGIN Task CMPT */

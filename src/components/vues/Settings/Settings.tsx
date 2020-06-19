@@ -16,6 +16,8 @@ type SettingsState = {
   auto_dark_mode: boolean;
   lang: AuthorizedLangs;
   download_rt: boolean;
+  local_medias: boolean;
+  local_videos: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -27,6 +29,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
     auto_dark_mode: SETTINGS.is_auto_dark_mode,
     lang: SETTINGS.lang,
     download_rt: SETTINGS.rt_dl,
+    local_medias: SETTINGS.use_tweets_local_medias,
+    local_videos: SETTINGS.use_tweets_local_videos,
   };
 
   changeDarkState(v: boolean, refresh_settings = true) {
@@ -85,6 +89,20 @@ export default class Settings extends React.Component<{}, SettingsState> {
     SETTINGS.pp = v;
   }
 
+  changeLocalMedias(v: boolean) {
+    this.setState({
+      local_medias: v
+    });
+    SETTINGS.use_tweets_local_medias = v;
+  }
+
+  changeLocalVideos(v: boolean) {
+    this.setState({
+      local_videos: v
+    });
+    SETTINGS.use_tweets_local_videos = v;
+  }
+
   handleDarkModeChange = (_: CustomEvent<boolean>) => {
     this.changeAutoDarkState(SETTINGS.is_auto_dark_mode, false);
   };
@@ -140,6 +158,32 @@ export default class Settings extends React.Component<{}, SettingsState> {
               />
             }
             label={LANG.download_rt_from_twitter_checkbox}
+            labelPlacement="end"
+          />
+
+          <FormControlLabel
+            value="medias_show"
+            control={
+              <Checkbox 
+                color="primary" 
+                checked={this.state.local_medias}
+                onChange={(_, c) => this.changeLocalMedias(c)}
+              />
+            }
+            label={LANG.use_local_medias}
+            labelPlacement="end"
+          />
+
+          <FormControlLabel
+            value="videos_show"
+            control={
+              <Checkbox 
+                color="primary" 
+                checked={this.state.local_videos}
+                onChange={(_, c) => this.changeLocalVideos(c)}
+              />
+            }
+            label={LANG.use_local_videos}
             labelPlacement="end"
           />
 

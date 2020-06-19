@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import classes from './TweetMedia.module.scss';
 import { PartialTweetEntity, MediaGDPREntity, PartialTweet } from 'twitter-archive-reader';
 import { Dialog } from '@material-ui/core';
@@ -7,6 +7,7 @@ import { Lightbox as ModalImage } from "react-modal-image";
 import LANG from '../../../classes/Lang/Language';
 import { TweetContext } from './TweetContext';
 import { Status } from 'twitter-d';
+import SETTINGS from '../../../tools/Settings';
 
 type TweetMediaState = {
   image_full: number | null
@@ -19,6 +20,62 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
   state: TweetMediaState = {
     image_full: null
   };
+
+  image_refs: string[] | undefined;
+  replacements: { [media_url: string]: string } | undefined;
+
+  componentWillUnmount() {
+    // Clean possibly created object URLs
+    if (this.image_refs)
+      for (const el of this.image_refs) {
+        URL.revokeObjectURL(el);
+      }
+  }
+
+  async onMediaError(this: [this, MediaGDPREntity, string?], evt: SyntheticEvent<HTMLImageElement | HTMLVideoElement>) {
+    const [that, media, possible_media_url] = this;
+    const media_url = possible_media_url ?? media.media_url_https;
+
+    // If media is already replaced, do nothing
+    if (that.replacements && media_url in that.replacements) {
+      return;
+    }
+
+    // Look for image in archive
+    const element = evt.currentTarget;
+
+    // Get media from archive
+    try {
+      const blob = await SETTINGS.archive.medias.fromTweetMediaEntity(media, false) as Blob;
+
+      if (!that.image_refs) {
+        that.image_refs = [];
+      }
+      if (!that.replacements) {
+        that.replacements = {};
+      }
+
+      const url = URL.createObjectURL(blob);
+      that.image_refs.push(url);
+      that.replacements[media_url] = url;
+
+      element.src = url;
+      console.log('image replaced for tweet', media.source_status_id, url);
+    } catch (e) {
+      console.log('media does not exists', e);
+    }
+  }
+
+  getRealUrlForImage(url: string) {
+    if (!this.replacements) {
+      return url;
+    }
+
+    if (url in this.replacements) {
+      return this.replacements[url];
+    }
+    return url;
+  }
 
   get entities() : PartialTweetEntity | { media?: MediaGDPREntity[] } {
     if (this.context.extended_entities) {
@@ -34,11 +91,20 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
     return { media: [] };
   }
 
+  get allow_local() {
+    return SETTINGS.use_tweets_local_medias && SETTINGS.archive.medias.has_medias;
+  }
+
+  get allow_local_videos() {
+    return SETTINGS.use_tweets_local_videos && this.allow_local;
+  }
+
   renderImages() {
     return (this.media as MediaGDPREntity[]).map((m, i) => {
       return <img key={`img${i}`}
         alt="Tweet attachment" 
-        src={m.media_url_https} 
+        src={this.getRealUrlForImage(m.media_url_https)} 
+        onError={this.allow_local ? this.onMediaError.bind([this, m]) : undefined}
         className={classes['img' + (i + 1)]} 
         onClick={() => this.setState({ image_full: i })}
       />;
@@ -63,6 +129,9 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
       better_variants = m.video_info.variants[0];
     }
 
+    const best_url = better_variants.url;
+    const url = this.getRealUrlForImage(best_url);
+
     if (type === "gif") {
       const is_ios = navigator.userAgent.includes('iPhone OS');
 
@@ -74,7 +143,8 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
           playsInline
           loop 
           className={classes.video + (full ? " " + classes.full : "")} 
-          src={better_variants.url} 
+          src={url} 
+          onError={this.allow_local_videos ? this.onMediaError.bind([this, m, best_url]) : undefined}
           onClick={full ? undefined : () => this.setState({ image_full: 0 })}
         />
       );
@@ -84,7 +154,8 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
         about="Video" 
         className={classes.video + (full ? " " + classes.full : "")} 
         controls 
-        src={better_variants.url} 
+        src={url} 
+        onError={this.allow_local_videos ? this.onMediaError.bind([this, m, best_url]) : undefined}
       />;
     }
   }
@@ -121,7 +192,7 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
       // With modal image
       return (
         <ModalImage 
-          large={image_url}
+          large={this.getRealUrlForImage(image_url)}
           alt={LANG.full_image}
           onClose={() => this.setState({ image_full: null })}
           hideDownload

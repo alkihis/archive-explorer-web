@@ -46,6 +46,8 @@ class AESettings {
   protected _allow_mentions: boolean = true;
   protected _has_server_errors: boolean = false;
   protected _can_save_other_users_archives: boolean = true;
+  protected _use_tweets_local_medias: boolean = false;
+  protected _use_tweets_local_videos: boolean = false;
 
   // Globals
   protected current_user: IUser | null = null;
@@ -107,6 +109,12 @@ class AESettings {
     if (localStorage.getItem('allow_mentions')) {
       this.allow_mentions = localStorage.getItem('allow_mentions') === "true";
     }
+    if (localStorage.getItem('use_local_medias')) {
+      this.use_tweets_local_medias = localStorage.getItem('use_local_medias') === 'true';
+    }
+    if (localStorage.getItem('use_local_videos')) {
+      this._use_tweets_local_videos = localStorage.getItem('use_local_videos') === 'true';
+    }
     if (localStorage.getItem('allow_self')) {
       this.allow_self = localStorage.getItem('allow_self') === "true";
     }
@@ -163,6 +171,24 @@ class AESettings {
   set can_save_other_users_archives(v: boolean) {
     localStorage.setItem('can_save_other_users_archives', String(v));
     this._can_save_other_users_archives = v;
+  }
+
+  get use_tweets_local_medias() {
+    return this._use_tweets_local_medias;
+  }
+
+  set use_tweets_local_medias(v: boolean) {
+    localStorage.setItem('use_local_medias', String(v));
+    this._use_tweets_local_medias = v;
+  }
+
+  get use_tweets_local_videos() {
+    return this._use_tweets_local_videos;
+  }
+
+  set use_tweets_local_videos(v: boolean) {
+    localStorage.setItem('use_local_videos', String(v));
+    this._use_tweets_local_videos = v;
   }
 
   get has_server_errors() {

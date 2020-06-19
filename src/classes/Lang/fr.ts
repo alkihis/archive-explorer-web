@@ -438,6 +438,8 @@ export default {
   really_want_to_logout: "Voulez-vous vous déconnecter ? Vous ne pourrez plus utiliser cette application tant que vous ne vous serez pas reconnecté.",
   display: "Affichage",
   language: "Langue",
+  use_local_medias: "Charger les images depuis l'archive si nécessaire",
+  use_local_videos: "Charger les vidéos depuis l'archive si nécessaire (attention, cette option peut induire une forte consommation de RAM)",
   /** END Settings-ExtendedActionsMenu CMPT */
 
   /** BEGIN Task CMPT */
