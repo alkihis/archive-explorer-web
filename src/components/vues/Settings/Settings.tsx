@@ -185,6 +185,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
             }
             label={LANG.use_local_videos}
             labelPlacement="end"
+            disabled={!this.state.local_medias}
           />
 
           <FormControlLabel
