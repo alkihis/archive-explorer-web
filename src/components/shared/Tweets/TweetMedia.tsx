@@ -60,9 +60,9 @@ export default class TweetMedia extends React.Component<{}, TweetMediaState> {
       that.replacements[media_url] = url;
 
       element.src = url;
-      console.log('image replaced for tweet', media.source_status_id, url);
+      // console.log('image replaced for tweet', media.source_status_id, url);
     } catch (e) {
-      console.log('media does not exists', e);
+      console.log('Impossible to replace broken link : Media does not exists', e);
     }
   }
 
