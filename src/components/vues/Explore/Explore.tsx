@@ -4,7 +4,7 @@ import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst, escapeRegE
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanel as MuiExpansionPanel, ExpansionPanelDetails, withStyles, TextField, Menu, MenuItem, makeStyles, createStyles, Theme, Dialog, DialogContent, DialogActions, DialogTitle, Button, Hidden } from '@material-ui/core';
+import { Typography, Divider, List, ListItem, ListItemText, AccordionSummary, Accordion as MuiAccordion, AccordionDetails, withStyles, TextField, Menu, MenuItem, makeStyles, createStyles, Theme, Dialog, DialogContent, DialogActions, DialogTitle, Button, Hidden } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import TweetViewer from '../../shared/TweetViewer/TweetViewer';
 import { PartialTweet, TweetSearcher, TwitterHelpers } from 'twitter-archive-reader';
@@ -28,7 +28,7 @@ import { toast } from '../../shared/Toaster/Toaster';
 import ComposeSearchModal from './SearchComposer';
 
 
-export const ExplorerExpansionPanel = withStyles({
+export const ExplorerAccordion = withStyles({
   root: {
     border: '1px solid rgba(0, 0, 0, .125)',
     borderBottomLeftRadius: '0 !important',
@@ -45,7 +45,7 @@ export const ExplorerExpansionPanel = withStyles({
     },
   },
   expanded: {},
-})(MuiExpansionPanel);
+})(MuiAccordion);
 
 type ExploreState = {
   loaded: PartialTweet[] | null;
@@ -169,11 +169,11 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
     return (
       <div>
-        <ExplorerExpansionPanel expanded={false} style={{ border: 0 }}>
-          <ExpansionPanelSummary>
+        <ExplorerAccordion expanded={false} style={{ border: 0 }}>
+          <AccordionSummary>
             <Typography className="bold">{LANG.full_archive}</Typography>
-          </ExpansionPanelSummary>
-        </ExplorerExpansionPanel>
+          </AccordionSummary>
+        </ExplorerAccordion>
         <ListItem 
           button 
           className={"*" === this.state.month ? classes.selected_month : ""} 
@@ -240,16 +240,16 @@ export default class Explore extends React.Component<{}, ExploreState> {
     }
 
     return (
-      <ExplorerExpansionPanel key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
-        <ExpansionPanelSummary
+      <ExplorerAccordion key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
         >
           <Typography><span className="bold">{year}</span> <span className={classes.year_count}>({i})</span></Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails style={{padding: '0'}}>
+        </AccordionSummary>
+        <AccordionDetails style={{padding: '0'}}>
           {this.listOfMonths(year)}
-        </ExpansionPanelDetails>
-      </ExplorerExpansionPanel>
+        </AccordionDetails>
+      </ExplorerAccordion>
     )
   }
 

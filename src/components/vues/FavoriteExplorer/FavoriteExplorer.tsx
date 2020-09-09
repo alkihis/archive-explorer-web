@@ -4,14 +4,14 @@ import { setPageTitle, isArchiveLoaded, getMonthText, uppercaseFirst, escapeRegE
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Typography, Divider, List, ListItem, ListItemText, ExpansionPanelSummary, ExpansionPanelDetails, Container, Hidden } from '@material-ui/core';
+import { Typography, Divider, List, ListItem, ListItemText, AccordionSummary, AccordionDetails, Container, Hidden } from '@material-ui/core';
 import { PartialFavorite } from 'twitter-archive-reader';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import LANG from '../../../classes/Lang/Language';
 import { toast } from '../../shared/Toaster/Toaster';
-import { SearchOptions, ExplorerExpansionPanel } from '../Explore/Explore';
+import { SearchOptions, ExplorerAccordion } from '../Explore/Explore';
 import Favorites from './Favorites';
 import NoGDPR from '../../shared/NoGDPR/NoGDPR';
 import FavoriteIcon from '@material-ui/icons/Star';
@@ -182,11 +182,11 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
 
     return (
       <div>
-        <ExplorerExpansionPanel expanded={false} style={{ border: 0 }}>
-          <ExpansionPanelSummary>
+        <ExplorerAccordion expanded={false} style={{ border: 0 }}>
+          <AccordionSummary>
             <Typography className="bold">{LANG.full_archive}</Typography>
-          </ExpansionPanelSummary>
-        </ExplorerExpansionPanel>
+          </AccordionSummary>
+        </ExplorerAccordion>
         <ListItem 
           button 
           className={"*" === this.state.month ? classes.selected_month : ""} 
@@ -257,18 +257,18 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     }
 
     return (
-      <ExplorerExpansionPanel key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
-        <ExpansionPanelSummary
+      <ExplorerAccordion key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
         >
           <Typography>
             <span className="bold">{year}</span> <span className={classes.year_count}>({tweet_count})</span>
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails style={{padding: '0'}}>
+        </AccordionSummary>
+        <AccordionDetails style={{padding: '0'}}>
           {this.listOfMonths(year)}
-        </ExpansionPanelDetails>
-      </ExplorerExpansionPanel>
+        </AccordionDetails>
+      </ExplorerAccordion>
     )
   }
 

@@ -1,7 +1,7 @@
 import classes from './Task.module.scss';
 import React from 'react';
 import { TaskInformation } from '../../../tools/Tasks';
-import { ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, LinearProgress, ExpansionPanelActions, Button, Paper, makeStyles, createStyles, Theme } from '@material-ui/core';
+import { Accordion, AccordionSummary, Typography, AccordionDetails, LinearProgress, AccordionActions, Button, Paper, makeStyles, createStyles, Theme } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RoundIcon from '@material-ui/icons/Lens';
 import LANG from '../../../classes/Lang/Language';
@@ -65,8 +65,8 @@ export default class Task extends React.Component<TaskP> {
     const IconType = this.iconForTask();
 
     return (
-      <ExpansionPanel className={base_panel}>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+      <Accordion className={base_panel}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>
 
             <RoundIcon className={classes.icon + " " + color_icon} /> 
@@ -78,8 +78,8 @@ export default class Task extends React.Component<TaskP> {
               <span className="bold">{completed}/{total}</span>, <span className="bold">{this.props.data.percentage.toFixed(0)}</span>% {LANG.completed})
             </span>
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.details}>
+        </AccordionSummary>
+        <AccordionDetails className={classes.details}>
           {errors && <TwitterErrors errors={errors} />}
 
           <Typography className={classes.counts}>
@@ -89,9 +89,9 @@ export default class Task extends React.Component<TaskP> {
           </Typography>
 
           <LinearProgress variant="determinate" className={this.is_over ? classes.bar_over : classes.bar} value={this.props.data.percentage} />
-        </ExpansionPanelDetails>
+        </AccordionDetails>
 
-        <ExpansionPanelActions>
+        <AccordionActions>
           {!this.is_over && <Button size="small" onClick={() => this.props.onCancel(this.id)}>
             {LANG.cancel}
           </Button>}
@@ -104,8 +104,8 @@ export default class Task extends React.Component<TaskP> {
             {LANG.unsubscribe}
           </Button>}
           
-        </ExpansionPanelActions>
-      </ExpansionPanel>
+        </AccordionActions>
+      </Accordion>
     );
   }
 }

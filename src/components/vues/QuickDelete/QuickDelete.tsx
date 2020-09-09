@@ -1,6 +1,6 @@
 import React, { MouseEvent as RMouseEvent, ChangeEvent } from 'react';
 import classes from './QuickDelete.module.scss';
-import { Stepper, Step, StepLabel, Typography, Button, DialogTitle, DialogContent, DialogActions, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Stepper, Step, StepLabel, Typography, Button, DialogTitle, DialogContent, DialogActions, Accordion, AccordionSummary, AccordionDetails, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { getMonthText } from '../../../helpers';
@@ -250,19 +250,19 @@ export default class QuickDelete extends React.Component<QuickDeleteProp, QuickD
         const is_selected = this.isYearSelected(y);
 
         return (
-          <ExpansionPanel key={y}>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <Accordion key={y}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
 
               <div className={classes.header_container}>
                 <Typography className={classes.heading}>{y}</Typography>
                 {is_selected ? <RoundIcon className={classes.icon + " " + classes.icon_lens} />  : ""}
               </div>
               
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            </AccordionSummary>
+            <AccordionDetails>
               {this.generateMonthsOfYear(y)}
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+            </AccordionDetails>
+          </Accordion>
         )
       });
   }

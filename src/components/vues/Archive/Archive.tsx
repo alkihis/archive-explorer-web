@@ -1326,7 +1326,13 @@ const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
     setOnSave(true);
 
     try {
-      await SAVED_ARCHIVES.registerArchive(SETTINGS.archive, SETTINGS.archive_name);
+      try {
+        await SAVED_ARCHIVES.registerArchive(SETTINGS.archive, SETTINGS.archive_name);
+      } catch (e) {
+        console.warn("Uncompressed save failed");
+        console.warn(e);
+        await SAVED_ARCHIVES.registerArchive(SETTINGS.archive, SETTINGS.archive_name, true);
+      }
   
       if (props.onSave) {
         props.onSave();
@@ -1335,6 +1341,8 @@ const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
         props.onClose();
       }
     } catch (e) {
+      console.error("Save error");
+      console.error(e);
       setOnSave(undefined);
     }
   }

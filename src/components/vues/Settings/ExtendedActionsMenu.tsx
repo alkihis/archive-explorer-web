@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, ExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails } from '@material-ui/core';
+import { Button, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Accordion, AccordionSummary, Typography, AccordionDetails } from '@material-ui/core';
 import { IToken } from '../../../tools/interfaces';
 import { CenterComponent, BigPreloader } from '../../../tools/PlacingComponents';
 import APIHELPER, { API_URLS } from '../../../tools/ApiHelper';
@@ -127,16 +127,16 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
 
   generateSessions() {
     return this.state.tokens.map((e, index) => (
-      <ExpansionPanel className={classes.panel} key={e.token}>
-        <ExpansionPanelSummary
+      <Accordion className={classes.panel} key={e.token}>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
         >
           <Typography className={classes.heading}>
             Session <span className="bold">{index + 1}</span>
             {"current" in e ? <span className="bold"> ({LANG.current})</span> : ""}
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.details}>
+        </AccordionSummary>
+        <AccordionDetails className={classes.details}>
           <Typography>
             {LANG.session_created_on} <span className="bold">{dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", new Date(e.date))} </span> 
             {LANG.with_ip_address} <span className="bold">{e.login_ip}</span>.
@@ -148,8 +148,8 @@ export default class ExtendedActionsMenu extends React.Component<{}, MState> {
           {!("current" in e) && <Button color="secondary" onClick={() => this.revokeToken(e.token)} className={classes.revoke_btn}>
             {LANG.revoke}
           </Button>}
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
     ));
   }
 

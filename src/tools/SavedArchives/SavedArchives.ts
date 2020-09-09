@@ -1,6 +1,7 @@
 import LocalForage from 'localforage';
 import uuidv4 from 'uuid/v4';
-import TwitterArchive, { ArchiveSave, ArchiveSaver } from 'twitter-archive-reader';
+import TwitterArchive from 'twitter-archive-reader';
+import ArchiveSaver, { ArchiveSave } from 'twitter-archive-saver';
 import SETTINGS from '../Settings';
 import EventTarget, { defineEventAttribute } from 'event-target-shim';
 
@@ -162,8 +163,8 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
   /**
    * Register a new save for logged user.
    */
-  registerArchive(archive: TwitterArchive, name: string) {
-    return this.registerArchiveOf(this.logged_user_id, archive, name);
+  registerArchive(archive: TwitterArchive, name: string, compress = false) {
+    return this.registerArchiveOf(this.logged_user_id, archive, name, compress);
   }
 
   /**
@@ -281,7 +282,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
   /**
    * Register a single {archive} into {owner}'s storage.
    */
-  protected async registerArchiveOf(owner: string, archive: TwitterArchive, name: string) {
+  protected async registerArchiveOf(owner: string, archive: TwitterArchive, name: string, compress = false) {
     if (!archive || !(archive instanceof TwitterArchive)) {
       throw new Error("Archive is not valid.");
     }
@@ -304,6 +305,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     }
 
     // Create the save
+    // @ts-expect-error
     const save = await ArchiveSaver.create(archive, {
       tweets: true,
       dms: true,
@@ -320,6 +322,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
         personalization: true,
       },
       ad_archive: true,
+      compress
     });
 
     // Create the save info from save + current archive data

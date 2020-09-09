@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './DMConversation.module.scss';
 import { Conversation, SubConversation, LinkedDirectMessage } from 'twitter-archive-reader';
-import { Divider, ExpansionPanel as MuiExpansionPanel, ExpansionPanelSummary, Typography, ExpansionPanelDetails, List, ListItem, ListItemText } from '@material-ui/core';
+import { Divider, Accordion as MuiAccordion, AccordionSummary, Typography, AccordionDetails, List, ListItem, ListItemText } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
@@ -17,7 +17,7 @@ import { toast } from '../../shared/Toaster/Toaster';
 import LANG from '../../../classes/Lang/Language';
 import { SearchOptions } from '../Explore/Explore';
 
-const ExpansionPanel = withStyles({
+const Accordion = withStyles({
   root: {
     borderTop: '1px solid rgba(0, 0, 0, .125)',
     borderBottomLeftRadius: '0 !important',
@@ -34,7 +34,7 @@ const ExpansionPanel = withStyles({
     },
   },
   expanded: {},
-})(MuiExpansionPanel);
+})(MuiAccordion);
 
 type DMProps = {
   conversation: Conversation;
@@ -218,11 +218,11 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           </ListItemText>
         </ListItem>
 
-        <ExpansionPanel expanded={false}>
-          <ExpansionPanelSummary>
+        <Accordion expanded={false}>
+          <AccordionSummary>
             <Typography className="bold">{LANG.full_conversation}</Typography>
-          </ExpansionPanelSummary>
-        </ExpansionPanel>
+          </AccordionSummary>
+        </Accordion>
         <ListItem 
           button 
           className={"*" === this.state.month ? classes.selected_month : ""} 
@@ -302,18 +302,18 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
   year(year: string) {
     return (
-      <ExpansionPanel key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
-        <ExpansionPanelSummary
+      <Accordion key={"year" + year} TransitionProps={{ unmountOnExit: true }}>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
         >
           <Typography>
             <span className="bold">{year}</span> <span className={classes.year_count}>({this.index.years[year].count})</span>
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails style={{padding: '0'}}>
+        </AccordionSummary>
+        <AccordionDetails style={{padding: '0'}}>
           {this.listOfMonths(year)}
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
     )
   }
 
