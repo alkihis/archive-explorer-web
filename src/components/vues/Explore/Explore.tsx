@@ -73,7 +73,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       mobileOpen: !this.state.mobileOpen
     });
   };
-  
+
   get can_show_speeddial() {
     return !!this.state.month && (!this.is_special_month || this.is_all) && !this.state.found;
   }
@@ -84,7 +84,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
   get can_use_current_in_search() {
     return !this.is_special_month || this.state.month === "day";
-  } 
+  }
 
   get is_all() {
     return this.state.month === "*";
@@ -97,7 +97,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     let selected_month = "*";
     let selected_loaded: any = null;
 
-    // Test si regex valide 
+    // Test si regex valide
     try {
       new RegExp(content);
     } catch (e) {
@@ -174,9 +174,9 @@ export default class Explore extends React.Component<{}, ExploreState> {
             <Typography className="bold">{LANG.full_archive}</Typography>
           </AccordionSummary>
         </ExplorerAccordion>
-        <ListItem 
-          button 
-          className={"*" === this.state.month ? classes.selected_month : ""} 
+        <ListItem
+          button
+          className={"*" === this.state.month ? classes.selected_month : ""}
           onClick={() => this.monthClicker("*", "")}
         >
           <ListItemText className={classes.drawer_month}>
@@ -184,9 +184,9 @@ export default class Explore extends React.Component<{}, ExploreState> {
           </ListItemText>
         </ListItem>
 
-        <ListItem 
-          button 
-          className={"day" === this.state.month ? classes.selected_month : ""} 
+        <ListItem
+          button
+          className={"day" === this.state.month ? classes.selected_month : ""}
           onClick={() => this.monthClicker("day", "")}
         >
           <ListItemText className={classes.drawer_month}>
@@ -194,9 +194,9 @@ export default class Explore extends React.Component<{}, ExploreState> {
           </ListItemText>
         </ListItem>
 
-        {SETTINGS.archive.is_gdpr && can_show_moments_decade && <ListItem 
-          button 
-          className={"moments" === this.state.month ? classes.selected_month : ""} 
+        {SETTINGS.archive.is_gdpr && can_show_moments_decade && <ListItem
+          button
+          className={"moments" === this.state.month ? classes.selected_month : ""}
           onClick={() => this.monthClicker("moments", "")}
         >
           <ListItemText className={classes.drawer_month}>
@@ -287,10 +287,10 @@ export default class Explore extends React.Component<{}, ExploreState> {
     return (
       <List className={classes.list_month}>
         {Object.entries(current_year).map(([month, tweets]) => (
-          <ListItem 
-            button 
-            key={year + "-" + month} 
-            className={year + "-" + month === this.state.month ? classes.selected_month : ""} 
+          <ListItem
+            button
+            key={year + "-" + month}
+            className={year + "-" + month === this.state.month ? classes.selected_month : ""}
             onClick={() => this.monthClicker(year, month)}
           >
             <ListItemText className={classes.drawer_month}>
@@ -304,7 +304,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
   showActiveMonth() {
     let year = "", month_text = LANG.full_archive;
-    
+
     if (this.state.month !== "*" && this.state.month !== "day" && this.state.month !== "moments") {
       const [_year, month] = this.state.month.split('-');
       year = _year;
@@ -354,7 +354,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
       );
     }
     else {
-      return this.state.loaded ? 
+      return this.state.loaded ?
       (<>
         {this.showActiveMonth()}
         <TweetViewer tweets={this.state.loaded} withMoments={this.state.month === "moments"} />
@@ -369,7 +369,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
     }
 
     return (
-      <ResponsiveDrawer 
+      <ResponsiveDrawer
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
         toolbarGradient
@@ -388,7 +388,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   }
 }
 
-export function SearchOptions<T>(props: { 
+export function SearchOptions<T>(props: {
   onClick?: (modes: (keyof T)[], text: string) => void;
   options: T,
   default?: (keyof T)[],
@@ -433,7 +433,7 @@ export function SearchOptions<T>(props: {
       FavoriteSearchHistory.push(data);
     else
       TweetSearchHistory.push(data);
-    
+
     if (props.onClick)
       props.onClick(options as (keyof T)[], data);
   }
@@ -471,12 +471,12 @@ export function SearchOptions<T>(props: {
   return (
     <>
       {/* Modal composer + search input form */}
-      <ListItem 
+      <ListItem
         className={classes.search_input}
       >
-        {modalAdvanced && <ComposeSearchModal 
-          onSearchMake={onAdvancedSearch} 
-          onClose={() => setModalAdvanced(false)} 
+        {modalAdvanced && <ComposeSearchModal
+          onSearchMake={onAdvancedSearch}
+          onClose={() => setModalAdvanced(false)}
           canSetCurrent={props.explorerInstance.can_use_current_in_search}
         />}
 
@@ -490,13 +490,13 @@ export function SearchOptions<T>(props: {
             closeText={LANG.close}
             clearText={LANG.clear_input}
             renderInput={params => (
-              <TextField 
-                {...params} 
+              <TextField
+                {...params}
                 InputProps={{
                   style: { paddingRight: 24 },
                   ...(params.InputProps ? params.InputProps : {})
                 }}
-                label={props.fieldLabel} 
+                label={props.fieldLabel}
                 className={classes.textField}
                 margin="normal"
               />
@@ -505,9 +505,9 @@ export function SearchOptions<T>(props: {
         </form>
       </ListItem>
 
-      <ListItem 
-        button 
-        className={classes.search_btn} 
+      <ListItem
+        button
+        className={classes.search_btn}
         onClick={handleClick}
         onContextMenu={onContextMenu}
       >
@@ -517,9 +517,9 @@ export function SearchOptions<T>(props: {
       </ListItem>
 
       {!props.isDM && !props.isFavoriteExplorer && <Hidden xsDown>
-        <ListItem 
-          button 
-          className={classes.advanced_search_btn} 
+        <ListItem
+          button
+          className={classes.advanced_search_btn}
           onClick={() => setModalAdvanced(true)}
         >
           <ListItemText classes={{ primary: classes.get_back_paper + " " + classes.search_paper }}>
@@ -543,7 +543,7 @@ export function SearchOptions<T>(props: {
           <MenuItem
             data-item={option}
             key={option}
-            onClick={handleMenuClick} 
+            onClick={handleMenuClick}
             className={options.includes(option) ? classes.clicked : ""}
           >
             {text}
@@ -582,9 +582,9 @@ interface SDAction {
   validate?: (month: string, loaded: PartialTweet[]) => boolean;
 }
 
-function StatsModal(props: React.PropsWithChildren<{ 
-  onClose?: () => void, 
-  title: React.ReactNode, 
+function StatsModal(props: React.PropsWithChildren<{
+  onClose?: () => void,
+  title: React.ReactNode,
   fullWidth?: boolean,
 }>) {
   return (
@@ -634,11 +634,11 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
 
     // if (action === 'wordcloud') {
     //   return (
-    //     <StatsModal 
+    //     <StatsModal
     //       onClose={handleModalClose}
     //       title={LANG.wordcloud_modal_title}
     //     >
-    //       <WordCloud tweets={props.loaded} /> 
+    //       <WordCloud tweets={props.loaded} />
     //     </StatsModal>
     //   );
     // }
@@ -724,6 +724,63 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
  */
 
 TweetSearcher.validators.push({
+  keyword: 'has',
+  validator(query) {
+    if (query === 'image') {
+      return tweet => {
+        const entities = tweet.extended_entities || tweet.entities;
+
+        if (!entities.media || !entities.media.length) {
+          return false;
+        }
+        if (!('type' in entities.media[0])) {
+          return true;
+        }
+        return entities.media[0].type === 'photo';
+      };
+    }
+    else if (query === 'video') {
+      return tweet => {
+        const entities = tweet.extended_entities || tweet.entities;
+
+        if (!entities.media || !entities.media.length || !('type' in entities.media[0])) {
+          return false;
+        }
+        return entities.media[0].type === 'video';
+      };
+    }
+    else if (query === 'gif') {
+      return tweet => {
+        const entities = tweet.extended_entities || tweet.entities;
+
+        if (!entities.media || !entities.media.length || !('type' in entities.media[0])) {
+          return false;
+        }
+        return entities.media[0].type === 'animated_gif';
+      };
+    }
+    else if (query === 'link') {
+      return tweet => tweet.entities && !!tweet.entities.urls.length;
+    }
+  },
+}, {
+  keyword: 'is',
+  validator(query) {
+    if (query === 'quote') {
+      const tweet_quote_url_regex = /^https:\/\/twitter\.com\/[a-zA-Z0-9_]+\/status\//;
+
+      return tweet => {
+        if (!tweet.entities.urls || !tweet.entities.urls.length) {
+          return false;
+        }
+        return tweet.entities.urls.some(url => url.expanded_url.match(tweet_quote_url_regex));
+      };
+    }
+    else if (query === 'retweet') {
+      return tweet => !!tweet.retweeted_status;
+    }
+  },
+}, {
   keyword: 'year',
   separator: [":", ">=", "<=", ">", "<"],
   validator: (query, sep) => {
