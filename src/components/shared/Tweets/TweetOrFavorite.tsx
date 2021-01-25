@@ -11,6 +11,7 @@ import SETTINGS from '../../../tools/Settings';
 import UserCache from '../../../classes/UserCache';
 import { TweetContext } from './TweetContext';
 import LANG from '../../../classes/Lang/Language';
+import { twitterSnowflakeToDate } from 'twitter-snowflake-to-date';
 
 type TweetProp = {
   data: PartialTweet | PartialFavorite,
@@ -80,7 +81,7 @@ export default class TweetOrFavorite extends React.Component<TweetProp, TweetSta
 
   render() {
     let user_pp = this.profile_picture;
-    
+
     // Si c'est un tweet d'une personne qui est en cache
     const usr_id = this.user_id;
     if (usr_id) {
@@ -106,7 +107,7 @@ export default class TweetOrFavorite extends React.Component<TweetProp, TweetSta
                 {SETTINGS.pp ? "" : avatar_name}
               </Avatar>
             }
-            title={<a 
+            title={<a
               className={classes.link}
               rel="noopener noreferrer"
               target="_blank"
@@ -114,7 +115,7 @@ export default class TweetOrFavorite extends React.Component<TweetProp, TweetSta
             >
               {this.name || LANG.favorited_tweet}
             </a>}
-            subheader={this.screen_name && <a 
+            subheader={this.screen_name && <a
               className={classes.link}
               rel="noopener noreferrer"
               target="_blank"
@@ -129,11 +130,10 @@ export default class TweetOrFavorite extends React.Component<TweetProp, TweetSta
           </CardContent>
 
           {has_media && <TweetImage />}
-          
+
           <CardActions className={classes.card_favorite_action + " tweet-font tweet-details"}>
             <TweetActions />
             <CustomTweetDate />
-
           </CardActions>
         </Card>
       </TweetContext.Provider>
@@ -166,32 +166,22 @@ function TweetActions() {
 function CustomTweetDate() {
   // @ts-ignore
   const context = getOriginal(React.useContext(TweetContext)) as PartialTweet | PartialFavorite;
+  const date = 'created_at' in context ?
+    TwitterHelpers.dateFromTweet(context as PartialTweet) :
+    twitterSnowflakeToDate(context.tweetId);
+  const link = 'created_at' in context ?
+    `https://twitter.com/${(context.user as PartialTweetUser).screen_name}/status/${context.id_str}` :
+    `https://twitter.com/i/web/status/${context.tweetId}`;
 
-  if ('created_at' in context) {
-    const date = TwitterHelpers.dateFromTweet(context as PartialTweet);
-  
-    return (
-      <div className={classes.date}>
-        <a 
-          href={`https://twitter.com/${(context.user as PartialTweetUser).screen_name}/status/${context.id_str}`} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className={classes.link}
-        >{SETTINGS.lang === "fr" ? dateFormatter("d/m/Y H:i:s", date) : dateFormatter("Y-m-d H:i:s", date)}</a>
-      </div>
-    );
-  }
-  else {
-    return (
-      <div className={classes.date}>
-        <a 
-          href={`https://twitter.com/i/web/status/${context.tweetId}`} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className={classes.link}
-      >#{context.tweetId}</a>
-      </div>
-    );
-  }
+  return (
+    <div className={classes.date}>
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes.link}
+      >{SETTINGS.lang === "fr" ? dateFormatter("d/m/Y H:i:s", date) : dateFormatter("Y-m-d H:i:s", date)}</a>
+    </div>
+  );
 }
 
