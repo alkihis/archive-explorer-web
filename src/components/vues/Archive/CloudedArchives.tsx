@@ -358,6 +358,7 @@ function CloudNewArchive(props: CloudNewArchiveProps) {
           canDelete={false}
           canSave={false}
           onLoad={props.onLoad}
+          hideHeader
         />
       </DialogContent>
 

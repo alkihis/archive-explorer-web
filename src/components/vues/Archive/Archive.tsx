@@ -1030,6 +1030,7 @@ type AvailableSavedArchivesProps = {
   canDelete?: boolean;
   block?: boolean;
   theme: Theme;
+  hideHeader?: boolean;
 };
 type AvailableSavedArchivesState = {
   available: SavedArchiveInfo[] | null | undefined;
@@ -1180,7 +1181,7 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
     return (
       <List>
         {/* Title and buttons */}
-        <ListSubheader
+        {!this.props.hideHeader && <ListSubheader
           className={styles.list_archive_header}
           style={{ backgroundColor: this.props.theme.palette.background.paper }}
         >
@@ -1223,7 +1224,7 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
               </IconButton>
             </CustomTooltip>}
           </span>
-        </ListSubheader>
+        </ListSubheader>}
 
         {/* Quota warning */}
         {this.state.quota.quota > 0.7 && <Typography
