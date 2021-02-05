@@ -66,6 +66,11 @@ export function CloudedArchive(props: CloudedArchiveProps) {
 
     try {
       const object_archive = await SAVED_ARCHIVES.getRawArchive(archive.uuid);
+
+      if (object_archive.tweets instanceof ArrayBuffer) {
+        return toast(LANG.invalid_saved_archive_type, 'error');
+      }
+
       const zip = new JSZip();
       zip.file('data.json', JSON.stringify(object_archive));
 

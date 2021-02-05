@@ -687,7 +687,8 @@ export default {
   no_clouded_archive: "Aucune archive sauvegardée à distance",
   cloud_saved_at: "Sauvegardée le {}",
   cloud_a_new_archive: "Téléverser une archive",
-  select_archive_from_local_saved_archives: "Sélectionnez une archive sauvegardée localement pour l'envoyer dans le nuage."
+  select_archive_from_local_saved_archives: "Sélectionnez une archive sauvegardée localement pour l'envoyer dans le nuage.",
+  invalid_saved_archive_type: "Cette archive est dans un format trop ancien. Veuillez recharger le ZIP original, puis ré-enregistrer l'archive.",
   /** END CloudedArchives file */
 
 } as { [msg: string]: string };

@@ -686,7 +686,8 @@ export default {
   no_clouded_archive: "No remote saved archive",
   cloud_saved_at: "Saved at {}",
   cloud_a_new_archive: "Upload an archive",
-  select_archive_from_local_saved_archives: "Select a locally saved archive to send it in the cloud."
+  select_archive_from_local_saved_archives: "Select a locally saved archive to send it in the cloud.",
+  invalid_saved_archive_type: "This archive is in a old format. Please reload the original ZIP, then re-save the archive.",
   /** END CloudedArchives file */
 
 } as { [msg: string]: string };
