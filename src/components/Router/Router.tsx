@@ -19,16 +19,16 @@ const DirectMessages = React.lazy(() => import("../vues/DirectMessages/DirectMes
 const More = React.lazy(() => import("../vues/More/More"));
 const FavoriteExplorer = React.lazy(() => import("../vues/FavoriteExplorer/FavoriteExplorer"));
 
-type RouterState = { 
+type RouterState = {
   /** True if login modal should be shown.
-   * False if login modal is hidden. 
+   * False if login modal is hidden.
    * Null will stop the page affichage. */
-  modal_shown: boolean | null, 
-  /** 
+  modal_shown: boolean | null,
+  /**
    * True if the user is logged and validated. True by default (to enable page showing),
    * but if user is not logged, automatically set to false.
    * When credentials are checked, must be updated.
-   * 
+   *
    * Null mean server is not accessible.
    */
   validation_status: boolean | null
@@ -42,7 +42,7 @@ class AppRouter extends React.Component<{}, RouterState> {
   constructor(props: any) {
     super(props);
 
-    this.state = { 
+    this.state = {
       modal_shown: null,
       validation_status: true
     };
@@ -59,7 +59,7 @@ class AppRouter extends React.Component<{}, RouterState> {
       checkCredentials()
         .then(is_logged => {
           if (!is_logged) {
-            // C'est pas bon, l'utilisateur doit se déconnecter, 
+            // C'est pas bon, l'utilisateur doit se déconnecter,
             // token invalide ou API injoignable
             this.setState({
               validation_status: is_logged,
@@ -68,7 +68,7 @@ class AppRouter extends React.Component<{}, RouterState> {
           }
         })
     }
-    // Processus de connexion classique 
+    // Processus de connexion classique
     // (si user not defined, pas censé arrivé)
     else if (this.logged) {
       this.setState({
@@ -83,7 +83,7 @@ class AppRouter extends React.Component<{}, RouterState> {
               modal_shown: false
             });
           }
-          // C'est pas bon, l'utilisateur doit se déconnecter, 
+          // C'est pas bon, l'utilisateur doit se déconnecter,
           // token invalide ou API injoignable
           else {
             this.setState({
@@ -117,7 +117,7 @@ class AppRouter extends React.Component<{}, RouterState> {
               {LANG.logout}
             </Button>
           </DialogActions>
-        </div>  
+        </div>
       );
     }
     // null
@@ -139,7 +139,7 @@ class AppRouter extends React.Component<{}, RouterState> {
               {LANG.reload}
             </Button>
           </DialogActions>
-        </div>  
+        </div>
       );
     }
   }
@@ -151,15 +151,15 @@ class AppRouter extends React.Component<{}, RouterState> {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        {this.state.validation_status ? 
+        {this.state.validation_status ?
         /* L'utilisateur doit attendre que l'API réponde */
           <div>
             <DialogTitle>{LANG.login_in}...</DialogTitle>
             <DialogContent style={{ padding: '30px 100px' }}>
               <BigPreloader />
             </DialogContent>
-          </div>  
-        : 
+          </div>
+        :
         /* L'utilisateur n'a pas le choix: Il doit se déconnecter */
           this.apiError()
         }
@@ -172,11 +172,11 @@ class AppRouter extends React.Component<{}, RouterState> {
       <Router>
         <Suspense fallback={<SuspenseWaiting />}>
           <Switch>
-            <Route path="/archive/" component={Archive} />  
-            <Route path="/explore/" component={Explore} /> 
-            <Route path="/favorites/" component={FavoriteExplorer} />  
-            <Route path="/dms/" component={DirectMessages} />  
-            <Route path="/more/" component={More} />  
+            <Route path="/archive/" component={Archive} />
+            <Route path="/tweets/" component={Explore} />
+            <Route path="/favorites/" component={FavoriteExplorer} />
+            <Route path="/dms/" component={DirectMessages} />
+            <Route path="/more/" component={More} />
             <Route path="/" exact component={HomePage} />
 
             {/* Langs autochange */}
@@ -195,7 +195,7 @@ class AppRouter extends React.Component<{}, RouterState> {
 
   unloggedRouter() {
     return (
-      <Router> 
+      <Router>
         <Suspense fallback={<SuspenseWaiting />}>
           <Switch>
             <Route path="/" exact component={HomePage} />
@@ -219,8 +219,8 @@ class AppRouter extends React.Component<{}, RouterState> {
       <div>
         {this.state.modal_shown && this.renderDialogLogin()}
         {!this.state.modal_shown &&
-          (this.logged ? 
-            this.routerLogged() : 
+          (this.logged ?
+            this.routerLogged() :
             this.unloggedRouter()
           )
         }
@@ -236,5 +236,5 @@ function SuspenseWaiting() {
     </CenterComponent>
   );
 }
-  
+
 export default AppRouter;

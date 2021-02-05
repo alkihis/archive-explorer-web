@@ -65,7 +65,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
   };
 
   componentDidMount() {
-    setPageTitle(LANG.explore);
+    setPageTitle(LANG.tweets_menu);
   }
 
   handleDrawerToggle = () => {
@@ -373,7 +373,7 @@ export default class Explore extends React.Component<{}, ExploreState> {
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
         toolbarGradient
-        title={LANG.explore}
+        title={LANG.tweets_menu}
         drawer={<div>
           <div className={classes.toolbar} />
           <Divider />

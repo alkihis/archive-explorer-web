@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent } from 'react';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import ExploreIcon from '@material-ui/icons/Explore';
+import TwitterIcon from '@material-ui/icons/Twitter';
 import MailIcon from '@material-ui/icons/Mail';
 import ArchiveIcon from '@material-ui/icons/FolderShared';
 import TasksIcon from '@material-ui/icons/CheckBox';
@@ -28,7 +28,7 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
     value: 0,
     pathMap: [
       '/archive/',
-      '/explore/',
+      '/tweets/',
       '/dms/',
       '/favorites/',
       '/more/',
@@ -145,7 +145,7 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
     if (this.state.tasks_running === 0) {
       return <TasksIcon />;
     }
-    
+
     return (
       <Badge badgeContent={this.state.tasks_running} color="primary">
         <TasksIcon />
@@ -171,7 +171,7 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
           className={"nav primary " + classes.stick_to_bottom + " " + classes.bottom_bar}
         >
           <BottomNavigationAction label={LANG.archive} icon={<ArchiveIcon />} component={Link} to={pathMap[0]} />
-          <BottomNavigationAction label={LANG.explore} icon={<ExploreIcon />} component={Link} to={pathMap[1]} />
+          <BottomNavigationAction label={LANG.tweets_menu} icon={<TwitterIcon />} component={Link} to={pathMap[1]} />
           <BottomNavigationAction label={LANG.direct_messages} icon={<MailIcon />} component={Link} to={pathMap[2]} />
           <BottomNavigationAction label={LANG.favorites} icon={<FavoriteIcon />} component={Link} to={pathMap[3]} />
           <BottomNavigationAction label={LANG.more} icon={<MoreIcon />} component={Link} to={pathMap[4]} />

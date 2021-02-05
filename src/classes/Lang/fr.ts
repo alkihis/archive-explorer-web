@@ -312,6 +312,7 @@ export default {
   /** END DMConversation CMPT */
 
   /** BEGIN Explore CMPT */
+  tweets_menu: "Tweets",
   explore: "Explorer",
   full_archive: "Archive entière",
   find_tweets: "Trouver des tweets",
