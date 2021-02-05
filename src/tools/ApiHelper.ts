@@ -6,20 +6,25 @@ export class APIHelper {
     url: string,
     settings: {
       parameters?: { [key: string]: any },
-      method: "GET" | "POST",
-      mode?: 'json' | 'text' | 'arraybuffer',
+      method: "GET" | "POST" | "DELETE",
+      mode?: 'json' | 'text' | 'arraybuffer' | 'blob',
       headers?: { [key: string]: string } | Headers,
       body_mode?: 'form-encoded' | 'multipart' | 'json',
-      auth?: boolean
-    } = { 
+      auth?: boolean,
+      end_with_json?: boolean,
+    } = {
       method: 'GET',
-      parameters: {}, 
+      parameters: {},
       mode: 'json',
       body_mode: 'form-encoded',
-      auth: true
+      auth: true,
+      end_with_json: true,
     }
   ): Promise<any> {
     let fullurl = BASE_API_URL + url + (url.endsWith('.json') ? "" : ".json");
+    if (settings.end_with_json === false) {
+      fullurl = BASE_API_URL + url;
+    }
 
     if (!settings.parameters) {
       settings.parameters = {};
@@ -30,7 +35,7 @@ export class APIHelper {
     // Build parameters
     if (Object.keys(settings.parameters).length) {
       // Encodage dans la query
-      if (settings.method === "GET") {
+      if (settings.method === "GET" || settings.method === "DELETE") {
         let str = "?";
         for (const [key, value] of Object.entries(settings.parameters)) {
           str += key + "=" + value;
@@ -42,7 +47,7 @@ export class APIHelper {
         // Si multipart (formdata)
         if (settings.body_mode && settings.body_mode === "multipart") {
           fd = new FormData();
-  
+
           for (const [key, value] of Object.entries(settings.parameters)) {
             fd.append(key, value);
           }
@@ -94,7 +99,7 @@ export class APIHelper {
       }
       else {
         if (settings.headers) {
-          if (settings.headers instanceof Headers) 
+          if (settings.headers instanceof Headers)
             settings.headers.set('Authorization', "Bearer " + SETTINGS.token);
           else
             settings.headers['Authorization'] = "Bearer " + SETTINGS.token;
@@ -124,8 +129,8 @@ export class APIHelper {
             return {};
           }
 
-          return (res.ok ? 
-            res.json() : 
+          return (res.ok ?
+            res.json() :
             res.json()
               .catch(e => Promise.reject([res, e]))
               .then(d => Array.isArray(d) ? Promise.reject(d) : Promise.reject([res, d]))
@@ -133,6 +138,9 @@ export class APIHelper {
         }
         else if (settings.mode === "text") {
           return res.ok ? res.text() : res.text().then(d => Promise.reject([res, d]));
+        }
+        else if (settings.mode === 'blob') {
+          return res.ok ? res.blob() : res.blob().then(d => Promise.reject([res, d]));
         }
         else {
           return res.ok ? res.arrayBuffer() : res.arrayBuffer().then(d => Promise.reject([res, d]));
@@ -164,4 +172,11 @@ export const API_URLS = {
   batch_tiny_tweets: 'batch/speed_tweets',
   batch_users: 'batch/users',
   classic_archive: 'tools/archive',
+  cloud_start_upload: 'cloud/upload/start',
+  cloud_send_chunk: 'cloud/upload/chunk',
+  cloud_get_allowed: 'cloud/upload/allowed',
+  cloud_end_upload: 'cloud/upload/terminate',
+  cloud_get_uploaded: 'cloud/download/list',
+  cloud_download_archive: 'cloud/download/archive',
+  cloud_delete_archive: 'cloud/download/destroy',
 };

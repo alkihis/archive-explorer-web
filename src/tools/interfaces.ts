@@ -15,16 +15,17 @@ export interface IUser {
   twitter_screen_name: string,
   twitter_id: string,
   profile_picture: string,
-  created_at: string
-}  
+  created_at: string,
+  can_cloud: boolean,
+}
 
 export interface IToken {
   user_id: string,
   token: string,
   login_ip: string,
   date: string,
-  last_use: string
-} 
+  last_use: string,
+}
 
 export interface DMEvent extends DirectMessageEventContainer {
   messageCreate?: LinkedDirectMessage;
@@ -34,10 +35,10 @@ export interface DMEvent extends DirectMessageEventContainer {
 export interface LogFile {
   /** The error message if any. */
   message?: string;
-  /** 
-   * The extract of concerned data if any. 
+  /**
+   * The extract of concerned data if any.
    * If parse error, contain a part of `FileParseError.content`.
-   * If other read error, contains the stringified version of `{Error}.extract`. 
+   * If other read error, contains the stringified version of `{Error}.extract`.
    */
   concern?: string;
   /** If error has no message, this should be the stringified error. */

@@ -87,7 +87,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
 
   /**
    * Get user info of a save, even if its doesn't have `.user` property.
-   * @param info 
+   * @param info
    */
   getUserInfoOf(info: SavedArchiveInfo) {
     if (info.user)
@@ -114,7 +114,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
 
   /**
    * Register a new user to the saved user store.
-   * 
+   *
    * This is **not** done when you ask for a storage for performance's sake, so
    * please take care of register an user when you register an archive from him !
    */
@@ -132,7 +132,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
    */
   protected async removeUser(user_id: string) {
     const users = await this.getRegistredUsers();
-    
+
     try {
       // Drop instance fails sometimes...
       await this.removeStorageOf(user_id);
@@ -145,6 +145,11 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
   // -----------------------------
   // CURRENT LOGGED USER FUNCTIONS
   // -----------------------------
+
+  async hasArchiveWithHash(hash: string) {
+    const archives = await this.getRegistredArchives();
+    return archives.some(archive => archive.hash === hash);
+  }
 
   /**
    * Get the registered archives for logged user.
@@ -160,11 +165,22 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     return this.getArchiveOf(this.logged_user_id, uuid);
   }
 
+  getRawArchive(uuid: string) {
+    return this.getRawArchiveOf(this.logged_user_id, uuid);
+  }
+
   /**
    * Register a new save for logged user.
    */
   registerArchive(archive: TwitterArchive, name: string, compress = false) {
     return this.registerArchiveOf(this.logged_user_id, archive, name, compress);
+  }
+
+  /**
+   * Register a new save (raw version) for logged user.
+   */
+  registerRawArchive(save: ArchiveSave, name: string) {
+    return this.registerRawArchiveOf(this.logged_user_id, save, name);
   }
 
   /**
@@ -179,7 +195,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
    */
   removeCurrentUser() {
     return this.removeUser(this.logged_user_id);
-  }  
+  }
 
 
   // ---------------------------------------
@@ -199,7 +215,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
 
     return all_archives;
   }
-  
+
   /**
    * Get the storage for each user available.
    */
@@ -220,23 +236,27 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
   // ARCHIVE MANAGEMENT USER-GENERIC FUNCTIONS
   // -----------------------------------------
 
-  /**
-   * Get a archive from a user {owner} by its {uuid}.
-   */
-  protected async getArchiveOf(owner: string, uuid: string) : Promise<TwitterArchive> {
+  protected async getRawArchiveOf(owner: string, uuid: string) {
     const storage = this.getStorageOf(owner);
     const serialized = await storage.getItem(uuid) as ArchiveSave;
 
     if (serialized) {
-      return ArchiveSaver.restore(serialized).then(archive => {
-        this.dispatchEvent({ type: "load", detail: archive });
-        return archive;
-      }).catch(error => {
-        this.dispatchEvent({ type: 'error', detail: error });
-        return error;
-      });
+      return serialized;
     }
     throw new Error("Archive does not exists");
+  }
+
+  /**
+   * Get a archive from a user {owner} by its {uuid}.
+   */
+  protected async getArchiveOf(owner: string, uuid: string) : Promise<TwitterArchive> {
+    return ArchiveSaver.restore(await this.getRawArchiveOf(owner, uuid)).then(archive => {
+      this.dispatchEvent({ type: "load", detail: archive });
+      return archive;
+    }).catch(error => {
+      this.dispatchEvent({ type: 'error', detail: error });
+      return error;
+    });
   }
 
   /**
@@ -255,7 +275,7 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
 
   /**
    * Remove the collection associated to {user_id}.
-   * 
+   *
    * If you want to delete all archives from an user, **please use `.removeUser()`, not this !**
    */
   protected async removeStorageOf(user_id: string) {
@@ -280,17 +300,12 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
   }
 
   /**
-   * Register a single {archive} into {owner}'s storage.
+   * Register a single {save} into {owner}'s storage.
    */
-  protected async registerArchiveOf(owner: string, archive: TwitterArchive, name: string, compress = false) {
-    if (!archive || !(archive instanceof TwitterArchive)) {
-      throw new Error("Archive is not valid.");
-    }
-
+  protected async registerRawArchiveOf(owner: string, save: ArchiveSave, name: string) {
     const storage = this.getStorageOf(owner);
     const archives = await this.getRegistredArchivesOf(owner);
-
-    const current_hash = archive.hash;
+    const current_hash = save.info.hash;
 
     // Check if archive already exists
     const existant = archives.find(a => a.hash === current_hash);
@@ -302,6 +317,42 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
     if (this.ask_persistence) {
       // Ask for storage to be persistent. We do not await this.
       this.askForPersistence();
+    }
+
+    // Create the save info from save + current archive data
+    const info: SavedArchiveInfo = {
+      uuid: uuidv4(),
+      tweets: save.info.tweet_count,
+      dms: save.info.dm_count,
+      last_tweet_date: save.info.last_tweet_date,
+      save_date: new Date().toString(),
+      hash: save.info.hash,
+      name,
+      user: {
+        screen_name: save.info.info.user.screen_name,
+        name: save.info.info.user.full_name,
+        id_str: save.info.info.user.id,
+      },
+    };
+
+    // Save the archive
+    await storage.setItem(info.uuid, save);
+
+    // Save the updated available archives
+    await storage.setItem<AvailableArchives>(this.AVAILABLE_ARCHIVES_KEY, [...archives, info]);
+
+    // Register the user in the saved
+    await this.registerUser(owner);
+
+    return info;
+  }
+
+  /**
+   * Register a single {archive} into {owner}'s storage.
+   */
+  protected async registerArchiveOf(owner: string, archive: TwitterArchive, name: string, compress = false) {
+    if (!archive || !(archive instanceof TwitterArchive)) {
+      throw new Error("Archive is not valid.");
     }
 
     // Create the save
@@ -322,35 +373,10 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
         personalization: true,
       },
       ad_archive: true,
-      compress
+      compress,
     });
 
-    // Create the save info from save + current archive data
-    const info: SavedArchiveInfo = {
-      uuid: uuidv4(),
-      tweets: save.info.tweet_count,
-      dms: save.info.dm_count,
-      last_tweet_date: save.info.last_tweet_date,
-      save_date: new Date().toString(),
-      hash: save.info.hash,
-      name,
-      user: {
-        screen_name: archive.user.screen_name,
-        name: archive.user.name,
-        id_str: archive.user.id,
-      },
-    };
-
-    // Save the archive
-    await storage.setItem(info.uuid, save);
-
-    // Save the updated available archives
-    await storage.setItem<AvailableArchives>(this.AVAILABLE_ARCHIVES_KEY, [...archives, info]);
-
-    // Register the user in the saved
-    await this.registerUser(owner);
-
-    return info;
+    return this.registerRawArchiveOf(owner, save, name);
   }
 
   /**
@@ -448,7 +474,7 @@ export async function loadFirstSavedArchiveInSettings(specific?: string) {
     }
     console.log("Loading the archive");
     const archive = await SAVED_ARCHIVES.getArchive(choosen.uuid);
-    
+
     loadSavedArchiveInSettings(choosen.name, archive);
     console.log("Archive is loaded !");
   }

@@ -51,8 +51,8 @@ export default {
   dl_gdpr_step_4: `Scroll at the end of the container and select "See your Twitter data"`,
   dl_gdpr_step_5: `You should see a password input. Enter your password and click "Confirm"`,
   dl_gdpr_step_6: `You can now click on the first "Request data" button`,
-  dl_gdpr_step_end: `Link will come into your mailbox. 
-  It may take some time (between one hour to several days) to generate. 
+  dl_gdpr_step_end: `Link will come into your mailbox.
+  It may take some time (between one hour to several days) to generate.
   Please be patient.`,
   download_your_archive: "Download your archive",
   close: 'Close',
@@ -74,7 +74,7 @@ export default {
   sort_asc: "Ascending sort",
   sort_desc: "Descending sort",
   contains_any_tweets: "This element does not contain any tweets",
-  filters_that_hide: `It seems you have applied filters 
+  filters_that_hide: `It seems you have applied filters
   that hide all the tweets that can be displayed.`,
   no_tweets_to_display: "No tweets to display here",
   deleted_or_no_permission_to_show: "All tweets are deleted, or you don't have the permission to read them.",
@@ -93,7 +93,7 @@ export default {
   task_start_error: "Unable to start task. Check your network.",
   delete_selected_tweets: "Delete selected tweets",
   tweets_deleted_from: "The tweets will be deleted from",
-  deletion_modal_text: `A deletion task will be started. 
+  deletion_modal_text: `A deletion task will be started.
   You can't restore tweets after they're been removed from Twitter.
   Are you sure you want to do this ?`,
   fatal_error: "Fatal error",
@@ -118,7 +118,7 @@ export default {
   direct messages, moments, mutes, blocks and many more.`,
   how_to_download: "Learn how to download your archive",
   powerful_search: "Powerful search",
-  powerful_search_p1: `Archive Explorer let you find in seconds tweets and direct messages. 
+  powerful_search_p1: `Archive Explorer let you find in seconds tweets and direct messages.
   With a simple text field, search by word, phrase or even using regular expressions.
   All that you want is within easy reach.`,
   clean_your_account: "Clean your account",
@@ -133,19 +133,19 @@ export default {
   explore_sort_p1: `Want to explore your shared videos?
   See your most popular posts of all times?
   Browse through your content without seeing the retweets?`,
-  explore_sort_p2: `Explore more precisly your archive by choosing a content filter : 
+  explore_sort_p2: `Explore more precisly your archive by choosing a content filter :
   Find your favorites retweets, selfies and top tweets from years ago!`,
   even_more: 'And even more',
   travel_through_time: "Travel through time",
   travel_through_time_p1: `Explore tweets or DMs conversations directly by year or month,
   relive every moment spent on Twitter, no matter of how far it is.`,
   most_mentionned_per_month: "Find your best buddies",
-  most_mentionned_per_month_p1: `Twitter Archive Explorer easily shows to you, per month or in the full archive, 
+  most_mentionned_per_month_p1: `Twitter Archive Explorer easily shows to you, per month or in the full archive,
   with whom you have the most interacted on Twitter. Who were your best friends 5 years ago?`,
   background_tasks: "Background tasks",
   background_tasks_p1: `With a very large number of tweets, blocks or mutes, deletion may be long.
   Without installing any program, or keeping any computer on,
-  delete with tasks started in background. 
+  delete with tasks started in background.
   You can cancel them at any time.`,
   tweets_of_the_day: "Tweets of the day",
   tweets_of_the_day_p1: `For fun or for nostalgia, find your posted tweets in the same day, the previous years.
@@ -154,7 +154,7 @@ export default {
   twitter_at_history_p1: `As a old Twitter user, did you ever asked when you've changed your Twitter @ for the last time?
   Archive Explorer let you know every name you've used, and when you've modified it.`,
   open_and_private: "Open and private",
-  open_and_private_p1: `Archive Explorer makes your privacy a priority. 
+  open_and_private_p1: `Archive Explorer makes your privacy a priority.
   Not a single of your direct messages are stored in our database.
   Twitter archive data stays in your browser.
   Have some doubt? Code is`,
@@ -245,7 +245,7 @@ export default {
   file_might_be_too_big: "Archive or file inside it may be too big.",
   file_with_an_incorrect_format: "Format of a file inside archive is invalid or unsupported.",
   incorrect_file_in_archive: "A file in archive has an incorrect syntax.",
-  file_is_not_a_zip_archive: `Specified file is not a ZIP archive. You should load the  
+  file_is_not_a_zip_archive: `Specified file is not a ZIP archive. You should load the
   file downloaded from Twitter.`,
   files_in_this_archive: "Files in this archive",
   tweet_file_is_incorrect: "Tweet file is unwell-formatted.",
@@ -265,7 +265,7 @@ export default {
   create_archive_title: "Create a “classic” archive to read your tweets offline with a simple web viewer contained in archive files.",
   create_archive_p1: "Those kind of archives does not contains anything except tweets.",
   create_archive_p2: `Do not substitute current archive with those kind of archive,
-  or you will lose direct messages, medias, user informations 
+  or you will lose direct messages, medias, user informations
   like advertiser data, screen name history, email address and more.`,
   create_archive_p3: "Warning: In generated archive, retweets will be unwell-formatted with a bad @ or a bad profile picture. This behavior is expected.",
   create: "Create",
@@ -351,7 +351,7 @@ export default {
   invalid_query: "Criteria after keyword \"{}\" in query is invalid.",
   search_cannot_be_made: "Search failed. Something bad happened.",
   advanced_search: "Advanced search",
-  advanced_search_explaination: `This tool allows you to create a search with a bunch of critieria. 
+  advanced_search_explaination: `This tool allows you to create a search with a bunch of critieria.
   After you made your choices, you can enter free text to finalize your request.`,
   free_text: "Free text",
   since_date: "Since date",
@@ -381,7 +381,7 @@ export default {
 
   /** BEGIN Login CMPT */
   tiny_access_text: `We need a tiny access to your Twitter account to allow us starting tweet deletions,
-  access your content and your profile details. 
+  access your content and your profile details.
   You can revoke access when you want.`,
   using: "Using",
   sign_in_with_twitter: "Sign in with Twitter",
@@ -500,12 +500,12 @@ export default {
   and years with Quick Delete, available in the Archive tab.`,
   favs_mutes_blocks: "Mutes and blocks",
   favs_mutes_blocks_p1: `Mutes and blocks can be deleted in their respective tab, which you can select
-  on top of this page. This kind of removal is "all or nothing", you can't 
+  on top of this page. This kind of removal is "all or nothing", you can't
   individually select which mute or block you will remove.`,
   limitations: "Limitations",
   retweet_data: "Retweet data",
-  retweet_data_p1: `When you browse your tweets, you may see strange retweet information: 
-  Profile picture may be yours, or Twitter name isn't good. 
+  retweet_data_p1: `When you browse your tweets, you may see strange retweet information:
+  Profile picture may be yours, or Twitter name isn't good.
   In fact, Twitter archives contains a bad retweet data. Retweets are stored in your name,
   and the original retweet isn't present. `,
   retweet_data_p2: `Archive Explorer tries to enhance at their maximum retweet data in order to make your experience
@@ -586,7 +586,7 @@ export default {
   most_seen_advertisers: "Most seen advertisers",
   impressions_per_date: "Impressions per date",
   impression_explaination: `A impression is produced when you "see" an ad on Twitter. This could be a sponsored tweet,
-  a pre-roll video, a sponsored video or poll, or many other things. The more impressions you have, the more you've been 
+  a pre-roll video, a sponsored video or poll, or many other things. The more impressions you have, the more you've been
   targeted by advertisements this day. Twitter archives provides 90-day impression history.`,
   followers: "Followers",
   followings: "Followings",
@@ -596,15 +596,15 @@ export default {
   legal_mentions_and_limitations: "Legal notice and limitations",
   legal_mentions: "Legal notice",
   about_archive_explorer: "About Twitter Archive Explorer",
-  about_archive_explorer_p1: `Twitter Archive Explorer is a software suite made by Alkihis. 
+  about_archive_explorer_p1: `Twitter Archive Explorer is a software suite made by Alkihis.
   It is used in accordance to CC-BY-NC-SA-4.0 license, and give free usage without any counterpart.
   Client, server and archive reader are available on `,
   about_archive_explorer_p2: `In case of code reuse of a part of this suite by other people, it must respect the
   license conditions affected to this tool.`,
-  about_archive_explorer_p3: `Archive Explorer doesn't belong to Twitter and is not affilated to it in any way. 
+  about_archive_explorer_p3: `Archive Explorer doesn't belong to Twitter and is not affilated to it in any way.
   Twitter, Tweet, Retweet and the Twitter logo are trademarks of Twitter, Inc. or its affiliates.`,
   tweet_deletion_p1: `When you delete tweets, mutes and other data using Twitter Archive Explorer,
-  this data is wiped permanently. However, Archive Explorer does not provide any guarantee, 
+  this data is wiped permanently. However, Archive Explorer does not provide any guarantee,
   either for the effectiveness or the accuracy of this deletion.
   If any other information is wiped from your account by error, Archive Explorer doesn't provide any way of restoring it.`,
   personal_data: "Personal data",
@@ -633,9 +633,9 @@ export default {
   older_favorited_tweets: "Favorites before November 2010",
   favorites_p1: `Due to an internal archive limit, favorites are sorted with `,
   favorites_p2: "the publication date of the favorited tweet, and not with the time when tweet has been favorited",
-  favorites_p3: `In favorites explorer, posted tweets before November, 2010 can't be sorted by date. 
+  favorites_p3: `In favorites explorer, posted tweets before November, 2010 can't be sorted by date.
   If any exists, a "Older favorites" category will be created.
-  Furthermore, if the favorited tweet has been deleted (or owner suspended/deactivated), 
+  Furthermore, if the favorited tweet has been deleted (or owner suspended/deactivated),
   no other information than text will be shown in explorer.`,
   /** END More CMPT */
 
@@ -656,5 +656,28 @@ export default {
   /** END Tasks file */
 
   past_s: "",
+
+  /** BEGIN CloudedArchives file */
+  clouded_archive: "Cloud archives",
+  cloud_download_failure: "Unable to download archive.",
+  already_sent: "This archive is already in the cloud.",
+  archive_successfully_uploaded: "Archive uploaded successfully.",
+  cloud_upload_failure: "Unable to upload archive.",
+  downloading_clouded_archive: "Downloading archive",
+  upload_archive: "Uploading archive",
+  compressing_archive: "Compressing...",
+  uploading_archive: "Uploading archive to Archive Explorer",
+  finishing_clouding_archive: "Just a moment...",
+  already_saved: "This archive is already present on your device.",
+  clouded_archive_removed: "Archive removed from the cloud.",
+  unable_to_delete_cloud_archive: "Unable to remove remote archive.",
+  list_of_clouded_archives: "Cloud archives",
+  here_are_the_saved_archives_on_your_cloud_account: "You can access here a list of saved remote archives in your Archive Explorer account.",
+  click_on_a_clouded_save_to_download_it: "Click on any of available archive to download it locally.",
+  no_clouded_archive: "No remote saved archive",
+  cloud_saved_at: "Saved at {}",
+  cloud_a_new_archive: "Upload an archive",
+  select_archive_from_local_saved_archives: "Select a locally saved archive to send it in the cloud."
+  /** END CloudedArchives file */
 
 } as { [msg: string]: string };

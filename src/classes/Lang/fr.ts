@@ -51,8 +51,8 @@ export default {
   dl_gdpr_step_4: `Rendez-vous à la fin de la page, et cliquez sur "Voir mes données Twitter"`,
   dl_gdpr_step_5: `Entrez votre mot de passe, puis cliquez sur "Confirmer"`,
   dl_gdpr_step_6: `Vous pouvez maintenant cliquer sur le bouton "Demander mes données"`,
-  dl_gdpr_step_end: `Le lien arrivera dans votre boîte mail. 
-  Ceci peut prendre un peu de temps (entre une heure et quelques jours) à se générer. 
+  dl_gdpr_step_end: `Le lien arrivera dans votre boîte mail.
+  Ceci peut prendre un peu de temps (entre une heure et quelques jours) à se générer.
   Merci d'être patient.`,
   download_your_archive: "Téléchargez votre archive",
   close: 'Fermer',
@@ -93,7 +93,7 @@ export default {
   task_start_error: "Impossible de lancer la tâche. Vérifiez votre connexion réseau.",
   delete_selected_tweets: "Supprimer les tweets sélectionnés",
   tweets_deleted_from: "Ces tweets vont être supprimés depuis",
-  deletion_modal_text: `Une tâche de suppression va être lancée. 
+  deletion_modal_text: `Une tâche de suppression va être lancée.
   Vous ne pouvez pas restaurer les tweets après qu'ils soient supprimés de Twitter.
   Voulez vous vraiment faire cela ?`,
   browser_is_obsolete: 'Navigateur obsolète',
@@ -117,13 +117,13 @@ export default {
   messages privés, moments, favoris, blocks et bien plus.`,
   how_to_download: "Apprenez à télécharger votre archive",
   powerful_search: "Recherche puissante",
-  powerful_search_p1: `Archive Explorer vous permet de trouver en quelques secondes vos tweets et messages privés. 
+  powerful_search_p1: `Archive Explorer vous permet de trouver en quelques secondes vos tweets et messages privés.
   Avec un simple champ de texte, cherchez par mot, phrase et même avec des expressions régulières.
   Tout ce que vous cherchez est à votre portée.`,
   clean_your_account: "Nettoyez votre compte",
   clean_your_account_p1: `Le vous de 13 ans a posté des tweets gênants dont vous ne vous souvenez même pas ?
   Vous avez utilisé une block-list bien trop grande pour vous et vous avez envie d'annuler ça ?
-  Archive Explorer est un outil conçu pour supprimer vos vieux tweets, par mois, année ou même via une recherche. 
+  Archive Explorer est un outil conçu pour supprimer vos vieux tweets, par mois, année ou même via une recherche.
   Vous serez également capable de supprimer les utilisateurs blockés ou mis en sourdine de votre compte !
   Cet outil a déjà permis la suppression de`,
   tweets: "tweets",
@@ -140,7 +140,7 @@ export default {
   revivez chaque moment passé sur Twitter, sans aucune barrière temporelle.`,
   most_mentionned_per_month: "Meilleurs compagnons",
   most_mentionned_per_month_p1: `Twitter Archive Explorer vous permet de voir rapidement, par mois ou sur
-  la totalité de votre archive, avec qui vous avez le plus interagi sur Twitter. 
+  la totalité de votre archive, avec qui vous avez le plus interagi sur Twitter.
   Qui étaient vos meilleurs amis d'il y a 5 ans ?`,
   background_tasks: "Tâches en arrière-plan",
   background_tasks_p1: `Avec un nombre considérable de tweets, favoris ou mutes, leur suppression peut être longue.
@@ -213,8 +213,8 @@ export default {
   no_archive_saved: "Aucune sauvegarde disponible",
   save_current_archive: "Sauvegarder l'archive chargée",
   delete_all_archives: "Supprimer toutes les sauvegardes",
-  save_current_archive_explaination: `L'archive actuellement chargée sera sauvegardée dans votre navigateur. 
-  Vous la retrouverez dans la liste des archives sauvegardées, si vous vous reconnectez avec le même compte Twitter, 
+  save_current_archive_explaination: `L'archive actuellement chargée sera sauvegardée dans votre navigateur.
+  Vous la retrouverez dans la liste des archives sauvegardées, si vous vous reconnectez avec le même compte Twitter,
   sur cet appareil.`,
   save: "Sauvegarder",
   saving: "Sauvegarde",
@@ -233,7 +233,7 @@ export default {
   quota_used: "",
   megabytes_used: "Mo utilisé",
   used_with_s: "s",
-  user_archive_save_mismatch: `L'utilisateur connecté n'est pas le propriétaire de l'archive actuellement chargée. 
+  user_archive_save_mismatch: `L'utilisateur connecté n'est pas le propriétaire de l'archive actuellement chargée.
   Si vous la rechargez via sa sauvegarde, les images des tweets et des messages privés peuvent ne pas s'afficher correctement.`,
   omg_what_happend: "Oups ! Que s'est t-il passé ?",
   why_my_archive_didnt_load: "Pourquoi mon archive ne s'est pas chargée ?",
@@ -245,7 +245,7 @@ export default {
   file_might_be_too_big: "L'archive ou un fichier à l'intérieur est peut être trop gros.",
   file_with_an_incorrect_format: "Le format d'un fichier à l'intérieur de l'archive est incorrect ou non supporté.",
   incorrect_file_in_archive: "Un fichier de l'archive présente une syntaxe incorrecte.",
-  file_is_not_a_zip_archive: `Le fichier spécifié n'est pas une archive ZIP. 
+  file_is_not_a_zip_archive: `Le fichier spécifié n'est pas une archive ZIP.
   Vous devez charger le fichier mis à disposition par Twitter, non décompressé.`,
   files_in_this_archive: "Fichiers dans cette archive",
   tweet_file_is_incorrect: "Le fichier contenant les tweets est mal formaté.",
@@ -481,7 +481,7 @@ export default {
   search: "Recherche",
   about_direct_messages: "Concernant les messages privés",
   search_p1: "Les recherches pour les tweets et messages privés s'effectent sans sensibilité à la casse, et celles-ci supportent les expressions régulières.",
-  search_p2: `Si vous effectuez un clic droit (appui long sur mobile) sur le bouton rechercher, 
+  search_p2: `Si vous effectuez un clic droit (appui long sur mobile) sur le bouton rechercher,
   vous aurez accès à des options avancées de recherche, comme la sensibilité à la casse ou des drapeaux pour les expressions régulières.`,
   tweets_p1: "Cherchez les tweets que vous souhaitez directement via votre archive. La recherche se fait instantanément, dans tous vos tweets.",
   direct_messages_p1: `Quand une conversation est sélectionnée, vous pouvez trouver des messages via leur contenu. Lorsque vous avez
@@ -496,7 +496,7 @@ export default {
   delete_tweets_more_p2: "Veuillez noter que",
   delete_tweets_more_p3: "chaque suppression est réalisée sur votre compte Twitter, et est irréversible.",
   delete_tweets_more_p4: "Vous ne serez pas capable de récupérer vos tweets, mutes ou autres informations supprimées",
-  tweets_more_p1: `Pour les tweets, vous pouvez les sélectionner individuellement dans l'explorateur de tweets (onglet Explorer), 
+  tweets_more_p1: `Pour les tweets, vous pouvez les sélectionner individuellement dans l'explorateur de tweets (onglet Explorer),
   ou choisir depuis plusieurs mois ou années dans la Suppression rapide, accessible dans l'onglet Archive.`,
   favs_mutes_blocks: "Mutes et blocks",
   favs_mutes_blocks_p1: `Les mutes et blocks peuvent être supprimés dans leur onglet respectif, en haut de cette page. Ce type de suppression est "tout ou rien", vous ne pouvez pas
@@ -510,7 +510,7 @@ export default {
   retweet_data_p2: `Archive Explorer essaie d'étendre au maximum les données fournies, pour rendre votre expérience la plus agréable possible,
   mais il est impossible de faire des miracles.`,
   truncated_tweets: "Tweets tronqués",
-  truncated_tweets_p1: `Les tweets contenant plus de 140 caractères peuvent être tronqués. Ceci est peut être un bug 
+  truncated_tweets_p1: `Les tweets contenant plus de 140 caractères peuvent être tronqués. Ceci est peut être un bug
   (voir`,
   this_tweet: "ce tweet",
   truncated_tweets_p2: `ou non, Twitter n'a fourni aucun élément de réponse.`,
@@ -587,7 +587,7 @@ export default {
   most_seen_advertisers: "Annonceurs les plus vus",
   impressions_per_date: "Impressions par date",
   impression_explaination: `Une impression est enregistrée lorsque vous "voyez" une publicité sur Twitter. Celle-ci peut être
-  un tweet sponsorisé, une publicité pré-vidéo, une vidéo publicitaire, un sondage sponsorisé ou d'autres. 
+  un tweet sponsorisé, une publicité pré-vidéo, une vidéo publicitaire, un sondage sponsorisé ou d'autres.
   Plus le nombre d'impressions est élevé, plus vous avez été soumis à de la publicité ce jour-là.
   Dans une archive, l'historique des impressions s'étend sur les 90 jours précédant la date de la création de celle-ci.`,
   followers: "Followers",
@@ -598,7 +598,7 @@ export default {
   legal_mentions_and_limitations: "Mentions légales et limitations",
   legal_mentions: "Mentions légales",
   about_archive_explorer: "À propos de Twitter Archive Explorer",
-  about_archive_explorer_p1: `Twitter Archive Explorer est une suite logiciel créée par Alkihis. 
+  about_archive_explorer_p1: `Twitter Archive Explorer est une suite logiciel créée par Alkihis.
   Celle-ci est utilisée conformément à sa licence CC-BY-NC-SA-4.0 et fournit une utilisation à titre gratuit sans contrepartie.
   L'ensemble de la suite, client, serveur et lecteur d'archive sont mis à disposition sur `,
   about_archive_explorer_p2: `En cas de réutilisation d'une partie de cette suite par d'autres personnes, elle doit respecter
@@ -635,7 +635,7 @@ export default {
   older_favorited_tweets: "Favoris antérieurs à novembre 2010",
   favorites_p1: `En raison d'une limite interne à l'archive, les favoris sont triés sont triés en fonction de `,
   favorites_p2: "la date de publication des tweets mis en favoris, et non pas de la date de mise en favori",
-  favorites_p3: `Dans l'explorateur de favoris, les tweets postés avant novembre 2010 ne peuvent être triés par date. 
+  favorites_p3: `Dans l'explorateur de favoris, les tweets postés avant novembre 2010 ne peuvent être triés par date.
   Si il en existe, une catégorie "Favoris plus anciens" est créée en conséquence.
   De plus, si le tweet mis en favori a été supprimé, aucune autre information que le texte du tweet ne pourra être affichée dans l'explorateur.`,
   /** END More CMPT */
@@ -657,5 +657,28 @@ export default {
   /** END Tasks file */
 
   past_s: "s",
+
+  /** BEGIN CloudedArchives file */
+  clouded_archive: "Archives dans le nuage",
+  cloud_download_failure: "Impossible de télécharger l'archive.",
+  already_sent: "Cette archive est déjà présente dans le nuage.",
+  archive_successfully_uploaded: "Archive téléversée avec succès.",
+  cloud_upload_failure: "Impossible de téléverser l'archive.",
+  downloading_clouded_archive: "Téléchargement de l'archive",
+  upload_archive: "Envoi de l'archive",
+  compressing_archive: "Compression...",
+  uploading_archive: "Téléversement de l'archive vers Archive Explorer",
+  finishing_clouding_archive: "Plus que quelques instants, nous terminons l'envoi...",
+  already_saved: "Cette archive est déjà présente sur votre appareil.",
+  clouded_archive_removed: "Archive supprimée du nuage.",
+  unable_to_delete_cloud_archive: "Impossible de supprimer l'archive distante.",
+  list_of_clouded_archives: "Archives dans le nuage",
+  here_are_the_saved_archives_on_your_cloud_account: "Vous pouvez accéder ici à une liste des archives sauvegardées à distance dans votre compte Archive Explorer.",
+  click_on_a_clouded_save_to_download_it: "Cliquez sur une des archives disponibles pour la télécharger localement.",
+  no_clouded_archive: "Aucune archive sauvegardée à distance",
+  cloud_saved_at: "Sauvegardée le {}",
+  cloud_a_new_archive: "Téléverser une archive",
+  select_archive_from_local_saved_archives: "Sélectionnez une archive sauvegardée localement pour l'envoyer dans le nuage."
+  /** END CloudedArchives file */
 
 } as { [msg: string]: string };
