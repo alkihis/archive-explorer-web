@@ -1,9 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import styles from './Archive.module.scss';
 import JSZip from 'jszip';
 import LANG from '../../../classes/Lang/Language';
-import clsx from 'clsx';
 import CloudCircleIcon from '@material-ui/icons/CloudCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Typography, Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText, LinearProgress, List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, IconButton } from '@material-ui/core';

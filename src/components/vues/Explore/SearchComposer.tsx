@@ -25,9 +25,10 @@ import { Marger } from '../../../tools/PlacingComponents';
 interface AdvancedInputProperties {
   keyword: string;
   operators?: (":" | ">=" | ">" | "<=" | "<")[];
-  type: "date" | "string" | "number" | "month" | "day" | "signednumber";
+  type: "date" | "string" | "number" | "month" | "day" | "signednumber" | "choices";
   /** Functions are needed because text change when LANG changes */
   text: () => string;
+  choices?: [string, () => string][];
 }
 
 const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
@@ -68,6 +69,24 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   type: 'number',
   operators: [":", ">=", ">", "<=", "<"],
   text: () => LANG.media_count,
+}, {
+  keyword: 'has',
+  type: 'choices',
+  text: () => LANG.has_search_choices,
+  choices: [
+    ['image', () => LANG.image],
+    ['video', () => LANG.video],
+    ['gif', () => LANG.gif],
+    ['link', () => LANG.link],
+  ],
+}, {
+  keyword: 'is',
+  type: 'choices',
+  text: () => LANG.is_search_choices,
+  choices: [
+    ['retweet', () => LANG.retweet],
+    ['quote', () => LANG.quote],
+  ],
 }];
 
 /**
@@ -108,7 +127,7 @@ export default function ComposeSearchModal(props: {
   }
 
   function refreshSearchString() {
-    return (currentMonth ? ":current " : "") + 
+    return (currentMonth ? ":current " : "") +
       (inputs.map(v => v.input.keyword + v.operator + v.value).join(' ') + " " + freeText).trim();
   }
 
@@ -147,8 +166,8 @@ export default function ComposeSearchModal(props: {
         </div>
 
         {/* Criterias input */}
-        {inputs.map(e => <AdvancedSearchInput 
-          key={e.id} 
+        {inputs.map(e => <AdvancedSearchInput
+          key={e.id}
           id={e.id}
           onDelete={() => deleteInput(e.id)}
           onChange={(kw, v, op) => updateInput(e.id, kw, v, op)}
@@ -162,15 +181,15 @@ export default function ComposeSearchModal(props: {
             </Fab>
           </CustomTooltip>
         </div>
-        
+
         <Hidden xsUp={!props.canSetCurrent}>
           <Marger size={4} />
-          
+
           <FormControlLabel
             value="ok"
             control={
-              <Checkbox 
-                color="primary" 
+              <Checkbox
+                color="primary"
                 checked={currentMonth}
                 onChange={(_, c) => setCurrentMonth(c)}
               />
@@ -180,7 +199,6 @@ export default function ComposeSearchModal(props: {
           />
         </Hidden>
 
-        
         <Marger size={4} />
         <Divider />
         <Marger size={6} />
@@ -375,6 +393,28 @@ function AdvancedSearchInput(props: {
             cancelLabel={LANG.close}
           />
         </MuiPickersUtilsProvider>
+      );
+    }
+    else if (data.type === "choices") {
+      const choices = data.choices!;
+
+      return (
+        <>
+          <InputLabel id={String(props.id) + "choices-select"}>{uppercaseFirst(LANG.value)}</InputLabel>
+          <Select
+            labelId={String(props.id) + "choices-select"}
+            value={input}
+            onChange={e => {
+              const val = String(e.target.value as any || "");
+              setIsError(false);
+              changeInput(val || "")
+            }}
+          >
+            {choices.map(choice => <MenuItem value={choice[0]} key={choice[0]}>
+              {choice[1]()}
+            </MenuItem>)}
+          </Select>
+        </>
       );
     }
   }

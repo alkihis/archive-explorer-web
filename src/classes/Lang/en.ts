@@ -378,6 +378,14 @@ export default {
   search_in_current_month: "Search in selected month/view",
   media_count: 'Media count',
   undefined_text: "[Tweet text can't be accessed]",
+  has_search_choices: "Contains...",
+  is_search_choices: "Is a...",
+  image: "Image",
+  video: "Video",
+  gif: "GIF",
+  link: "Link",
+  retweet: "Retweet",
+  quote: "Quote",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

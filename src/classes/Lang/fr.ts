@@ -379,6 +379,14 @@ export default {
   search_in_current_month: "Chercher dans le mois ou la vue courante",
   media_count: 'Nombre de médias',
   undefined_text: "[Le texte du tweet est inaccessible]",
+  has_search_choices: "Contient un(e)...",
+  is_search_choices: "Est un(e)...",
+  image: "Image",
+  video: "Vidéo",
+  gif: "GIF",
+  link: "Lien",
+  retweet: "Retweet",
+  quote: "Citation",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
