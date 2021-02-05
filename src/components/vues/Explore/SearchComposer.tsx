@@ -70,6 +70,21 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   operators: [":", ">=", ">", "<=", "<"],
   text: () => LANG.media_count,
 }, {
+  keyword: 'mentions',
+  type: 'number',
+  operators: [":", ">=", ">", "<=", "<"],
+  text: () => LANG.mentions_count,
+}, {
+  keyword: 'id',
+  type: 'number',
+  operators: [":", ">=", ">", "<=", "<"],
+  text: () => LANG.tweet_identifier,
+}, {
+  keyword: 'user_id',
+  type: 'number',
+  operators: [":", ">=", ">", "<=", "<"],
+  text: () => LANG.user_identifier,
+}, {
   keyword: 'has',
   type: 'choices',
   text: () => LANG.has_search_choices,

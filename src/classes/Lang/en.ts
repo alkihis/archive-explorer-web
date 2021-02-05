@@ -377,6 +377,7 @@ export default {
   sort_by_random: "Random sort",
   search_in_current_month: "Search in selected month/view",
   media_count: 'Media count',
+  mentions_count: 'Mention count',
   undefined_text: "[Tweet text can't be accessed]",
   has_search_choices: "Contains...",
   is_search_choices: "Is a...",
@@ -386,6 +387,8 @@ export default {
   link: "Link",
   retweet: "Retweet",
   quote: "Quote",
+  tweet_identifier: "Tweet identifier",
+  user_identifier: "User identifier",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

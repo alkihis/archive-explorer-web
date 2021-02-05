@@ -378,6 +378,7 @@ export default {
   sort_by_random: "Tri aléatoire",
   search_in_current_month: "Chercher dans le mois ou la vue courante",
   media_count: 'Nombre de médias',
+  mentions_count: 'Nombre de mentions',
   undefined_text: "[Le texte du tweet est inaccessible]",
   has_search_choices: "Contient un(e)...",
   is_search_choices: "Est un(e)...",
@@ -387,6 +388,8 @@ export default {
   link: "Lien",
   retweet: "Retweet",
   quote: "Citation",
+  tweet_identifier: "Identifiant de tweet",
+  user_identifier: "Identifiant utilisateur",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

@@ -724,6 +724,59 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
  */
 
 TweetSearcher.validators.push({
+  keyword: 'id',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator(query, sep) {
+    const getId = (tweet: PartialTweet) => tweet.id_str || (tweet.retweeted_status && tweet.retweeted_status.id_str);
+
+    if (sep === ':') {
+      return tweet => getId(tweet) === query;
+    }
+    else {
+      const target = BigInt(query);
+
+      switch (sep) {
+        case ">":
+          return tweet => BigInt(getId(tweet)) > target;
+        case ">=":
+          return tweet => BigInt(getId(tweet)) >= target;
+        case "<":
+          return tweet => BigInt(getId(tweet)) < target;
+        case "<=":
+          return tweet => BigInt(getId(tweet)) <= target;
+      }
+    }
+  },
+}, {
+  keyword: 'lang',
+  validator(query) {
+    return (tweet: any) => tweet.lang === query;
+  },
+}, {
+  keyword: 'user_id',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator(query, sep) {
+    const getId = (tweet: PartialTweet) => tweet.user.id_str || (tweet.retweeted_status && tweet.retweeted_status.user.id_str);
+
+    if (sep === ':') {
+      return tweet => getId(tweet) === query;
+    }
+    else {
+      const target = BigInt(query);
+
+      switch (sep) {
+        case ">":
+          return tweet => BigInt(getId(tweet)) > target;
+        case ">=":
+          return tweet => BigInt(getId(tweet)) >= target;
+        case "<":
+          return tweet => BigInt(getId(tweet)) < target;
+        case "<=":
+          return tweet => BigInt(getId(tweet)) <= target;
+      }
+    }
+  },
+}, {
   keyword: 'has',
   validator(query) {
     if (query === 'image') {
@@ -952,6 +1005,30 @@ TweetSearcher.validators.push({
         return tweet => getMediaCount(tweet) <= medias;
       case ":":
         return tweet => getMediaCount(tweet) === medias;
+    }
+  }
+}, {
+  keyword: 'mentions',
+  separator: [":", ">=", "<=", ">", "<"],
+  validator: (query, sep) => {
+    const mentions = parseInt(query, 10);
+    const getMentionCount = (tweet: PartialTweet) => tweet.entities.user_mentions.length;
+
+    if (isNaN(mentions)) {
+      return;
+    }
+
+    switch (sep) {
+      case ">":
+        return tweet => getMentionCount(tweet) > mentions;
+      case ">=":
+        return tweet => getMentionCount(tweet) >= mentions;
+      case "<":
+        return tweet => getMentionCount(tweet) < mentions;
+      case "<=":
+        return tweet => getMentionCount(tweet) <= mentions;
+      case ":":
+        return tweet => getMentionCount(tweet) === mentions;
     }
   }
 });
