@@ -390,6 +390,11 @@ export default {
   quote: "Citation",
   tweet_identifier: "Identifiant de tweet",
   user_identifier: "Identifiant utilisateur",
+  reply: "Réponse",
+  not_a_reply: "Pas une réponse",
+  hashtag: "Hashtag",
+  src_contains: "La source contient",
+  lang: "Langue",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

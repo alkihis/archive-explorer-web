@@ -389,6 +389,11 @@ export default {
   quote: "Quote",
   tweet_identifier: "Tweet identifier",
   user_identifier: "User identifier",
+  reply: "Reply",
+  not_a_reply: "Not a reply",
+  hashtag: "Hashtag",
+  src_contains: "Tweet source contains",
+  lang: "Language",
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */

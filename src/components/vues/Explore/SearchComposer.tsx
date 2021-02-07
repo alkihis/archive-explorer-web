@@ -25,7 +25,7 @@ import { Marger } from '../../../tools/PlacingComponents';
 interface AdvancedInputProperties {
   keyword: string;
   operators?: (":" | ">=" | ">" | "<=" | "<")[];
-  type: "date" | "string" | "number" | "month" | "day" | "signednumber" | "choices";
+  type: "date" | "string" | "number" | "month" | "day" | "bigint" | "signednumber" | "choices";
   /** Functions are needed because text change when LANG changes */
   text: () => string;
   choices?: [string, () => string][];
@@ -39,6 +39,11 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   keyword: 'until',
   type: "date",
   text: () => LANG.until_date,
+}, {
+  keyword: 'year',
+  type: 'number',
+  operators: [":", ">=", ">", "<=", "<"],
+  text: () => LANG.year,
 }, {
   keyword: 'month',
   type: 'month',
@@ -76,12 +81,12 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   text: () => LANG.mentions_count,
 }, {
   keyword: 'id',
-  type: 'number',
+  type: 'bigint',
   operators: [":", ">=", ">", "<=", "<"],
   text: () => LANG.tweet_identifier,
 }, {
   keyword: 'user_id',
-  type: 'number',
+  type: 'bigint',
   operators: [":", ">=", ">", "<=", "<"],
   text: () => LANG.user_identifier,
 }, {
@@ -93,6 +98,7 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
     ['video', () => LANG.video],
     ['gif', () => LANG.gif],
     ['link', () => LANG.link],
+    ['hashtag', () => LANG.hashtag],
   ],
 }, {
   keyword: 'is',
@@ -101,8 +107,28 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   choices: [
     ['retweet', () => LANG.retweet],
     ['quote', () => LANG.quote],
+    ['reply', () => LANG.reply],
+    ['noreply', () => LANG.not_a_reply],
   ],
+}, {
+  keyword: 'src_contains',
+  type: 'string',
+  text: () => LANG.src_contains,
+}, {
+  keyword: 'lang',
+  type: 'string',
+  text: () => LANG.lang,
 }];
+
+/**
+ * Returns `value` or `"value"` if `value` contains whitespace characters.
+ */
+function valueOrQuotedValue(value: string) {
+  if (value.match(/\s/)) {
+    return `"${value}"`;
+  }
+  return value;
+}
 
 /**
  * Modal used to create an advanced search
@@ -143,7 +169,7 @@ export default function ComposeSearchModal(props: {
 
   function refreshSearchString() {
     return (currentMonth ? ":current " : "") +
-      (inputs.map(v => v.input.keyword + v.operator + v.value).join(' ') + " " + freeText).trim();
+      (inputs.map(v => v.input.keyword + v.operator + valueOrQuotedValue(v.value)).join(' ') + " " + freeText).trim();
   }
 
   function getSearchString() {
@@ -280,8 +306,14 @@ function AdvancedSearchInput(props: {
       value = value.trim();
       const data = SEARCH_KEYWORDS.find(e => e.keyword === keyword);
 
-      if (data.type === "day" || data.type === "month" || data.type.includes("number"))
+      if (data.type === "day" || data.type === "month" || data.type.includes("number")) {
         value = String(Number(value))
+      }
+      else if (data.type === "bigint") {
+        try {
+          value = String(BigInt(value));
+        } catch (e) { }
+      }
 
       props.onChange(data.keyword, value, operator);
     }
@@ -296,16 +328,12 @@ function AdvancedSearchInput(props: {
           type="text"
           value={input}
           onChange={e => {
-            const val = e.target.value;
-            if (val.split(/\s/).length === 1) {
+            if (isError) {
               setIsError(false);
-            }
-            else {
-              setIsError(true);
             }
             changeInput(e.target.value)
           }}
-          helperText={isError ? LANG.invalid_value : ""}
+          helperText=""
         />
       );
     }
@@ -319,6 +347,34 @@ function AdvancedSearchInput(props: {
           onChange={e => {
             const val = e.target.value;
             if (Number(val) >= 0) {
+              setIsError(false);
+            }
+            else {
+              setIsError(true);
+            }
+            changeInput(e.target.value)
+          }}
+          helperText={isError ? LANG.invalid_value : ""}
+        />
+      );
+    }
+    else if (data.type === "bigint") {
+      return (
+        <TextField
+          error={isError}
+          label={LANG.value}
+          value={input}
+          onChange={e => {
+            const val = e.target.value;
+            let number_value: number | bigint;
+
+            try {
+              number_value = BigInt(val);
+            } catch (e) {
+              number_value = Number(val);
+            }
+
+            if (number_value >= 0) {
               setIsError(false);
             }
             else {

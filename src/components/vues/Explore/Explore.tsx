@@ -26,6 +26,7 @@ import MostMentionned from '../../charts/MostMentionned/MostMentionned';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import { toast } from '../../shared/Toaster/Toaster';
 import ComposeSearchModal from './SearchComposer';
+import { DEBUG_MODE } from '../../../const';
 
 
 export const ExplorerAccordion = withStyles({
@@ -124,12 +125,20 @@ export default class Explore extends React.Component<{}, ExploreState> {
     try {
       if (content.startsWith(':current ') && this.state.loaded) {
         content = content.replace(/^:current /, '').trim();
-        tweets = TweetSearcher.search(this.state.loaded, content, flags, undefined, search_in);
+        tweets = Array.from(TweetSearcher.find(content, this.state.loaded, {
+          use_regex: flags,
+          search_in: search_in as any,
+          get_debug_results: DEBUG_MODE ? console.log : undefined,
+        }));
         selected_month = this.state.month;
         selected_loaded = this.state.loaded;
       }
       else {
-        tweets = TweetSearcher.search(SETTINGS.archive.tweets, content.trim(), flags, undefined, search_in);
+        tweets = Array.from(TweetSearcher.find(content.trim(), SETTINGS.archive.tweets, {
+          use_regex: flags,
+          search_in: search_in as any,
+          get_debug_results: DEBUG_MODE ? console.log : undefined,
+        }));
       }
     } catch (e) {
       const msg = (e as Error).message;
@@ -632,16 +641,6 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
       return "";
     }
 
-    // if (action === 'wordcloud') {
-    //   return (
-    //     <StatsModal
-    //       onClose={handleModalClose}
-    //       title={LANG.wordcloud_modal_title}
-    //     >
-    //       <WordCloud tweets={props.loaded} />
-    //     </StatsModal>
-    //   );
-    // }
     if (action === 'tweet') {
       const month_year = props.month.split('-', 2);
       const dayView = month_year.length > 1 ? { year: month_year[0], month: month_year[1] } : undefined;
@@ -815,6 +814,9 @@ TweetSearcher.validators.push({
     else if (query === 'link') {
       return tweet => tweet.entities && !!tweet.entities.urls.length;
     }
+    else if (query === 'hashtag') {
+      return tweet => tweet.entities.hashtags.length > 0;
+    }
   },
 }, {
   keyword: 'is',
@@ -831,6 +833,29 @@ TweetSearcher.validators.push({
     }
     else if (query === 'retweet') {
       return tweet => !!tweet.retweeted_status;
+    }
+    else if (query === 'reply' || query === 'noreply') {
+      const hook = (tweet: PartialTweet) => {
+        if (tweet.in_reply_to_status_id_str) {
+          return true;
+        }
+        else if (tweet.retweeted_status) {
+          if (tweet.retweeted_status.in_reply_to_status_id_str) {
+            return true;
+          }
+
+          const mentions = tweet.retweeted_status.entities.user_mentions;
+          if (mentions.length) {
+            return mentions[0].indices[0] === 0;
+          }
+        }
+        return false;
+      };
+
+      if (query === 'reply') {
+        return hook;
+      }
+      return tweet => !hook(tweet);
     }
   },
 }, {
@@ -1031,4 +1056,19 @@ TweetSearcher.validators.push({
         return tweet => getMentionCount(tweet) === mentions;
     }
   }
+}, {
+  keyword: 'src_contains',
+  validator(query) {
+    const src_regex = />(.+)<\//;
+    query = query.toLowerCase();
+
+    return tweet => {
+      const matches = tweet.source.match(src_regex);
+
+      if (matches) {
+        const src_content = matches[1];
+        return src_content.toLowerCase().includes(query);
+      }
+    };
+  },
 });
