@@ -355,18 +355,28 @@ export default class Explore extends React.Component<{}, ExploreState> {
 
   content() {
     if (this.state.found) {
+      // Search mode
       return (
         <>
           {this.showActiveSearch()}
-          <TweetViewer tweets={this.state.found} withMoments={this.state.month === "moments"} />
+          <TweetViewer
+            tweets={this.state.found}
+            withMoments={this.state.month === "moments"}
+            asList={SETTINGS.show_explore_as_list}
+          />
         </>
       );
     }
     else {
+      // Show archive month / tweets of day
       return this.state.loaded ?
       (<>
         {this.showActiveMonth()}
-        <TweetViewer tweets={this.state.loaded} withMoments={this.state.month === "moments"} />
+        <TweetViewer
+          tweets={this.state.loaded}
+          withMoments={this.state.month === "moments"}
+          asList={SETTINGS.show_explore_as_list}
+        />
       </>) :
       this.noMonthSelected();
     }

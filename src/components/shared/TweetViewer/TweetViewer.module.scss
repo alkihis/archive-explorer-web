@@ -6,7 +6,21 @@
   grid-gap: 10px;
   align-items: center;
   // Pour le speeddial
-  padding-bottom: 12px; 
+  padding-bottom: 12px;
+
+  max-width: 1200px;
+  margin: auto;
+
+  @include mobile_large {
+    display: block;
+  }
+}
+
+.list_container {
+  display: block;
+  align-items: center;
+  // Pour le speeddial
+  padding-bottom: 12px;
 
   max-width: 1200px;
   margin: auto;
@@ -62,7 +76,7 @@
 
 .icon {
   color: lighten($color: #000000, $amount: 70);
-  font-size: 7rem !important; 
+  font-size: 7rem !important;
 }
 
 .loader {

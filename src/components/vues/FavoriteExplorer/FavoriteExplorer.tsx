@@ -75,7 +75,7 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
       until_date = new Date(u_results[1]);
     }
 
-    // Test si regex valide 
+    // Test si regex valide
     let flags = "i";
 
     if (settings.includes("case-sensitive")) {
@@ -160,9 +160,9 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
       // BEFORE snowflake (all tweets to 2010-10-31)
       if (oct_month) {
         before_snowflake_element = (
-          <ListItem 
-            button 
-            className={"2010-10" === this.state.month ? classes.selected_month : ""} 
+          <ListItem
+            button
+            className={"2010-10" === this.state.month ? classes.selected_month : ""}
             onClick={() => this.monthClicker("2010", "10")}
             style={{ border: '1px solid rgba(0, 0, 0, .125)', borderBottom: 0 }}
           >
@@ -187,9 +187,9 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
             <Typography className="bold">{LANG.full_archive}</Typography>
           </AccordionSummary>
         </ExplorerAccordion>
-        <ListItem 
-          button 
-          className={"*" === this.state.month ? classes.selected_month : ""} 
+        <ListItem
+          button
+          className={"*" === this.state.month ? classes.selected_month : ""}
           onClick={() => this.monthClicker("*", "")}
         >
           <ListItemText className={classes.drawer_month}>
@@ -197,9 +197,9 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
           </ListItemText>
         </ListItem>
 
-        <ListItem 
-          button 
-          className={"day" === this.state.month ? classes.selected_month : ""} 
+        <ListItem
+          button
+          className={"day" === this.state.month ? classes.selected_month : ""}
           onClick={() => this.monthClicker("day", "")}
         >
           <ListItemText className={classes.drawer_month}>
@@ -312,10 +312,10 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
     return (
       <List className={classes.list_month}>
         {months.map(([month, favorites]) => (
-          <ListItem 
-            button 
-            key={year + "-" + month} 
-            className={year + "-" + month === this.state.month ? classes.selected_month : ""} 
+          <ListItem
+            button
+            key={year + "-" + month}
+            className={year + "-" + month === this.state.month ? classes.selected_month : ""}
             onClick={() => this.monthClicker(year, month)}
           >
             <ListItemText className={classes.drawer_month}>
@@ -330,7 +330,7 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
   showActiveMonth() {
     let year = "", month_text = LANG.full_archive;
     let insert_br = false;
-    
+
     if (this.state.month === "day") {
       month_text = LANG.favorites_of_the_day;
     }
@@ -379,15 +379,15 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
       return (
         <>
           {this.showActiveSearch()}
-          <Favorites favorites={this.state.found} />
+          <Favorites favorites={this.state.found} asList={SETTINGS.show_explore_as_list} />
         </>
       );
     }
     else {
-      return this.state.loaded ? 
+      return this.state.loaded ?
       (<>
         {this.showActiveMonth()}
-        <Favorites favorites={this.state.loaded} />
+        <Favorites favorites={this.state.loaded} asList={SETTINGS.show_explore_as_list} />
       </>) :
       this.noMonthSelected();
     }
@@ -400,13 +400,13 @@ export default class FavoriteExplorer extends React.Component<{}, FavoriteExplor
 
     if (!SETTINGS.archive.is_gdpr || !SETTINGS.archive.favorites.has_extended_favorites) {
       return <NoGDPR
-        icon={FavoriteIcon} 
-        message={LANG.archive_no_favorites} 
+        icon={FavoriteIcon}
+        message={LANG.archive_no_favorites}
       />;
     }
 
     return (
-      <ResponsiveDrawer 
+      <ResponsiveDrawer
         handleDrawerToggle={this.handleDrawerToggle}
         mobileOpen={this.state.mobileOpen}
         toolbarGradient

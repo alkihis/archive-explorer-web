@@ -7,7 +7,21 @@ import classes from './TweetViewer.module.scss';
 import { filterTweets } from '../../../helpers';
 import NoTweetsIcon from '@material-ui/icons/FormatClear';
 import { CenterComponent } from '../../../tools/PlacingComponents';
-import { Typography, Button, CircularProgress, Icon, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Menu, MenuItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+  CircularProgress,
+  Icon,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import TweetCache from '../../../classes/TweetCache';
 import Tasks from '../../../tools/Tasks';
@@ -36,11 +50,12 @@ import ArrowWithEndIcon from '@material-ui/icons/PlayForWork';
 
 export type MenuNeededDetails = { element: HTMLElement, position: { left: number, top: number } };
 export type SelectedCheckboxDetails = { id: string } & MenuNeededDetails;
- 
+
 type ViewerProps = {
   tweets: PartialTweet[];
   withMoments?: boolean;
   chunkLen?: number;
+  asList?: boolean;
 };
 
 type ViewerState = {
@@ -170,7 +185,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     if (!value) {
       return;
     }
-    
+
     SETTINGS.sort_type = value;
     this.setState({
       sort_type: value,
@@ -255,8 +270,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             </CustomTooltip>
           </ToggleButton>
 
-          <ToggleButton 
-            value="popular" 
+          <ToggleButton
+            value="popular"
             disabled={!SETTINGS.archive.is_gdpr}
           >
             <CustomTooltip title={LANG.sort_by_popular}>
@@ -264,8 +279,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             </CustomTooltip>
           </ToggleButton>
 
-          <ToggleButton 
-            value="retweets" 
+          <ToggleButton
+            value="retweets"
             disabled={!SETTINGS.archive.is_gdpr}
           >
             <CustomTooltip title={LANG.sort_by_rt_count}>
@@ -273,8 +288,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             </CustomTooltip>
           </ToggleButton>
 
-          <ToggleButton 
-            value="favorites" 
+          <ToggleButton
+            value="favorites"
             disabled={!SETTINGS.archive.is_gdpr}
           >
             <CustomTooltip title={LANG.sort_by_fav_count}>
@@ -328,8 +343,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             </CustomTooltip>
           </ToggleButton>
 
-          <ToggleButton 
-            value="video" 
+          <ToggleButton
+            value="video"
             disabled={!SETTINGS.archive.is_gdpr}
           >
             <CustomTooltip title={LANG.show_with_videos}>
@@ -381,7 +396,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         .then(data => {
           const t = tweets.map(t => data[t.id_str]).filter(t => t);
           // console.log(t, "excepted", tweets.length);
-    
+
           // @ts-ignore
           this.state.current_page.push(...t);
         })
@@ -409,7 +424,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
             current_page,
             has_more: tweets.length > 0
           });
-        }); 
+        });
     }
     else {
       this.state.current_page.push(...tweets);
@@ -425,7 +440,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   /** REFRESH COMPONENT */
   componentDidUpdate(prev_props: ViewerProps, prev_state: ViewerState) {
     if (
-      prev_props.tweets !== this.props.tweets || 
+      prev_props.tweets !== this.props.tweets ||
       prev_state.key !== this.state.key || 
       this.props.withMoments !== prev_props.withMoments
     ) {
@@ -531,7 +546,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     const tweets = this.state.tweets.slice(0, tweet_id_pos + 1).map(tweet => tweet.id_str);
     this.checkThisTweets(tweets);
   }
-  
+
   checkUntilFromFirstSelected(tweet_id: string) {
     const selected = this.state.selected;
 
@@ -586,23 +601,22 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
   renderTweet(t: PartialTweet) {
     this.references[t.id_str] = t.id_str in this.references ? this.references[t.id_str] : React.createRef();
-    
+
     if (t.id_str in this.cache) {
       return this.cache[t.id_str];
     }
 
-    return this.cache[t.id_str] = <Tweet 
-      data={t} 
-      key={t.id_str} 
-      ref={this.references[t.id_str]} 
-      checked={this.state.selected.has(t.id_str)} 
-      onCheckChange={this.onTweetCheckChange} 
+    return this.cache[t.id_str] = <Tweet
+      data={t}
+      key={t.id_str}
+      ref={this.references[t.id_str]}
+      checked={this.state.selected.has(t.id_str)}
+      onCheckChange={this.onTweetCheckChange}
+      asListBlock={this.props.asList}
     />;
   }
 
   onTweetCheckChange(checked: boolean, id_str: string) {
-    // console.log(this, checked, id_str);
-    
     const s = this.state.selected;
     if (checked) {
       s.add(id_str);
@@ -705,8 +719,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           <Button onClick={() => this.closeConfirmModal()} color="primary" autoFocus>
             {LANG.no}
           </Button>
-          <Button onClick={() => { 
-            this.closeConfirmModal();  
+          <Button onClick={() => {
+            this.closeConfirmModal();
             Tasks.start([...this.state.selected], "tweet")
               .catch(() => {
                 toast(LANG.task_start_error, "error");
@@ -722,25 +736,25 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
   askDeletionModal() {
     return (
-      <div className={classes.modal_root + 
+      <div className={classes.modal_root +
           (this.state.delete_modal ? " " + classes.open : "") + " "
         }>
         <div className={classes.modal_grid_root}>
           <div className={classes.modal_selected}>
             {this.state.selected.size} {LANG.selected_without_s}{this.state.selected.size > 1 ? LANG.past_s : ''}
-          </div> 
+          </div>
 
           <div className={classes.modal_grid_container}>
             <Button color="primary" onClick={this.onOpenDeleteMenuClick}>
               {LANG.select_tweets_choices}
             </Button>
-          </div> 
-          
+          </div>
+
           <div className={classes.modal_grid_container}>
             <Button color="secondary" onClick={() => this.openConfirmModal()}>
               <Icon>delete_sweep</Icon>
             </Button>
-          </div> 
+          </div>
         </div>
       </div>
     );
@@ -771,7 +785,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       tweet_rendered_data = this.state.current_page.map((tweet, i) => {
         const current_tweet_date = TwitterHelpers.dateFromTweet(tweet).getFullYear();
         const t = this.renderTweet(tweet);
-        
+
         if (current_tweet_date !== current_year) {
           // must show year
           current_year = current_tweet_date;
@@ -781,8 +795,8 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
           return (
             <React.Fragment key={i}>
-              {/* 
-                If the previous year has a odd tweet count, 
+              {/*
+                If the previous year has a odd tweet count,
                 we must inject a empty container to go to next line (max 2 tweets per line).
               */}
               {previous_count % 2 !== 0 && <div className={classes.card_container} />}
@@ -793,7 +807,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
                 </Typography>
               </div>
               <div className={classes.card_container} />
-        
+
               {t}
             </React.Fragment>
           );
@@ -811,7 +825,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
     return (
       <>
-        <TweetSelectOptions 
+        <TweetSelectOptions
           id={this.state.selected_checkbox && this.state.selected_checkbox.id}
           position={this.state.selected_checkbox && this.state.selected_checkbox.position}
           anchor={this.state.selected_checkbox && this.state.selected_checkbox.element}
@@ -822,7 +836,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           onSelectBelowLast={id => { this.checkBelowToLastSelected(id); this.closeSelectedCheckbox(); }}
         />
 
-        <TweetBulkSelectOptions 
+        <TweetBulkSelectOptions
           position={this.state.menu_bulk_delete && this.state.menu_bulk_delete.position}
           anchor={this.state.menu_bulk_delete && this.state.menu_bulk_delete.element}
           onClose={this.closeDeleteMenu}
@@ -836,9 +850,9 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         {this.state.modal_confirm && this.confirmDeletionModal()}
 
         {this.askDeletionModal()}
-        
+
         <InfiniteScroll
-          className={classes.card_container}
+          className={this.props.asList ? classes.list_container : classes.card_container}
           pageStart={0}
           loadMore={p => this.loadTweets(p)}
           hasMore={this.state.has_more}
@@ -852,7 +866,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   }
 }
 
-export function TweetSelectOptions(props: { 
+export function TweetSelectOptions(props: {
   anchor?: HTMLElement,
   onClose?: () => void,
   onSelectUntil?: (tweet_id: string) => void,
@@ -873,7 +887,7 @@ export function TweetSelectOptions(props: {
       <MenuItem disabled dense>
         {LANG.select_tweets}
       </MenuItem>
-      
+
 
       {props.id &&
         // Fragments aren't accepted as Menu childs
@@ -882,8 +896,8 @@ export function TweetSelectOptions(props: {
             <ArrowUpwardIcon className={classes.menu_tiny_icon} />
           </ListItemIcon>
           <ListItemText primary={LANG.select_tweets_until} />
-        </MenuItem>, 
-        
+        </MenuItem>,
+
         <MenuItem key="until-first" onClick={() => { props.onSelectUntilFirst && props.onSelectUntilFirst(props.id) }}>
           <ListItemIcon>
             <ArrowWithEndIcon className={classes.menu_tiny_icon} style={{ transform: 'rotate(180deg)' }} />
@@ -909,7 +923,7 @@ export function TweetSelectOptions(props: {
   );
 }
 
-export function TweetBulkSelectOptions(props: { 
+export function TweetBulkSelectOptions(props: {
   anchor?: HTMLElement,
   onClose?: () => void,
   onSelectAll?: () => void,

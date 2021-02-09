@@ -457,6 +457,7 @@ export default {
   language: "Langue",
   use_local_medias: "Charger les images depuis l'archive si nécessaire",
   use_local_videos: "Charger les vidéos depuis l'archive si nécessaire (attention, cette option peut induire une forte consommation de RAM)",
+  show_tweets_as_list: "Voir les tweets sous forme de liste compacte",
   /** END Settings-ExtendedActionsMenu CMPT */
 
   /** BEGIN Task CMPT */

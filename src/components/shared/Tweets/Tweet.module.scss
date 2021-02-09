@@ -1,3 +1,5 @@
+@import "../../../tools/functions.scss";
+
 .card {
   margin-bottom: 1rem;
 }
@@ -57,6 +59,15 @@
   justify-content: flex-start;
 }
 
+.inline_icon {
+  display: inline-flex;
+  align-items: flex-end;
+
+  & > svg:first-of-type {
+    margin-right: 10px;
+  }
+}
+
 .rt_number, .fav_number {
   display: flex;
   align-items: flex-start;
@@ -65,6 +76,10 @@
 
   :global .dark :local & {
     color: lighten($color: #000000, $amount: 80) !important;
+  }
+
+  [data-inline] & {
+    display: inline-flex;
   }
 }
 
@@ -81,4 +96,60 @@
 
 .card_title {
   font-weight: bold;
+}
+
+.list_item {
+  background-color: #fff;
+
+  :global .dark :local & {
+    background-color: #424242;
+
+    &:not(:last-child) {
+      border-bottom-color: #636363;
+    }
+  }
+
+  padding-left: 10px;
+
+  &:first-child {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px #e6e6e6 solid;
+  }
+}
+
+.list_item_text {
+  padding-left: .5rem;
+}
+
+.list_actions {
+  margin-top: .3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  @include mobile_large {
+    margin-top: .5rem;
+    flex-direction: column;
+    justify-content: unset;
+    align-items: flex-end;
+  }
+}
+
+.list_details {
+  display: inline-flex;
+  align-items: baseline;
+
+  & > :first-child {
+    margin-right: .3rem;
+  }
 }

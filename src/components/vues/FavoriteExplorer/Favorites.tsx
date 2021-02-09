@@ -4,7 +4,6 @@ import { CircularProgress, Typography } from '@material-ui/core';
 import { PartialFavorite, PartialTweet } from 'twitter-archive-reader';
 import SETTINGS, { TweetSortWay, FavoriteTweetSortType } from '../../../tools/Settings';
 import InfiniteScroll from 'react-infinite-scroller';
-import TweetOrFavorite from '../../shared/Tweets/TweetOrFavorite';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import TweetCache from '../../../classes/TweetCache';
 import { API_URLS } from '../../../tools/ApiHelper';
@@ -21,12 +20,14 @@ import MentionIcon from '@material-ui/icons/Reply';
 import Time from '@material-ui/icons/Schedule';
 import SortIcon from '@material-ui/icons/Sort';
 import TweetUser from '@material-ui/icons/Person';
+import Tweet from '../../shared/Tweets/Tweet';
 
 const FAV_CHUNK_LEN = 20;
 type PartialTweetOrFavorite = PartialTweet | PartialFavorite;
 
 type FavoritesProps = {
   favorites: PartialFavorite[],
+  asList: boolean,
 };
 
 type FavoritesState = {
@@ -64,14 +65,14 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
 
   componentDidUpdate(old_props: FavoritesProps, old_state: FavoritesState) {
     if (
-      this.props.favorites !== old_props.favorites || 
+      this.props.favorites !== old_props.favorites ||
       this.state.allow_mentions !== old_state.allow_mentions ||
       this.state.sort_way !== old_state.sort_way ||
       this.state.sort_type !== old_state.sort_type ||
       this.state.allow_self !== old_state.allow_self
     ) {
       this.key = Math.random();
-      
+
       this.setState({
         has_more: true,
         position: 0,
@@ -96,7 +97,7 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
     if (!value) {
       return;
     }
-    
+
     SETTINGS.favorite_sort_type = value;
     this.setState({
       sort_type: value,
@@ -233,7 +234,7 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
         {this.renderFilters()}
 
         <InfiniteScroll
-          className={classes.card_container}
+          className={this.props.asList ? classes.list_container : classes.card_container}
           pageStart={0}
           key={this.key}
           loadMore={this.loadItems}
@@ -244,7 +245,15 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
             </CenterComponent>
           </div>}
         >
-          {this.state.loaded.slice(0, this.state.position).map((e, index) => <TweetOrFavorite data={e} key={index} />)}
+          {this.state.loaded
+            .slice(0, this.state.position)
+            .map((e, index) => <Tweet
+              data={e}
+              key={index}
+              asListBlock={this.props.asList}
+              favoriteMode
+            />)
+          }
         </InfiniteScroll>
       </div>
     );
@@ -253,9 +262,9 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
 
 function filterFavorites(favorites: PartialFavorite[]) {
   const settings = SETTINGS;
-  let sort_fn: (a: PartialFavorite, b: PartialFavorite) => number; 
+  let sort_fn: (a: PartialFavorite, b: PartialFavorite) => number;
   const current_user_id = settings.archive.user.id;
-  
+
   // Every thing is asc by default !
   if (settings.favorite_sort_type === "time") {
     if (typeof BigInt !== 'undefined') {
@@ -274,7 +283,7 @@ function filterFavorites(favorites: PartialFavorite[]) {
     }
     // If self-favorited tweets are not showed
     if (!settings.allow_self && settings.archive.tweets.has(t.tweetId)) {
-      // If the archive contain this tweet, 
+      // If the archive contain this tweet,
       // and if the tweet is posted by current user,
       // don't show it.
       const tweet = settings.archive.tweets.single(t.tweetId);

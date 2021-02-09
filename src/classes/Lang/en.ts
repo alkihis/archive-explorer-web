@@ -456,6 +456,7 @@ export default {
   language: "Language",
   use_local_medias: "Use archive images if supported and necessary",
   use_local_videos: "Use archive videos if supported and necessary (can cause huge memory consumption, use this option with care)",
+  show_tweets_as_list: "Show tweets as compact list",
   /** END Settings-ExtendedActionsMenu CMPT */
 
   /** BEGIN Task CMPT */

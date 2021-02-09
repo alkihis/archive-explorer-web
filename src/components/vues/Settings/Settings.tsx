@@ -18,6 +18,7 @@ type SettingsState = {
   download_rt: boolean;
   local_medias: boolean;
   local_videos: boolean;
+  as_list: boolean;
 }
 
 export default class Settings extends React.Component<{}, SettingsState> {
@@ -31,6 +32,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
     download_rt: SETTINGS.rt_dl,
     local_medias: SETTINGS.use_tweets_local_medias,
     local_videos: SETTINGS.use_tweets_local_videos,
+    as_list: SETTINGS.show_explore_as_list,
   };
 
   changeDarkState(v: boolean, refresh_settings = true) {
@@ -66,6 +68,13 @@ export default class Settings extends React.Component<{}, SettingsState> {
         SETTINGS.dark_mode = actual;
       }
     }
+  }
+
+  changeTweetAsListState(v: boolean) {
+    this.setState({
+      as_list: v
+    });
+    SETTINGS.show_explore_as_list = v;
   }
 
   changeTweetDLState(v: boolean) {
@@ -136,8 +145,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <FormControlLabel
             value="media"
             control={
-              <Checkbox 
-                color="primary" 
+              <Checkbox
+                color="primary"
                 checked={this.state.download}
                 onChange={(_, c) => this.changeTweetDLState(c)}
                 disabled={SETTINGS.expired}
@@ -150,8 +159,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <FormControlLabel
             value="media"
             control={
-              <Checkbox 
-                color="primary" 
+              <Checkbox
+                color="primary"
                 checked={this.state.download_rt}
                 onChange={(_, c) => this.changeRtDLState(c)}
                 disabled={SETTINGS.expired || this.state.download}
@@ -164,8 +173,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <FormControlLabel
             value="medias_show"
             control={
-              <Checkbox 
-                color="primary" 
+              <Checkbox
+                color="primary"
                 checked={this.state.local_medias}
                 onChange={(_, c) => this.changeLocalMedias(c)}
               />
@@ -177,8 +186,8 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <FormControlLabel
             value="videos_show"
             control={
-              <Checkbox 
-                color="primary" 
+              <Checkbox
+                color="primary"
                 checked={this.state.local_videos}
                 onChange={(_, c) => this.changeLocalVideos(c)}
               />
@@ -191,13 +200,26 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <FormControlLabel
             value="media"
             control={
-              <Checkbox 
-                color="primary" 
+              <Checkbox
+                color="primary"
                 checked={this.state.pp}
-                onChange={(_, c) => this.changePPState(c)} 
+                onChange={(_, c) => this.changePPState(c)}
               />
             }
             label={LANG.show_profile_pictures}
+            labelPlacement="end"
+          />
+
+          <FormControlLabel
+            value="aslist"
+            control={
+              <Checkbox
+                color="primary"
+                checked={this.state.as_list}
+                onChange={(_, c) => this.changeTweetAsListState(c)}
+              />
+            }
+            label={LANG.show_tweets_as_list}
             labelPlacement="end"
           />
         </FormGroup>
@@ -209,10 +231,10 @@ export default class Settings extends React.Component<{}, SettingsState> {
     return (
       <div>
         <div className={classes.acc_details}>
-          <Avatar 
-            alt="Twitter avatar" 
-            src={SETTINGS.twitter_user.profile_image_url_https.replace('_normal', '')} 
-            className={classes.avatar} 
+          <Avatar
+            alt="Twitter avatar"
+            src={SETTINGS.twitter_user.profile_image_url_https.replace('_normal', '')}
+            className={classes.avatar}
           />
           <div className={classes.tn}>{SETTINGS.twitter_user.name}</div>
           <div className={classes.sn}>@{SETTINGS.twitter_user.screen_name}</div>
@@ -224,7 +246,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
 
         <div style={{display: 'flex', alignItems: 'center'}}>
           <Typography>
-            {LANG.account_created_on} 
+            {LANG.account_created_on}
             <span className="bold"> {dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", new Date(SETTINGS.user.created_at))}</span>.
           </Typography>
           <Tooltip placement="top" classes={{
@@ -257,7 +279,7 @@ export default class Settings extends React.Component<{}, SettingsState> {
               className={classes.select}
             >
               {Object.entries(AvailableLanguages).map(lang => (
-                <MenuItem key={lang[0]} value={lang[0]}>{lang[1]}</MenuItem>  
+                <MenuItem key={lang[0]} value={lang[0]}>{lang[1]}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -265,10 +287,10 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <FormControlLabel
             value="auto_dark_mode"
             control={
-              <Checkbox 
+              <Checkbox
                 color="primary"
                 checked={this.state.auto_dark_mode}
-                onChange={(_, c) => this.changeAutoDarkState(c)} 
+                onChange={(_, c) => this.changeAutoDarkState(c)}
               />
             }
             label={LANG.automatic_dark_mode}
@@ -278,10 +300,10 @@ export default class Settings extends React.Component<{}, SettingsState> {
           <FormControlLabel
             value="dark_mode"
             control={
-              <Checkbox 
+              <Checkbox
                 color="primary"
                 checked={this.state.dark_mode}
-                onChange={(_, c) => this.changeDarkState(c)} 
+                onChange={(_, c) => this.changeDarkState(c)}
                 disabled={this.state.auto_dark_mode}
               />
             }

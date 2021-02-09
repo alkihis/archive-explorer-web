@@ -10,15 +10,15 @@ const splitter = new Graphene();
 const TWITTER_BASE = "https://twitter.com/";
 const TWITTER_HASH_BASE = "https://twitter.com/search?q=";
 
-function TweetText() {
+function TweetText({ inline }: { inline?: boolean }) {
   const tweet = React.useContext(TweetContext) as PartialTweet | PartialFavorite;
 
   function renderText() {
     const parts: JSX.Element[] = [];
     const original_t = 'retweeted_status' in tweet ? tweet.retweeted_status : tweet;
     const entities_fragments = calculateTextForEntities();
-    const original_text = 'full_text' in original_t ? 
-      original_t.full_text : 
+    const original_text = 'full_text' in original_t ?
+      original_t.full_text :
       ('text' in original_t ?
         original_t.text :
         original_t.fullText
@@ -30,7 +30,7 @@ function TweetText() {
     let last_end = 0;
     let i = 1;
 
-    // Assemble les fragments et les lie avec les parties 
+    // Assemble les fragments et les lie avec les parties
     // de la chaîne originale entre eux
     for (const [begin, end, element] of entities_fragments) {
       if (begin !== last_end) {
@@ -65,11 +65,11 @@ function TweetText() {
     if (t.entities) {
       if (t.entities.user_mentions && t.entities.user_mentions.length) {
         for (const m of t.entities.user_mentions) {
-          frags.push([Number(m.indices[0]), Number(m.indices[1]), 
-            <a 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              title={'@' + m.screen_name} 
+          frags.push([Number(m.indices[0]), Number(m.indices[1]),
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              title={'@' + m.screen_name}
               href={TWITTER_BASE + m.screen_name}
               key={String(frags.length)}
             >@{m.screen_name}</a>
@@ -79,11 +79,11 @@ function TweetText() {
 
       if (t.entities.urls && t.entities.urls.length) {
         for (const u of t.entities.urls) {
-          frags.push([Number(u.indices[0]), Number(u.indices[1]), 
-            <a 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              title={LANG.link_to + ' ' + u.display_url} 
+          frags.push([Number(u.indices[0]), Number(u.indices[1]),
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              title={LANG.link_to + ' ' + u.display_url}
               href={u.expanded_url}
               key={String(frags.length)}
             >{u.display_url}</a>
@@ -93,11 +93,11 @@ function TweetText() {
 
       if (t.entities.hashtags && t.entities.hashtags.length) {
         for (const h of t.entities.hashtags) {
-          frags.push([Number(h.indices[0]), Number(h.indices[1]), 
-            <a 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              title={'#' + h.text} 
+          frags.push([Number(h.indices[0]), Number(h.indices[1]),
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              title={'#' + h.text}
               href={TWITTER_HASH_BASE + encodeURIComponent('#' + h.text)}
               key={String(frags.length)}
             >#{h.text}</a>
@@ -108,11 +108,11 @@ function TweetText() {
       if (t.entities.media && t.entities.media.length) {
         // First link is always the good one
         const m = t.entities.media[0];
-        frags.push([Number(m.indices[0]), Number(m.indices[1]), 
-          <a 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            title={LANG.link_to + ' ' + LANG.picture + ' ' + m.display_url} 
+        frags.push([Number(m.indices[0]), Number(m.indices[1]),
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            title={LANG.link_to + ' ' + LANG.picture + ' ' + m.display_url}
             href={m.expanded_url}
             key={String(frags.length)}
           >{m.display_url}</a>
@@ -124,8 +124,9 @@ function TweetText() {
     return frags.sort((a, b) => a[0] - b[0]);
   }
 
+  const classes = (inline ? "" : "pre-wrap break-word ") + "tweet-font tweet-text";
   return (
-    <Typography variant="body2" className="pre-wrap break-word tweet-font tweet-text" color="textSecondary" component="p">
+    <Typography variant="body2" className={classes} color="textSecondary" component="p">
       {renderText()}
     </Typography>
   );

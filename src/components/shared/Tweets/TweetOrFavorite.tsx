@@ -17,6 +17,7 @@ type TweetProp = {
   data: PartialTweet | PartialFavorite,
   checked?: boolean,
   onCheckChange?: (is_checked: boolean, id_str: string) => void;
+  asListBlock?: boolean;
 };
 
 type TweetState = {
