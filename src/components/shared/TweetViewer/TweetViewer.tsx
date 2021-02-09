@@ -2,7 +2,7 @@ import React from 'react';
 import { PartialTweet, TwitterHelpers } from 'twitter-archive-reader';
 import InfiniteScroll from 'react-infinite-scroller';
 import SETTINGS, { TweetSortType, TweetSortWay, TweetMediaFilters } from '../../../tools/Settings';
-import Tweet from '../Tweets/Tweet';
+import Tweet, { TweetOverviewModal, AcceptedTweetSources } from '../Tweets/Tweet';
 import classes from './TweetViewer.module.scss';
 import { filterTweets } from '../../../helpers';
 import NoTweetsIcon from '@material-ui/icons/FormatClear';
@@ -82,6 +82,9 @@ type ViewerState = {
 
   /** Menu bulk delete */
   menu_bulk_delete?: MenuNeededDetails;
+
+  /** Selected tweet */
+  selected_tweet?: PartialTweet;
 };
 
 const DEFAULT_CHUNK_LEN = 26;
@@ -132,6 +135,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     };
 
     this.onTweetCheckChange = this.onTweetCheckChange.bind(this);
+    this.onDetailClick = this.onDetailClick.bind(this);
     this.renderTweet = this.renderTweet.bind(this);
   }
 
@@ -612,6 +616,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       ref={this.references[t.id_str]}
       checked={this.state.selected.has(t.id_str)}
       onCheckChange={this.onTweetCheckChange}
+      onDetailClick={this.onDetailClick}
       asListBlock={this.props.asList}
     />;
   }
@@ -626,6 +631,10 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     }
 
     this.setState({ delete_modal: !!s.size, selected: s });
+  }
+
+  onDetailClick(tweet: AcceptedTweetSources) {
+    this.setState({ selected_tweet: tweet as PartialTweet });
   }
 
   loader() {
@@ -825,6 +834,12 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
     return (
       <>
+        {this.state.selected_tweet && <TweetOverviewModal
+          tweet={this.state.selected_tweet}
+          onClose={() => this.setState({ selected_tweet: undefined })}
+          favoriteMode
+        />}
+
         <TweetSelectOptions
           id={this.state.selected_checkbox && this.state.selected_checkbox.id}
           position={this.state.selected_checkbox && this.state.selected_checkbox.position}

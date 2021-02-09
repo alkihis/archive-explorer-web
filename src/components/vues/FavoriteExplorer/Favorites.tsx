@@ -20,7 +20,7 @@ import MentionIcon from '@material-ui/icons/Reply';
 import Time from '@material-ui/icons/Schedule';
 import SortIcon from '@material-ui/icons/Sort';
 import TweetUser from '@material-ui/icons/Person';
-import Tweet from '../../shared/Tweets/Tweet';
+import Tweet, { AcceptedTweetSources, TweetOverviewModal } from '../../shared/Tweets/Tweet';
 
 const FAV_CHUNK_LEN = 20;
 type PartialTweetOrFavorite = PartialTweet | PartialFavorite;
@@ -42,6 +42,9 @@ type FavoritesState = {
   sort_way: TweetSortWay;
   allow_mentions: boolean;
   allow_self: boolean;
+
+  /** Selected tweet */
+  selected_tweet?: PartialTweetOrFavorite;
 };
 
 export default class Favorites extends React.Component<FavoritesProps, FavoritesState> {
@@ -80,6 +83,12 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
         favorites: filterFavorites(this.props.favorites),
       });
     }
+
+    this.onDetailClick = this.onDetailClick.bind(this);
+  }
+
+  onDetailClick(tweet: AcceptedTweetSources) {
+    this.setState({ selected_tweet: tweet as PartialTweet });
   }
 
   /** FILTERS */
@@ -231,6 +240,12 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
 
     return (
       <div>
+        {this.state.selected_tweet && <TweetOverviewModal
+          tweet={this.state.selected_tweet}
+          onClose={() => this.setState({ selected_tweet: undefined })}
+          favoriteMode
+        />}
+
         {this.renderFilters()}
 
         <InfiniteScroll
@@ -252,6 +267,7 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
               key={index}
               asListBlock={this.props.asList}
               favoriteMode
+              onDetailClick={this.onDetailClick}
             />)
           }
         </InfiniteScroll>

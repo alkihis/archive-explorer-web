@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './Tweet.module.scss';
 import { FullUser, Status } from 'twitter-d';
 import { PartialFavorite, PartialTweet, PartialTweetUser, TwitterHelpers } from 'twitter-archive-reader';
-import { Card, CardHeader, Avatar, CardContent, CardActions, Checkbox, ListItem, ListItemText } from '@material-ui/core';
+import { Card, CardHeader, Avatar, CardContent, CardActions, Checkbox, ListItem, ListItemText, Dialog } from '@material-ui/core';
 import RetweetIcon from '@material-ui/icons/Repeat';
 import FavoriteIcon from '@material-ui/icons/Star';
 import { dateFormatter, truncateInteractionCount } from '../../../helpers';
@@ -18,12 +18,16 @@ import clsx from 'clsx';
 import LANG from '../../../classes/Lang/Language';
 import twitterSnowflakeToDate from 'twitter-snowflake-to-date';
 
+export type AcceptedTweetSources = PartialFavorite | PartialTweet | Status;
+
 type TweetProp = {
-  data: PartialFavorite | PartialTweet | Status,
+  data: AcceptedTweetSources,
   checked?: boolean,
   onCheckChange?: (is_checked: boolean, id_str: string) => void;
-  asListBlock: boolean;
+  asListBlock?: boolean;
   favoriteMode?: boolean;
+  inline?: boolean;
+  onDetailClick?: (tweet: AcceptedTweetSources) => any;
 };
 
 type TweetState = {
@@ -133,7 +137,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
     const avatar_name = this.name.slice(0, 1) || '#';
 
     return (
-      <Card className={classes.card} elevation={0}>
+      <Card className={this.props.inline ? '' : classes.card} elevation={0}>
         <CardHeader
           classes={
             { title: classes.card_title }
@@ -184,7 +188,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
                   oc(checked, (this.props.data as PartialTweet).id_str);
               }}
               checked={this.state.checked}
-              disabled={!SETTINGS.can_delete}
+              disabled={!SETTINGS.can_delete || this.props.inline}
               onContextMenu={this.handleTweetContextMenu}
             />
 
@@ -216,7 +220,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
               oc(checked, (this.props.data as PartialTweet).id_str);
           }}
           checked={this.state.checked}
-          disabled={!SETTINGS.can_delete}
+          disabled={!SETTINGS.can_delete || this.props.inline}
           onContextMenu={this.handleTweetContextMenu}
         />}
 
@@ -224,15 +228,18 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
           className={classes.list_item_text}
           primary={<TweetText inline />}
           secondary={<div className={classes.list_actions}>
-            <ListTweetDetails />
+            <ListTweetDetails onDetailClick={this.props.onDetailClick} />
             <span className={classes.inline_icon}>
               {'retweeted_status' in this.props.data ?
                 <RetweetIcon className={clsx(classes.rt_icon, classes.retweeted)} /> :
                 undefined
               }
-              <TweetDateLink />
+              <span className={classes.date}>
+                <TweetDateLink />
+              </span>
             </span>
           </div>}
+          secondaryTypographyProps={{ component: 'div' }}
         />
       </ListItem>
     );
@@ -269,7 +276,7 @@ function TweetActions() {
   );
 }
 
-function ListTweetDetails() {
+function ListTweetDetails({ onDetailClick }: { onDetailClick: (tweet: AcceptedTweetSources) => any }) {
   const raw_tweet = React.useContext(TweetContext);
   const context = getOriginal(raw_tweet);
 
@@ -294,6 +301,10 @@ function ListTweetDetails() {
       <span className={classes.fav_number}>
         {truncateInteractionCount(fav)} <FavoriteIcon className={classes.fav_icon} />
       </span>
+
+      <a href="#!" className={classes.see_full_tweet} onClick={() => onDetailClick?.(raw_tweet)}>
+        {LANG.see_full_tweet}
+      </a>
     </span>
   );
 }
@@ -323,6 +334,25 @@ function TweetDateLink() {
       rel="noopener noreferrer"
       className={classes.link}
     >{SETTINGS.lang === "fr" ? dateFormatter("d/m/Y H:i:s", date) : dateFormatter("Y-m-d H:i:s", date)}</a>
+  );
+}
+
+type TweetOverviewModalProps = {
+  tweet: AcceptedTweetSources,
+  favoriteMode?: boolean,
+  onClose: () => any,
+};
+
+export function TweetOverviewModal({ tweet, favoriteMode, onClose }: TweetOverviewModalProps) {
+  return (
+    <Dialog
+      open
+      onClose={onClose}
+      fullWidth
+      scroll="body"
+    >
+      <Tweet data={tweet} favoriteMode={favoriteMode} inline />
+    </Dialog>
   );
 }
 

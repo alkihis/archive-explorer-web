@@ -394,6 +394,7 @@ export default {
   hashtag: "Hashtag",
   src_contains: "Tweet source contains",
   lang: "Language",
+  see_full_tweet: 'See detail',
   /** END Explore CMPT */
 
   /** BEGIN Login CMPT */
