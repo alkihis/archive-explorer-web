@@ -135,6 +135,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
 
     const avatar = user_pp.replace('_normal', '');
     const avatar_name = this.name.slice(0, 1) || '#';
+    const sn = this.screen_name;
 
     return (
       <Card className={this.props.inline ? '' : classes.card} elevation={0}>
@@ -144,8 +145,8 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
           }
 
           avatar={
-            <Avatar className={classes.avatar} src={SETTINGS.pp ? avatar : undefined}>
-              {SETTINGS.pp ? "" : avatar_name}
+            <Avatar className={classes.avatar} src={SETTINGS.pp && avatar ? avatar : undefined}>
+              {SETTINGS.pp && avatar ? '' : avatar_name}
             </Avatar>
           }
           action={(this.props.data as Status).retweeted_status ?
@@ -156,17 +157,17 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
             className={classes.link}
             rel="noopener noreferrer"
             target="_blank"
-            href={"https://twitter.com/" + this.screen_name}
+            href={"https://twitter.com/" + sn}
           >
             {this.name || LANG.favorited_tweet}
           </a>}
-          subheader={<a
+          subheader={sn && <a
             className={classes.link}
             rel="noopener noreferrer"
             target="_blank"
-            href={"https://twitter.com/" + this.screen_name}
+            href={"https://twitter.com/" + sn}
           >
-            @{this.screen_name}
+            @{sn}
           </a>}
         />
 
@@ -234,7 +235,7 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
                 <RetweetIcon className={clsx(classes.rt_icon, classes.retweeted)} /> :
                 undefined
               }
-              <span className={classes.date}>
+              <span className={classes.date} data-inline="data-inline">
                 <TweetDateLink />
               </span>
             </span>
@@ -282,18 +283,19 @@ function ListTweetDetails({ onDetailClick }: { onDetailClick: (tweet: AcceptedTw
 
   const rt = context.retweet_count && !isNaN(context.retweet_count) ? context.retweet_count : 0;
   const fav = context.favorite_count && !isNaN(context.favorite_count) ? context.favorite_count : 0;
+  const sn = 'user' in context ? (context.user as FullUser).screen_name : "";
   return (
     <span className={classes.list_details} data-inline="data-inline">
-      <span>
+      {sn && <span>
         <a
           className={classes.link}
           rel="noopener noreferrer"
           target="_blank"
-          href={"https://twitter.com/" + (context.user as PartialTweetUser).screen_name}
+          href={"https://twitter.com/" + sn}
         >
-          @{(context.user as PartialTweetUser).screen_name}
+          @{sn}
         </a>
-      </span>
+      </span>}
 
       <span className={classes.rt_number}>
         {truncateInteractionCount(rt)} <RetweetIcon className={classes.rt_icon} />

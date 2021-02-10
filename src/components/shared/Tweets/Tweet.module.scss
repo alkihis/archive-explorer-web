@@ -33,6 +33,10 @@
   font-size: 12px;
   margin-right: .7rem;
   justify-self: end;
+
+  &[data-inline] {
+    margin-right: 0;
+  }
 }
 
 .link {
@@ -86,6 +90,10 @@
 .rt_number {
   margin-right: 1rem;
   margin-left: .3rem;
+
+  [data-inline] &:first-child {
+    margin-left: 0;
+  }
 }
 
 .rt_icon, .fav_icon {
@@ -149,7 +157,7 @@
   display: inline-flex;
   align-items: baseline;
 
-  & > :first-child {
+  & > :first-child:not(.rt_number) {
     margin-right: .3rem;
   }
 }
