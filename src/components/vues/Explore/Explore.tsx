@@ -13,6 +13,8 @@ import LeftArrowIcon from '@material-ui/icons/KeyboardArrowLeft';
 import ResponsiveDrawer from '../../shared/RespDrawer/RespDrawer';
 import LANG from '../../../classes/Lang/Language';
 import { TweetSearchHistory, DMSearchHistory, FavoriteSearchHistory } from '../../../tools/SearchHistory';
+import { DEBUG_MODE } from '../../../const';
+import { iter } from 'iterator-helper';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -26,7 +28,6 @@ import MostMentionned from '../../charts/MostMentionned/MostMentionned';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import { toast } from '../../shared/Toaster/Toaster';
 import ComposeSearchModal from './SearchComposer';
-import { DEBUG_MODE } from '../../../const';
 
 
 export const ExplorerAccordion = withStyles({
@@ -733,6 +734,32 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
  */
 
 TweetSearcher.validators.push({
+  keyword: 'around',
+  validator(query) {
+    // Remove the link & the possible query string to extract ID
+    const tweet_id = query.startsWith('http') ?
+      query.split('/').pop().split('?')[0] :
+      query;
+
+    const tweets = iter(SETTINGS.archive.tweets.sortedIterator('asc'))
+      .map(tweet => tweet.id_str)
+      .toArray();
+
+    const current_index = tweets.findIndex(id => id === tweet_id);
+    let matching_tweets = new Set<string>();
+
+    if (current_index !== -1) {
+      // Matching tweets are in index [-35<>+35]
+      const low_index = current_index - 35 < 0 ?
+        0 :
+        current_index - 35;
+
+      matching_tweets = new Set(tweets.slice(low_index, current_index + 35));
+    }
+
+    return tweet => matching_tweets.has(tweet.id_str);
+  },
+}, {
   keyword: 'id',
   separator: [":", ">=", "<=", ">", "<"],
   validator(query, sep) {
