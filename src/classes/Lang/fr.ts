@@ -116,15 +116,20 @@ export default {
   whats_a_archive_p1: `Une archive est une compilation de toutes vos actions sur le réseau social. Elle contient tous vos tweets,
   messages privés, moments, favoris, blocks et bien plus.`,
   how_to_download: "Apprenez à télécharger votre archive",
+  blazing_fast_loading: "Chargement instantané",
+  blazing_fast_loading_p1: `Retrouvez le contenu de votre archive Twitter en quelques secondes dans Archive Explorer, sans
+  aucun envoi ni téléchargement.`,
+  blazing_fast_loading_p2: `La sécurité de vos données est garantie : votre fichier est décompressé, lu et exploré directement
+  depuis votre navigateur, à la vitesse de l'éclair, même avec de très grandes archives. 😎`,
   powerful_search: "Recherche puissante",
   powerful_search_p1: `Archive Explorer vous permet de trouver en quelques secondes vos tweets et messages privés.
   Avec un simple champ de texte, cherchez par mot, phrase et même avec des expressions régulières.
   Tout ce que vous cherchez est à votre portée.`,
   clean_your_account: "Nettoyez votre compte",
   clean_your_account_p1: `Le vous de 13 ans a posté des tweets gênants dont vous ne vous souvenez même pas ?
-  Vous avez utilisé une block-list bien trop grande pour vous et vous avez envie d'annuler ça ?
-  Archive Explorer est un outil conçu pour supprimer vos vieux tweets, par mois, année ou même via une recherche.
-  Vous serez également capable de supprimer les utilisateurs blockés ou mis en sourdine de votre compte !
+  Vous avez utilisé une block-list bien trop grande pour vous ?
+  Archive Explorer est un outil conçu pour supprimer vos vieux tweets, par mois, année ou même via une recherche,
+  bien au-delà de la limite de 3200 tweets habituelle.
   Cet outil a déjà permis la suppression de`,
   tweets: "tweets",
   sort_and_filter_tweets: "Triez et filtrez vos tweets",
@@ -169,6 +174,11 @@ export default {
   find_favorites_p1: `Compliqué de retrouver quels tweets postés il y a des années vous avez mis en favori ? Certainement pas avec Archive Explorer !`,
   find_favorites_p2: `Avec un simple explorateur par mois, naviguer à travers tous vos favoris n'a jamais été aussi simple !
   Vous pouvez même utiliser des sélecteurs temporels dans le champ de recherche intégré afin d'affiner vos requêtes.`,
+  intelligent_targeting: "Ciblage intelligent",
+  intelligent_targeting_p1: "Vous avez des tweets en tête, mais impossible de les dénicher en explorant votre archive ?",
+  intelligent_targeting_p2: `Si la recherche textuelle ne suffit pas, Archive Explorer vous propose un module de recherche avancé complet et puissant,
+  vous permettant d'appliquer des filtres complexes sur vos tweets dans une interface simple d'utilisation.
+  Intervalles de dates, nombre de retweets, langue, type de tweet... Demandez, vous trouverez.`,
   /** END PRESENTATION PAGE */
 
   /** BEGIN ARCHIVE CMPT */

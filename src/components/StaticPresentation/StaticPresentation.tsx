@@ -61,11 +61,33 @@ const StaticPresentation: React.FC = () => {
             </p>
           </Container>
         </section>
-        
+
         <Container>
           <section className="feature">
             <div>
-              <h3 className="tweet-font">{LANG.powerful_search}</h3>
+              <h3 className="tweet-font">
+                <span role="img" aria-label="spark">⚡</span>
+                {" "}{LANG.blazing_fast_loading}
+              </h3>
+
+              <div className="small-classic-divider" />
+
+              <p>
+                {LANG.blazing_fast_loading_p1}
+                <br />
+                {LANG.blazing_fast_loading_p2}
+              </p>
+            </div>
+
+            <img alt={LANG.blazing_fast_loading} title={LANG.blazing_fast_loading} src="/assets/start_page/archive_home.jpg" />
+          </section>
+
+          <section className="feature">
+            <div>
+              <h3 className="tweet-font">
+                <span role="img" aria-label="Magnifying glass">🔍</span>
+                {" "}{LANG.powerful_search}
+              </h3>
 
               <div className="small-classic-divider" />
 
@@ -79,7 +101,29 @@ const StaticPresentation: React.FC = () => {
 
           <section className="feature">
             <div>
-              <h3 className="tweet-font">{LANG.clean_your_account}</h3>
+              <h3 className="tweet-font">
+                <span role="img" aria-label="target">🎯</span>
+                {" "}{LANG.intelligent_targeting}
+              </h3>
+
+              <div className="small-classic-divider" />
+
+              <p>
+                {LANG.intelligent_targeting_p1}
+                <br />
+                {LANG.intelligent_targeting_p2}
+              </p>
+            </div>
+
+            <img alt={LANG.intelligent_targeting} title={LANG.intelligent_targeting} src="/assets/start_page/search_target.png" />
+          </section>
+
+          <section className="feature">
+            <div>
+              <h3 className="tweet-font">
+                <span role="img" aria-label="broom">🧹</span>
+                {" "}{LANG.clean_your_account}
+              </h3>
 
               <div className="small-classic-divider" />
 
@@ -93,7 +137,10 @@ const StaticPresentation: React.FC = () => {
 
           <section className="feature">
             <div>
-              <h3 className="tweet-font">{LANG.sort_and_filter_tweets}</h3>
+              <h3 className="tweet-font">
+                <span role="img" aria-label="random">🔀</span>
+                {" "}{LANG.sort_and_filter_tweets}
+              </h3>
 
               <div className="small-classic-divider" />
 
@@ -111,10 +158,13 @@ const StaticPresentation: React.FC = () => {
 
           <section className="feature">
             <div>
-              <h3 className="tweet-font">{LANG.find_your_favorites_favorites}</h3>
+              <h3 className="tweet-font">
+                <span role="img" aria-label="star">🌟</span>
+                {" "}{LANG.find_your_favorites_favorites}
+              </h3>
 
               <div className="small-classic-divider" />
-              
+
               <p>
                 {LANG.find_favorites_p1}
                 <br />
@@ -168,7 +218,7 @@ const StaticPresentation: React.FC = () => {
                 <div>
                   <h5>{LANG.open_and_private}</h5>
                   <p>
-                    {LANG.open_and_private_p1} <a 
+                    {LANG.open_and_private_p1} <a
                       href="https://github.com/alkihis/archive-explorer-web"
                       rel="noopener noreferrer"
                       target="_blank"

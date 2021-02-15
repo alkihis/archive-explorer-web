@@ -117,6 +117,10 @@ export default {
   whats_a_archive_p1: `An archive is a compilation of all your actions inside the social network. It contains all your tweets,
   direct messages, moments, mutes, blocks and many more.`,
   how_to_download: "Learn how to download your archive",
+  blazing_fast_loading: "Blazing fast loading",
+  blazing_fast_loading_p1: `Discover your archive content in seconds using Archive Explorer, without any upload nor download.`,
+  blazing_fast_loading_p2: `Data safety is guaranteed: Your file is unzipped, read and explored inside your web browser,
+  at lightning speed, even with really big archives. 😎`,
   powerful_search: "Powerful search",
   powerful_search_p1: `Archive Explorer let you find in seconds tweets and direct messages.
   With a simple text field, search by word, phrase or even using regular expressions.
@@ -125,7 +129,7 @@ export default {
   clean_your_account_p1: `The 13 years old you did post embarrassing tweets you don't even remember?
   You've used an overkill block list and you want to reverse it?
   Archive Explorer is a tool made for clear your old tweets, by month, year or even
-  with a text query. You'll also be able to delete muted and blocked users!
+  with a text query, well beyond the 3200 tweets limit. You'll also be able to delete muted and blocked users!
   This tool already helps to delete`,
   tweets: "tweets",
   sort_and_filter_tweets: "Sort and filter tweets",
@@ -166,10 +170,15 @@ export default {
   help_with_donate: "You find this website useful? You can help me with your ❤️ by",
   little: "donating a little",
   statistics: "Statistics",
-  find_your_favorites_favorites: "Rediscover your favorites favorites",
+  find_your_favorites_favorites: "Rediscover your favorites",
   find_favorites_p1: `It's difficult to find which tweets posted years ago you've favorited? Obviously not with Archive Explorer!`,
   find_favorites_p2: `With a simple by-month explorer, browsing through all your favorited tweets has never been so simple! You can even
   use time queries with the integrated search field.`,
+  intelligent_targeting: "Intelligent targeting",
+  intelligent_targeting_p1: "You've tweets in mind, but unable to find them with a simple textual search?",
+  intelligent_targeting_p2: `Archive Explorer gives you a user-friendly advanced search module, full-featured and powerful.
+  Apply complex filters on your tweets: Date intervals, numbers of retweets, lang, tweet type and even more.
+  Just ask, and you'll find.`,
   /** END PRESENTATION PAGE */
 
   /** BEGIN ARCHIVE CMPT */

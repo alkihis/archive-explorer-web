@@ -14,6 +14,7 @@ import SETTINGS from '../../../tools/Settings';
 import { dateFormatter, uppercaseFirst, getMonthText, range } from '../../../helpers';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import { Marger } from '../../../tools/PlacingComponents';
+import { iter } from 'iterator-helper';
 
 
 /// -------------
@@ -28,7 +29,8 @@ interface AdvancedInputProperties {
   type: "date" | "string" | "number" | "month" | "day" | "bigint" | "signednumber" | "choices";
   /** Functions are needed because text change when LANG changes */
   text: () => string;
-  choices?: [string, () => string][];
+  choices?: () => [string, string][];
+  _choices?: [string, string][];
 }
 
 const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
@@ -93,22 +95,22 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   keyword: 'has',
   type: 'choices',
   text: () => LANG.has_search_choices,
-  choices: [
-    ['image', () => LANG.image],
-    ['video', () => LANG.video],
-    ['gif', () => LANG.gif],
-    ['link', () => LANG.link],
-    ['hashtag', () => LANG.hashtag],
+  choices: () => [
+    ['image', LANG.image],
+    ['video', LANG.video],
+    ['gif', LANG.gif],
+    ['link', LANG.link],
+    ['hashtag', LANG.hashtag],
   ],
 }, {
   keyword: 'is',
   type: 'choices',
   text: () => LANG.is_search_choices,
-  choices: [
-    ['retweet', () => LANG.retweet],
-    ['quote', () => LANG.quote],
-    ['reply', () => LANG.reply],
-    ['noreply', () => LANG.not_a_reply],
+  choices: () => [
+    ['retweet', LANG.retweet],
+    ['quote', LANG.quote],
+    ['reply', LANG.reply],
+    ['noreply', LANG.not_a_reply],
   ],
 }, {
   keyword: 'src_contains',
@@ -116,8 +118,20 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   text: () => LANG.src_contains,
 }, {
   keyword: 'lang',
-  type: 'string',
+  type: 'choices',
   text: () => LANG.lang,
+  choices: () => {
+    const langs = new Set<string>();
+
+    for (const tweet of SETTINGS.archive.tweets) {
+      if ('lang' in tweet)
+        langs.add((tweet as any).lang);
+    }
+
+    return iter(langs)
+      .map(lang => [lang, lang] as [string, string])
+      .toArray();
+  },
 }];
 
 /**
@@ -142,6 +156,15 @@ export default function ComposeSearchModal(props: {
   const [inputs, setInputs] = React.useState([] as { id: number, value: string, operator: string, input: AdvancedInputProperties }[]);
   const [freeText, setFreeText] = React.useState("");
   const [currentMonth, setCurrentMonth] = React.useState(false);
+
+  React.useEffect(() => {
+    // Delete possible cache on component init
+    for (const keyword of SEARCH_KEYWORDS) {
+      if (keyword._choices) {
+        keyword._choices = undefined;
+      }
+    }
+  }, []);
 
   function deleteInput(id: number) {
     setInputs(inputs.filter(i => i.id !== id));
@@ -467,7 +490,8 @@ function AdvancedSearchInput(props: {
       );
     }
     else if (data.type === "choices") {
-      const choices = data.choices!;
+      const choices = data._choices ? data._choices : data.choices();
+      data._choices = choices;
 
       return (
         <>
@@ -482,7 +506,7 @@ function AdvancedSearchInput(props: {
             }}
           >
             {choices.map(choice => <MenuItem value={choice[0]} key={choice[0]}>
-              {choice[1]()}
+              {choice[1]}
             </MenuItem>)}
           </Select>
         </>
