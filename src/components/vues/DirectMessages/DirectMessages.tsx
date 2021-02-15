@@ -119,7 +119,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
       const p = participants[0];
 
       if (typeof p !== 'string') {
-        avatar = <Avatar 
+        avatar = <Avatar
           className={classes.avatar}
           src={(p as FullUser).profile_image_url_https.replace('_normal', '')}
         />;
@@ -142,9 +142,9 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
     }
     else {
       const s_n = specialJoinJSX(participants.map(e => typeof e === 'string' ? "#" + e : '@' + e.screen_name), { class_element: "bold" });
-      
+
       let conversation_name: React.ReactNode;
-  
+
       if (conv.name) {
         conversation_name = conv.name;
       }
@@ -156,7 +156,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
           </React.Fragment>
         );
       }
-  
+
       card_content = (
         <div className={classes.group_conv_container}>
           <div className={classes.group_conv}>
@@ -167,8 +167,12 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
       );
     }
 
-    const last_message = localeDateFormat(conv.last.createdAtDate);
-    
+    let last_message_date: string = '';
+
+    if (conv.last) {
+      last_message_date = localeDateFormat(conv.last.createdAtDate);
+    }
+
     return (
       <Card key={conv.id} elevation={0} className={classes.card_root} onClick={oncardclick}>
         <CardContent className={classes.card_single}>
@@ -178,7 +182,9 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
             <span className="bold">{nFormat(conv.length)}</span> message{conv.length > 1 ? "s" : ""}
           </div>
           <div className={classes.last_message}>
-            {LANG.last_message_on} <span className="bold">{last_message}</span>.
+            {last_message_date && <>
+              {LANG.last_message_on} <span className="bold">{last_message_date}</span>.
+            </>}
           </div>
         </CardContent>
       </Card>
@@ -196,9 +202,9 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
     const sort_fn = (a: Conversation, b: Conversation) => b.length - a.length;
 
     if (messages.length === 0) {
-      return <EmptyMessage 
-        main={LANG.no_conversations} 
-        second={LANG.need_one_conversation} 
+      return <EmptyMessage
+        main={LANG.no_conversations}
+        second={LANG.need_one_conversation}
         icon={MailOutlineIcon}
       />;
     }
@@ -215,7 +221,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
 
         <Container className={classes.root}>
           {this.state.active_tab === 0 && <div>
-            <Typography className={classes.conv_title + " tweet-font"} variant="h6"> 
+            <Typography className={classes.conv_title + " tweet-font"} variant="h6">
               Conversations
             </Typography>
 
@@ -227,7 +233,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
           </div>}
 
           {this.state.active_tab === 1 && <div>
-            <Typography className={classes.conv_title + " tweet-font"} variant="h6"> 
+            <Typography className={classes.conv_title + " tweet-font"} variant="h6">
               {LANG.group_conversations}
             </Typography>
 
@@ -237,7 +243,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
               {groups.map(e => this.renderConversation(e))}
             </div>
           </div>}
-        </Container>        
+        </Container>
       </div>
     );
   }
@@ -258,17 +264,17 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
     }
 
     if (!SETTINGS.archive.is_gdpr) {
-      return <NoGDPR 
-        icon={MailIcon} 
-        message={LANG.archive_no_dms} 
+      return <NoGDPR
+        icon={MailIcon}
+        message={LANG.archive_no_dms}
       />;
     }
 
     if (this.state.ready && this.state.conversation) {
       return (
-        <DMConversation 
-          getBack={this.handleRemoveConversation} 
-          conversation={this.state.conversation} 
+        <DMConversation
+          getBack={this.handleRemoveConversation}
+          conversation={this.state.conversation}
         />
       );
     }
