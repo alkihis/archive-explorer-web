@@ -43,7 +43,7 @@
     "socket.io-client": "^2.4.0",
     "stopword": "^0.3.5",
     "timerize": "^1.0.3",
-    "twitter-archive-reader": "^7.0.2",
+    "twitter-archive-reader": "^7.1.0",
     "twitter-archive-saver": "^1.1.0",
     "twitter-d": "^0.4.0",
     "twitter-snowflake-to-date": "^1.0.2",
