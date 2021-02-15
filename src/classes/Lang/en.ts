@@ -120,7 +120,7 @@ export default {
   blazing_fast_loading: "Blazing fast loading",
   blazing_fast_loading_p1: `Discover your archive content in seconds using Archive Explorer, without any upload nor download.`,
   blazing_fast_loading_p2: `Data safety is guaranteed: Your file is unzipped, read and explored inside your web browser,
-  at lightning speed, even with really big archives. 😎`,
+  at lightning speed, even with really large archives. 😎`,
   powerful_search: "Powerful search",
   powerful_search_p1: `Archive Explorer let you find in seconds tweets and direct messages.
   With a simple text field, search by word, phrase or even using regular expressions.
