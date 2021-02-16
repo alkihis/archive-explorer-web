@@ -734,6 +734,13 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
  */
 
 TweetSearcher.validators.push({
+  keyword: 'url_contains',
+  validator(query) {
+    return tweet =>
+      tweet.entities.urls &&
+      tweet.entities.urls.some(u => u.url.includes(query) || u.display_url.includes(query) || u.expanded_url.includes(query));
+  },
+}, {
   keyword: 'around',
   validator(query) {
     // Remove the link & the possible query string to extract ID

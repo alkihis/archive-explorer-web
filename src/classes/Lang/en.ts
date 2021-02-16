@@ -402,6 +402,7 @@ export default {
   not_a_reply: "Not a reply",
   hashtag: "Hashtag",
   src_contains: "Tweet source contains",
+  url_contains: "URL contains",
   lang: "Language",
   see_full_tweet: 'See detail',
   /** END Explore CMPT */

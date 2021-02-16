@@ -117,6 +117,10 @@ const SEARCH_KEYWORDS: AdvancedInputProperties[] = [{
   type: 'string',
   text: () => LANG.src_contains,
 }, {
+  keyword: 'url_contains',
+  type: 'string',
+  text: () => LANG.url_contains,
+}, {
   keyword: 'lang',
   type: 'choices',
   text: () => LANG.lang,
