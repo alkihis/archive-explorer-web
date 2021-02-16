@@ -94,13 +94,13 @@ function convertToData(data: { [dayOrMonth: string]: number }, trim: false | num
 }
 
 const CustomTooltip: React.FC<{
-  active: boolean, 
+  active: boolean,
   payload: [any],
-  label: string, 
-  month?: string, 
+  label: string,
+  month?: string,
   monthPos: "left" | "right"
 }> = ({ active, payload, month, monthPos }) => {
-  if (active) {
+  if (active && payload) {
     const has_s = payload[0].payload.amount > 1;
 
     const on_year = month === undefined;
@@ -131,7 +131,7 @@ export default function TweetNumberChart(props: TweetNumberProps) {
   const theme = useTheme();
   const idata = props.dayView ? getTweetCountByDay(props.dayView.month, props.dayView.year) : getTweetCountByMonth();
   const data = convertToData(idata, props.dayView ? false : (props.trimAt === undefined ? false : props.trimAt));
-  
+
   const month = props.dayView ? getMonthText(props.dayView.month) : undefined;
   const month_pos = SETTINGS.lang === "fr" ? "right" : "left";
 
@@ -151,8 +151,8 @@ export default function TweetNumberChart(props: TweetNumberProps) {
       <>
         <Typography variant="h6" color="textSecondary" align="center">
           {LANG.posted_tweets_per} {
-            props.dayView ? 
-            LANG.day_of + " " + month.toLocaleLowerCase() + " " + props.dayView.year : 
+            props.dayView ?
+            LANG.day_of + " " + month.toLocaleLowerCase() + " " + props.dayView.year :
             LANG.month
           }
         </Typography>
@@ -167,19 +167,19 @@ export default function TweetNumberChart(props: TweetNumberProps) {
                 left: 0,
               }}
             >
-              <XAxis 
-                dataKey="time" 
+              <XAxis
+                dataKey="time"
                 // @ts-ignore
                 stroke={theme.palette.text.secondary}
-                tickFormatter={formatYearMonth} 
+                tickFormatter={formatYearMonth}
               />
-              <YAxis 
+              <YAxis
                 // @ts-ignore
-                stroke={theme.palette.text.secondary} 
+                stroke={theme.palette.text.secondary}
               />
-  
+
               <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />
-              
+
               <Tooltip content={
                 // @ts-ignore
                 <CustomTooltip month={month} monthPos={month_pos} />
@@ -195,7 +195,7 @@ export default function TweetNumberChart(props: TweetNumberProps) {
     <div>
       <DialogContentText variant="body1" align="center">
         {LANG.you_dont_have_any_tweet}.
-      </DialogContentText>  
+      </DialogContentText>
     </div>
   )
 }
