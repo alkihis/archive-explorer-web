@@ -744,7 +744,7 @@ TweetSearcher.validators.push({
 
     return tweet =>
       tweet.entities.urls &&
-      tweet.entities.urls.some(u => hasMatch(u.url, u.display_url, u.expanded_url));
+      tweet.entities.urls.some(u => hasMatch(u.display_url, u.expanded_url));
   },
 }, {
   keyword: 'around',
