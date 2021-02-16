@@ -736,9 +736,15 @@ function StatisticsSpeedDial(props: { hidden?: boolean, month: string, loaded: P
 TweetSearcher.validators.push({
   keyword: 'url_contains',
   validator(query) {
+    query = query.toLowerCase();
+
+    function hasMatch(...strings: string[]) {
+      return strings.some(s => s.toLowerCase().includes(query));
+    }
+
     return tweet =>
       tweet.entities.urls &&
-      tweet.entities.urls.some(u => u.url.includes(query) || u.display_url.includes(query) || u.expanded_url.includes(query));
+      tweet.entities.urls.some(u => hasMatch(u.url, u.display_url, u.expanded_url));
   },
 }, {
   keyword: 'around',
