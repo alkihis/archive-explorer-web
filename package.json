@@ -37,7 +37,7 @@
     "react-infinite-scroller": "^1.2.4",
     "react-modal-image": "^2.5.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.4",
+    "react-scripts": "^5.0.1",
     "react-virtualized": "^9.22.3",
     "recharts": "^2.0.6",
     "socket.io-client": "^2.4.0",
