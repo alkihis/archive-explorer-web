@@ -28,7 +28,7 @@
     "grapheme-splitter": "^1.0.4",
     "iterator-helper": "^1.1.2",
     "js-cookie": "^2.2.1",
-    "jszip": "^3.6.0",
+    "jszip": "^3.7.0",
     "localforage": "^1.9.0",
     "node-sass": "^4.14.1",
     "notistack": "^0.9.17",
