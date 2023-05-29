@@ -2,14 +2,12 @@ import React from 'react';
 import classes from './Tweet.module.scss';
 import { FullUser, Status } from 'twitter-d';
 import { PartialFavorite, PartialTweet, PartialTweetUser, TwitterHelpers } from 'twitter-archive-reader';
-import { Card, CardHeader, Avatar, CardContent, CardActions, Checkbox, ListItem, ListItemText, Dialog } from '@material-ui/core';
+import { Card, CardHeader, Avatar, CardContent, CardActions, ListItem, ListItemText, Dialog } from '@material-ui/core';
 import RetweetIcon from '@material-ui/icons/Repeat';
 import FavoriteIcon from '@material-ui/icons/Star';
 import { dateFormatter, truncateInteractionCount } from '../../../helpers';
 import TweetImage from './TweetMedia';
 import TweetText from './TweetText';
-import { withStyles } from '@material-ui/styles';
-import { CheckboxProps } from '@material-ui/core/Checkbox';
 import SETTINGS from '../../../tools/Settings';
 import UserCache from '../../../classes/UserCache';
 import { TweetContext } from './TweetContext';
@@ -22,40 +20,14 @@ export type AcceptedTweetSources = PartialFavorite | PartialTweet | Status;
 
 type TweetProp = {
   data: AcceptedTweetSources,
-  checked?: boolean,
-  onCheckChange?: (is_checked: boolean, id_str: string) => void;
   asListBlock?: boolean;
   favoriteMode?: boolean;
   inline?: boolean;
   onDetailClick?: (tweet: AcceptedTweetSources) => any;
 };
 
-type TweetState = {
-  checked: boolean;
-};
-
-const TweetCheckbox = withStyles({
-  root: {
-    '&$checked': {
-      color: '#ff8c34',
-    },
-  },
-  checked: {},
-})(
-  React.forwardRef<HTMLButtonElement, CheckboxProps>((props, ref) => (
-    <Checkbox color="default" ref={ref} {...props} />
-  ))
-);
-
-export default class Tweet extends React.Component<TweetProp, TweetState> {
-  state: TweetState;
+export default class Tweet extends React.Component<TweetProp, {}> {
   checkbox: React.RefObject<HTMLButtonElement> = React.createRef();
-
-  constructor(props: TweetProp) {
-    super(props);
-
-    this.state = { checked: this.props.checked };
-  }
 
   handleTweetContextMenu = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -179,20 +151,6 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
 
         {!this.props.favoriteMode ?
           <CardActions disableSpacing className={classes.card_action + " tweet-font tweet-details"}>
-            <TweetCheckbox
-              ref={this.checkbox}
-              onChange={(_, checked) => {
-                this.setState({ checked });
-                const oc = this.props.onCheckChange;
-
-                if (oc)
-                  oc(checked, (this.props.data as PartialTweet).id_str);
-              }}
-              checked={this.state.checked}
-              disabled={!SETTINGS.can_delete || this.props.inline}
-              onContextMenu={this.handleTweetContextMenu}
-            />
-
             <TweetActions />
             <TweetDate />
           </CardActions> :
@@ -211,20 +169,6 @@ export default class Tweet extends React.Component<TweetProp, TweetState> {
   renderListItem() {
     return (
       <ListItem className={classes.list_item}>
-        {!this.props.favoriteMode && <TweetCheckbox
-          ref={this.checkbox}
-          onChange={(_, checked) => {
-            this.setState({ checked });
-            const oc = this.props.onCheckChange;
-
-            if (oc)
-              oc(checked, (this.props.data as PartialTweet).id_str);
-          }}
-          checked={this.state.checked}
-          disabled={!SETTINGS.can_delete || this.props.inline}
-          onContextMenu={this.handleTweetContextMenu}
-        />}
-
         <ListItemText
           className={classes.list_item_text}
           primary={<TweetText inline />}

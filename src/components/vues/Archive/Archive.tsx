@@ -2,14 +2,12 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import styles from './Archive.module.scss';
 import { setPageTitle, dateFormatter } from '../../../helpers';
-import { Typography, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, FormControlLabel, Checkbox, withStyles, Container, Hidden } from '@material-ui/core';
+import { Typography, CircularProgress, Divider, Dialog, ListItem, ListItemAvatar, Avatar, ListItemText, ListItemSecondaryAction, IconButton, List, ListSubheader, withTheme, Theme, Paper, DialogActions, DialogTitle, DialogContent, DialogContentText, Link as MUILink, withStyles, Container, Hidden } from '@material-ui/core';
 import { CenterComponent, Marger } from '../../../tools/PlacingComponents';
 import SETTINGS from '../../../tools/Settings';
 import TwitterArchive, { ArchiveReadState, TwitterHelpers } from 'twitter-archive-reader';
 import UserCache from '../../../classes/UserCache';
 import { THRESHOLD_PREFETCH } from '../../../const';
-import { Link } from 'react-router-dom';
-import QuickDelete from '../QuickDelete/QuickDelete';
 import FileUploadIcon from '@material-ui/icons/CloudUpload';
 import Timer from 'timerize';
 import JSZip from 'jszip';
@@ -19,14 +17,11 @@ import FolderIcon from '@material-ui/icons/Folder';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteAllIcon from '@material-ui/icons/DeleteSweep';
-import BackupIcon from '@material-ui/icons/Backup';
 import clsx from 'clsx';
 import CustomTooltip from '../../shared/CustomTooltip/CustomTooltip';
 import ArchiveLoadErrorDialog from './ArchiveLoadErrorDialog';
 import { truncateText, loadingMessage, AvatarArchive } from './ArchiveHelpers';
 import { DownloadGDPRModal } from '../../shared/NoGDPR/NoGDPR';
-import ConvertArchiveModal from '../ConvertModal/ConvertModal';
-import { CloudedArchive } from './CloudedArchives';
 
 type ArchiveState = {
   loaded: string;
@@ -38,12 +33,10 @@ type ArchiveState = {
   };
   in_load: string;
   loading_state: ArchiveReadState | "prefetch" | "read_save";
-  quick_delete_open: boolean;
   in_drag: boolean;
   is_a_saved_archive: boolean;
   how_to_dl_open: boolean;
   header_url?: string;
-  create_classic_open?: boolean;
 };
 
 Timer.default_format = "s";
@@ -68,7 +61,6 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
       loading_state: "reading",
       is_error: false,
       in_load: SETTINGS.archive_in_load,
-      quick_delete_open: false,
       in_drag: false,
       is_a_saved_archive: SETTINGS.is_saved_archive,
       how_to_dl_open: false,
@@ -440,35 +432,6 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
     }
   };
 
-
-  /* ------------ */
-  /* QUICK DELETE */
-  /* ------------ */
-
-  handleModalOpen = () => {
-    this.setState({ quick_delete_open: true });
-  }
-
-  handleModalClose = () => {
-    this.setState({ quick_delete_open: false });
-  }
-
-  modalQuickDelete() {
-    return (
-      <Dialog
-        open={this.state.quick_delete_open}
-        onClose={this.handleModalClose}
-        scroll="body"
-        classes={{
-          paper: styles.modal_paper
-        }}
-      >
-        {this.state.quick_delete_open ? <QuickDelete onClose={this.handleModalClose} /> : ""}
-      </Dialog>
-    );
-  }
-
-
   /* ------- */
   /* GETTERS */
   /* ------- */
@@ -526,23 +489,8 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         {(this.state.loaded || this.state.is_error) &&
         <div className={clsx("center-space-between", this.props.classes.actions)}>
           {this.buttonLoad()}
-          {this.can_create_classic && this.buttonCreateClassicArchive()}
-          {this.state.loaded && SETTINGS.can_delete && this.buttonQuickDelete()}
         </div>}
       </React.Fragment>
-    );
-  }
-
-  buttonQuickDelete() {
-    return (
-      <Button
-        style={{ marginTop: '.5rem' }}
-        color="secondary"
-        variant="outlined"
-        onClick={this.handleModalOpen}
-      >
-        {LANG.quick_delete}
-      </Button>
     );
   }
 
@@ -555,18 +503,6 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         onClick={this.clickOnInput}
       >
         {LANG.load_another_archive}
-      </Button>
-    );
-  }
-
-  buttonCreateClassicArchive() {
-    return (
-      <Button
-        className={this.props.classes.buttonClassicArchive}
-        variant="outlined"
-        onClick={() => this.setState({ create_classic_open: true })}
-      >
-        {LANG.create_classic_archive}
       </Button>
     );
   }
@@ -696,25 +632,6 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
         <Typography className={cl.fileHeader} color="textSecondary">
           {LANG.file}: <span className={cl.filename}>{truncateText(this.state.loaded)}</span>.
         </Typography>
-
-        {!SETTINGS.is_owner && <div>
-          <Marger size=".25rem" />
-          <Typography className={styles.cannot_delete}>
-            {LANG.dont_own_archive}
-          </Typography>
-
-          {this.state.is_a_saved_archive && <Typography color="error">
-            {LANG.cant_show_dm_images}
-          </Typography>}
-        </div>}
-
-        {SETTINGS.is_owner && SETTINGS.expired && <div>
-          <Marger size=".20rem" />
-          <Typography className={styles.cannot_delete}>
-            {LANG.credentials_expired_cant_deleted}
-            {LANG.logout_and_in_in} <Link to="/settings/">{LANG.settings}</Link>.
-          </Typography>
-        </div>}
       </div>
     );
   }
@@ -827,10 +744,7 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
 
   render() {
     const actions = this.loadRightActions();
-    const can_save_archive = this.has_archive_loaded && (
-      SETTINGS.archive.user.id === SETTINGS.user.twitter_id ||
-      SETTINGS.can_save_other_users_archives
-    );
+    const can_save_archive = this.has_archive_loaded;
 
     const styles_of_header: any = {};
     const has_custom_img = !!(this.state.header_url || (this.state.loaded && SETTINGS.archive.user.profile_banner_url));
@@ -883,15 +797,10 @@ class Archive extends React.Component<{ classes: Record<string, string> }, Archi
           </Container>
         </div>
 
-        {this.modalQuickDelete()}
         <DownloadGDPRModal
           open={this.state.how_to_dl_open}
           onClose={() => this.setState({ how_to_dl_open: false })}
         />
-        {this.state.create_classic_open && <ConvertArchiveModal
-          open
-          onClose={() => this.setState({ create_classic_open: false })}
-        />}
       </div>
     );
   }
@@ -1037,7 +946,6 @@ type AvailableSavedArchivesState = {
   save_modal: boolean;
   quota: { used: number; available: number; quota: number; };
   delete_modal: boolean | string;
-  is_clouding: boolean;
 };
 
 class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesProps, AvailableSavedArchivesState> {
@@ -1046,14 +954,9 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
     save_modal: false,
     delete_modal: false,
     quota: { used: 0, available: 1, quota: 0 },
-    is_clouding: false,
   };
 
   mounted = false;
-
-  get can_cloud() {
-    return this.props.canDelete && !this.props.block && SETTINGS.user.can_cloud;
-  }
 
   componentDidMount() {
     this.mounted = true;
@@ -1083,19 +986,6 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
   onArchiveSaveSuccess = () => {
     this.setState({
       save_modal: false
-    });
-    this.refreshSavedArchivesList();
-  };
-
-  onShowCloud = () => {
-    this.setState({
-      is_clouding: true,
-    });
-  };
-
-  onHideCloud = () => {
-    this.setState({
-      is_clouding: false,
     });
     this.refreshSavedArchivesList();
   };
@@ -1156,13 +1046,8 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
         }
       }
 
-      // Register logged user archive's in a special slot
-      const logged_sn = SETTINGS.user.twitter_screen_name.toLowerCase();
-      const archives_of_logged: [string, SavedArchiveInfo[]] = [logged_sn, []];
-      if (logged_sn in sn_to_info) {
-        archives_of_logged[1] = sn_to_info[logged_sn];
-        delete sn_to_info[logged_sn];
-      }
+      // Register logged user archive's in a special slot (INACTIVE)
+      const archives_of_logged: [string, SavedArchiveInfo[]] = ['', []];
 
       // Sort the rest of users alphabetically
       const archives_owners_ordrerd = Object.entries(sn_to_info).sort((a, b) => a[0].localeCompare(b[0]));
@@ -1203,14 +1088,6 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
             {this.props.canSave && <CustomTooltip title={LANG.save_current_archive} placement="top">
               <IconButton style={{ marginRight: 5 }} edge="end" aria-label="save" onClick={this.onArchiveSave}>
                 <SaveIcon style={{
-                  color: this.props.theme.palette.primary.main
-                }} />
-              </IconButton>
-            </CustomTooltip>}
-
-            {this.can_cloud && <CustomTooltip title={LANG.clouded_archive} placement="top">
-              <IconButton style={{ marginRight: 5 }} edge="end" aria-label="cloud" onClick={this.onShowCloud}>
-                <BackupIcon style={{
                   color: this.props.theme.palette.primary.main
                 }} />
               </IconButton>
@@ -1321,12 +1198,6 @@ class AvailableSavedArchivesRaw extends React.Component<AvailableSavedArchivesPr
           onDelete={this.onDeleteSuccess}
         />}
 
-        {this.can_cloud && <CloudedArchive
-          open={this.state.is_clouding}
-          onClose={() => this.setState({ is_clouding: false })}
-          onNewArchiveDownloaded={this.onHideCloud}
-        />}
-
         <div style={{ width: '100%' }} className={clsx(this.props.block ? styles.blocked : "", styles.smooth_opacity)}>
           {this.state.available && this.renderArchiveList()}
 
@@ -1383,14 +1254,6 @@ const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
     }
   }
 
-  function ifUserMismatch() {
-    return (
-      <Typography color="error">
-        {LANG.user_archive_save_mismatch}
-      </Typography>
-    );
-  }
-
   function onError() {
     return (
       <>
@@ -1417,7 +1280,6 @@ const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
           <DialogContentText>
             {LANG.save_current_archive_explaination}
           </DialogContentText>
-          {SETTINGS.user.twitter_id !== SETTINGS.archive.user.id && ifUserMismatch()}
         </DialogContent>
         <DialogActions>
           <Button onClick={props.onClose} color="secondary">
@@ -1457,7 +1319,6 @@ const ArchiveSaver = (props: { onClose?: () => void, onSave?: () => void }) => {
 
 const ArchiveDeleter = (props: { onClose?: () => void, onDelete?: () => void, archive: string | false }) => {
   const [onDelete, setOnDelete] = React.useState<boolean | undefined>(false);
-  const [removeAll, setRemoveAll] = React.useState(false);
 
   async function handleDelete() {
     setOnDelete(true);
@@ -1466,13 +1327,9 @@ const ArchiveDeleter = (props: { onClose?: () => void, onDelete?: () => void, ar
       if (props.archive) {
         await SAVED_ARCHIVES.removeArchive(props.archive);
       }
-      else if (removeAll) {
-        // Delete all
-        await SAVED_ARCHIVES.removeAllArchives();
-      }
       else {
         // All archives of current user
-        await SAVED_ARCHIVES.removeCurrentUser();
+        await SAVED_ARCHIVES.removeAllArchives();
       }
 
       if (props.onDelete) {
@@ -1511,21 +1368,7 @@ const ArchiveDeleter = (props: { onClose?: () => void, onDelete?: () => void, ar
         <DialogContent>
           <DialogContentText>
             {LANG.remove_archives_explaination}
-            {!props.archive && <>
-              <br /><br />
-              {LANG.remove_all_archives_explaination}
-            </>}
           </DialogContentText>
-
-          {!props.archive && <FormControlLabel
-            control={<Checkbox
-              checked={removeAll}
-              onChange={(_, checked) => setRemoveAll(checked)}
-              value="remove-all"
-            />}
-            label={LANG.remove_all_checkbox}
-          />}
-
         </DialogContent>
         <DialogActions>
           <Button onClick={props.onClose} color="primary" autoFocus>

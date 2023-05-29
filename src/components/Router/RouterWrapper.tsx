@@ -5,13 +5,9 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import MailIcon from '@material-ui/icons/Mail';
 import ArchiveIcon from '@material-ui/icons/FolderShared';
-import TasksIcon from '@material-ui/icons/CheckBox';
 import MoreIcon from '@material-ui/icons/MoreHoriz';
 import FavoriteIcon from '@material-ui/icons/Star';
 import classes from './RouterWrapper.module.scss';
-import { Badge } from '@material-ui/core';
-import TaskModal from '../vues/TaskModal/TaskModal';
-import Tasks, { TaskInformation, TaskBaseMessage } from '../../tools/Tasks';
 import LANG from '../../classes/Lang/Language';
 
 interface RouterWrapperProps extends RouteComponentProps {}
@@ -37,8 +33,6 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
     tasks_running: 0,
     shown: true
   };
-
-  internal_progress: Set<string> = new Set();
 
   constructor(props: RouteComponentProps) {
     super(props);
@@ -70,52 +64,6 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
     });
   }
 
-  componentDidMount() {
-    // @ts-ignore
-    Tasks.addEventListener('progression', this.handleTaskProgress);
-    // @ts-ignore
-    Tasks.addEventListener('unsubscribe', this.handleUnsubscribe);
-     // @ts-ignore
-    Tasks.addEventListener('remove', this.handleUnsubscribe);
-  }
-
-  componentWillUnmount() {
-    // @ts-ignore
-    Tasks.removeEventListener('progression', this.handleTaskProgress);
-    // @ts-ignore
-    Tasks.removeEventListener('unsubscribe', this.handleUnsubscribe);
-    // @ts-ignore
-    Tasks.removeEventListener('remove', this.handleUnsubscribe);
-  }
-
-  handleTaskProgress = (e: CustomEvent<TaskInformation>) => {
-    if (e.detail.percentage >= 100) {
-      if (this.internal_progress.has(e.detail.id)) {
-        this.internal_progress.delete(e.detail.id);
-
-        this.setState({
-          tasks_running: this.internal_progress.size
-        });
-      }
-    }
-    else {
-      if (!this.internal_progress.has(e.detail.id)) {
-        this.internal_progress.add(e.detail.id);
-
-        this.setState({
-          tasks_running: this.internal_progress.size
-        });
-      }
-    }
-  };
-
-  handleUnsubscribe = (e: CustomEvent<TaskBaseMessage>) => {
-    this.internal_progress.delete(e.detail.id);
-    this.setState({
-      tasks_running: this.internal_progress.size
-    });
-  };
-
   calculateCurrentValue(props: { location: { pathname: string } }) {
     const { pathname } = props.location;
     const { pathMap } = this.state;
@@ -129,30 +77,6 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
       this.setState({ value });
   };
 
-  handleModalOpen = () => {
-    this.setState({ task_opens: true });
-  }
-
-  handleModalClose = () => {
-    this.setState({ task_opens: false });
-  }
-
-  renderModalTasks() {
-    return <TaskModal open={this.state.task_opens} onClose={this.handleModalClose} />;
-  }
-
-  renderTaskIcon() {
-    if (this.state.tasks_running === 0) {
-      return <TasksIcon />;
-    }
-
-    return (
-      <Badge badgeContent={this.state.tasks_running} color="primary">
-        <TasksIcon />
-      </Badge>
-    );
-  }
-
   render() {
     const { value, pathMap } = this.state;
 
@@ -162,8 +86,6 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
 
     return (
       <div>
-        {this.renderModalTasks()}
-
         <BottomNavigation
           value={value}
           onChange={this.handleChange}
@@ -175,7 +97,6 @@ class RouterWrapper extends Component<RouterWrapperProps, RouterWrapperState> {
           <BottomNavigationAction label={LANG.direct_messages} icon={<MailIcon />} component={Link} to={pathMap[2]} />
           <BottomNavigationAction label={LANG.favorites} icon={<FavoriteIcon />} component={Link} to={pathMap[3]} />
           <BottomNavigationAction label={LANG.more} icon={<MoreIcon />} component={Link} to={pathMap[4]} />
-          <BottomNavigationAction label={LANG.tasks} icon={this.renderTaskIcon()} onClick={() => this.handleModalOpen()} />
         </BottomNavigation>
       </div>
     );

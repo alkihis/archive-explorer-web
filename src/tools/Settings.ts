@@ -1,10 +1,6 @@
-import { IUser } from "./interfaces";
 import { TwitterArchive } from "twitter-archive-reader";
 import { FullUser } from "twitter-d";
-import { DEBUG_MODE } from "../const";
-import APIHELPER, { API_URLS } from "./ApiHelper";
 import { AuthorizedLangs, isAuthorizedLang } from "../classes/Lang/Language";
-import Cookies from 'js-cookie';
 
 export type TweetSortType = "time" | "popular" | "retweets" | "favorites" | "random";
 export type FavoriteTweetSortType = "time" | "random";
@@ -31,9 +27,6 @@ try {
 
 class AESettings {
   // Saved settings
-  protected _token: string = "";
-  protected _auto_tweet_download = false;
-  protected _auto_rt_download = true;
   protected _pp = true;
   protected _lang: AuthorizedLangs = window.navigator.language.includes('fr') ? 'fr' : 'en';
 
@@ -46,12 +39,11 @@ class AESettings {
   protected _allow_mentions: boolean = true;
   protected _has_server_errors: boolean = false;
   protected _can_save_other_users_archives: boolean = true;
-  protected _use_tweets_local_medias: boolean = false;
-  protected _use_tweets_local_videos: boolean = false;
+  protected _use_tweets_local_medias: boolean = true;
+  protected _use_tweets_local_videos: boolean = true;
   protected _show_explore_as_list: boolean = false;
 
   // Globals
-  protected current_user: IUser | null = null;
   protected current_archive: TwitterArchive | null = null;
   protected _twitter_user: FullUser;
   protected _dark_mode: boolean = null;
@@ -59,16 +51,12 @@ class AESettings {
 
   archive_name: string = "";
   archive_in_load = "";
-  expired = false;
   is_saved_archive = false;
 
   constructor() {
     // Refresh html lang attribute
     document.documentElement.lang = this._lang;
 
-    if (localStorage.getItem('login_token')) {
-      this.token = localStorage.getItem('login_token');
-    }
     if (localStorage.getItem('dark_mode')) {
       this.dark_mode = localStorage.getItem('dark_mode') === "true";
     }
@@ -77,17 +65,11 @@ class AESettings {
       console.log("Autodetecting prefereed mode...");
       console.log("Dark mode on:", media_query_list.matches);
     }
-    if (localStorage.getItem('auto_tweet_download')) {
-      this.tweet_dl = localStorage.getItem('auto_tweet_download') === "true";
-    }
     if (localStorage.getItem('can_save_other_users_archives')) {
       this.can_save_other_users_archives = localStorage.getItem('can_save_other_users_archives') === "true";
     }
     if (localStorage.getItem('has_server_errors')) {
       this.has_server_errors = localStorage.getItem('has_server_errors') === "true";
-    }
-    if (localStorage.getItem('auto_rt_download')) {
-      this.rt_dl = localStorage.getItem('auto_rt_download') === "true";
     }
     if (localStorage.getItem('pp')) {
       this.pp = localStorage.getItem('pp') === "true";
@@ -133,20 +115,6 @@ class AESettings {
     }
     else {
       this.media_filter = "none";
-    }
-    if (localStorage.getItem('current_user')) {
-      try {
-        const u = JSON.parse(localStorage.getItem('current_user'));
-
-        if (this.isUserValid(u)) {
-          this.user = u;
-        }
-        else {
-          localStorage.removeItem('current_user');
-        }
-      } catch (e) {
-        localStorage.removeItem('current_user');
-      }
     }
     if (localStorage.getItem('twitter_user')) {
       try {
@@ -326,50 +294,12 @@ class AESettings {
     localStorage.setItem('pp', String(v));
   }
 
-  get token() {
-    return this._token;
-  }
-
-  set token(v: string) {
-    this._token = v;
-    Cookies.set('login_token', v, { secure: !DEBUG_MODE, path: '/' });
-    localStorage.setItem('login_token', v);
-  }
-
   get only_medias() {
     return this._media_filter === "video" || this._media_filter === "pic";
   }
 
   get only_videos() {
     return this._media_filter === "video";
-  }
-
-  get tweet_dl() {
-    return this._auto_tweet_download;
-  }
-
-  set tweet_dl(v: boolean) {
-    this._auto_tweet_download = v;
-    localStorage.setItem('auto_tweet_download', String(v));
-  }
-
-  get rt_dl() {
-    return this._auto_rt_download;
-  }
-
-  set rt_dl(v: boolean) {
-    this._auto_rt_download = v;
-    localStorage.setItem('auto_rt_download', String(v));
-  }
-
-  set user(v: IUser) {
-    this.current_user = v;
-    localStorage.setItem('current_user', JSON.stringify(v));
-    window.DEBUG.LoggedUser = v;
-  }
-
-  get user() {
-    return this.current_user;
   }
 
   set twitter_user(v: FullUser) {
@@ -394,52 +324,8 @@ class AESettings {
     return this.current_archive;
   }
 
-  get is_owner() {
-    return !!this.archive && this.archive.user.id === this.user.twitter_id;
-  }
-
-  get can_delete() {
-    if (DEBUG_MODE && window.DEBUG.globals.force_no_delete)
-      return false;
-
-    if (DEBUG_MODE)
-      return true;
-
-    return !!this.archive && this.archive.user.id === this.user.twitter_id && !this.expired;
-  }
-
-  get is_logged() {
-    return !!this.token;
-  }
-
-  logout(reload = true, revoke = false) {
-    const is_logged = this.is_logged;
-    localStorage.removeItem("save_token_secret");
-
-    if (revoke && is_logged) {
-      // Revoke without specifing token: revoking current
-      return APIHELPER.request(API_URLS.user_token_revoke, { method: 'POST' })
-        .finally(() => {
-          this.token = "";
-
-          if (reload)
-            this.reload();
-        });
-    }
-    else {
-      this.token = "";
-
-      if (reload)
-        this.reload();
-    }
-  }
-
   reload() {
     window.location.pathname = '/';
-  }
-
-  protected isUserValid(u: IUser) {
-    return !!(u.created_at && u.twitter_id && u.twitter_name && u.twitter_screen_name);
   }
 
   protected isTUserValid(u: FullUser) {

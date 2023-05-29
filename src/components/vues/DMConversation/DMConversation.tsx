@@ -151,7 +151,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
       // Create a subconversation from actual DMs
       search_results = new SubConversation(
-        this.state.selected, 
+        this.state.selected,
         this.conv.infos.me
       ).find(new RegExp(content, flags));
     }
@@ -168,7 +168,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
       search_results = this.conv.find(new RegExp(content, flags));
     }
-    
+
     if (selected_users.length) {
       search_results = search_results.sender(selected_users.map(u => u.id_str));
     }
@@ -208,9 +208,9 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
 
     return (
       <div>
-        <ListItem 
-          button 
-          className={classes.back_btn} 
+        <ListItem
+          button
+          className={classes.back_btn}
           onClick={this.props.getBack}
         >
           <ListItemText classes={{ primary: classes.get_back_paper }}>
@@ -223,9 +223,9 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
             <Typography className="bold">{LANG.full_conversation}</Typography>
           </AccordionSummary>
         </Accordion>
-        <ListItem 
-          button 
-          className={"*" === this.state.month ? classes.selected_month : ""} 
+        <ListItem
+          button
+          className={"*" === this.state.month ? classes.selected_month : ""}
           onClick={() => this.monthClicker("*", "")}
         >
           <ListItemText className={classes.drawer_month}>
@@ -233,9 +233,9 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           </ListItemText>
         </ListItem>
 
-        <ListItem 
-          button 
-          className={"day" === this.state.month ? classes.selected_month : ""} 
+        <ListItem
+          button
+          className={"day" === this.state.month ? classes.selected_month : ""}
           onClick={() => this.monthClicker("day", "")}
         >
           <ListItemText className={classes.drawer_month}>
@@ -349,10 +349,10 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     return (
       <List className={classes.list_month}>
         {Object.entries(current_year.months).map(([month, dms]) => (
-          <ListItem 
-            button 
-            key={year + "-" + month} 
-            className={year + "-" + month === this.state.month ? classes.selected_month : ""} 
+          <ListItem
+            button
+            key={year + "-" + month}
+            className={year + "-" + month === this.state.month ? classes.selected_month : ""}
             onClick={() => this.monthClicker(year, month)}
           >
             <ListItemText className={classes.drawer_month}>
@@ -370,7 +370,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
     const p = [...this.conv.real_participants][0];
     const user = UserCache.getFromCache(p);
 
-    if (user && !this.conv.is_group_conversation) {
+    if (user?.profile_banner_url && !this.conv.is_group_conversation) {
       return (
         <img className={classes.conv_header_img} alt="Conversation header" src={user.profile_banner_url} />
       );
@@ -429,7 +429,7 @@ export default class DMConversation extends React.Component<DMProps, DMState> {
           {this.showHeaderConv()}
 
           <div className={classes.inner_content}>
-            {this.state.found && this.state.found.length ? 
+            {this.state.found && this.state.found.length ?
               (<div>
                 {this.showActiveSearch()}
                 <DMContainer key={this.state.key} messages={this.state.found} onDmClick={this.handleDmClick} hideEvents />

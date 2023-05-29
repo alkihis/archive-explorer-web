@@ -3,9 +3,7 @@ import './StaticPresentation.scss';
 import { Link } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import { DownloadGDPRModal } from '../shared/NoGDPR/NoGDPR';
-import SETTINGS from '../../tools/Settings';
 import { setPageTitle, nFormat } from '../../helpers';
-import APIHELPER, { API_URLS } from '../../tools/ApiHelper';
 import LANG from '../../classes/Lang/Language';
 import { Copyright } from '../../tools/PlacingComponents';
 
@@ -36,11 +34,7 @@ const StaticPresentation: React.FC = () => {
           </section>
 
           <section>
-            {(
-              SETTINGS.is_logged ?
-              <Link to="/archive/" className="button-login">{LANG.explore_archive}</Link> :
-              <Link to="/login/" className="button-login">{LANG.login}</Link>
-            )}
+            <Link to="/archive/" className="button-login">{LANG.explore_archive}</Link>
           </section>
         </Container>
       </header>
@@ -247,15 +241,8 @@ export default StaticPresentation;
 type DCProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
 
 const DeletedCounter: React.FC<DCProps> = (props: DCProps) => {
-  const [deleted, setDeleted] = React.useState<number>(undefined);
-
-  if (deleted === undefined) {
-    APIHELPER.request(API_URLS.deleted_count, { auth: false, method: 'GET' })
-      .then((resp: { count: number }) => {
-        setDeleted(resp.count);
-      });
-  }
-
+  const [deleted, ] = React.useState<number>(undefined);
+  //TODO?
   return (
     <span {...props}>
       {deleted !== undefined ? nFormat(deleted) : "•••"}

@@ -7,13 +7,12 @@ import LANG from '../../../classes/Lang/Language';
 import Help from './Help';
 import Mutes from './Mutes';
 import Blocks from './Blocks';
-import Followers, { Followings } from './Followers';
 import AdAndUserData from './AdAndUserData';
 import LegalMentions from './LegalMentions';
 import Settings from '../Settings/Settings';
 import { ClassicHeader, ClassicTabs } from '../../../tools/PlacingComponents';
 
-type MoreState = {  
+type MoreState = {
   active_tab: number;
 };
 
@@ -31,8 +30,6 @@ export default class More extends React.Component<{}, MoreState> {
       Settings,
       Help,
       AdAndUserData,
-      Followers,
-      Followings,
       Mutes,
       Blocks,
       LegalMentions,
@@ -49,8 +46,6 @@ export default class More extends React.Component<{}, MoreState> {
     const enabled = {
       mutes: false,
       blocks: false,
-      followers: false,
-      followings: false,
       ads_and_user_data: false,
     };
 
@@ -59,8 +54,6 @@ export default class More extends React.Component<{}, MoreState> {
       const ar = SETTINGS.archive;
       enabled.mutes = !!ar.mutes.size;
       enabled.blocks = !!ar.blocks.size;
-      enabled.followers = !!ar.followers.size;
-      enabled.followings = !!ar.followings.size;
       enabled.ads_and_user_data = !!(ar.user.personalization || ar.ads.impressions.length || ar.user.screen_name_history.length);
     }
 
@@ -69,8 +62,6 @@ export default class More extends React.Component<{}, MoreState> {
         <Tab label={LANG.settings} />
         <Tab label={LANG.help} />
         <Tab label={LANG.ads_and_user_data} disabled={!enabled.ads_and_user_data} />
-        <Tab label={LANG.followers} disabled={!enabled.followers} />
-        <Tab label={LANG.followings} disabled={!enabled.followings} />
         <Tab label={LANG.mutes} disabled={!enabled.mutes} />
         <Tab label={LANG.blocks} disabled={!enabled.blocks} />
         <Tab label={LANG.legal_mentions} />
@@ -104,8 +95,8 @@ export default class More extends React.Component<{}, MoreState> {
   }
 }
 
-export const DeleteModal: React.FC<{ 
-  open?: boolean, 
+export const DeleteModal: React.FC<{
+  open?: boolean,
   type: string,
   onClose?: () => void,
   onValidate?: () => void,

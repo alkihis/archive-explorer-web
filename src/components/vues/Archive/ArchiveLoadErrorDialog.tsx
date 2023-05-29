@@ -5,10 +5,9 @@ import TwitterArchive, { TweetFileError, DirectMessageParseError, AccountFileErr
 import { Marger } from '../../../tools/PlacingComponents';
 import { LogFile } from '../../../tools/interfaces';
 import { makeFileDownload, dateFormatter } from '../../../helpers';
-import SETTINGS from '../../../tools/Settings';
 import DownloadFileIcon from '@material-ui/icons/GetApp';
 
-export default function ArchiveLoadErrorDialog(props: React.PropsWithChildren<{ 
+export default function ArchiveLoadErrorDialog(props: React.PropsWithChildren<{
   detail: { files: string[], error: any, saved: boolean, archive?: TwitterArchive },
 }>) {
   const [open, setOpen] = React.useState(false);
@@ -21,18 +20,16 @@ export default function ArchiveLoadErrorDialog(props: React.PropsWithChildren<{
     const log = generateLogFrom(props.detail.error, props.detail.files, props.detail.archive);
     log.saved_archive = props.detail.saved;
     const date = dateFormatter("Y.m.d_H.i.s");
-    const user_id = SETTINGS.user.user_id;
-    const user_name = SETTINGS.user.twitter_screen_name;
 
-    makeFileDownload(JSON.stringify(log), `log-${date}-${user_id}-${user_name}.json`);
+    makeFileDownload(JSON.stringify(log), `log-${date}.json`);
   }
 
   function listFiles() {
     const files = props.detail.files
       .filter(file => (
-        !file.endsWith('/') && 
-        !file.endsWith('.jpg') && 
-        !file.endsWith('.png') && 
+        !file.endsWith('/') &&
+        !file.endsWith('.jpg') &&
+        !file.endsWith('.png') &&
         !file.endsWith('.gif') &&
         !file.endsWith('.mp4') &&
         !file.endsWith('.svg') &&
@@ -154,7 +151,7 @@ export default function ArchiveLoadErrorDialog(props: React.PropsWithChildren<{
           </DialogContentText>
 
           <DialogContentText>
-            <strong>{getReadableErrorMessage()}</strong> 
+            <strong>{getReadableErrorMessage()}</strong>
           </DialogContentText>
 
           <Marger size={8} />
@@ -165,26 +162,26 @@ export default function ArchiveLoadErrorDialog(props: React.PropsWithChildren<{
             <DownloadFileIcon style={{ marginRight: '.2rem' }} />
             <Link href="#" onClick={downloadLogFile}>
               {LANG.download_error_dump}
-            </Link> 
+            </Link>
           </DialogContentText>
           <Typography variant="caption">
-            {LANG.you_can_put_the_content_of_log_file_to} <Link 
-              target="_blank" 
+            {LANG.you_can_put_the_content_of_log_file_to} <Link
+              target="_blank"
               rel="noopener noreferrer"
               href="https://pastebin.com/"
-            >PasteBin</Link> 
+            >PasteBin</Link>
             {" "}{LANG.and_send_this_error_dump_to} {" "}
-            <Link 
-              rel="noopener noreferrer" 
-              target="_blank" 
+            <Link
+              rel="noopener noreferrer"
+              target="_blank"
               href="https://twitter.com/Alkihis"
             >@Alkihis via Twitter</Link>.
 
             <br />
 
-            {LANG.you_can_also} <Link 
-              rel="noopener noreferrer" 
-              target="_blank" 
+            {LANG.you_can_also} <Link
+              rel="noopener noreferrer"
+              target="_blank"
               href="https://github.com/alkihis/archive-explorer-web/issues"
             >
               {LANG.open_an_issue_and_attach_file}
@@ -299,9 +296,9 @@ function generateLogFrom(err: any, filelist: string[], archive?: TwitterArchive)
 
   if (filelist.length) {
     log.archive_files = filelist.filter(f => (
-      !f.endsWith('/') && 
-      !f.endsWith('.jpg') && 
-      !f.endsWith('.png') && 
+      !f.endsWith('/') &&
+      !f.endsWith('.jpg') &&
+      !f.endsWith('.png') &&
       !f.endsWith('.gif') &&
       !f.endsWith('.mp4') &&
       !f.startsWith('_') &&
@@ -317,7 +314,7 @@ function generateLogFrom(err: any, filelist: string[], archive?: TwitterArchive)
       has_tweets = !!(archive.tweets && archive.tweets.length);
       has_dms = !!(archive.messages && archive.messages.length);
     } catch (e) { }
-    
+
     log.archive_info = {
       has_dms,
       has_tweets,
@@ -339,9 +336,9 @@ function generateLogFrom(err: any, filelist: string[], archive?: TwitterArchive)
     }
     else if (
       [
-        TweetFileError, 
-        DirectMessageParseError, 
-        ProfileFileError, 
+        TweetFileError,
+        DirectMessageParseError,
+        ProfileFileError,
         AccountFileError
       ].some(e => err instanceof e)
     ) {

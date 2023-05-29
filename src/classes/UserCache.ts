@@ -2,7 +2,6 @@ import { FullUser } from 'twitter-d';
 import { Conversation } from 'twitter-archive-reader';
 import Cache from './Cache';
 import { escapeRegExp } from '../helpers';
-import { API_URLS } from '../tools/ApiHelper';
 
 class __UserCache extends Cache<FullUser> {
   protected user_cache: {
@@ -54,8 +53,8 @@ class __UserCache extends Cache<FullUser> {
     if (typeof screen_name_or_name === 'string') {
       try {
         screen_name_or_name = new RegExp(
-          (screen_name_or_name.startsWith('^') ? '' : '^') + 
-          screen_name_or_name + 
+          (screen_name_or_name.startsWith('^') ? '' : '^') +
+          screen_name_or_name +
           (screen_name_or_name.endsWith('$') ? '' : '$'), 'i');
       } catch (e) {
         screen_name_or_name = new RegExp('^' + escapeRegExp(screen_name_or_name as string) + '$', 'i');
@@ -78,7 +77,7 @@ class __UserCache extends Cache<FullUser> {
   }
 }
 
-export const UserCache = new __UserCache(API_URLS.batch_users);
+export const UserCache = new __UserCache('');
 export default UserCache;
 
 window.DEBUG.UserCache = UserCache;

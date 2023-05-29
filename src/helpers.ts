@@ -1,13 +1,8 @@
-import APIHELPER, { API_URLS } from "./tools/ApiHelper";
-import { IUser } from "./tools/interfaces";
 import SETTINGS, { TweetSortType, TweetSortWay } from "./tools/Settings";
-import { PartialTweet, TwitterHelpers } from "twitter-archive-reader";
-import UserCache from "./classes/UserCache";
-import TwitterArchive from "twitter-archive-reader";
-import { toast } from "./components/shared/Toaster/Toaster";
-import { FullUser } from "twitter-d";
-import { AUTO_TWITTER_CHECK } from "./const";
+import TwitterArchive, { PartialTweet, PartialTweetUser, TwitterHelpers } from 'twitter-archive-reader';
 import LANG from "./classes/Lang/Language";
+import UserCache from './classes/UserCache';
+import { FullUser } from 'twitter-d';
 
 export function setPageTitle(title?: string, absolute = false) {
   if (!absolute)
@@ -38,97 +33,6 @@ export function localeDateFormat(date: Date, with_time = false) {
       "Y-m-d",
     date
   );
-}
-
-/**
- * Return true if user is verified, false if token expires, null if server can't be accessed.
- */
-export async function checkCredentials(auto_user_dl = true, check_twitter_account = AUTO_TWITTER_CHECK) {
-  try {
-    const reso: IUser = await APIHELPER.request(API_URLS.user_credentials_check);
-    SETTINGS.user = reso;
-
-    if (check_twitter_account) {
-      const twitter_check = APIHELPER.request(API_URLS.user_twitter_informations);
-
-      twitter_check
-        .then((d: { user: IUser, twitter: FullUser }) => {
-          SETTINGS.twitter_user = d.twitter;
-        })
-        .catch((e: any) => {
-          if (Array.isArray(e)) {
-            const [_, c] = e as [Response, any];
-      
-            if (c) {
-              if (c.code === 11) {
-                // Token expiré
-                SETTINGS.expired = true;
-                toast(LANG.credentials_expired, "error");
-                return;
-              }
-              
-              // Unknown error
-              console.log(_, c);
-              return;
-            }
-          }
-      
-          // API unavailable (fetch promise reject), or other error
-          toast(LANG.account_unverifable, "warning");
-        });
-    }
-
-    if (reso.twitter_id && auto_user_dl) {
-      if (UserCache.getFromCache(reso.twitter_id)) {
-        SETTINGS.twitter_user = UserCache.getFromCache(reso.twitter_id);
-      }
-      else {
-        try {
-          const u_twi = await UserCache.get(reso.twitter_id);
-
-          if (u_twi) {
-            SETTINGS.twitter_user = u_twi;
-          }
-        } catch (e) { /* do nothing, l'utilisateur peut ne pas exister */ }
-      }
-    }
-
-    return !!reso.user_id;
-  } catch (e) {
-    if (Array.isArray(e)) {
-      const [rq, c] = e as [Response, any];
-
-      if (rq) {
-        if (rq.status === 403 || rq.status === 401) {
-          // Login invalid
-          return false;
-        }
-        
-        // Unknown error
-        console.log(rq, c);
-      }
-    }
-
-    // API unavailable (fetch promise reject), or other error
-    return null;
-  }
-}
-
-export function prefetchAllUserData(archive: TwitterArchive) {
-  const sets: Set<string>[] = archive.messages.all.map(e => e.participants);
-
-  const users = new Set<string>();
-
-  for (const s of sets) {
-    for (const u of s) {
-      users.add(u);
-    }
-  }
-
-  if (users.size)
-    return UserCache.bulk([...users]);
-
-  return Promise.resolve();
 }
 
 /**
@@ -237,8 +141,8 @@ interface SortFilterTweetsSettings {
 }
 
 export function sortAndFilterTweetsFromSettings(tweets: PartialTweet[], settings: SortFilterTweetsSettings) {
-  let sort_fn: (a: PartialTweet, b: PartialTweet) => number; 
-  
+  let sort_fn: (a: PartialTweet, b: PartialTweet) => number;
+
   // Every thing is asc by default !
   if (settings.sort_type === "time") {
     if (typeof BigInt !== 'undefined') {
@@ -303,7 +207,7 @@ export function sortAndFilterTweetsFromSettings(tweets: PartialTweet[], settings
     if (settings.only_videos) {
       if (
         !t.extended_entities || 
-        !t.extended_entities.media || 
+        !t.extended_entities.media ||
         !t.extended_entities.media.length
       ) {
         return false;
@@ -381,16 +285,16 @@ export function scoreOfTweet(tweet: PartialTweet) {
 
 /**
  * Find moments of selected {years} in {tweets}
- * 
+ *
  * Moments are the most {max_elements} popular tweets of a year.
- * 
+ *
  * Tweets with popularity < {threshold} will be skipped.
- * 
+ *
  * Unfortunatly, we can't check the number of replies to the tweet to check if it's popular...
  */
 export function findMomentsOfYears(tweets: PartialTweet[], years: Iterable<number> = [new Date().getFullYear()], max_elements = 10, threshold = 5) {
   const sort_fn = (a: PartialTweet, b: PartialTweet) => scoreOfTweet(b) - scoreOfTweet(a);
-  
+
   const ys = new Set(years);
   const years_to_tweets: {[year: string]: PartialTweet[]} = {};
 
@@ -468,7 +372,7 @@ export function truncateInteractionCount(count: number) {
 
       return `${Math.trunc(count / 1000)}K`;
     }
-    
+
     return `${Math.trunc(count / 100) / 10}K`;
   }
   return String(count);
@@ -478,7 +382,7 @@ export function daysInMonth(month: number, year: number) {
   return new Date(year, month, 0).getDate();
 }
 
-export function randomIntFromInterval(min: number, max: number) { // min and max included 
+export function randomIntFromInterval(min: number, max: number) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
@@ -500,10 +404,10 @@ export function range(start: number, end?: number, step: number = 1) {
 }
 
 /**
- * Shuffle an array using the Durstenfeld shuffle. 
- * 
+ * Shuffle an array using the Durstenfeld shuffle.
+ *
  * See: https://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm
- * 
+ *
  * @param array The array to shuffle
  * @param use_source `true` if shuffle use the original array, `false` to create a copy.
  */
@@ -532,4 +436,38 @@ export function makeFileDownload(file: string, filename: string) {
   document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);
+}
+
+export function extractUsersFromAvailableTweets(archive: TwitterArchive, cache: typeof UserCache) {
+  const mergeOrSet = (user: Partial<PartialTweetUser>) => {
+    if (cache.getFromCache(user.id_str)) {
+      cache.set(user.id_str, { ...cache.getFromCache(user.id_str), ...user });
+    } else {
+      if (!user.name) {
+        user.name = user.screen_name;
+      }
+      cache.set(user.id_str, user as FullUser);
+    }
+  };
+
+  for (const tweet of archive.tweets) {
+    mergeOrSet(tweet.user);
+
+    // Build from in reply
+    if (tweet.in_reply_to_user_id_str && tweet.in_reply_to_screen_name) {
+      mergeOrSet({
+        id_str: tweet.in_reply_to_user_id_str,
+        screen_name: tweet.in_reply_to_screen_name,
+      });
+    }
+
+    // Build from mentions
+    for (const entity of tweet.entities?.user_mentions ?? []) {
+      mergeOrSet({
+        id_str: entity.id_str,
+        screen_name: entity.screen_name,
+        name: entity.name,
+      });
+    }
+  }
 }

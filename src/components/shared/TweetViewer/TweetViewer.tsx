@@ -2,7 +2,7 @@ import React from 'react';
 import { PartialTweet, TwitterHelpers } from 'twitter-archive-reader';
 import InfiniteScroll from 'react-infinite-scroller';
 import SETTINGS, { TweetSortType, TweetSortWay, TweetMediaFilters } from '../../../tools/Settings';
-import Tweet, { TweetOverviewModal, AcceptedTweetSources } from '../Tweets/Tweet';
+import Tweet, { AcceptedTweetSources } from '../Tweets/Tweet';
 import classes from './TweetViewer.module.scss';
 import { filterTweets } from '../../../helpers';
 import NoTweetsIcon from '@material-ui/icons/FormatClear';
@@ -11,21 +11,9 @@ import {
   Typography,
   Button,
   CircularProgress,
-  Icon,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import TweetCache from '../../../classes/TweetCache';
-import Tasks from '../../../tools/Tasks';
-import { toast } from '../Toaster/Toaster';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import SortIcon from '@material-ui/icons/Sort';
@@ -41,12 +29,7 @@ import MentionIcon from '@material-ui/icons/Reply';
 import Pictures from '@material-ui/icons/Collections';
 import CustomTooltip from '../CustomTooltip/CustomTooltip';
 import LANG from '../../../classes/Lang/Language';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import PlusIcon from '@material-ui/icons/Add';
-import MinusIcon from '@material-ui/icons/Close';
-import RevertIcon from '@material-ui/icons/Refresh';
-import ArrowWithEndIcon from '@material-ui/icons/PlayForWork';
+import { SHOULD_DOWNLOAD_TWEETS_AND_USERS } from '../../../const';
 
 export type MenuNeededDetails = { element: HTMLElement, position: { left: number, top: number } };
 export type SelectedCheckboxDetails = { id: string } & MenuNeededDetails;
@@ -64,9 +47,6 @@ type ViewerState = {
   tweets: PartialTweet[];
   current_page: PartialTweet[];
   scroller_key: string;
-  delete_modal: boolean;
-  selected: Set<string>;
-  modal_confirm: boolean;
   key: string;
 
   /** Filters */
@@ -122,9 +102,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       tweets,
       current_page: [],
       scroller_key: String(Math.random()),
-      delete_modal: false,
-      selected: new Set(),
-      modal_confirm: false,
       key: String(Math.random()),
       sort_type: SETTINGS.sort_type,
       sort_way: SETTINGS.sort_way,
@@ -134,7 +111,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       allow_self: SETTINGS.allow_self
     };
 
-    this.onTweetCheckChange = this.onTweetCheckChange.bind(this);
     this.onDetailClick = this.onDetailClick.bind(this);
     this.renderTweet = this.renderTweet.bind(this);
   }
@@ -360,23 +336,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     );
   }
 
-  /** MODAL */
-  openConfirmModal() {
-    this.setState({ modal_confirm: true });
-  }
-
-  closeConfirmModal() {
-    this.setState({ modal_confirm: false });
-  }
-
-  closeSelectedCheckbox = () => {
-    this.setState({ selected_checkbox: undefined });
-  };
-
-  closeDeleteMenu = () => {
-    this.setState({ menu_bulk_delete: undefined });
-  };
-
   /** GET TWEETS */
   loadTweets(page: number) {
     page -= 1;
@@ -394,7 +353,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       return;
     }
 
-    if (SETTINGS.tweet_dl && !SETTINGS.expired) {
+    if (SHOULD_DOWNLOAD_TWEETS_AND_USERS) {
       // do dl
       TweetCache.bulk(tweets.map(t => t.id_str))
         .then(data => {
@@ -418,7 +377,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
           });
         })
     }
-    else if (SETTINGS.archive.is_gdpr && SETTINGS.rt_dl && !SETTINGS.expired) {
+    else if (SETTINGS.archive.is_gdpr && SHOULD_DOWNLOAD_TWEETS_AND_USERS ) { // RT DOWNLOAD, this cannot work yet
       TweetCache.bulkRts(tweets)
         .then(tweets => {
           this.state.current_page.push(...tweets);
@@ -445,7 +404,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
   componentDidUpdate(prev_props: ViewerProps, prev_state: ViewerState) {
     if (
       prev_props.tweets !== this.props.tweets ||
-      prev_state.key !== this.state.key || 
+      prev_state.key !== this.state.key ||
       this.props.withMoments !== prev_props.withMoments
     ) {
       // Tweets change, component reset
@@ -456,152 +415,12 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
         current_page: [],
         tweets,
         has_more: true,
-        delete_modal: false,
         scroller_key: String(Math.random()),
-        selected: new Set(),
       });
     }
   }
 
   /** METHODS FOR TWEETS */
-  checkAll() {
-    this.setState({
-      selected: new Set(this.state.tweets.map(t => t.id_str)),
-      delete_modal: true
-    });
-    Object.values(this.references).map(t => t.current.check());
-  }
-
-  uncheckAll() {
-    this.setState({
-      selected: new Set([]),
-      delete_modal: false
-    });
-    Object.values(this.references).map(t => t.current.uncheck());
-  }
-
-  protected checkThisTweets(ids: string[]) {
-    const selected = this.state.selected;
-    for (const tweet of ids) {
-      selected.add(tweet);
-    }
-
-    this.setState({
-      selected,
-      delete_modal: selected.size > 0
-    });
-
-    for (const tweet of ids) {
-      if (tweet in this.references) {
-        this.references[tweet].current.check();
-      }
-    }
-  }
-
-  checkBelow(tweet_id: string) {
-    // Check tweets AFTER tweet_id
-    const tweet_id_pos = this.state.tweets.findIndex(t => t.id_str === tweet_id);
-
-    if (tweet_id_pos === -1) {
-      // tweet does not exists
-      console.warn("You're trying to check a tweet that does not exists. This should not happend.");
-      return;
-    }
-
-    // Check after index (index is NOT included)
-    const tweets = this.state.tweets.slice(tweet_id_pos + 1).map(tweet => tweet.id_str);
-    this.checkThisTweets(tweets);
-  }
-
-  checkBelowToLastSelected(tweet_id: string) {
-    const selected = this.state.selected;
-
-    const tweet_id_pos = this.state.tweets.findIndex(t => t.id_str === tweet_id);
-    if (tweet_id_pos === -1) {
-      // tweet does not exists
-      console.warn("You're trying to check a tweet that does not exists. This should not happend.");
-      return;
-    }
-
-    let last_index = tweet_id_pos;
-
-    // Find the last selected tweet in array
-    for (let i = this.state.tweets.length - 1; i >= tweet_id_pos; i--) {
-      if (selected.has(this.state.tweets[i].id_str)) {
-        last_index = i;
-        break;
-      }
-    }
-
-    // Check all tweets from tweet_id_pos (excluded) to last_index (excluded)
-    const tweets = this.state.tweets.slice(tweet_id_pos + 1, last_index).map(t => t.id_str);
-    this.checkThisTweets(tweets);
-  }
-
-  checkUntil(tweet_id: string) {
-    // Check tweets UNTIL tweet_id (index IS included)
-    const tweet_id_pos = this.state.tweets.findIndex(t => t.id_str === tweet_id);
-    if (tweet_id_pos === -1) {
-      // tweet does not exists
-      console.warn("You're trying to check a tweet that does not exists. This should not happend.");
-      return;
-    }
-
-    const tweets = this.state.tweets.slice(0, tweet_id_pos + 1).map(tweet => tweet.id_str);
-    this.checkThisTweets(tweets);
-  }
-
-  checkUntilFromFirstSelected(tweet_id: string) {
-    const selected = this.state.selected;
-
-    const tweet_id_pos = this.state.tweets.findIndex(t => t.id_str === tweet_id);
-    if (tweet_id_pos === -1) {
-      // tweet does not exists
-      console.warn("You're trying to check a tweet that does not exists. This should not happend.");
-      return;
-    }
-
-    let first_index = this.state.tweets
-      .slice(0, tweet_id_pos)
-      .findIndex(t => selected.has(t.id_str));
-
-    if (first_index === -1) {
-      // No previous tweet selected, assuming 0
-      first_index = 0;
-    }
-
-    // Check all tweets from first_index to tweet_id_pos (included)
-    const tweets = this.state.tweets.slice(first_index, tweet_id_pos + 1).map(t => t.id_str);
-    this.checkThisTweets(tweets);
-  }
-
-  revertSelection() {
-    const selected = this.state.selected;
-    const tweets = this.state.tweets.map(t => t.id_str);
-    const new_selected = new Set<string>();
-
-    for (const tweet of tweets) {
-      if (!selected.has(tweet)) {
-        new_selected.add(tweet);
-      }
-    }
-
-    this.setState({
-      selected: new_selected,
-      delete_modal: new_selected.size > 0
-    });
-
-    for (const tweet of tweets) {
-      if (tweet in this.references) {
-        if (new_selected.has(tweet)) {
-          this.references[tweet].current.check();
-        }
-        else {
-          this.references[tweet].current.uncheck();
-        }
-      }
-    }
-  }
 
   renderTweet(t: PartialTweet) {
     this.references[t.id_str] = t.id_str in this.references ? this.references[t.id_str] : React.createRef();
@@ -614,23 +433,9 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       data={t}
       key={t.id_str}
       ref={this.references[t.id_str]}
-      checked={this.state.selected.has(t.id_str)}
-      onCheckChange={this.onTweetCheckChange}
       onDetailClick={this.onDetailClick}
       asListBlock={this.props.asList}
     />;
-  }
-
-  onTweetCheckChange(checked: boolean, id_str: string) {
-    const s = this.state.selected;
-    if (checked) {
-      s.add(id_str);
-    }
-    else {
-      s.delete(id_str);
-    }
-
-    this.setState({ delete_modal: !!s.size, selected: s });
   }
 
   onDetailClick(tweet: AcceptedTweetSources) {
@@ -708,67 +513,6 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
     );
   }
 
-  confirmDeletionModal() {
-    return (
-      <Dialog
-        open={true}
-        onClose={() => this.closeConfirmModal()}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle>{LANG.delete_selected_tweets} ?</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {LANG.tweets_deleted_from} <span className="bold">Twitter</span>.
-          </DialogContentText>
-          <DialogContentText>
-            {LANG.deletion_modal_text}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.closeConfirmModal()} color="primary" autoFocus>
-            {LANG.no}
-          </Button>
-          <Button onClick={() => {
-            this.closeConfirmModal();
-            Tasks.start([...this.state.selected], "tweet")
-              .catch(() => {
-                toast(LANG.task_start_error, "error");
-              });
-            this.uncheckAll();
-          }} color="secondary">
-            {LANG.yes}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-
-  askDeletionModal() {
-    return (
-      <div className={classes.modal_root +
-          (this.state.delete_modal ? " " + classes.open : "") + " "
-        }>
-        <div className={classes.modal_grid_root}>
-          <div className={classes.modal_selected}>
-            {this.state.selected.size} {LANG.selected_without_s}{this.state.selected.size > 1 ? LANG.past_s : ''}
-          </div>
-
-          <div className={classes.modal_grid_container}>
-            <Button color="primary" onClick={this.onOpenDeleteMenuClick}>
-              {LANG.select_tweets_choices}
-            </Button>
-          </div>
-
-          <div className={classes.modal_grid_container}>
-            <Button color="secondary" onClick={() => this.openConfirmModal()}>
-              <Icon>delete_sweep</Icon>
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   render() {
     // Pas de tweets donnés
     if (this.props.tweets.length === 0) {
@@ -834,37 +578,7 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
 
     return (
       <>
-        {this.state.selected_tweet && <TweetOverviewModal
-          tweet={this.state.selected_tweet}
-          onClose={() => this.setState({ selected_tweet: undefined })}
-          favoriteMode
-        />}
-
-        <TweetSelectOptions
-          id={this.state.selected_checkbox && this.state.selected_checkbox.id}
-          position={this.state.selected_checkbox && this.state.selected_checkbox.position}
-          anchor={this.state.selected_checkbox && this.state.selected_checkbox.element}
-          onClose={this.closeSelectedCheckbox}
-          onSelectBelow={(id: string) => { this.checkBelow(id); this.closeSelectedCheckbox(); }}
-          onSelectUntil={(id: string) => { this.checkUntil(id); this.closeSelectedCheckbox(); }}
-          onSelectUntilFirst={id => { this.checkUntilFromFirstSelected(id); this.closeSelectedCheckbox(); }}
-          onSelectBelowLast={id => { this.checkBelowToLastSelected(id); this.closeSelectedCheckbox(); }}
-        />
-
-        <TweetBulkSelectOptions
-          position={this.state.menu_bulk_delete && this.state.menu_bulk_delete.position}
-          anchor={this.state.menu_bulk_delete && this.state.menu_bulk_delete.element}
-          onClose={this.closeDeleteMenu}
-          onRevertSelection={() => { this.revertSelection(); this.closeDeleteMenu(); }}
-          onSelectAll={() => { this.checkAll(); this.closeDeleteMenu(); }}
-          onUnSelectAll={() => { this.uncheckAll(); this.closeDeleteMenu(); }}
-        />
-
         {this.renderFilters()}
-
-        {this.state.modal_confirm && this.confirmDeletionModal()}
-
-        {this.askDeletionModal()}
 
         <InfiniteScroll
           className={this.props.asList ? classes.list_container : classes.card_container}
@@ -879,105 +593,4 @@ export default class TweetViewer extends React.Component<ViewerProps, ViewerStat
       </>
     );
   }
-}
-
-export function TweetSelectOptions(props: {
-  anchor?: HTMLElement,
-  onClose?: () => void,
-  onSelectUntil?: (tweet_id: string) => void,
-  onSelectUntilFirst?: (tweet_id: string) => void,
-  onSelectBelow?: (tweet_id: string) => void,
-  onSelectBelowLast?: (tweet_id: string) => void,
-  position?: { left: number, top: number },
-  id?: string,
-}) {
-  return (
-    <Menu
-      anchorEl={props.anchor}
-      open={Boolean(props.anchor)}
-      onClose={props.onClose}
-      anchorPosition={props.position}
-      anchorReference="anchorPosition"
-    >
-      <MenuItem disabled dense>
-        {LANG.select_tweets}
-      </MenuItem>
-
-
-      {props.id &&
-        // Fragments aren't accepted as Menu childs
-        [<MenuItem key="until" onClick={() => { props.onSelectUntil && props.onSelectUntil(props.id) }}>
-          <ListItemIcon>
-            <ArrowUpwardIcon className={classes.menu_tiny_icon} />
-          </ListItemIcon>
-          <ListItemText primary={LANG.select_tweets_until} />
-        </MenuItem>,
-
-        <MenuItem key="until-first" onClick={() => { props.onSelectUntilFirst && props.onSelectUntilFirst(props.id) }}>
-          <ListItemIcon>
-            <ArrowWithEndIcon className={classes.menu_tiny_icon} style={{ transform: 'rotate(180deg)' }} />
-          </ListItemIcon>
-          <ListItemText primary={LANG.select_tweets_until_first} />
-        </MenuItem>,
-
-        <MenuItem key="below-last" onClick={() => { props.onSelectBelowLast && props.onSelectBelowLast(props.id) }}>
-          <ListItemIcon>
-            <ArrowWithEndIcon className={classes.menu_tiny_icon} />
-          </ListItemIcon>
-          <ListItemText primary={LANG.select_tweets_below_last} />
-        </MenuItem>,
-
-        <MenuItem key="below" onClick={() => { props.onSelectBelow && props.onSelectBelow(props.id) }}>
-          <ListItemIcon>
-            <ArrowDownwardIcon className={classes.menu_tiny_icon} />
-          </ListItemIcon>
-          <ListItemText primary={LANG.select_tweets_below} />
-        </MenuItem>]
-      }
-    </Menu>
-  );
-}
-
-export function TweetBulkSelectOptions(props: {
-  anchor?: HTMLElement,
-  onClose?: () => void,
-  onSelectAll?: () => void,
-  onUnSelectAll?: () => void,
-  onRevertSelection?: () => void,
-  position?: { left: number, top: number },
-}) {
-  return (
-    <Menu
-      anchorEl={props.anchor}
-      open={Boolean(props.anchor)}
-      onClose={props.onClose}
-      anchorPosition={props.position}
-      anchorReference="anchorPosition"
-    >
-      <MenuItem disabled dense>
-        {LANG.tweet_selection}
-      </MenuItem>
-
-      <MenuItem onClick={props.onSelectAll}>
-        <ListItemIcon>
-          <PlusIcon className={classes.menu_tiny_icon} />
-        </ListItemIcon>
-        <ListItemText primary={LANG.select_all} />
-      </MenuItem>
-
-      <MenuItem onClick={props.onUnSelectAll}>
-        <ListItemIcon>
-          <MinusIcon className={classes.menu_tiny_icon} />
-        </ListItemIcon>
-        <ListItemText primary={LANG.unselect_all} />
-      </MenuItem>
-
-      <MenuItem onClick={props.onRevertSelection}>
-        <ListItemIcon>
-          <RevertIcon className={classes.menu_tiny_icon} />
-        </ListItemIcon>
-        <ListItemText primary={LANG.revert_selection} />
-      </MenuItem>
-    </Menu>
-  );
 }

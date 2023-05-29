@@ -6,7 +6,6 @@ import SETTINGS, { TweetSortWay, FavoriteTweetSortType } from '../../../tools/Se
 import InfiniteScroll from 'react-infinite-scroller';
 import { CenterComponent } from '../../../tools/PlacingComponents';
 import TweetCache from '../../../classes/TweetCache';
-import { API_URLS } from '../../../tools/ApiHelper';
 import LANG from '../../../classes/Lang/Language';
 import NoFavsIcon from '@material-ui/icons/FormatClear';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
@@ -21,6 +20,7 @@ import Time from '@material-ui/icons/Schedule';
 import SortIcon from '@material-ui/icons/Sort';
 import TweetUser from '@material-ui/icons/Person';
 import Tweet, { AcceptedTweetSources, TweetOverviewModal } from '../../shared/Tweets/Tweet';
+import { SHOULD_DOWNLOAD_TWEETS_AND_USERS } from '../../../const';
 
 const FAV_CHUNK_LEN = 20;
 type PartialTweetOrFavorite = PartialTweet | PartialFavorite;
@@ -205,8 +205,8 @@ export default class Favorites extends React.Component<FavoritesProps, Favorites
     const tweets_for_current_page = this.state.favorites.slice(start, next);
 
     let final_array: PartialTweetOrFavorite[];
-    if (!SETTINGS.expired) {
-      const downloaded = await TweetCache.bulk(tweets_for_current_page.map(t => t.tweetId), undefined, undefined, API_URLS.batch_tiny_tweets);
+    if (SHOULD_DOWNLOAD_TWEETS_AND_USERS) {
+      const downloaded = await TweetCache.bulk(tweets_for_current_page.map(t => t.tweetId), undefined, undefined);
 
       const final_tweets = tweets_for_current_page.map(t => t.tweetId in downloaded ? downloaded[t.tweetId] : t);
       final_array = [...this.state.loaded, ...(final_tweets as any)];

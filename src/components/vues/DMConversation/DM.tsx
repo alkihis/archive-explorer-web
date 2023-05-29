@@ -9,7 +9,6 @@ import { REGEX_URL } from '../../../const';
 // @ts-ignore
 import { Lightbox as ModalImage } from "react-modal-image";
 import LANG from '../../../classes/Lang/Language';
-import { BASE_API_URL } from '../../../tools/ApiHelper';
 
 type DMProp = {
   msg: LinkedDirectMessage;
@@ -38,7 +37,7 @@ export default class DM extends React.Component<DMProp, DMState> {
 
     // With modal image
     return (
-      <ModalImage 
+      <ModalImage
         medium={used_entity}
         large={used_entity}
         alt={LANG.full_image}
@@ -63,7 +62,7 @@ export default class DM extends React.Component<DMProp, DMState> {
     const splitted = text.split(REGEX_URL).filter(e => !e.match(REGEX_URL));
     const urls: string[] = [];
     const regex = new RegExp(REGEX_URL);
-    
+
     let matches: RegExpExecArray;
 
     // eslint-disable-next-line
@@ -118,12 +117,7 @@ export default class DM extends React.Component<DMProp, DMState> {
           });
         })
         .catch(() => {
-          // Image does not exists, try to go through proxy if the logged user is valid
-          if (SETTINGS.archive.user.id === SETTINGS.user.twitter_id) {
-            this.setState({
-              img: BASE_API_URL + "batch/dm_proxy?url=" + encodeURIComponent(media)
-            });
-          }
+          // Image does not exists
         });
     }
     else if (media) {
@@ -140,7 +134,7 @@ export default class DM extends React.Component<DMProp, DMState> {
   showDate() {
     return <div className={classes.date}>{dateFormatter(SETTINGS.lang === "fr" ? 'd/m/Y, H:i' : 'Y-m-d, H:i', this.props.msg.createdAtDate)}</div>;
   }
-  
+
   onDmClick = () => {
     if (this.props.onClick) {
       this.props.onClick(this.dm.id);
@@ -152,22 +146,22 @@ export default class DM extends React.Component<DMProp, DMState> {
 
     return (
       <div ref={this.inner_ref} className={classes.position + " " + (this.is_you ? classes.you : "")}>
-        <div className={classes.root + 
+        <div className={classes.root +
           " " + (this.is_you ? classes.root_you : classes.root_other) +
           " " + (this.props.showPp ? classes.marginT : "")}>
-          
-          {this.props.showPp && <Avatar 
-            className={classes.avatar} 
-            src={user ? user.profile_image_url_https.replace('_normal', '') : undefined}
+
+          {this.props.showPp && <Avatar
+            className={classes.avatar}
+            src={user?.profile_image_url_https ? user.profile_image_url_https.replace('_normal', '') : undefined}
           >
             {user ? "" : "#"}
           </Avatar>}
-          
-          <div 
-            className={classes.msg + 
+
+          <div
+            className={classes.msg +
               " " + (this.is_you ? classes.msg_you : classes.msg_other) +
-              " " + (!this.props.showPp ? classes.no_img : "") + 
-              " " + (this.props.onClick ? classes.pointer : "") + 
+              " " + (!this.props.showPp ? classes.no_img : "") +
+              " " + (this.props.onClick ? classes.pointer : "") +
               " " + (this.props.selected ? classes.msg_selected : "")
             }
             onClick={this.onDmClick}

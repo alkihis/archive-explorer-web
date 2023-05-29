@@ -1,8 +1,5 @@
 import React from "react";
-import { Grid, CircularProgress, Typography, CardContent, Button, Link as MUILink, Container, Tabs, withStyles } from "@material-ui/core";
-import LoginIcon from '@material-ui/icons/Refresh';
-import SETTINGS from "./Settings";
-import { Link } from "react-router-dom";
+import { Grid, CircularProgress, Typography, CardContent, Link as MUILink, Container, Tabs, withStyles } from "@material-ui/core";
 import LANG from "../classes/Lang/Language";
 import FindUseful from "../components/StaticPresentation/FindUseful";
 import './PlacingComponents.scss';
@@ -33,7 +30,7 @@ export const Marger: React.FC<{ size: number | string }> = props => {
   }} />;
 }
 
-export function internalError(message: string, additionnal_text = "", login_again = false) {
+export function internalError(message: string, additionnal_text = "") {
   return (
     <div>
       <CardContent>
@@ -49,24 +46,16 @@ export function internalError(message: string, additionnal_text = "", login_agai
         <p>
           {additionnal_text}
         </p>
-
-        {login_again ? (
-          <Link to="/login">
-            <Button onClick={() => SETTINGS.logout(false)} color="primary" style={{width: '100%', marginTop: '1.5rem'}}>
-              <LoginIcon style={{marginRight: '3%'}} /> {LANG.login_again}
-            </Button>
-          </Link>
-        ) : "" }
       </CardContent>
     </div>
   );
 }
 
-export function specialJoinJSX(array: string[], options: { 
-  sep?: string, 
-  final_joiner?: string, 
-  class_element?: string, 
-  class_joiner?: string 
+export function specialJoinJSX(array: string[], options: {
+  sep?: string,
+  final_joiner?: string,
+  class_element?: string,
+  class_joiner?: string
 } = {}) : JSX.Element {
   options = Object.assign({ sep: ", ", final_joiner: " " + LANG.and + " ", class_joiner: "no-bold" }, options);
 
@@ -99,9 +88,9 @@ export function Copyright({ version }: { version?: boolean }) {
   return (
     <div className={"copyright" + (version ? " small-padding" : "")}>
       <Typography align="center" className="main-twitter-link">
-        <img 
-          src="/assets/Twitter_Bird.svg" 
-          alt="Twitter logo" 
+        <img
+          src="/assets/Twitter_Bird.svg"
+          alt="Twitter logo"
           className="twitter-bird"
         />
         <MUILink href="https://twitter.com/ArchivExplorer" rel="noopener noreferrer" target="_blank">
@@ -110,15 +99,15 @@ export function Copyright({ version }: { version?: boolean }) {
       </Typography>
 
       <Typography variant="body2" color="textSecondary" align="center">
-        {LANG.ae_made_by} <a 
-          href="https://alkihis.fr/" 
-          rel="noopener noreferrer" 
+        {LANG.ae_made_by} <a
+          href="https://alkihis.fr/"
+          rel="noopener noreferrer"
           target="_blank"
         >
           Alkihis
-        </a> • <a 
-          href="https://twitter.com/alkihis/" 
-          rel="noopener noreferrer" 
+        </a> • <a
+          href="https://twitter.com/alkihis/"
+          rel="noopener noreferrer"
           target="_blank"
           className="twitter-link"
         >
@@ -161,7 +150,7 @@ export function ClassicHeader(props: { title: string, divider?: boolean | React
           {props.title}
         </Typography>
       </header>
-      {props.divider && <div 
+      {props.divider && <div
         className="linear-header-divider background-flat-image-linear no-dark"
       >
         {props.divider}

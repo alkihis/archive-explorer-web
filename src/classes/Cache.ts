@@ -1,4 +1,3 @@
-import APIHELPER from "../tools/ApiHelper";
 
 export class Cache<T> {
   protected cache: {
@@ -68,12 +67,7 @@ export class Cache<T> {
       return {};
     }
 
-    const api_res: T[] = await APIHELPER.request(custom_url ? custom_url : this.url, {
-      method: 'POST',
-      parameters: { [id_parameter]: ids },
-      body_mode: "json",
-      auth: true
-    });
+    const api_res: T[] = []; // TODO change if need to download tweet / items differently (crawling?)
 
     const returned: { [id: string]: T } = {};
 
@@ -94,7 +88,7 @@ export class Cache<T> {
     for (const unrecieved of diff) {
       this.asked_by_empty.add(unrecieved);
     }
-    
+
     return returned;
   }
 

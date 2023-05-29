@@ -18,7 +18,8 @@
 
 .card_action {
   display: grid !important;
-  grid-template-columns: min-content auto auto;
+  grid-template-columns: auto auto;
+  min-height: 32px;
 }
 
 .card_favorite_action {
@@ -61,6 +62,7 @@
 .rt_container {
   display: flex;
   justify-content: flex-start;
+  margin-left: .5rem;
 }
 
 .inline_icon {

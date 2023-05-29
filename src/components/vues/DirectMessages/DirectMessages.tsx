@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from './DirectMessages.module.scss';
-import { setPageTitle, isArchiveLoaded, specialJoin, nFormat, localeDateFormat } from '../../../helpers';
+import { setPageTitle, isArchiveLoaded, specialJoin, nFormat, localeDateFormat, extractUsersFromAvailableTweets } from '../../../helpers';
 import MailIcon from '@material-ui/icons/Mail';
 import SETTINGS from '../../../tools/Settings';
 import NoArchive from '../../shared/NoArchive/NoArchive';
@@ -14,6 +14,7 @@ import EmptyMessage from '../../shared/EmptyMessage/EmptyMessage';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { FullUser } from 'twitter-d';
 import LANG from '../../../classes/Lang/Language';
+import { SHOULD_DOWNLOAD_TWEETS_AND_USERS } from '../../../const';
 
 type DMProps = {};
 
@@ -77,14 +78,26 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
       }
     }
 
-    UserCache.bulk([...participants])
-      .finally(() => {
-        this.setState({
-          ready: true
-        });
+    // TODO: try to remap it with users found in tweets
+    console.log('SHOULD REMAP!');
 
-        this.in_dl = false;
+    if (SHOULD_DOWNLOAD_TWEETS_AND_USERS) {
+      UserCache.bulk([...participants])
+        .finally(() => {
+          this.setState({
+            ready: true
+          });
+
+          this.in_dl = false;
+        });
+    } else {
+      extractUsersFromAvailableTweets(SETTINGS.archive, UserCache);
+
+      this.setState({
+        ready: true
       });
+      this.in_dl = false;
+    }
   }
 
   handleRemoveConversation = () => {
@@ -118,7 +131,7 @@ export default class DirectMessages extends React.Component<DMProps, DMState> {
       let avatar: JSX.Element;
       const p = participants[0];
 
-      if (typeof p !== 'string') {
+      if (typeof p !== 'string' && (p as FullUser).profile_image_url_https) {
         avatar = <Avatar
           className={classes.avatar}
           src={(p as FullUser).profile_image_url_https.replace('_normal', '')}

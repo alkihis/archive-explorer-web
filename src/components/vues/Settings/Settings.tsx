@@ -1,21 +1,17 @@
 import React from 'react';
 import classes from './Settings.module.scss';
-import { setPageTitle, dateFormatter, toggleDarkMode } from '../../../helpers';
-import { Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tooltip, Avatar, InputLabel, Select, MenuItem, Divider } from '@material-ui/core';
+import { setPageTitle, toggleDarkMode } from '../../../helpers';
+import { Typography, Container, Checkbox, FormControlLabel, FormControl, FormGroup, InputLabel, Select, MenuItem, Divider } from '@material-ui/core';
 import SETTINGS from '../../../tools/Settings';
-import IIcon from '@material-ui/icons/Info';
-import ExtendedActionsMenu from './ExtendedActionsMenu';
 import LANG, { AvailableLanguages, AuthorizedLangs } from '../../../classes/Lang/Language';
 import { Copyright } from '../../../tools/PlacingComponents';
 
 type SettingsState = {
-  download: boolean;
   modal_open: boolean;
   pp: boolean;
   dark_mode: boolean;
   auto_dark_mode: boolean;
   lang: AuthorizedLangs;
-  download_rt: boolean;
   local_medias: boolean;
   local_videos: boolean;
   as_list: boolean;
@@ -23,13 +19,11 @@ type SettingsState = {
 
 export default class Settings extends React.Component<{}, SettingsState> {
   state: SettingsState = {
-    download: SETTINGS.tweet_dl,
     modal_open: false,
     pp: SETTINGS.pp,
     dark_mode: SETTINGS.dark_mode,
     auto_dark_mode: SETTINGS.is_auto_dark_mode,
     lang: SETTINGS.lang,
-    download_rt: SETTINGS.rt_dl,
     local_medias: SETTINGS.use_tweets_local_medias,
     local_videos: SETTINGS.use_tweets_local_videos,
     as_list: SETTINGS.show_explore_as_list,
@@ -75,20 +69,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
       as_list: v
     });
     SETTINGS.show_explore_as_list = v;
-  }
-
-  changeTweetDLState(v: boolean) {
-    this.setState({
-      download: v
-    });
-    SETTINGS.tweet_dl = v;
-  }
-
-  changeRtDLState(v: boolean) {
-    this.setState({
-      download_rt: v
-    });
-    SETTINGS.rt_dl = v;
   }
 
   changePPState(v: boolean) {
@@ -142,34 +122,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
     return (
       <FormControl component="fieldset">
         <FormGroup>
-          <FormControlLabel
-            value="media"
-            control={
-              <Checkbox
-                color="primary"
-                checked={this.state.download}
-                onChange={(_, c) => this.changeTweetDLState(c)}
-                disabled={SETTINGS.expired}
-              />
-            }
-            label={LANG.download_from_twitter_checkbox}
-            labelPlacement="end"
-          />
-
-          <FormControlLabel
-            value="media"
-            control={
-              <Checkbox
-                color="primary"
-                checked={this.state.download_rt}
-                onChange={(_, c) => this.changeRtDLState(c)}
-                disabled={SETTINGS.expired || this.state.download}
-              />
-            }
-            label={LANG.download_rt_from_twitter_checkbox}
-            labelPlacement="end"
-          />
-
           <FormControlLabel
             value="medias_show"
             control={
@@ -227,45 +179,6 @@ export default class Settings extends React.Component<{}, SettingsState> {
     );
   }
 
-  accountSettings() {
-    return (
-      <div>
-        <div className={classes.acc_details}>
-          <Avatar
-            alt="Twitter avatar"
-            src={SETTINGS.twitter_user.profile_image_url_https.replace('_normal', '')}
-            className={classes.avatar}
-          />
-          <div className={classes.tn}>{SETTINGS.twitter_user.name}</div>
-          <div className={classes.sn}>@{SETTINGS.twitter_user.screen_name}</div>
-
-          <Button className={classes.logout} onClick={() => this.handleClickOpen()} color="secondary">
-            {LANG.logout}
-          </Button>
-        </div>
-
-        <div style={{display: 'flex', alignItems: 'center'}}>
-          <Typography>
-            {LANG.account_created_on}
-            <span className="bold"> {dateFormatter(SETTINGS.lang === "fr" ? "d/m/Y" : "Y-m-d", new Date(SETTINGS.user.created_at))}</span>.
-          </Typography>
-          <Tooltip placement="top" classes={{
-              tooltip: classes.big_text,
-              popper: classes.big_text
-            }} title={LANG.thats_all_infos}>
-              <IIcon className={classes.icon + " " + classes.account_icon} />
-          </Tooltip>
-        </div>
-
-        <ExtendedActionsMenu />
-
-        {SETTINGS.expired && <Typography className={classes.expired}>
-          {LANG.twitter_credentials_expired}.
-        </Typography>}
-      </div>
-    );
-  }
-
   displaySettings() {
     return (
       <div>
@@ -315,53 +228,10 @@ export default class Settings extends React.Component<{}, SettingsState> {
     );
   }
 
-  handleClickOpen() {
-    this.setState({ modal_open: true });
-  }
-
-  handleClose() {
-    this.setState({ modal_open: false });
-  }
-
-  modalLogout() {
-    return (
-      <Dialog
-        open={this.state.modal_open}
-        onClose={() => this.handleClose()}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{LANG.logout}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {LANG.really_want_to_logout}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => this.handleClose()} color="primary" autoFocus>
-            {LANG.cancel}
-          </Button>
-          <Button onClick={() => SETTINGS.logout(true, true)} color="secondary">
-            {LANG.logout}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-
   render() {
     return (
       <div>
-        {this.modalLogout()}
-
         <Container maxWidth="lg" className={classes.root}>
-          <Typography variant="h4" className={classes.account_title}>
-            {LANG.account}
-          </Typography>
-          <Container className={classes.account_container}>
-            {this.accountSettings()}
-          </Container>
-
           <Typography variant="h4" className={classes.account_title}>
             Tweets
           </Typography>

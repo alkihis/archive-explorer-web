@@ -94,9 +94,9 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
       return info.user;
 
     return {
-      screen_name: SETTINGS.user.twitter_screen_name,
-      id_str: SETTINGS.user.twitter_id,
-      name: SETTINGS.user.twitter_name
+      screen_name: '[screen_name]',
+      id_str: '[id_str]',
+      name: '[name]',
     };
   }
 
@@ -421,13 +421,8 @@ export class SavedArchives extends EventTarget<SavedArchivesEvents, SavedArchive
    * Current user logged id.
    */
   protected get logged_user_id() {
-    const logged_user = SETTINGS.user;
-
-    if (!logged_user) {
-      throw new Error("User must be logged");
-    }
-
-    return logged_user.user_id;
+    // Return a fake user id, as we cannot log anymore
+    return '0';
   }
 
   /**
